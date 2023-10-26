@@ -15,32 +15,31 @@ sed
 cht.sh - cheat sheet website for curling anything  
 
 
-`ncal` - View a command-line calendar
-`ps aux | grep ssh` - List all processes containing "ssh" in their names.
+`ncal` - View a command-line calendar  
+`ps aux | grep ssh` - List all processes containing "ssh" in their names.  
 `who` - List of users currently logged in, along with their usernames, terminal devices, login
-times, and IP addresses (`pts` means SSH sessions)
-`w` - Similar to `who`, with more details (load avg, system uptime)
+times, and IP addresses (`pts` means SSH sessions)  
+`w` - Similar to `who`, with more details (load avg, system uptime)  
 
-`grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in
-multiple files 
-* `grep -r`ecursively, `-l`: files that have a match,
-* `sed` changes file `-i`n-place
+`grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
+* `grep -r`ecursively, `-l`ist files that have a match  
+* `sed` changes file `-i`n-place  
 
-### Numeric Calculations & Random Numbers
+## Numeric Calculations & Random Numbers
 Numeric calculations can be done in a subshell in parentheses.
-```bash
+```bas
 $((a + 200))      # Add 200 to $a
 $(($RANDOM%200))  # Random number 0..199
 declare -i count  # Declare as type integer 
 count+=1          # Increment
 ```
 
-### Get the Directory of a Script
+## Get the Directory of a Script
 ```bash
 dir=${0%/*}
 ```
 
-### Search Terms for Bash Man Page
+## Search Terms for Bash Man Page
 `man bash` 
 /pathname expansion
 /pattern matching
@@ -48,52 +47,58 @@ dir=${0%/*}
 /redirection
 
 
-### DEFINITIONS
+## Definitions
 The following definitions are used throughout the `bash` man page.
-* blank  A space or tab.
-* word   A sequence of characters considered as a single unit by the shell.
-         Also known as a token.
-* name   A word consisting only of alphanumeric characters and underscores, and  beginning  with
-         an alphabetic character or an underscore.  Also referred to as an identifier.
-* metacharacter
-      A character that, when unquoted, separates words.  One of the following:
-      |  & ; ( ) < > space tab newline
-* control operator
-      A token that performs a control function.  It is one of the following symbols:
-      || & && ; ;; ;& ;;& ( ) | |& <newline>
+* `blank`: A space or tab.
+* `word`: A sequence of characters considered as a single unit by the shell.
+          Also known as a token.
+* `name`: A word consisting only of alphanumeric characters and underscores, and  beginning  with
+          an alphabetic character or an underscore.  Also referred to as an identifier.
+* `metacharacter`: 
+    A character that, when unquoted, separates words.  One of the following:
+    ```bash
+    |  & ; ( ) < > space tab newline
+    ```
+* `control operator`: 
+    A token that performs a control function.  It is one of the following symbols:
+    ```bash 
+    || & && ; ;; ;& ;;& ( ) | |& <newline>
+    ```
 
 
 
-### Terminal Colors
+## Terminal Colors
 
-256 colors
----
-38; indicates "foreground"
-5; indicates "256-color"
+#### 256-colors
+
+38; indicates "foreground"  
+5; indicates "256-color"  
 ```bash
-SYNTAX='\e[38;5;${COLOR_CODE}m'
+SYNTAX="\e[38;5;${COLOR_CODE}m"
+# or, if used in your prompt customization:
+SYNTAX="\[\e[38;5;${COLOR_CODE}m\]"
 0-7: Standard colors
 8-15: Bright colors
 16-231: 6x6x6 RGB cube
 232-255: Grayscale
 ```
 
-### SSH Logs and Processes
-`journalctl -u ssh` - See SSH login attempts
+## SSH Logs and Processes
+`journalctl -u ssh` - See SSH login attempts  
 You can see the fingerprint of the SSH key is included in the logs. Failed login attempts will appear
-like this:
+like this:  
 ```bash
 Mar 30 17:10:35 web0 sshd[5561]: Connection closed by authenticating user ubuntu 10.103.160.144 port
 38860 [preauth]
 ```
-`ps aux | grep ssh` - List all processes containing "ssh" in their names.
+`ps aux | grep ssh` - List all processes containing "ssh" in their names.  
 For remote SSH sessions, you will see entries with "pts" in the terminal device column,
-indicating that those are pseudo-terminals used for SSH connections. 
-"tty" indicates a non-SSH connection.
-These pseudo-terminals allow you to interact with the remote machine as if you were sitting at the physical console.
+indicating that those are pseudo-terminals used for SSH connections.   
+"tty" indicates a non-SSH connection.  
+These pseudo-terminals allow you to interact with the remote machine as if you were sitting at the physical console.  
 
 
-### Cron & Crontabs
+## Cron, Cronjobs & Crontabs
 1. **Open Crontab Configuration**
 Open the crontab configuration file with:
 ```bash
@@ -126,7 +131,7 @@ Or, instead of the 5-asterisks method, special strings can be used
 
 
 
-### Permissions
+## File and Directory Permissions
 The permissions are listed in the following order (left to right):
 1. Owner
 2. Group
@@ -136,11 +141,11 @@ The permissions are listed in the following order (left to right):
 ##own grp oth
 -|---|---|---
 ```
-`chmod` to change permissions.
-`chown` to change file owner.
+`chmod` to change permissions.  
+`chown` to change file owner.  
 
 
-### Disable Shellcheck From Within Shell Scripts
+## Disable Shellcheck From Within Shell Scripts
 
 To disable shellcheck, use this comment:
 
@@ -148,9 +153,9 @@ To disable shellcheck, use this comment:
 # shellcheck disable=SC2059
 ```
 
-### Check if an argument is empty
-The `-z` conditional flag checks if the string is empty.
-The `-n` conditional flag checks that the string is not empty.
+## Check if an argument is empty
+The `-z` conditional flag checks if the string is empty.  
+The `-n` conditional flag checks that the string is not empty.  
 ```bash
 if [[ -z "$1" ]]; then
     echo "The first position argument is an empty string."
@@ -161,7 +166,7 @@ elif [[ -n "$1" ]]; then
 * `-z`: Argument not present
 
 
-### Get Command Locations, Binaries, and Aliases
+## Get Command Locations, Binaries, and Aliases
 * `find` - Finds a file
 * `which` - Shows which binary the command uses.
 * `file` - Determine the file type.
@@ -169,7 +174,7 @@ elif [[ -n "$1" ]]; then
 * `whereis` - Finds the binary, source code, and man pages for a command.
 
 
-### Getting Help With Commands
+## Getting Help With Commands
 * `whatis <cmd>` - Display one-line man page descriptions
 * `man -f <cmd>` - Displays all man pages available for `<cmd>`(same as `whatis`)
 * `man -k <cmd>` (same as `apropos <cmd>`) - Searches the short descriptions and man page names for the `<cmd>`
@@ -177,7 +182,7 @@ elif [[ -n "$1" ]]; then
 * `command -V <cmd>` will inspect the `<cmd>`
 
 
-### Trapping Errors
+## Trapping Errors
 You can trap errors with the `trap` command.
 ```bash
 trap 'echo Error at about $LINENO' ERR
@@ -189,17 +194,17 @@ set -o errtrace
 trap traperr ERR
 ```
 
-### Source Relative Files
+## Source Relative Files
 ```bash
 source "${0%/*}/../share/foo.sh"
 ```
 
-### Changing the system's hostname
+## Changing the system's hostname
 `hostnamectl hostname <new_hostname>`
 `hostname -I` will display the current SSH IP (along with some other stuff)
 
 
-### Stream Manipulation w/ `awk`, `grep`, and `sed`
+## Stream Manipulation w/ `awk`, `grep`, and `sed`
 Print all lines matching a pattern in a file:
 ```bash
 awk '[pattern] {print $0}' [filename]
@@ -208,15 +213,15 @@ sed
 ```
 
 
-### Compare Files
+## Compare Files
 
-`cmp` - Compare two files byte by byte
-`diff` - Compare two files line by line
-`comm` - Compare two sorted files line by line
-`sort` - Sort a file line by line, write to stdout
+`cmp` - Compare two files byte by byte  
+`diff` - Compare two files line by line  
+`comm` - Compare two sorted files line by line  
+`sort` - Sort a file line by line, write to stdout  
 
 
-### Loops
+## Loops
 
 ```bash
 # Basic for loop
@@ -250,7 +255,7 @@ while true; do
 done
 ```
 
-### Getting Options and Arguments
+## Getting Options and Arguments
 ```bash
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do 
     case $1 in
@@ -271,7 +276,7 @@ fi
 ```
 
 
-### Options
+## Options
 ```bash
 set -o noclobber  # Avoid overlay files (echo "hi" > foo)
 set -o errexit    # Used to exit upon error, avoiding cascading errors
@@ -279,7 +284,7 @@ set -o pipefail   # Unveils hidden failures
 set -o nounset    # Exposes unset variables
 ```
 
-### Glob Options
+## Glob Options
 ```bash
 shopt -s nullglob    # Non-matching globs are removed  ('*.foo' => '')
 shopt -s failglob    # Non-matching globs throw errors
@@ -291,10 +296,10 @@ shopt -s globstar    # Allow ** for recursive matches ('lib/**/*.rb' => 'lib/a/b
 
 ## Functions & Scripts
 Functions are the only way to change the state of the existing shell (e.g., using `cd` to change
-directory)
-Scripts cannot do this.
+directory)  
+Scripts cannot do this.  
 
-### Returning Values
+## Returning Values
 To return values in bash/sh, just echo or printf them. 
 ```bash
 myfunc() {
@@ -303,7 +308,7 @@ myfunc() {
 }
 result=$(myfunc)
 ```
-### Raising Errors
+## Raising Errors
 Do not use the `return` keyword for normal function value returns.
 `return` raises errors.
 ```bash
@@ -351,7 +356,7 @@ $-    # Current option flags set by the shell itself, on invocation, or using th
 
 ## Arrays in Bash
 
-### List-like Arrays & String Manipulation/Slicing
+## List-like Arrays & String Manipulation/Slicing
 ```bash
 Fruits=('Apple' 'Banana' 'Orange')
 Fruits[0]="Apple"
@@ -379,7 +384,7 @@ for i in "${arrayName[@]}"; do          # Iterating over an array
 done
 ```
 
-### Dictionaries (Associative Arrays)
+## Dictionaries (Associative Arrays)
 ```bash
 declare -A sounds
 # Declares sound as a Dictionary object (aka associative array).
@@ -413,14 +418,13 @@ done
 
 ## Process Substitution
 `man bash; /Process Substitution`
-Process substitution allows a process's input or output to be referred to using a filename.
-It  takes the form of <(list) or >(list).  The process list is run asynchronously, and its in‐
-put or output appears as a filename.
-This filename is passed as an argument to the current command as the result of the expansion.
-If the >(list) form is used, writing to the file will provide input for list.
-If the <(list) form is used, the file passed as an argument should be read to obtain the output of list.
+Process substitution allows a process's input or output to be referred to using a filename.  
+It  takes the form of <(list) or >(list).  The process list is run asynchronously, and its input or output appears as a filename.  
+This filename is passed as an argument to the current command as the result of the expansion.  
+If the >(list) form is used, writing to the file will provide input for list.  
+If the <(list) form is used, the file passed as an argument should be read to obtain the output of list.  
 Process substitution is supported on systems that support
-named pipes (FIFOs) or the /dev/fd method of naming open files.
+named pipes (FIFOs) or the /dev/fd method of naming open files.  
 
 
 ## Transforming Strings with `tr`
@@ -514,7 +518,12 @@ echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
           True if string1 sorts after string2 lexicographically.
 
 #### Arithmetic Operators:
--eq, -ne, -lt, -le, -gt, -ge
+* `-eq`: (`==`) Is equal to   
+* `-ne`: (`!=`) Not equal to   
+* `-lt`: (`<`) Less Than   
+* `-le`: (`<=`) Less than or equal to 
+* `-gt`: (`>`) Greater than
+* `-ge`: (`>=`) Greater than or equal to
 
 
 ## Interpreter Order of Operations
@@ -565,6 +574,7 @@ src="/path/to/foo.cpp"
 base=${src##*/}   #=> "foo.cpp" (basepath)
 dir=${src%$base}  #=> "/path/to/" (dirpath)
 ```
+
 ### Substitution
 ```bash
 ${foo%suffix} 	Remove suffix
@@ -585,32 +595,28 @@ ${foo:0:3} 	    # Substring (position, length)
 ${foo:(-3):3} 	# Substring from the right
 ```
 
-### Length of a String/Variable
+### Getting the Length of a String/Variable
 ```bash
 ${#foo} 	   # Length of $foo
 ```
 
 
-## Etc
+## Get bits: Zero, random or random 0/1
+
+`/dev/zero` : returns zero  
+`/dev/random` : returns random number  
+`/dev/urandom` : returns random 0 or 1  
 
 
-### Get bits: Zero, random or random 0/1
+## SysAdmin Relevant - Firewall and Network commands
 
-`/dev/zero` : returns zero
-`/dev/random` : returns random number
-`/dev/urandom` : returns random 0 or 1
-
-
-### SysAdmin Relevant - Firewall and Network commands
-
-`service` - Run a System V init script
-`ufw` - Firewall stuff
-`iptables` - Admin took for packet filtering and NAT
-
-`whereis` - Find binary, source, and man page for a command.
+`service` - Run a System V init script  
+`ufw` - Firewall stuff  
+`iptables` - Admin took for packet filtering and NAT  
+`whereis` - Find binary, source, and man page for a command.  
 
 
-### Redirecting Standard Output AND Standard Error
+## Redirecting Standard Output AND Standard Error
 Note that the order of redirections is significant.  For example, the command
 ```bash
 # Correct
@@ -625,6 +631,6 @@ directs  only  the  standard output to file dirlist, because the standard error 
 from the standard output before the standard output was redirected to dirlist.
 
 
-
-
+##### Credit
+A lot of this was taken from [devhints.io](https://devhints.io/bash).
 
