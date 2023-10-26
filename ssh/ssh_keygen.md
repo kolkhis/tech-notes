@@ -6,7 +6,7 @@
 ssh-keygen -C mycomment -f /tmp/somekey -t ed25519
 ```  
 
-* The comment can be safely deleted from the public key.  
+* Note: The comment can be safely deleted from the public key.  
 
 ```output
 Generating public/private ed25519 key pair.
@@ -28,11 +28,21 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-When this is added to `~/.ssh/authorized_keys` it will have generic comments
+When this is added to `~/.ssh/authorized_keys` it will have generic comments.  
 
-In `/tmp/somekey.pub` you'll find the key to add to Github.
+In `/tmp/somekey.pub` you'll find the key to add to Github.  
 
-* For setting up a user's access on a server, the key should go to `/root/.ssh/username_ed25519` 
+Then configure Git to use SSH as its default URL:
+```bash
+git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+```
+
+
+For setting up a user's access on a server, the key should go to `/root/.ssh/username_ed25519`.  
+
+
+
+
 
 ### Generating a Temporary SSH Key
 > Credit for the information: rwxrob
