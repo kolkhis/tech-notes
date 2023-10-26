@@ -6,14 +6,14 @@
 
 ## Data Structures (in Python)
 
-### Introduction
+## Introduction
 
 Data structures are a way of organizing and storing data for efficient access and modification.  
 They define the relationship between the data, and the operations that can be performed on the data.  
 They are crucial for writing efficient algorithms and are a common topic in technical interviews.  
 
 
-### Why Learn Data Structures?
+## Why Learn Data Structures?
 
 * Efficiency: Proper data structures can make your code run faster and consume less memory.
 * Code Organization: They help in organizing your code in a cleaner and more modular way.
@@ -21,7 +21,7 @@ They are crucial for writing efficient algorithms and are a common topic in tech
 * Technical Interviews: They are a common topic in coding interviews.
 
 
-### Types of Data Structures
+## Types of Data Structures
 
 Data structures can be broadly classified into:
 
@@ -45,9 +45,10 @@ Data structures can be broadly classified into:
 
 ---
 
-### Linear Data Structures
 
-#### Arrays
+## Linear Data Structures
+
+### Arrays
 
 * **What**: Contiguous block of memory containing elements of the same type.
 * **Operations**: Access, Insert, Delete, Search
@@ -69,7 +70,8 @@ arr.pop()  # [1, 2, 3, 4]
 print(2 in arr)  # Output: True
 ```
 
-#### Linked Lists
+
+### Linked Lists
 
 * **What**: Collection of nodes, where each node contains a value and a reference to the next node.
 * **Operations**: Access, Insert, Delete
@@ -96,7 +98,8 @@ head.next = new_node
 head.next = head.next.next
 ```
 
-#### Stacks
+
+### Stacks
 
 * **What**: LIFO (Last In, First Out) data structure.
 * **Operations**: Push, Pop, Peek
@@ -114,7 +117,8 @@ stack.pop()
 print(stack[-1])
 ```
 
-#### Queues
+
+### Queues
 
 * **What**: FIFO (First In, First Out) data structure.
 * **Operations**: Enqueue, Dequeue, Peek
@@ -141,11 +145,10 @@ print(queue[0])
 
 
 
-### Non-Linear Data Structures
+## Non-Linear Data Structures
 
 
-#### Trees
-
+### Trees
 * **What**: Hierarchical data structure with a root element and children.
 * **Types**: Binary Trees, Binary Search Trees, AVL Trees, etc.
 * **Operations**: Insert, Delete, Search, Traversal
@@ -163,8 +166,34 @@ root.left = TreeNode(2)
 root.right = TreeNode(3)
 ```
 
+#### Binary Search Trees
 
-#### Graphs
+* **Basic Structure**:
+A binary search tree will branch values based on the values.  
+```
+                 (10)
+                /    \
+               /      \
+            (8)        (14)
+            / \        /  \
+           /   \     (11)  (17)
+          (5)  (9)
+         /  \
+        (4) (7)
+```
+The right branch will always be a value larger than the one it is attached to.  
+The left branch will always be a value smaller than the one it is attached to.  
+How it handles deletions:
+    - If an element is deleted, it will be replaced by the next-highest 
+      value element from its children.  
+    - So, it will look down to the left side and then right.  
+    - If `(8)` is deleted, it will look down to `(5)`, and find the 
+      highest value of its children. In this case `(7)`.  
+
+
+
+
+### Graphs
 
 * **What**: Set of nodes connected by edges.
 * **Types**: Directed, Undirected, Weighted, Unweighted
@@ -184,8 +213,8 @@ graph['A'].append('E')
 
 
 
-#### Hash-based Data Structures
-#### Hash Tables
+### Hash-based Data Structures
+### Hash Tables
 
 * **What**: Key-value pairs stored in an array-like structure.
 * **Operations**: Insert, Delete, Search
@@ -207,8 +236,8 @@ print('key' in hash_table)
 
 
 
-### Other Data Structures
-#### Heaps
+## Other Data Structures
+### Heaps
 
 * **What**: Specialized tree-based data structure.
 * **Types**: Min-Heap, Max-Heap
@@ -231,14 +260,14 @@ print(heap[0])
 ```
 
 
-#### Disjoint Set
+### Disjoint Set
 
 * **What**: Data structure to keep track of a set divided into disjoint subsets.
 * **Operations**: Union, Find
 * **Python Example**: (To be covered later, as it's a bit more advanced)
 
 
-#### Trie
+### Trie
 
 * **What**: Tree-like data structure that stores a dynamic set of strings.
 * **Operations**: Insert, Delete, Search
