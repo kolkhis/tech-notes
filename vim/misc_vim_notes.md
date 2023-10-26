@@ -1,6 +1,30 @@
 
 # Misc Vim Notes
 
+
+### Installing Vim With Full Feature Support
+To get Vim with Python support, it can be installed from source:  
+* `https://github.com/vim/vim/blob/master/src/INSTALL`  
+Basic Dependencies:
+    * `git`
+    * `make`
+    * `clang`
+    * `libtool-bin`
+X-windows Clipboard Dependencies:
+    * `libxt-dev`
+Python Dependencies:
+    * `libpython3-dev`
+    * The `CONF_OPT_PYTHON3 = --enable-python3interp` needs to be uncommented from the Makefile.
+GUI Dependencies (lol):
+    * `libgtk-3-dev`
+Debugging:
+    * `valgrind`
+	* Uncomment in Makefile:
+    `CFLAGS = -g -Wall -Wextra -Wshadow -Wmissing-prototypes -Wunreachable-code -Wno-deprecated-declarations -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1`
+
+
+
+
 ### Special Characters (Diagraphs)
 
 * `i_<C-k>` + 2 letters will output a special character.
@@ -9,7 +33,9 @@
 * `:dig` for a list of available digraphs.
 
 
-* `:h visual-search`
+### Debugging Vim
+You can debug your Vim startup sequence by running `vim --startuptime vim.log`.  
+This will create a file called vim.log that logs what gets loaded and when.  
 
 ### Omnicomplete
 Omnicompletion in vim:
@@ -143,27 +169,27 @@ Repeat last ":!{cmd}".
     :!!  
 
 ### Recursive Macros
-* <Position my cursor where I want to make the first change>  
+* **Position my cursor where I want to make the first change**  
 * `qa` - start recording into register 'a'
-* <Make all my changes, doing it in a way that should apply cleanly to all locations>
+* **Make all my changes, doing it in a way that should apply cleanly to all locations**
 * `q` - stop recording
-* <Position cursor on next location I want changed>
+* **Position cursor on next location I want changed**
 * `@a` - run the macro to test and make sure it works as intended
 * `qA` - start recording to append to macro register 'a'
-* <Move cursor to next location to change>
+* **Move cursor to next location to change**
 * `@a`
 * `q`
 
 ##### More from the author of the Recursive macro tip
 Now, if I call it again, register 'a' contains a macro that does my change, moves to the next spot, and then calls itself again.  
 It will run repeatedly until it encounters an error.  
-This could be trying to move past the end of the buffer, finding no matches for a search, search hitting the end of buffer if 'nowrapscan' is set, or any other command failure indicating all the changes are complete.  
+This could be trying to move past the end of the buffer, finding no matches for a search, search hitting the end of buffer if `nowrapscan` is set, or any other command failure indicating all the changes are complete.  
 Quick and easy way to process an entire file!  
 
 The other thing I want to mention is more fundamental: text-objects.  
 I hesitate to mention it because you said "uncommon commands" and I hope everyone using Vim already knows about those and uses them constantly.  
 But in case you don't know about them, go find them in the help and change your life.  
-You'll get to do things like "=aB" to re-indent an entire C-style code block (from anywhere in the block) or "cit" to delete everything within the current XML tag and drop you into insert mode ready to add new content.  
+You'll get to do things like `"=aB"` to re-indent an entire C-style code block (from anywhere in the block) or `cit` to delete everything within the current XML tag and drop you into insert mode ready to add new content.  
 Note these also combine really well with macro techniques mentioned above, as well.  
 
 
@@ -171,7 +197,7 @@ Note these also combine really well with macro techniques mentioned above, as we
 ### Using the `=` Register for Formulas
 Using the = register to calculate numeric inputs for motions.  
 
-For example @=237*8<cr><c-a> to increment a value by 237*8.  
+For example `@=237*8<cr><c-a>` to increment a value by 237*8.  
 
 There are a number of ways to go about this and it might seems odd but I use it surprisingly often.  
 
@@ -180,24 +206,26 @@ Also I don’t think many people make use of onoremap or omap for operator pendi
 I don’t find myself using zg or zug or the other variants for modifying spellcheck, but I guess I don’t use spell check too often.  
 
 I find gi helpful and didn’t use it for the longest time.  
-Also <c-a> and <c-d> in Ex mode for autocompleting all strings or showing a list (when you don’t set list in wildmode).  
+Also `<c-a>` and `<c-d>` in Ex mode for autocompleting all strings or showing a list (when you don’t set list in wildmode).  
 I think :~ is not so common either.  
 I never use virtual replace mode gR.  
 
-Some commands I do use quite often that might be less common are :@“ to run an ex command that I copied from some buffer,  
- mainly for testing changes to my vimrc, @: to rerun the last ex command   
+Some commands I do use quite often that might be less common are `:@“` to run an ex command that I copied from some buffer,  
+ mainly for testing changes to my vimrc, `@:` to rerun the last ex command   
   (I abuse makeprg and use make to do a lot of testing, and sometimes I need to repeat lest run one script to test against another).  
-I don’t think going into ex mode via Q is too common, but q: is handy for modifying ex history.  
+I don’t think going into ex mode via `Q` is too common, but `q:` is handy for modifying ex history.  
 But I don’t know, maybe everyone else uses these regularly, I guess it depends on your work flow.  
 
 
 
 
 ### Function author for a quick search type thing
-I wrote an operator mapping I activate by <leader>/ that takes the result of the motion and sets the search register to it.  
+He wrote an operator mapping activated by <leader>/ that takes 
+the result of the motion and sets the search register to it.  
+
 For example, hitting <leader>/i( will search for the string currently in the parentheses where the cursor is.  
 
-I'm on a mobile right now so can't share it, but grab any of your existing mappings for o mode and just set @/ to the captured text.  
+he's on a mobile right now so can't share it, but grab any of your existing mappings for o mode and just set @/ to the captured text.  
 For extra fun, replace all whitespace with \s+ to make it even more useful so hitting <leader>/i' inside 'a b' will match 'a b', also.  
 
 ```vim
@@ -229,6 +257,10 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 ```
 
 
+
+### Misc
+* `:h visual-search`
+* `:h feature-list`: Features that are accepted as arguments to `has()`
 
 
 ### Help Sections to Read Up On
