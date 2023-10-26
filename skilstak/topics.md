@@ -10,25 +10,27 @@ ChatGPT with ??
 ### Week 13:
 Networking: `./beginner_boost_week13/notes_week13.md`  
 (packets, ports, network layers), network monitoring/diagnostic tools
-`ipconfig`
-`tracepath`
-`traceroute`
-`mtr`
-`ping`
-`netstat`
-`nmap`
-`ncat` - Make your own servers that do whatever you want if you can get
-`strace -p` - sniff the communications of a particular process
-`ufw status verbose` - firewall
-`dig` (is this in there?) - DNS info
+* `ipconfig`
+* `tracepath`
+* `traceroute`
+* `mtr`
+* `ping`
+* `netstat`
+* `nmap`
+* `ncat` - Make your own servers that do whatever you want if you can get
+* `strace -p` - sniff the communications of a particular process
+* `ufw status verbose` - firewall
+* `dig` (is this in there?) - DNS info
 
 
 ### Week 14:
 Finding files and vulnerabilities like a hacker: `./beginner_boost_week14/notes_week14.md` 
-`lsof`
-`find -ls`
-    `find ~ -name somefile -type f -ls -printf %a` (%a is last accessed time)
-`chmod`
+```bash
+lsof
+find -ls
+find ~ -name somefile -type f -ls -printf %a  # (%a is last accessed time)
+chmod
+```
 
 
 ### Week 15:
@@ -117,7 +119,6 @@ case $name in
     *)  # else
         echo "I don't know your name"
 ```
-
 
 
 
