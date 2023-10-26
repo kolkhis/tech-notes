@@ -8,9 +8,9 @@
 
 ### Introduction
 
-Data structures are a way of organizing and storing data for efficient access and modification.
-They define the relationship between the data, and the operations that can be performed on the data.
-They are crucial for writing efficient algorithms and are a common topic in technical interviews.
+Data structures are a way of organizing and storing data for efficient access and modification.  
+They define the relationship between the data, and the operations that can be performed on the data.  
+They are crucial for writing efficient algorithms and are a common topic in technical interviews.  
 
 
 ### Why Learn Data Structures?
@@ -51,7 +51,7 @@ Data structures can be broadly classified into:
 
 * **What**: Contiguous block of memory containing elements of the same type.
 * **Operations**: Access, Insert, Delete, Search
-
+* **Python Example**:
 ```python
 # Initialization
 arr = [1, 2, 3, 4]
@@ -73,7 +73,7 @@ print(2 in arr)  # Output: True
 
 * **What**: Collection of nodes, where each node contains a value and a reference to the next node.
 * **Operations**: Access, Insert, Delete
-
+* **Python Example**:
 ```python
 class Node:
     def __init__(self, data):
@@ -100,7 +100,7 @@ head.next = head.next.next
 
 * **What**: LIFO (Last In, First Out) data structure.
 * **Operations**: Push, Pop, Peek
-
+* **Python Example**:
 ```python
 stack = []
 
@@ -118,7 +118,7 @@ print(stack[-1])
 
 * **What**: FIFO (First In, First Out) data structure.
 * **Operations**: Enqueue, Dequeue, Peek
-
+* **Python Example**:
 ```python
 from collections import deque
 
@@ -146,10 +146,10 @@ print(queue[0])
 
 #### Trees
 
-* What: Hierarchical data structure with a root element and children.
-* Types: Binary Trees, Binary Search Trees, AVL Trees, etc.
-* Operations: Insert, Delete, Search, Traversal
-* Python Example:
+* **What**: Hierarchical data structure with a root element and children.
+* **Types**: Binary Trees, Binary Search Trees, AVL Trees, etc.
+* **Operations**: Insert, Delete, Search, Traversal
+* **Python Example**:
 ```python
 class TreeNode:
     def __init__(self, value):
@@ -166,10 +166,10 @@ root.right = TreeNode(3)
 
 #### Graphs
 
-* What: Set of nodes connected by edges.
-* Types: Directed, Undirected, Weighted, Unweighted
-* Operations: Add Node, Add Edge, Search
-* Python Example:
+* **What**: Set of nodes connected by edges.
+* **Types**: Directed, Undirected, Weighted, Unweighted
+* **Operations**: Add Node, Add Edge, Search
+* **Python Example**:
 ```python
 graph = {'A': ['B', 'C'], 'B': ['A', 'D'], 'C': ['A'], 'D': ['B']}
 
@@ -187,9 +187,9 @@ graph['A'].append('E')
 #### Hash-based Data Structures
 #### Hash Tables
 
-* What: Key-value pairs stored in an array-like structure.
-* Operations: Insert, Delete, Search
-* Python Example:
+* **What**: Key-value pairs stored in an array-like structure.
+* **Operations**: Insert, Delete, Search
+* **Python Example**:
 ```python
 # Initialize
 hash_table = {}
@@ -210,10 +210,10 @@ print('key' in hash_table)
 ### Other Data Structures
 #### Heaps
 
-* What: Specialized tree-based data structure.
-* Types: Min-Heap, Max-Heap
-* Operations: Insert, Delete, Peek
-* Python Example:
+* **What**: Specialized tree-based data structure.
+* **Types**: Min-Heap, Max-Heap
+* **Operations**: Insert, Delete, Peek
+* **Python Example**:
 ```python
 import heapq
 
@@ -233,17 +233,20 @@ print(heap[0])
 
 #### Disjoint Set
 
-* What: Data structure to keep track of a set divided into disjoint subsets.
-* Operations: Union, Find
-* Python Example: (To be covered later, as it's a bit more advanced)
+* **What**: Data structure to keep track of a set divided into disjoint subsets.
+* **Operations**: Union, Find
+* **Python Example**: (To be covered later, as it's a bit more advanced)
 
 
 #### Trie
 
-* What: Tree-like data structure that stores a dynamic set of strings.
-* Operations: Insert, Delete, Search
-* Python Example: (To be covered later, as it's a bit more advanced)
+* **What**: Tree-like data structure that stores a dynamic set of strings.
+* **Operations**: Insert, Delete, Search
+* **Python Example**: (To be covered later, as it's a bit more advanced)
 
-Would you like to dive deeper into any of these data structures or proceed to the next set?
 
-tl;dr: Non-linear data structures include Trees and Graphs. Hash-based structures like Hash Tables are key-value stores. Other types include Heaps, Disjoint Sets, and Tries. Each has its own set of operations and Python examples.
+## tl;dr: 
+Non-linear data structures include Trees and Graphs.  
+Hash-based structures like Hash Tables are key-value stores.  
+Other types include Heaps, Disjoint Sets, and Tries.  
+Each has its own set of operations and Python examples.  
