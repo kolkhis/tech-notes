@@ -1,6 +1,7 @@
 # tmux Commands & Arguments
 
 ## List of tmux Commands and their Options/Argumnents
+`tmux list-commands`
 
 1. attach-session
     * -t: Target session
