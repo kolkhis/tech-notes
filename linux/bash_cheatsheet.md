@@ -14,7 +14,6 @@ sed
 
 cht.sh - cheat sheet website for curling anything  
 
-
 `ncal` - View a command-line calendar  
 `ps aux | grep ssh` - List all processes containing "ssh" in their names.  
 `who` - List of users currently logged in, along with their usernames, terminal devices, login
@@ -24,6 +23,23 @@ times, and IP addresses (`pts` means SSH sessions)
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
+
+
+
+## Colored output for `less`
+Kinda janky, and only displays in red, but red is easier to read.
+```bash
+man bash | grep --color=always -e '.*' | less -R
+```
+
+
+
+## Using `xargs` to Transform Input into Arguments
+`xargs`: transform standard input (stdin) into arguments.
+```bash
+find . -name d | echo  # won't print anything because it doesn't take stdin as args
+find . -name d | xargs echo  # Will print the output of the `find` command.
+```
 
 ## Numeric Calculations & Random Numbers
 Numeric calculations can be done in a subshell in parentheses.
@@ -69,7 +85,7 @@ The following definitions are used throughout the `bash` man page.
 
 ## Terminal Colors
 
-#### 256-colors
+### 256-colors
 
 38; indicates "foreground"  
 5; indicates "256-color"  
