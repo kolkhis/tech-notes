@@ -334,6 +334,7 @@ Full list [here](https://web.archive.org/web/20230318164746/https://wiki.bash-ha
 * `$@`:	All positional arguments (as separate strings)
 * `$1`:	First argument
 * `$_`:	Last argument of the previous command
+* `$?`:	Exit code/Return code of the last command
 * `$0`: The name of the shell or the shell script (filename). Set by the shell itself. (`argv[0]`)
 * `$$`: The process ID (PID) of the shell. In an explicit subshell it expands to the PID of the current "main shell", not the subshell. This is different from $BASHPID!
 * `$!`: The process ID (PID) of the most recently executed background pipeline (like started with command &)
@@ -599,6 +600,30 @@ ${foo:(-3):3} 	# Substring from the right
 ```bash
 ${#foo} 	   # Length of $foo
 ```
+
+## PS1, PS2, PS3, and PS4 Special Environment Variables
+### PS1
+The PS1 environment variable is used to customize the terminal prompt.  
+
+What it does: This is the main shell prompt that you see.  
+It's highly customizable and can include variables, escape sequences, and functions.
+Example: `export PS1="\u@\h:\w\$ " `
+See `./customizing_terminal.md`
+
+### PS2: Secondary Prompt String
+What it does: This is the prompt displayed when a command is not finished.  
+For example, if you type echo "hello and don't close the quote, you'll see this prompt.
+Example: `export PS2="> "`
+
+
+### PS3: Prompt String for select
+What it does: This is the prompt used in shell scripts for the select loop, which is used to generate menus.
+Example: `export PS3="Please make a choice: "`
+
+### PS4: Debug Prompt String
+What it does: This is displayed when debugging a script.  
+It's prepended to each line of output when using set -x for debugging.
+Example: `export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '`
 
 
 ## Get bits: Zero, random or random 0/1
