@@ -28,7 +28,8 @@ File browsing with netrw:
 ### Tags:
 This is basically a fzf.  
 Utilizing `ctags`, type `:find *.vim<Tab>` and it pulls up all .vim
-files in the current directory and all subdirectories (with `set path+=**` set)  
+files in the current directory and, with `set path+=**` set, all subdirectories  
+`:fin` is the alias for `:find`.  
 "no_plugins.vim"
 command! MakeTags !ctags -R .
 " C-] will jump to tag
