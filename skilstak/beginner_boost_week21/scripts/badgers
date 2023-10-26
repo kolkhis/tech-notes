@@ -1,0 +1,45 @@
+#!/bin/bash
+# !! <- shortcut for :.! 
+# :.!termcolors
+
+
+red=$'\e[31m'
+green=$'\e[32m'
+yellow=$'\e[33m'
+reset=$'\e[0m'
+
+for ((n=0; n<2; n++)); do
+
+    for ((i=0; i<3; i++)); do
+
+        count=1
+        while [ $count -le 12 ]; do   # This is the POSIX-compliant way of doing this (this is the same as `while test`)
+            printf "%s badgers%s\n" "$green$count" "$reset"
+            sleep 0.3
+            # count+=1  # This is the shorthand
+            ((count++))  # Arithmetic expressions must be done in this way: $(( expression ))
+        done
+
+        for ((count=1; count<=2; count++)); do
+            printf "%s mushrooms!\n" "$yellow$count"
+            sleep 0.6
+        done
+
+    done
+    if ((n >= 2)); then
+        printf "%sAhh snake, ahh snake, ahh snake!!\n" "$red"
+        sleep 1
+    fi
+
+done
+
+
+
+
+# count=0
+# while [[ count -le 2 ]]; do
+#     printf "%s mushrooms!\n" "$count"
+#     sleep 0.6
+#     count=$(( count + 1 ))
+# done
+
