@@ -1,18 +1,18 @@
 # Linux Command Cheatsheet
 
 ## CLI Tools to Become Familiar With
-xclip
-npv/nvp # sound clips, pulse audio
-ESXi
-Ncdu
-pandoc
-ffmpeg
-tar
-parallel (GNU Parallel)
-awk
-sed
+xclip  
+npv/nvp # sound clips, pulse audio  
+ESXi  
+Ncdu  
+pandoc  
+ffmpeg  
+tar  
+parallel (GNU Parallel)  
+awk  
+sed  
 
-cht.sh - cheat sheet website for curling anything
+cht.sh - cheat sheet website for curling anything  
 
 
 `ncal` - View a command-line calendar
@@ -27,6 +27,7 @@ multiple files
 * `sed` changes file `-i`n-place
 
 ### Numeric Calculations & Random Numbers
+Numeric calculations can be done in a subshell in parentheses.
 ```bash
 $((a + 200))      # Add 200 to $a
 $(($RANDOM%200))  # Random number 0..199
