@@ -28,7 +28,7 @@ the query, with no user input.
 ```sql
 SELECT notes FROM users WHERE username='' OR 1=1 -- -'
 ```
-Select `notes` from `users` where `username` is equal to `''` (an empty string) OR `1=1` (true)  
+Select `notes` from `users` where `username` is equal to `''` (an empty string) **OR** `1=1` (true)  
 This is essentially simplified as:
 ```sql
 SELECT notes FROM users WHERE username=TRUE

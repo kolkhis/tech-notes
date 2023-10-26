@@ -37,6 +37,16 @@
         * The `touch` command will update this timestamp (or create a new file)
     * more info: `man find`
 
+#### Exclude files from `find`
+```bash
+# Exclude '.git' from find:
+find . -type d -name '.git' -prune -o -print
+```
+* `-type d`: specifies that you're looking for directories.
+* `-name '.git'`: specifies the name of the directory you want to exclude.
+* `-prune`: tells find to prune (skip) the directory when it's encountered.
+* `-o`: is the OR operator.
+* `-print`: specifies that any other files or directories that don't match the exclusion criteria should be printed.
 
 ### `touch`
 * Updates timestamp if file exists. Creates file if it doesn't exist.

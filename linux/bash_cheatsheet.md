@@ -183,11 +183,30 @@ elif [[ -n "$1" ]]; then
 
 
 ## Get Command Locations, Binaries, and Aliases
-* `find` - Finds a file
+* `find` - Finds a file:
 * `which` - Shows which binary the command uses.
 * `file` - Determine the file type.
 * `type` - Builtin. Displays information about the command type.
 * `whereis` - Finds the binary, source code, and man pages for a command.
+
+## Using `find` 
+### Exclude files using `find`
+Basic Exclusion Syntax
+```bash
+find /path/to/search -type d -name 'directory_to_exclude' -prune -o -print
+```
+* `-type d`: specifies that you're looking for directories.
+* `-name '.git'`: specifies the name of the directory you want to exclude.
+* `-prune`: tells find to prune (skip) the directory when it's encountered.
+* `-o`: is the **OR** operator.
+* `-print`: specifies that any other files or directories that **don't** match the exclusion criteria should be printed.
+
+To print everything in the current directory and all 
+subdirectories **EXCEPT** the contents of `.git`:  
+```bash
+# Exclude '.git' from find:
+find . -type d -name '.git' -prune -o -print
+```
 
 
 ## Getting Help With Commands

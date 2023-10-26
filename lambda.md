@@ -1,20 +1,35 @@
 
-Lambda is a serverless execution environment
-- it allows you to execute code remotely without having to manage a server.
-- You can deploy your own containers with Lambda
+# AWS Lambda
 
-By default lambda environments only support Java, Ruby and Python.
-However, you can add "layers" 
+## What is Lambda?
+
+Lambda is a serverless execution environment.  
+* Lambda allows you to execute code remotely without having to manage a server.  
+* You can deploy your own containers with Lambda.  
+
+
+### What is a serverless execution environment?
+There is still a server running the code somewhere.  
+A serverless environment just provides you an execution environment without having to manage the
+server yourself.  
+
+### Language Support
+By default lambda environments only support Java, Ruby and Python.  
+However, you can add "layers" to get support for other things.  
+
+### Other serverless products:
+* S3
+* DynamoDB
+
+---
 
 - Other things AWS has:
 EventBridge (CloudWatch Events) - Enables the use of cronjobs, automated script execution. 
 Step Functions. These have a technical timeout of 1 year.
 
-- Other serverless products:
-S3, DynamoDB
+
 
 ## Random AWS Questions and Answers
-
 
 Q. Which product is not a good fit if you want to run a job for ten hours?
 a. AWS Batch

@@ -1,11 +1,10 @@
 
 
-
 # Reformat a Disk/USB Drive in Windows w/ `cmd`
 
 ## Check for System File Corruption 
 
-`sfc`: System File Checker/Corruption
+`sfc`: System File Checker/Corruption  
 1. Open `cmd` as administrator.
 1. Run the following command to check for, and repair, system file corruption:
 ```sh
@@ -33,10 +32,15 @@ Use DiskPart:
     * Replace `<partition_number>` with the partition number of the unwanted partitions.
 1. Type `delete partition override` to forcibly delete the selected partition.
 1. Repeat the above steps for each unwanted partition you want to remove.
-1. To format the drive, reselect it and run `format` on it.
+1. To format the drive, reselect it 
+   and run the following `format` on it:
 ```sh
 DISKPART> format fs=FAT32 quick label=UbuntuServer
 ```
+1. If that doesn't work, once the partition is deleted, open `Computer Management`
+1. Select `Disk Management`
+1. Select the drive, and right click the `Volume` area (to the right of the disk number)
+1. Select `New Volume` and follow the wizard.
 
 
 The default allocation unit size (cluster size) for the FAT32 file system is typically used in this
