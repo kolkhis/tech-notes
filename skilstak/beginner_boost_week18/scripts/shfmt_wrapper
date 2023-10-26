@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# wrap shfmt so errors on stdout instead of stderr doesn't prevent run-on-write from being helpful
+wrapshfmt() {
+    # shellcheck disable=SC2034
+    results=$(shfmt "${1}")
+    valid=$? # $? Checks the return code (or exit status) of the last program run
+
+    if [[ ${valid} -eq 0 ]]; then
+        shfmt -w "${1}"
+    fi
+}

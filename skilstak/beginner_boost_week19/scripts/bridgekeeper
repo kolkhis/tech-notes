@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# shellcheck disable=SC2059
+
+# HOMEWORK: Add a function that will print a string as yellow and reset to white
+
+
+#POSIX
+black="\e[30m"
+yellow="\e[33m"
+magenta="\e[35m"
+white="\e[37m"
+reset="\e[0m"
+
+yecho() {
+    echo "${yellow}$*" "${white}"
+}
+
+echo "${yellow}Answer me these questions three, 'ere the other side ye see."
+
+printf "${magenta}What is your name? ${white}"
+# name="Arthur"
+read -r name
+# read -r -p "What is your name?" name  # THIS IS NOT IN POSIX SHELL.
+# mkdir -p is ALSO not supported on POSIX.
+
+echo "${black}You entered: $name"
+echo "${reset}"
+
+yecho "What is your quest?"
+
+# # the [ actually creates a subshell, since it's a program
+# if [ "$name" = "Robin" ]; then
+#     echo "What is your capital of Assyria?"
+# elif [ "$name" = "Lancelot" ]; then
+#     echo "What is your favorite colour?"
+# elif [ "$name" = "Arthur" ]; then
+#     echo "What is the air speed velocity of an unladen swallow?"
+#     echo "How do you know so much about swallows?"
+#     echo "Well, as a King you have to know these things, you know."
+# else
+#     echo "What is your favorite color?"
+# fi
+
+
+case "$name" in
+    "Robin") 
+        yecho "What is your capital of Assyria?";;
+    "Lancelot") 
+        yecho "What is your favorite colour?";;
+    "Arthur")
+        yecho "What is the air speed velocity of an unladen swallow?";
+        yecho "How do you know so much about swallows?";
+        yecho "Well, as a King you have to know these things, you know.";;
+    *)
+        yecho "I don't know what to ask $name";;
+esac

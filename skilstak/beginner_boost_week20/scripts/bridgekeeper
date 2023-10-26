@@ -1,0 +1,62 @@
+#!/bin/bash
+# shellcheck disable=SC2059
+
+# HOMEWORK: Add a function that will print a string as yellow and reset to white
+
+
+#POSIX
+clear="\e[H\e[2J"
+#  \e[H clears all pixels
+#  \e[2J repositions to the top left of the screen
+black="\e[30m"
+yellow="\e[33m"
+magenta="\e[35m"
+white="\e[37m"
+reset="\e[0m"
+
+yprintf() {
+    printf "${yellow}$*\n" "${white}\n"
+}
+
+printf "${yellow}Answer me these questions three, 'ere the other side ye see.\n"
+
+printf "${magenta}What is your name? ${white}\n"
+# name=\n"Arthur"
+read -r name
+# read -r -p "What is your name?\n" name  # THIS IS NOT IN POSIX SHELL.
+# mkdir -p is ALSO not supported on POSIX.
+
+printf "${black}You entered: $name \n"
+printf "${reset}\n"
+
+yprintf "What is your quest?\n"
+
+if [[ $name =~ [Rr]ob* ]]; then
+    printf "Yes, the pattern matched\n"
+fi
+# Just change the value temporarily
+lname=$(printf "$name" | tr '[:upper:]' '[:lower:]')
+# echo "$lname"  # for debugging
+case $lname in
+    # robin|rob) 
+    rob*) 
+        yprintf "What is your capital of Assyria?\n";;
+    "lancelot") 
+        yprintf "What is your favorite colour?\n";;
+    "arthur")
+        yprintf "What is the air speed velocity of an unladen swallow?\n";
+        yprintf "How do you know so much about swallows?\n";
+        yprintf "Well, as a King you have to know these things, you know.\n";;
+    *)
+        yprintf "I don't know what to ask $name\n";;
+esac
+# printf "$clear"
+
+
+printf "${yellow}Would you like to play again? [y] [n]${reset}";
+read -r yes
+
+case $yes in
+    [Yy]) printf "Okay.\n";;
+    *) printf "Fine.\n"
+esac

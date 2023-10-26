@@ -1,0 +1,33 @@
+#!/bin/sh
+
+greet1() {
+    echo 'Using $@:' 
+    echo 'arg1:' "$1" 
+    echo 'arg2:' "$2"
+    echo "\n"
+    echo Hello "$1" '($1)' ' / ' "$2" '($2)'
+}
+
+greet2() {
+    echo 'Using $*:' 
+    echo 'arg1:' "$1" 
+    echo 'arg2:' "$2"
+    echo "\n"
+    echo Hello "$1" '($1)' ' / ' "$2" '($2)'
+}
+
+
+rfc_date() {
+    date --rfc-3339 date
+}
+#date  # Easy way to timestamp
+echo 'All arguments (space delimited):' "$@" '\n'
+greet1 "$@"  # The $@ passes all arguments that were passed in via the command line into the main() fn.
+echo "\n"
+greet2 "$*"  # The $* passes all arguments as ONE argument, a string with the args separated by spaces.
+
+rfc_date
+# :%! shfmt
+# sends the entire file to shfmt
+# %! shfmt 2>/dev/null DOES NOT WORK.
+# shfmt does not pass errors to STDERR, it passes errors to STDOUT.
