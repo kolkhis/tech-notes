@@ -12,6 +12,9 @@ parallel (GNU Parallel)
 awk  
 sed  
 
+
+
+## Miscellaneous Useful Commands
 cht.sh - cheat sheet website for curling anything  
 
 `ncal` - View a command-line calendar  
@@ -24,6 +27,16 @@ times, and IP addresses (`pts` means SSH sessions)
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
 
+
+## Recursively Get or Search Files
+To add a filename on each line, either `ls -1` or `find` can be used.  
+I don't think there's a way to recursively search with `ls` without
+`set -o globstar` enabled.  
+Get all markdown files in pwd and all subdirectories:  
+```bash
+ls -1 **/*.md  # with `set -o globstar` enabled
+find . -type f -name '*.md' # 
+```
 
 
 ## Colored output for `less`
