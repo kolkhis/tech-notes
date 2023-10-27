@@ -70,10 +70,10 @@ dir=${0%/*}
 
 ## Search Terms for Bash Man Page
 `man bash` 
-/pathname expansion
-/pattern matching
-/coprocesses (`coproc`)
-/redirection
+/pathname expansion  
+/pattern matching  
+/coprocesses (`coproc`)  
+/redirection  
 
 
 ## Definitions
@@ -193,6 +193,15 @@ elif [[ -n "$1" ]]; then
 ```
 * `-n`: Argument is present
 * `-z`: Argument not present
+
+## Check if a File Exists or is Larger Than 0 Bytes
+* `-f`: Checks if file exists.
+* `-d`: Checks if directory exists.
+* `-s`: This checks if the file exists, AND is larger than 0 bytes.
+```bash
+# Check if file exists and source it
+[ -s ~/.bash_aliases ] && \. ~/.bash_aliases
+```
 
 
 ## Get Command Locations, Binaries, and Aliases
