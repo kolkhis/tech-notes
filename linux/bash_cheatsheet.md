@@ -38,6 +38,14 @@ ls -1 **/*.md  # with `set -o globstar` enabled
 find . -type f -name '*.md' # 
 ```
 
+### Timezone change
+* Get timezone for system:
+    * `timedatectl`
+* Find your timezone:
+    * `timedatectl list-timezones`
+* Change it:
+    * `timedatectl set-timezone America/New_York`
+
 
 ## Colored output for `less`
 Kinda janky, and only displays in red, but red is easier to read.
