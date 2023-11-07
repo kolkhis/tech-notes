@@ -27,6 +27,84 @@ times, and IP addresses (`pts` means SSH sessions)
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
 
+## Important Linux Commands
+### File and Directory Management
+```bash
+ls      # Show contents of current directory
+pwd     # Show current directory
+cd      # Change directory
+mkdir   # Create directory
+mdir  
+touch   # Create a file or update file timestamp
+cp      # Copy file or directory
+mv      # Move or rename file or directory
+rm      # Remove/delete file or directory
+```
+
+### File Viewing and Editing
+```bash
+cat
+less
+more
+vi
+vim
+gedit
+```
+
+### User and Group Management
+```bash
+passwd      # Change user password
+useradd     # Create user accounts
+userdel     # Delete user accounts
+usermod     # Modify user accounts
+groupadd    # Create user group
+groupdel    # Delete user group
+groups      # Get user groups
+id          # Get user ID information
+```
+
+### Network Configuration and Monitoring
+```bash
+ifconfig
+ip
+ping
+netstat
+ss
+traceroute
+ssh
+nc
+```
+### Process Management
+```bash
+ps
+top
+kill
+killall
+pstree
+htop
+```
+### Package Management
+```bash
+apt-get
+apt
+yum
+dnf
+rpm
+dpkg
+snap
+zyper
+```
+
+### System Information
+```bash
+uname   # Get system info (OS/kernel type by default)
+df      # Get filesystem information
+du      # Get disk usage
+free    # Get RAM/swapfile information
+lscpu   # Get CPI information
+lshw    # Get all system information
+lsblk   # Get information about block devices
+```
 
 ## Recursively Get or Search Files
 To add a filename on each line, either `ls -1` or `find` can be used.  
@@ -43,7 +121,7 @@ find . -type f -name '*.md' #
     * `timedatectl`
 * Find your timezone:
     * `timedatectl list-timezones`
-* Change it:
+* Change timezone for system:
     * `timedatectl set-timezone America/New_York`
 
 
@@ -77,11 +155,11 @@ dir=${0%/*}
 ```
 
 ## Search Terms for Bash Man Page
-`man bash` 
-/pathname expansion  
-/pattern matching  
-/coprocesses (`coproc`)  
-/redirection  
+`man bash`  
+* /pathname expansion  
+* /pattern matching  
+* /coprocesses (`coproc`)  
+* /redirection  
 
 
 ## Definitions
