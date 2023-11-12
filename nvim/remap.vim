@@ -1,3 +1,6 @@
+
+" Remaps from my nvim config translated to vimscript
+
 nnoremap <silent> <Space> <Nop>
 let g:mapleader = ' '
 let g:maplocalleader = ' '
