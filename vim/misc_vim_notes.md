@@ -22,7 +22,7 @@ Not supported yet:
 ### Installing Vim With Full Feature Support
 To get Vim with Python support, it can be installed from source:  
 * `https://github.com/vim/vim/blob/master/src/INSTALL`  
-Basic Dependencies:
+Base Installation Dependencies:
     * `git`
     * `make`
     * `clang`
@@ -38,6 +38,27 @@ Debugging:
     * `valgrind`
     * Uncomment in Makefile:
     `CFLAGS = -g -Wall -Wextra -Wshadow -Wmissing-prototypes -Wunreachable-code -Wno-deprecated-declarations -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1`
+
+
+### Mapping Modes
+> `:h map-table` | `:h map-overview`
+  
+
+     COMMANDS                    MODES ~
+:map   :noremap  :unmap     Normal, Visual, Select, Operator-pending
+:nmap  :nnoremap :nunmap    Normal
+:vmap  :vnoremap :vunmap    Visual and Select
+:smap  :snoremap :sunmap    Select
+:xmap  :xnoremap :xunmap    Visual
+:omap  :onoremap :ounmap    Operator-pending
+:map!  :noremap! :unmap!    Insert and Command-line
+:imap  :inoremap :iunmap    Insert
+:lmap  :lnoremap :lunmap    Insert, Command-line, Lang-Arg
+:cmap  :cnoremap :cunmap    Command-line
+:tmap  :tnoremap :tunmap    Terminal
+
+
+
 
 
 ### Recursive Macros
