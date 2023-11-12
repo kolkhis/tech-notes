@@ -9,6 +9,7 @@ Instead, it returns:
 - `'<C-V>'` for visual block mode
 - `'t'` for terminal mode
 
+
 ### Keymap Modes
 - `:h map-table` for all the different modes for keymaps.
 
@@ -18,6 +19,12 @@ Instead, it returns:
 Using `v:lua` as a prefix, you can run lua from vimscript.
 - `:h v:lua-call`
 
+
+## Digraphs
+- `:h dig` | `digraphs`
+  
+Digraphs are special characters that can be inserted (while in insert mode) with `<C-k>xx` whُere
+`xx` is a key combination for a given `digraph`.  
 
 
 ## Accessing Vim Variables
