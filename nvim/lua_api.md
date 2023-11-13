@@ -14,6 +14,15 @@ Instead, it returns:
 - `:h map-table` for all the different modes for keymaps.
 
 
+### Get List of Marks
+```vim
+getmarklist([{buf}])
+```
+This function returns Global Marks by default, unless provided with a buffer number(or name?)
+```vim
+local buf = bufname()
+```
+
 
 ## Running Lua From Vimscript
 Using `v:lua` as a prefix, you can run lua from vimscript.
