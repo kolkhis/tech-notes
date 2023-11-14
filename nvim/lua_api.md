@@ -29,6 +29,63 @@ Using `v:lua` as a prefix, you can run lua from vimscript.
 - `:h v:lua-call`
 
 
+## User Defined Ex Commands
+By default, you'll error out if you try to provide arguments to a
+user-defined command. You can allow arguments by adding the `-nargs=` argument
+when defining the command.
+```vim
+:command -nargs=1 Error echoerr <args>
+```
+### Allowing Arguments for User-Defined Ex-Commands
+There are some special characters allowed in this argument:
+* `-nargs=0`: No arguments are allowed (the default)
+* `-nargs=1`: Exactly one argument is required, it includes spaces
+* `-nargs=*`: Any number of arguments are allowed (0, 1, or many), separated by white space
+* `-nargs=?`: 0 or 1 arguments are allowed
+* `-nargs=+`: Arguments must be supplied, but any number are allowed
+
+#### Argument Completion for User-Defined Ex Commands
+Argument completion can be enabled when `-nargs` is not set to zero.
+* `-complete=arglist`: file names in argument list
+* `-complete=augroup`: autocmd groups
+* `-complete=buffer`: buffer names
+* `-complete=behave`: :behave suboptions
+* `-complete=color`: color schemes
+* `-complete=command`: Ex command (and arguments)
+* `-complete=compiler`: compilers
+* `-complete=dir`: directory names
+* `-complete=environment`: environment variable names
+* `-complete=event`: autocommand events
+* `-complete=expression`: Vim expression
+* `-complete=file`: file and directory names
+* `-complete=file_in_path`: file and directory names in `'path'`
+* `-complete=filetype`: filetype names `'filetype'`
+* `-complete=function`: function name
+* `-complete=help`: help subjects
+* `-complete=highlight`: highlight groups
+* `-complete=history`: :history suboptions
+* `-complete=locale`: locale names (as output of locale -a)
+* `-complete=lua`: Lua expression `:lua`
+* `-complete=mapclear`: buffer argument
+* `-complete=mapping`: mapping name
+* `-complete=menu`: menus
+* `-complete=messages`: `:messages` suboptions
+* `-complete=option`: options
+* `-complete=packadd`: optional package |pack-add| names
+* `-complete=shellcmd`: Shell command
+* `-complete=sign`: `:sign` suboptions
+* `-complete=syntax`: syntax file names `'syntax'`
+* `-complete=syntime`: `:syntime` suboptions
+* `-complete=tag`: tags
+* `-complete=tag_listfiles`: tags, file names are shown when CTRL-D is hit
+* `-complete=user`: user names
+* `-complete=var`: user variables
+* `-complete=custom,{func}`: custom completion, defined via {func}
+* `-complete=customlist,{func}`: custom completion, defined via {func}
+If you specify completion while there is nothing to complete (-nargs=0, the
+default) then you get error *E1208* .
+
+
 ## Digraphs
 - `:h dig` | `digraphs`
   
