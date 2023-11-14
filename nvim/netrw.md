@@ -4,6 +4,7 @@
 
 
 ## Basic Customization
+> *:h netrw-browser-settings*  
 These are the basic quality-of-life changes that one would want. Flips the sides 'o' and 'v' open 
 new windows on from netrw, gets rid of banner, shows all files, and opens previews in vsplit.
 ```vim
@@ -15,8 +16,10 @@ let g:netrw_preview=1     " open previews in vsplit
 let g:netrw_liststyle=3   " tree view
 let g:netrw_hide=0        " show all files (including hidden. default 1)
 ```
+---
 
 ## Other Customization Options
+> *:h netrw-browser-settings*  
 
 ### Local and Remote (ssh) Terminal Command Options
 Vim lets you specify the commands it runs in netrw when creating 
@@ -64,7 +67,7 @@ let g:netrw_usetab=NONE         " If exists (and nonzero), the <tab> map support
                                 " shrinking/expanding a Lexplore or netrw window is enabled"
 let g:netrw_wiw=1               " Min window width to use when shrinking a netrw/Lexplore window
 
-let g:netrw_retmap=NONE         " if in netrw-selected file * no normalmode <2-leftmouse> map
+let g:netrw_retmap=NONE         " if in netrw-selected file *   no normalmode <2-leftmouse> map
                                 " exists, then the 2-leftmouse will be mapped for return to netrw
 
 let g:netrw_timefmt="%c"        " vim's strftime() format string for displaying time in netrw
@@ -72,47 +75,80 @@ let g:netrw_timefmt="%c"        " vim's strftime() format string for displaying 
 let g:netrw_winsize=50          " 50% Initial size of new windows made with "o", "v" ":Hex" or ":Vex"
 ```
 
+---
 
 ## Performing Actions in netrw
 
 ### Marking Files
-> *:h netrw-mf* | *:h netrw-mr*
+> *:h netrw-mf* | *:h netrw-mr*  
 Mark files with `mf` when hovering with the cursor.  
+
+Mark multiple files at a time using regex with `mr`.  
+* `mr` takes a shell-style regex.
+* Uses the vim function `glob()` 
+    * `glob()` doesn't work on remote systems, so `*` is converted into `.*  ` on remote systems.
+        *   `:h glob()`, `:h regexp`
+
 You can also use the `:MF` command, which takes a list of files.  
 ```vim
-:MF *.py
+:MF *  .py
 ```
+
+### Unmarking Files
+> *:h netrw-mF*  
+Use `mf` on an already marked file to unmark just that file.
+The `mF` command will unmark **all** files in the current directory.  
+
+> *:h netrw-mu*  
+> `mu` uses the **global AND local** marked files lists.
+Using `mu` will unmark **all currently marked files**.  
+This is different from `mF`, as `mF` only unmarks files in the current directory,
+whereas `mu` will unmark global **and** all buffer-local marked files.
+
 
 ### Lists
 netrw has three "main" lists: 
 * Marked Files list     `:h `
 * Argument List         `:h arglist`
-    * > *:h netrw-mX*
+    * > *:h netrw-mX*  
 * Buffer list
 
 Each of these lists has a relationship with one another.  
 One can add files to one list from another list with the appropriate keys.  
 
+
+
 ### Marked Files / Argument List
-> *:h netrw-ma* | *netrw-mA*
+> *:h netrw-ma* | *netrw-mA*  
+> Uses the **global** marked file list.  
 * Using `ma`, one moves filenames from the marked file list to the argument list.
 * Using `mA`, one moves filenames from the argument list to the marked file list.
 
+
+
 ### Marked Files / Buffer List
-> *:h netrw-cb* | *netrw-cB*
+> *:h netrw-cb* | *netrw-cB*    
+> Uses the **global** marked file list.  
 * Using cb, one moves  filenames from the marked file list to the buffer list.
 * Using cB, one copies filenames from the buffer list to the marked file list.
 
-### Marked Files - Compression and Decompression
-> *:h netrw-mz*
-* If any marked files are compressed,   then "mz" will decompress them.
-* If any marked files are decompressed, then "mz" will compress them
 
-Uses the command specified by `g:netrw_compress`; by default, that's "gzip".
+
+### Arbitrary Vim Commands on Marked Files
+> *:h netrw-mv*    
+> Uses the **local** marked file list.  
+The `mv` map causes netrw to execute an arbitrary vim command on each file on
+the **local** marked file list, individually.
+1. Mark the files on which you want to run the vim command.
+1. Press `mv`
+1. Enter the vim command to run on each file.  
+
+
 
 ### Arbitrary Shell Commands on Marked Files
-> *:h netrw-mx*
-* `mx`: This will execute a command on each file separately
+> *:h netrw-mx*    
+> `mx` uses the **local** marked file list.  
+* `mx`: This will execute a command on each file **separately**
   ```bash
   # mx
   # Enter command: cat
@@ -120,7 +156,11 @@ Uses the command specified by `g:netrw_compress`; by default, that's "gzip".
   cat 'file2'
   ```
 
-* `mX`: This will execute a command all files 'en bloc'. This means that all the files will be
+> *:h netrw-mX*  
+> `mX` uses the **global** marked file list.  
+ 
+* `mX`: This will execute a command all files 'en bloc'. 
+  This means that **all** the files will be
   passed to the command you give it.
   ```bash
   # mX
@@ -128,6 +168,233 @@ Uses the command specified by `g:netrw_compress`; by default, that's "gzip".
   cat 'file1' 'file2'
   ```
 
+
+### Compressing and Decompressing Marked Files
+> *:h netrw-mz*  
+> Uses the **local** marked file list.  
+* If any marked files are compressed, then `mz` will decompress them.
+* If any marked files are decompressed, then `mz` will compress them
+Uses the command specified by `g:netrw_compress`; by default, that's "`gzip`".  
+#### Decompressing Files That Were Not Compressed With `gzip`
+Compression programs for *decompression* can be added into a dictionary: 
+`g:netrw_decompress` - default value:
+```vim
+let g:netrw_decompress={  
+                        \ ".gz"  : "gunzip" ,
+                        \ ".bz2" : "bunzip2" ,
+                        \ ".zip" : "unzip" ,
+                        \ ".tar" : "tar -xf"
+                        \ }
+```
+Does not contain '7z' by default.
+
+
+
+### Copying Marked Files
+> *:h netrw-mc*  
+> Uses the **global** marked file list.  
+You can copy all files in the 'Marked Files' list to a target directory.  
+1. Select a target directory with `mt` (`:h netrw-mt`). 
+1. Then change directory, and mark the files you want to copy.  
+1. Press `mc`.  
+The copy is done from the current window (where the marks are) to the target.  
+* If one does not have a target directory set with `netrw-mt`, then netrw  
+will query you for a directory to copy to.  
+* You can copy local directories and their contents to a target directory.  
+    *   Does not work on remote directories.  
+
+Settings variables for copying in netrw:  
+* `g:netrw_localcopycmd` 
+* `g:netrw_localcopycmdopt`
+* `g:netrw_localcopydircmd` 
+* `g:netrw_localcopydircmdopt`
+* `g:netrw_ssh_cmd`
+
+
+
+### Using Diff (`vimdiff`) on Marked Files
+> *:h netrw-md*  
+> Uses the **global** marked file list.  
+Uses vimdiff to visualize difference between selected files (two or
+three may be selected for this).  
+1. Mark the files you want to use `diff` on.
+1. Press `md`
+
+
+### Editing Marked Files
+> *:h netrw-me*  
+> Uses the **global** marked file list.  
+The `me` command will put the marked files on the `arglist` and start
+editing them.  
+Return the to explorer window with `:Rexplore`.
+1. Mark the files you want to edit
+1. Press `me`
+(use 
+* `:n`: edit next file in the arglist
+* `:p`: edit previous file in the arglist
+
+
+### Use Grep (`:vimgrep`) on Marked Files
+> *:h netrw-mg*  
+> Uses the **global** marked file list.  
+The `mg` command will apply `:vimgrep` to the marked files (*`:h :vimgrep`*  ).  
+The command will ask for the pattern; then enter:
+```vim
+/pattern/[g][j]
+! /pattern/[g][j]
+pattern
+```
+* The `/g` option will add every match (even ones on the same line) to the Quickfix List.  
+* the `/j` option will remove non-matching files from the Marked Files list.  
+The pattern is a Vim search pattern (*`:h search-pattern`*  ).  
+1. Mark the files you want to `grep`
+1. Press `mg`
+1. Enter the pattern.
+
+
+
+### Hiding and Unhiding Marked Files by Suffix
+> *:h netrw-mh*  
+> Uses the **local** marked file list.  
+The `mh` command extracts the suffices of the marked files and toggles their
+presence on the hiding list.
+
+
+
+### Moving Marked Files 
+> *:h netrw-mm*  
+> Uses the **global** marked file list.  
+#### **WARNING** for MOVING FILES WITH NETRW:
+    A file being moved is first copied and then deleted; if the
+    copy operation fails and the delete succeeds, you will lose
+    the file.  
+To move files using netrw in vim:  
+1. Select a target directory with mt (`netrw-mt`).  
+1. Then change directory,
+1. Mark the files to be moved
+1. Press `mm`.  
+The move is done from the current window (where the marked files are) to the target.
+
+Settings variables for moving files with netrw:  
+* `g:netrw_localmovecmd` 
+* `g:netrw_ssh_cmd`
+Settings variables for other netrw operations:  
+* `g:netrw_ssh_cmd`
+* `g:netrw_list_cmd`
+* `g:netrw_mkdir_cmd`
+* `g:netrw_rm_cmd`
+* `g:netrw_rmdir_cmd`
+* `g:netrw_rmf_cmd`
+
+
+### Sourcing Marked Files
+> *:h netrw-ms*  
+> Uses the **local** marked file list.  
+With `ms`, netrw will source the marked files (using vim's `:source` command)
+
+
+
+# Setting the Target Directory for Marked Files
+> *:h netrw-mt*  
+Set the marked file copy/move-to target (see `netrw-mc` and `netrw-mm`):  
+  *   If the cursor is on a file name or in the banner, then the netrw window's currently
+    displayed directory is used for the copy/move-to target.
+    If the target already is the current directory, typing "mf" clears the target.
+  *   If the cursor is on a directory name, then that directory is
+    used for the copy/move-to target
+  * Use :MT [directory] command to set the target	*:h netrw-:MT*  
+    This command uses |<q-args>|, so spaces in the directory name are
+    allowed without escaping.
+  *   With mouse-enabled vim or with gvim, one may select a target by using
+    <c-leftmouse>
+
+
+
+### Tagging Marked Files with `ctags`
+> *:h netrw-mT*  
+> Uses the **global** marked file list.  
+The `mT` mapping will apply the command in |g:netrw_ctags| (by default, it is
+"ctags") to marked files.
+
+
+
+
+### Listing Bookmarks and History in netrw
+> *:h netrq-qb*  
+Pressing `qb` (query bookmarks) will list both the bookmarked directories and
+directory traversal history.
+
+
+### Set Target Directory Using Bookmarks
+> *:h netrw-Tb*  
+Sets the marked file copy/move-to target.
+The `netrw-qb` map will give you a list of bookmarks (and history).
+Choose one of the bookmarks to become your marked file
+target by using [count]Tb (default count: 1).
+
+
+### Set Target Directory Using History
+> *:h netrw-Th*  
+The `netrw-qb` map will give you a list of history (and bookmarks).
+Choose one of the history entries to become your marked file
+target by using [count]Th (default count: 0; ie. the current directory).
+
+
+
+
+## User Specified Maps in netrw
+> *:h netrw-usermaps*
+Custom user maps can be added.  
+Make a variable (`g:Netrw_UserMaps`), to hold a List of lists
+```vim
+let g:Netrw_UserMaps = [["keymap-sequence","ExampleUserMapFunc"],
+                      \ ["keymap-sequence","AnotherUserMapFunc"]]
+```
+* Vim will go through all entries of `g:Netrw_UserMaps`, and set up maps:
+```vim
+nno <buffer> <silent> KEYMAP-SEQUENCE
+:call s:UserMaps(islocal,"ExampleUserMapFunc")
+```
+* refreshes if result from that function call is the string
+  "refresh"
+* if the result string is not "", then that string will be
+  executed (`:exe result`)
+* if the result is a List, then the above two actions on results
+  will be taken for every string in the result List
+
+The user function is passed one argument; it resembles
+```vim
+fun! ExampleUserMapFunc(islocal)
+```
+where `a:islocal` is 1 if it's a local-directory system call or 0 when
+remote-directory system call.
+
+### Netrw Functions
+> *:h netrw-call* | *netrw-expose* | *netrw-modify*
+Use `netrw#Expose("varname")`          to access netrw-internal (script-local) variables.
+Use `netrw#Modify("varname",newvalue)` to change netrw-internal variables.
+Use `netrw#Call("funcname"[,args])`    to call a netrw-internal function with specified arguments.
+
+Example: Get a copy of netrw's marked file list:  
+```vim
+let netrwmarkfilelist= netrw#Expose("netrwmarkfilelist")
+```
+
+Example: Modify the value of netrw's marked file list:  
+```vim
+call netrw#Modify("netrwmarkfilelist",[])
+```
+
+Example: Clear netrw's marked file list via a mapping on `gu`  
+```vim
+fun! ExampleUserMap(islocal)
+    call netrw#Modify("netrwmarkfilelist",[])
+    call netrw#Modify('netrwmarkfilemtch_{bufnr("%")}',"")
+    let retval= ["refresh"]
+    return retval
+endfun
+let g:Netrw_UserMaps= [["gu","ExampleUserMap"]]
+```
 
 ## Help Pages
 Marking Files:
@@ -148,4 +415,14 @@ Marked File List/Buffer List:
 * `:h :buffers`
 
 Marked Files List/Compression and Decompression	
-> *:h netrw-mz*
+> *:h netrw-mz*  
+
+Default netrw commands used for actions:  
+* `g:netrw_localmovecmd` 
+* `g:netrw_ssh_cmd`
+* `g:netrw_ssh_cmd`
+* `g:netrw_list_cmd`
+* `g:netrw_mkdir_cmd`
+* `g:netrw_rm_cmd`
+* `g:netrw_rmdir_cmd`
+* `g:netrw_rmf_cmd`
