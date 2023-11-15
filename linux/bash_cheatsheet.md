@@ -14,13 +14,15 @@ sed
 
 
 
+
 ## Miscellaneous Useful Commands
 cht.sh - cheat sheet website for curling anything  
 
+`xxd` - hex dumping / reversing hex dumps  
 `ncal` - View a command-line calendar  
 `ps aux | grep ssh` - List all processes containing "ssh" in their names.  
 `who` - List of users currently logged in, along with their usernames, terminal devices, login
-times, and IP addresses (`pts` means SSH sessions)  
+        times, and IP addresses (`pts` means SSH sessions)  
 `w` - Similar to `who`, with more details (load avg, system uptime)  
 
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
