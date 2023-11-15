@@ -30,7 +30,21 @@ let g:netrw_preview=1     " open previews in vsplit
 let g:netrw_liststyle=3   " tree view
 let g:netrw_hide=0        " show all files (including hidden. default 1)
 let g:netrw_chgwin=-1     " -1 is default. Specifies a window number where netrw will open files.
+
+" default - g:netrw_bufsettings="noma nomod nonu nowrap ro nobl"
+let g:netrw_bufsettings+=" nu rnu"
 ```
+
+The `g:netrw_alto` variable can be used to provide
+additional splitting control:
+| g:netrw_preview | g:netrw_alto |   result       |
+|-----------------|--------------|----------------|
+|             0   |          0   |  `:aboveleft`  |
+|             0   |          1   |  `:belowright` |
+|             1   |          0   |  `:topleft`    |
+|             1   |          1   |  `:botright`   |
+
+To control sizing, see `g:netrw_winsize`
 
 ### Show netrw if vim is launched without a filename or directory
 > ##### *:h netrw-activate*  
@@ -90,9 +104,17 @@ let g:netrw_ssh_cmd="ssh"               " executable for netrw to ssh/remote act
 #### Editing Remote Files
 > *:h netrw-write* | *netrw-nwrite*  
 
+You can edit remote files by just providing a URL with the protocol 
+you want to use to retrieve the file.
 ```vim
-:Nwrite "scp://[user@]machine[[:#]port]/path" " uses scp
+" syntax:
+:e [protocol]://[user]@hostname/path/
+" to use ssh(scp):
+:e scp://[user@]machine[[:#]port]/path 
+" or use :[range]Nw[rite]
+:Nwrite scp://[user@]machine[[:#]port]/path
 ```
+The port can either be preceded by ':' or '#'.
 #### Browsing Remote Directories
 Browse a directory to get a listing by simply attempting to
 edit the directory:
