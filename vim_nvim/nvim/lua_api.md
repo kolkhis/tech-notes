@@ -124,10 +124,11 @@ Returns a Ringbuf instance with the following methods:
 ## Getting Iterators for Loops
 ### Iterators from Tables (Lists or Dicts)
 *:h vim.spairs()*  
-#### Using `vim.spairs({table})`
+
+### Using `vim.spairs({table})`
 Enumerate a dict-like table (key:value pairs), sorted by key.  
 
-#### Using Lua
+### Using Lua
 * Use `ipairs(table)` on a list-like table to enumerate (idx, val).  
 * Use `pairs(table)` on a dict-like table to iterate k:v pairs (key, val).  
 
@@ -162,7 +163,7 @@ vim.iter(rb):totable()
 -- { "a", "b" }
 ```
 
-#### Useful Iter Methods
+### Useful Iter Methods
 * `Iter:each({f})`: Call a function once for each item in the pipeline. 
                     This is used for functions which have side effects. Use `map` to modify the
                     values in the iterator.
@@ -243,9 +244,9 @@ default) then you get error *E1208* .
 
 
 ## Digraphs
-- `:h dig` | `digraphs`
+* `:h dig` | `digraphs`  
   
-Digraphs are special characters that can be inserted (while in insert mode) with `<C-k>xx` whُere
+Digraphs are special characters that can be inserted (while in insert mode) with `<C-k>xx` where
 `xx` is a key combination for a given `digraph`.  
 
 
