@@ -1,6 +1,69 @@
 
 # Neovim's Lua API
-> *:h api*  
+> ##### *:h api*  
+> ##### *:h lua-loop*  
+> ##### *:h lua-vim*  
+> ##### *:h Lua*  
+> ##### *:h luaref*  
+
+always vim.inspect().
+
+## Setting Vim Options from Lua
+##### *:h vim.o* | *vim.opt*
+Generally you'll use `vim.o.*` or `vim.opt.*` to access vim options.  
+```lua
+vim.o.number = true
+--or 
+vim.opt.number = true
+```
+
+The following methods of setting a map-style option are equivalent:  
+A map-style/dict-style option can be set in the following ways (each does same thing):
+In Vimscript:  
+```vim
+set listchars=space:_,tab:>~
+```
+In Lua:
+```lua
+vim.o.listchars = 'space:_,tab:>~'
+-- or
+vim.opt.listchars = { space = '_', tab = '>~' }
+```
+#### Option Objects
+Note that `vim.opt` returns an `Option` object, not the value of the option,
+which is accessed through `vim.opt:get()`:
+```lua
+vim.print(vim.opt.wildignore:get())
+-- These are equivalent:
+vim.opt.formatoptions:append('j')
+vim.opt.formatoptions = vim.opt.formatoptions + 'j'
+```
+
+Options that are strings that can be added to or subtracted to using
+normal vimscript operators (such as `set shortmess+=c`) need to be called
+with `vim.opt` to manipulate the `Option` object.  
+
+To replicate the behavior of `:set+=`, use:  
+```lua
+vim.opt.wildignore:append({ "*.pyc", "node_modules" })
+```
+To replicate the behavior of `:set^=`, use:  
+```lua
+vim.opt.wildignore:prepend({ "new_first_value" })
+```
+To replicate the behavior of `:set-=`, use:  
+```lua
+vim.opt.wildignore:remove({ "node_modules" })
+```
+
+
+## Tab Completion Keymap
+This is already handled by nvim-cmp (must be remapped from `<Enter>`), but this is neat to know:
+```lua
+vim.keymap.set('i', '<Tab>', function()
+  return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
+end, { expr = true })
+```
 
 
 ## Modes
@@ -26,6 +89,94 @@ This function returns Global Marks by default, unless provided with a buffer num
 ```vim
 local buf = bufname()
 ```
+
+---
+
+## Ringbuffer: Self-Updating Fixed Size List
+*:h vim.ringbuf()*  
+Creates a ring buffer limited to a max number of items.  
+```lua
+local rb = vim.ringbuf({3})
+rb:push(1)
+rb:push(2)
+rb:push(3)
+rb:push(4) -- replaces 1
+print(rb:pop())  -- prints 2
+print(rb:pop())  -- prints 3
+-- Can be used as iterator. Pops remaining items:
+for val in rb do
+  print(val)
+end
+```
+When the limit is reached, the newest items will replace the 
+oldest items. Calling `:pop()` will return the oldest item in
+the ring buffer.  
+
+### Ringbuffer Methods
+Returns a Ringbuf instance with the following methods:
+* `Ringbuf:push()`  : Adds an item, overriding the oldest item if the buffer is full.
+* `Ringbuf:pop()`   : Removes and returns the first unread item
+* `Ringbuf:peek()`  : Returns the first unread item without removing it
+* `Ringbuf:clear()` : Clear all items 
+
+---
+
+## Getting Iterators for Loops
+### Iterators from Tables (Lists or Dicts)
+*:h vim.spairs()*  
+#### Using `vim.spairs({table})`
+Enumerate a dict-like table (key:value pairs), sorted by key.  
+
+#### Using Lua
+* Use `ipairs(table)` on a list-like table to enumerate (idx, val).  
+* Use `pairs(table)` on a dict-like table to iterate k:v pairs (key, val).  
+
+### Creating an `Iter` Object
+*:h vim.iter*  
+`vim.iter` is an interface for iterables.  
+It wraps a table or function argument into an `Iter` object that has methods.  
+```lua
+-- Run each item through a function
+local it = vim.iter({ 1, 2, 3, 4, 5 })
+it:map(function(v)
+          return v * 3
+        end)
+it:rev()
+it:skip(2)  -- Skip the first 2 items
+it:totable()
+-- { 9, 6, 3 }
+
+-- Check if an item exists in the Iter
+vim.iter({ a = 1, b = 2, c = 3, z = 26 }):any(function(k, v)
+  return k == 'z'
+end)
+-- true
+```
+`Iter` functions can also be applied to `Ringbuf` objects after
+casting the `Ringbuf` as an `Iter` (`vim.iter(ringbuf)`).  
+```lua
+local rb = vim.ringbuf(3)
+rb:push("a")
+rb:push("b")
+vim.iter(rb):totable()
+-- { "a", "b" }
+```
+
+#### Useful Iter Methods
+* `Iter:each({f})`: Call a function once for each item in the pipeline. 
+                    This is used for functions which have side effects. Use `map` to modify the
+                    values in the iterator.
+* `Iter:map({f})`: Add a map step to the iterator pipeline.
+* `Iter:filter({f})`: Add a filter step to the iterator pipeline.
+    ```lua
+    local bufs = vim.iter(vim.api.nvim_list_bufs()):filter(vim.api.nvim_buf_is_loaded)
+    ```
+* `Iter:next()`: Return the next value from the iterator.  
+* `Iter:peek()`: Peek at the next value in the iterator without consuming it.
+* `Iter:skip({n})`: Skip values in the iterator.
+
+
+---
 
 
 ## Running Lua From Vimscript
@@ -90,6 +241,7 @@ If you specify completion while there is nothing to complete (-nargs=0, the
 default) then you get error *E1208* .
 
 
+
 ## Digraphs
 - `:h dig` | `digraphs`
   
@@ -140,6 +292,39 @@ For full list, see `./vim_variables.md`
 Not supported yet:
 * tuple<a: {type}, b: {type}, ...>
 
+### Useful Vim API Functions
+* `vim.fs.normalize({path}, {opts})`: Normalize a path to a standard format. Expands `~` to home and
+  converts backslash (\) to forward slashes (/). Environment variables are also expanded.
+* `vim.fs.find({names}, {opts})`: Find files or directories (or other items as specified by `opts.type`) in the given path.
+* `vim.is_callable({f})`: Returns true if object `f` can be called as a function.
+* `vim.tbl_count({t})`: Counts the number of non-nil values in table `t`. 
+* `vim.tbl_isempty({t})`: Checks if a table is empty.
+* `vim.trim({s})`: Trim whitespace (Lua pattern "%s") from both sides of a string.
+
+* `vim.validate({opt})`: Validates a parameter specification (types and values).
+    ```lua
+    function user.new(name, age, hobbies)
+        -- Check types
+        vim.validate{
+            name={name, 'string'},
+                age={age, 'number'},
+                hobbies={hobbies, 'table'},
+        }
+    end
+    -- Checking values AND types
+    vim.validate{arg1={{'foo'}, 'table'}, arg2={'foo', 'string'}}
+       --> NOP (success)
+    vim.validate{arg1={1, 'table'}}
+       --> error('arg1: expected table, got number')
+    vim.validate{arg1={3, function(a) return (a % 2) == 0 end, 'even number'}}
+       --> error('arg1: expected even number, got 3')
+
+    -- Multiple types can be given as a list. (Success if the type is in the list given)
+        vim.validate{arg1={{'foo'}, {'table', 'string'}}, arg2={'foo', {'table', 'string'}}}
+        -- NOP (success)
+        vim.validate{arg1={1, {'string', 'table'}}}
+        -- error('arg1: expected string|table, got number')
+    ```
 
 ## Terminal Codes and Key Codes
 
@@ -209,7 +394,7 @@ vim.keycode({str})
 ### Testing Syntax Time When Syntax is Slow
 > *:h :syntime*
 
-#### Naming Conventions
+#### Highlighting Naming Conventions
 > *:h group-name* *{group-name}*
 
 * `Comment`: any comment
