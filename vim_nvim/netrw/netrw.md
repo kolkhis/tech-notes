@@ -5,6 +5,7 @@
 
 ## Basic Netrw Customization
 
+[#marking-files](#marking-files)
 ### Pulling Remote Config
 > *:h netrw-source*  
 
@@ -101,7 +102,9 @@ let g:netrw_servername="NETRWSERVER"    " Name for netrw-ctrl-r to use for its s
 let g:netrw_ssh_cmd="ssh"               " executable for netrw to ssh/remote actions
 ```
 
-#### Editing Remote Files
+---
+
+### Editing Remote Files
 > *:h netrw-write* | *netrw-nwrite*  
 
 You can edit remote files by just providing a URL with the protocol 
@@ -115,7 +118,8 @@ you want to use to retrieve the file.
 :Nwrite scp://[user@]machine[[:#]port]/path
 ```
 The port can either be preceded by ':' or '#'.
-#### Browsing Remote Directories
+
+### Browsing Remote Directories
 Browse a directory to get a listing by simply attempting to
 edit the directory:
 ```vim
@@ -132,7 +136,9 @@ The Nread command does the same thing:
 :Nread [protocol]://[user]@hostname/path/
 ```
 
-#### Setting up SSH Key-Based Authentication
+---
+
+### Setting up SSH Key-Based Authentication
 > *:h netrw-ssh-hack*  
 
 If you haven't already set up key-based authentication for SSH, the help page above
@@ -148,6 +154,7 @@ External links on speeding up SSH + netrw:
 * http://usevim.com/2012/03/16/editing-remote-files/
 
 
+---
 
 
 ### Visual and Accessibility Options
@@ -177,6 +184,7 @@ let g:netrw_winsize=50          " 50% Initial size of new windows made with "o",
 ```
 
 ---
+
 
 ## Performing Actions in netrw
 

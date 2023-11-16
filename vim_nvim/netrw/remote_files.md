@@ -1,16 +1,7 @@
 
 # Remote Files and Directories with Netrw
 
-## Remote Settings in netrw
-> *:h netrw-transparent*
-> *:h netrw-urls*  
-> *:h netrw-protocol*  
-> *:h .netrc*  
-> *:h netrw-externapp*  
-> *:h netrw-settings*  
-
-
-### Paths to Remote Files
+## Paths to Remote Files
 > *:h netrw-path*  
 
 Paths to files are generally user-directory relative for most protocols.
@@ -97,6 +88,15 @@ let g:netrw_ssh_cmd="ssh"               " executable for netrw to ssh/remote act
 ```
 
 ## Help Pages
+## Remote Settings in netrw
+> *:h netrw-transparent*
+> *:h netrw-urls*  
+> *:h netrw-protocol*  
+> *:h .netrc*  
+> *:h netrw-externapp*  
+> *:h netrw-settings*  
+
+
 *netrw-browser-var*     : netrw browser option variables  
 *netrw-protocol*        : file transfer protocol option variables  
 *netrw-settings*        : additional file transfer options  
