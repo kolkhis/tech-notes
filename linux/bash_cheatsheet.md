@@ -118,6 +118,17 @@ ls -1 **/*.md  # with `set -o globstar` enabled
 find . -type f -name '*.md' # 
 ```
 
+## Using Netcat
+Netcat is often referred to as the "Swiss army knife" of networking tools.  
+It can function as a simple client and server for TCP or UDP connections.  
+### Listening on Ports 
+* `nc -l 2389`: Launches netcat to listen for incoming 
+  connections on port 2389  
+### Transferring Files
+* `netcat` can be used to transfer files between two 
+  computers by setting up one as a listener and another as a sender.  
+
+
 ### Timezone change
 * Get timezone for system:
     * `timedatectl`
