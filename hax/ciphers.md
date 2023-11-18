@@ -34,3 +34,20 @@ PBKDF2 stands for "Password-Based Key Derivation Function 2."
   'psuedorandom' function.
 * The hash fn is applied repeatedly in each iteration to generate the final key
 
+
+
+
+## Recon
+recon: Go to linked and see what technologies they're using
+What tooling do they use? What's exposed to internet?
+
+Footprinting:
+```bash
+curl -I hostname.com/:port
+```
+ningx/1.25.2, now I just have to look for vulns in nginx 1.25.X
+
+
+
+## Diamond Model of Intrusion Analysis
+https://www.activeresponse.org/wp-content/uploads/2013/07/diamond.pdf
