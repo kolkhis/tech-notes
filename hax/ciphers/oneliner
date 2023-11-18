@@ -1,0 +1,11 @@
+#!/bin/bash
+
+a="$(cat ./stderr_challenge.txt | base64 -d)" ; 
+while 
+ a="$(echo "$a" | rev | base64 -d | openssl enc -d -aes-256-cbc -pbkdf2 -pass pass:P@ssw0rd)" ; do
+    echo hacking in progress ... ;
+    b="$a" ;
+done ;
+echo "$b" | rev
+
+# echo "$a"
