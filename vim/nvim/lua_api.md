@@ -81,6 +81,10 @@ Instead, it returns:
 ### Keymap Modes
 - `:h map-table` for all the different modes for keymaps.
 
+### Get a List of Global Keymaps
+- `nvim_get_keymap({mode})`
+
+
 ### Get List of Marks
 ```vim
 getmarklist([{buf}])
@@ -367,6 +371,8 @@ vim.keycode({str})
 
 ## API for Buffers and Windows (UI)
 > *:h api-ui*
+> *:h api-window*
+> *:h api-win_config*
 
 ## Terminal Instances from nvim
 > *:h nvim_open_term()*
@@ -378,6 +384,24 @@ vim.keycode({str})
 > *:h :highlight* | *:hi*
 > *:h :highlight-link* | *:hi-link*
 > *:h :highlight-default* | *:hi-default*
+
+
+### Namespace Highlighting
+Get or create a namespace used for buffer highlights and 
+virtual text with `nvim_create_namespace()`.   
+    - Returns a Namespace ID
+To get existing, non-anonymous namespaces `nvim_get_namespaces()`  
+    - Returns a Dictionary that maps from Names to Namespace IDs.
+This namespace can then be used to add highlights or 'extmarks'.  
+
+Get the active highlight namespace with `nvim_get_hl_ns()`.
+* Returns Namespace id, or -1
+* Returns -1 when `nvim_win_set_hl_ns()` has not been 
+  called for the window (or was called with a namespace of -1).  
+
+Related to namespace highlighting:  
+* `nvim_buf_add_highlight()` and `nvim_buf_set_extmark()`.  
+
 
 ### Highlighting Tags
 > *:h tag-highlight*
