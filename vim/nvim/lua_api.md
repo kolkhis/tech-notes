@@ -399,6 +399,8 @@ Get the active highlight namespace with `nvim_get_hl_ns()`.
 * Returns -1 when `nvim_win_set_hl_ns()` has not been 
   called for the window (or was called with a namespace of -1).  
 
+Extmarks are often used with namespace highlights.  
+
 Related to namespace highlighting:  
 * `nvim_buf_add_highlight()` and `nvim_buf_set_extmark()`.  
 
