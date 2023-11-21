@@ -176,6 +176,41 @@ They must appear right after the command, before any other arguments.
 * `c_CTRL-]`: (`CTRL-]`)  trigger abbreviation (Doesn't work?)
 
 
+## Select mode
+Entering select mode:
+* From Normal mode with:
+    * `gh` for character-wise selection  
+    * `gH` for line-wise selection  
+    * `g^H` for block-wise selection  
+* From Insert mode with:
+    * `<C-o>` followed by one of the above commands.
+* From Visual mode with `<C-g>` (`v_CTRL-G`)
+    * `<C-g>` Toggles between Visual and Select
+
+In Select mode, vim behaves more like a standard graphical editor.  
+The same keybindings for motion you would use in a non-vim-enabled
+environment are applicable in Select mode.  
+In Select Mode you can highlight characters with `<Left>` and `<Right>`,
+words with `<C-Left>`/`<C-Right>`, etc.  
+
+Movement keys in this mode are the cursor keys,
+`<End>`, `<Home>`, `<PageUp>` and `<PageDown>`.
+
+### Commands in Select mode:
+- Printable characters, `<NL>` and `<CR>` cause the selection to be 
+  deleted, and Vim enters Insert mode.
+  The typed character is inserted.
+- Non-printable movement commands, with the Shift key pressed, extend the
+  selection.  'keymodel' must include "startsel".
+- Non-printable movement commands, with the Shift key NOT pressed,
+  stop Select mode.  'keymodel' must include "stopsel".
+- ESC stops Select mode.
+- CTRL-O switches to Visual mode for the duration of one command. *v_CTRL-O*
+- CTRL-G switches to Visual mode.
+- CTRL-R {register} selects the register to be used for the text that is
+  deleted when typing text. *v_CTRL-R*
+  Unless you specify the "_" (black hole) register, the unnamed register is
+  also overwritten.
 
 
 ## Netrw
