@@ -32,11 +32,44 @@ They must appear right after the command, before any other arguments.
 * `gU{motion}`: Make the text selected with `{MOTION}` uppercase
 * `gu{motion}`: Make the text selected with `{MOTION}` lowercase
 
-
 * `g?{MOTION}`: Rot13 encode {motion} text.
 
 
+### Editing Motions
+* `d/word`: Delete text up to a searched pattern
+* `d?word`: same as above, except deletes backwards to search term
+
+* `c/word`: Remove text up to a searched pattern and go into insert mode
+* `c?word`: same as above, except changes backwards to search term
+
+* `y/word`: Yank text up to a searched pattern
+* `y?word`: same as above, except yanks backwards to search term
+
+* `vib`: Go into visual mode and select inside parens (` ( ) `)
+* `viB`:  Go into visual mode and select inside braces (` { } `)
+
+
 ---
+
+
+## Insert Mode
+
+* `CTRL-D`: Unindent the current line
+* `CTRL-W`: Delete the previous word
+* `CTRL-U`: Delete all the text entered on the current line
+    * Deletes text only inserted since you went into insert mode.
+    * If you didn't enter any text, it deletes the whole line.
+* `CTRL-Y`: Insert the character **above** the cursor.
+
+### Completion
+* `CTRL-X {mode}`: enter `CTRL-X` sub mode (omni-completion)
+    * `i_CTRL-X_index`
+
+
+
+---
+
+
 
 ## Visual Mode
 ##### *:h visual-index*
@@ -141,4 +174,55 @@ They must appear right after the command, before any other arguments.
                                                     under the cursor literally
 * `c_CTRL-\_e`: (`CTRL-\ e {expr}`) replace the command line with the result of {expr}
 * `c_CTRL-]`: (`CTRL-]`)  trigger abbreviation (Doesn't work?)
+
+
+
+
+## Netrw
+
+### View / Opening Files
+* `i`: Cycle through the different listing styles.
+* `o`: Opens file under cursor in horizontal split.
+* `v`: Opens file under cursor in vertical split.
+* `t`: Opens file under cursor in a new tab.
+* `gx`: Open file with an external program
+    * This can be disabled by setting the `g:netrw_nogx` variable.
+
+### Browsing
+* `gn`: Change the "tree top" to the word below cursor (see `:Ntree`)
+* `u`/`U`: Jump to previous/next directory in browsing history.
+    * Change `g:netrw_dirhistmax` to increase the amount of directories saved. (default 10)
+* `-`: Go up a directory (`../`)
+
+### Modifying Files
+* `D`: Delete marked files/directories (and empty directories). 
+       If no files are marked, delete the file/directory under the cursor.
+    * Delete files matching a pattern: `:MF pattern`, then `D`
+* `gp`: Ask for new permission for the file under cursor.
+    * Uses `g:netrw_chgperm`. Default: `chmod PERM FILENAME` 
+      (Windows: `cacls FILENAME /e /p PERM`)
+* `X`: When pressed when cursor is above an executable, it will prompt the
+       user for arguments. Netrw will call `system()` with that cmd and args.
+
+### Bookmarks
+* `mb`: Bookmark the currently browsed directory.
+    * Stored in `.netrwbook` (in the `g:netrw_home` directory).
+* `mB`: Remove the currently browsed directory from bookmarks.
+* `qb`: List bookmarks and history
+* `{cnt}gb`: Go to `{cnt}` bookmark.
+* Also available: `:NetrwMB[!] [files/directories]`
+    * No Argument (and in netrw buffer):
+        * Adds marked files to bookmarks.
+        * Else, adds file/directory under cursor.
+    * With arguments: `glob()` each arg and bookmark them.
+    * With bang (`!`): Removes files/directories from bookmarks.
+
+### File Display / Information
+* `qf`: Get file's size and last modification timestamp.
+* `S`: Specify priority via sorting sequence (`g:netrw_sort_sequence`).
+* `gh`: Toggle between hiding the "dotfiles" and not.
+* `a`: Toggle through three hiding modes. Set the hiding list with `<C-h>`
+* `<Ctrl-H>`: Brings up a requestor allowing user to change the 
+  file/directory hiding list in `g:netrw_list_hide`.  
+
 
