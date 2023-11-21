@@ -1,32 +1,122 @@
 
+
 # Misc Vim Notes
 
-Reading the help pages (like a book): `:h 1.1`
+You can read the help pages (like a book): `:h 1.1`  
 
-List of all vim commands for each mode:
-* *:h index*
-* *:h insert-index* / *visual-index*
+List of all default vim keybindings/commands for each mode:  
+* *:h index*  
+* *:h insert-index* / *visual-index*  
+
+
+
+
+### Neovim Resources:
+* Nightly repo for `apt-get`:
+    * `sudo add-apt-repository ppa:neovim-ppa/unstable -y`
+* [API docs](https://neovim.io/doc/user/api.html#API)
+* [Pynvim docs](https://pynvim.readthedocs.io/en/latest/usage/python-plugin-api.html#nvim-api-methods-vim-api)
+* [Lua reference](https://learnxinyminutes.com/docs/lua/)
+* [Regex](https://www.vimregex.com/) 
+    * *:h character-classes*  
+* [`vim.fn` Functions](https://neovim.io/doc/user/usr_41.html#function-list)
+
+
+## Regex with vim
+### Pattern atom
+*  `^` start matching from beginning of a line
+    * `/^This` match This only at beginning of line
+*  `$` match pattern should terminate at end of a line
+    * `/)$` match ) only at end of line
+    * `/^$` match empty line
+*  `.` match any single character, excluding new line
+    * `/c.t` match 'cat' or 'cot' or 'c2t' or 'c^t' but not 'cant'
+
+For more info:
+* :h pattern-atoms
+
+
+###   Pattern Qualifiers
+* `*` greedy match preceding character 0 or more times  
+    * `/abc*` match 'ab' or 'abc' or 'abccc' or 'abcccccc' etc  
+* `\+`: greedy match preceding character 1 or more times  
+    * `/abc\+` match 'abc' or 'abccc' but not 'ab'  
+* `\?` match preceding character 0 or 1 times (\= can also be used)  
+    * `/abc\?` match 'ab' or 'abc' but not 'abcc'  
+* `\{-}` non-greedy match preceding character 0 or more times  
+    * Consider this line of text 'This is a sample text'  
+    * `/h.\{-}s` will match: 'his'  
+    * `/h.*s` will match: 'his is a s'  
+    * Read more on non-greedy matching  
+* `\{min,max}` greedy match preceding character min to max times (including min and max)  
+    * min or max can be left unspecified as they default to 0 and infinity respectively  
+    * greedy match, tries to match as much as possible  
+* `\{-min,max}` non-greedy match, tries to match as less as possible  
+* `\{number}` match exactly with specified number  
+    * `/c\{5}` match exactly 'ccccc'  
+
+For more info:  
+* :h pattern-overview  
+* :h character-classes  
+
+
+## Helpful Functions for Plugin Dev
+
+### Get the details of loaded packages
+package.loaded contains a table of loaded packages
+that can be accessed.  
+```vim
+:lua print(vim.inspect(package.loaded))
+```
+
+* `vim.api.nvim_get_keymaps`: Gets a list of global (non-buffer-local) |mapping| definitions.
+* `:h wincmd`: Window switching for scripts  
+* `:e https://github.com/somefile.c`: Can edit via URL
+
+Anything in nvim/plugin will load/run at runtime.
+
+
+### Refactoring tip
+>> Grep with Telescope, add to quickfix list  
+>> Then, to apply a cmd to each thing:  
+```vim
+:cdo <cmd>
+:h cdo
+```
+
+### Disable LSP for current buffer
+```vim
+:lua vim.lsp.diagnostics.disable(vim.api.nvim_get_current_buf())
+```
+
+---
+
 
 ## Undo Line
 Pressing `U` (`<Shift-u>`) undoes all the changes made on the 
 last line that was edited. This command is a change by itself,
-which is undone by the normal undo (`u`).
+which is undone by the normal undo (`u`).  
 
 ## Use `man` in NeoVim
 In nvim (not vim as of right now) `:Man {cmd}` will pull up
 the man page for the given cmd. Defined by the `'keywordprg'/ 'kp'`
-option.
+option.  
+
+## Perform Actions on Ranges Using Searches
+* `c/[pattern]` <- change to most recently searched text  
+* `c?[pattern]` <- same as above, change backwards to most recently search term  
+
 
 ## Use a Normal Mode Command from Insert Mode
 While in Insert Mode, pressing `<C-o>` (`i_CTRL-O`) will allow you
 to use a normal-mode command or motion, allowing for easy navigation,
 executing an arbitrary normal-mode command,
-or going into Select Mode (with `gh/gH/g^h`).
+or going into Select Mode (with `gh/gH/g^h`).  
 
 ## Use a Visual Mode Command From Select Mode
 While in Select Mode, pressing `<C-o>` (`v_CTRL-O`) will allow
 you to switch to Visual mode for the duration of **one** command
-or motion.
+or motion.  
 
 
 ## Vimscript Types
@@ -50,29 +140,30 @@ Not supported yet:
 ### Installing Vim With Full Feature Support
 To get Vim with Python support, it can be installed from source:  
 * `https://github.com/vim/vim/blob/master/src/INSTALL`  
-Base Installation Dependencies:
-    * `git`
-    * `make`
-    * `clang`
-    * `libtool-bin`
+
+Base Installation Dependencies:  
+* `git`
+* `make`
+* `clang`
+* `libtool-bin`
 X-windows Clipboard Dependencies:
-    * `libxt-dev`
+* `libxt-dev`
 Python Dependencies:
-    * `libpython3-dev`
-    * The `CONF_OPT_PYTHON3 = --enable-python3interp` needs to be uncommented from the Makefile.
+* `libpython3-dev`
+* The `CONF_OPT_PYTHON3 = --enable-python3interp` needs to be uncommented from the Makefile.
 GUI Dependencies (lol):
-    * `libgtk-3-dev`
+* `libgtk-3-dev`
 Debugging:
-    * `valgrind`
-    * Uncomment in Makefile:
-    `CFLAGS = -g -Wall -Wextra -Wshadow -Wmissing-prototypes -Wunreachable-code -Wno-deprecated-declarations -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1`
+* `valgrind`
+* Uncomment in Makefile:
+    * `CFLAGS = -g -Wall -Wextra -Wshadow -Wmissing-prototypes -Wunreachable-code -Wno-deprecated-declarations -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1`
 
 
 ### Mapping Modes
 > `:h map-table` | `:h map-overview`
   
 Here is a table representation of the different 
-mapping mode letters for keymaps:
+mapping mode letters for keymaps:  
 Mode Letter|Regular|Non-recursive|  Removing |      Modes                    |
 |---|-------|------------|------------|---------------------------------|
 | - | :map  |  :noremap  |   :unmap   |   Normal, Visual, Select, Operator-pending  |
@@ -88,7 +179,7 @@ Mode Letter|Regular|Non-recursive|  Removing |      Modes                    |
 | t | :tmap |  :tnoremap |   :tunmap  |   Terminal  |
 
 When put into practice, this graph may be more helpful to identify
-which type of mapping you need:
+which type of mapping you need:  
 | Command mode:  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
 |----------------|------|-----|-----|-----|-----|-----|------|------|
 | [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
@@ -105,7 +196,7 @@ which type of mapping you need:
 
 The `l` mode (Lang / Language Argument Mode) is used when using 
 an 'input method editor' to type text in another language,
-such a Korean, Japanese, Chinese, etc.
+such a Korean, Japanese, Chinese, etc.  
 
 
 ## Select mode
@@ -209,7 +300,6 @@ File browsing with netrw:
 * You can do a lot with netrw. Connect to remote filesystems with ssh, mark files, etc.  
 * Open in split with `v`, `o`, or `p`  
 * `:h netrw-browse-maps`  
-
 * `:h netrw-usermaps`
 
 
@@ -218,10 +308,12 @@ This is basically a fzf.
 Utilizing `ctags`, type `:find *.vim<Tab>` and it pulls up all .vim
 files in the current directory and all subdirectories (with `set path+=**` set)  
 "no_plugins.vim"  
+```vim
 command! MakeTags !ctags -R .  
-" `C-]` will jump to tag  
-" `g<C-]>` will list all tags  
-" `<C-t>` will jump back up the tag stack  
+```
+* `C-]` will jump to tag  
+* `g<C-]>` will list all tags  
+* `<C-t>` will jump back up the tag stack  
 
 
 ### Command Mode Editing
@@ -236,6 +328,7 @@ Or Ex mode editing.
 > `:h cmdline-ranges`    
 > `:h E1247`: Special characters for ranges  
 > `:h :;`: Using semicolons vs commas  
+
 With cmds that accept ranges, lines can be separated with commas or semicolons (`,`/`;`)    
 * When separated with `;` the cursor position will be set to the match before interpreting the next
   line specifier:
@@ -271,53 +364,53 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 
 
 ### Various Options
-`:h options`
+* `:h: options`  
+* `:h: emoji`  
 
-`:h emoji`  
-`emoji`    emoji characters are full width  
-     - set emo    noemo  
+* `emoji`: Emoji characters are full width    
+    * `set emo`    `noemo`  
 
-`splitkeep`    determines scroll behavior for split windows  
-     set cursorspk    spk  
+* `splitkeep`: Determines scroll behavior for split windows    
+    * `set cursorspk` / `spk`  
 
-`clipboard`    "unnamed" to use the * register like unnamed register  
-    "autoselect" to always put selected text on the clipboard  
-     set cb=unnamedplus  
+* `clipboard`: "unnamed" to use the * register like unnamed register    
+    * "autoselect" to always put selected text on the clipboard  
+    * `set cb=unnamedplus`  
 
-`backspace`    specifies what <BS>, CTRL-W, etc. can do in Insert mode  
-     set bs=indent,eol,start  
+* `backspace`: Specifies what `<BS>`, `CTRL-W,` etc. can do in Insert mode  
+    * `set bs=indent,eol,start`  
 
-`complete`    specifies how Insert mode completion works for CTRL-N and CTRL-P  
-    (local to buffer)  
-     set cpt=.,w,b,u,t  
+* `complete`: Specifies how Insert mode completion works for CTRL-N and CTRL-P  
+    * (local to buffer)  
+    * `set cpt=.,w,b,u,t`  
 
-`completeopt`    whether to use a popup menu for Insert mode completion  
-     set cot=menuone,noselect,  
+* `completeopt`: Whether to use a popup menu for Insert mode completion  
+    * `set cot=menuone,noselect,`  
 
 
 #### More Tab Options
-`vartabstop`    list of number of spaces a tab counts for  
-    (local to buffer)  
-     set vts=  
-`varsofttabstop`    list of number of spaces a soft tabsstop counts for  
-    (local to buffer)  
-     set vsts=  
+* `vartabstop`: list of number of spaces a tab counts for  
+    * (local to buffer)  
+    * `set vts=`  
+* `varsofttabstop`: list of number of spaces a soft tabsstop counts for  
+    * (local to buffer)  
+    * `set vsts=`  
 
 ##### Formatting Options For `gq`
-`formatexpr`    expression used for "gq" to format lines  
-    (local to buffer)  
-     set fex=v:lua.vim.lsp.formatexpr()  
+* `formatexpr`: expression used for "gq" to format lines  
+    * (local to buffer)  
+    * `set fex=v:lua.vim.lsp.formatexpr()`  
 
 #### Undo Options
-`undolevels`    maximum number of changes that can be undone  
-    (global or local to buffer)  
-     set ul=1000  
-`undofile`    automatically save and restore undo history  
-     set udf    noudf  
-`undodir`    list of directories for undo files  
-     set udir=/home/kolkhis/.local/state/nvim/undo//  
-`undoreload`    maximum number lines to save for undo on a buffer reload  
-     set ur=10000  
+* `undolevels`: maximum number of changes that can be undone  
+    * (global or local to buffer)  
+    * `set ul=1000`  
+* `undofile`: automatically save and restore undo history  
+    * `set udf` / `noudf`  
+* `undodir`: list of directories for undo files  
+    * `set udir=/home/kolkhis/.local/state/nvim/undo//`  
+* `undoreload`: maximum number lines to save for undo on a buffer reload  
+    * `set ur=10000`  
 
 ### Misc `:!{cmd}` Notes
 Any "%" in {cmd} is expanded to the current file name.  
