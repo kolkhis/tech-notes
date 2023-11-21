@@ -31,9 +31,10 @@ let g:netrw_preview=1     " open previews in vsplit
 let g:netrw_liststyle=3   " tree view
 let g:netrw_hide=0        " show all files (including hidden. default 1)
 let g:netrw_chgwin=-1     " -1 is default. Specifies a window number where netrw will open files.
+let g:netrw_usetab=1      " Allows the <Plug>NetrwShrink keymap to be set and used.
 
-" default - g:netrw_bufsettings="noma nomod nonu nowrap ro nobl"
-let g:netrw_bufsettings+=" nu rnu"
+" default - g:netrw_bufsettings="noma nomod nonu nowrap ro nobl"  
+let g:netrw_bufsettings+="nu rnu"  
 ```
 
 The `g:netrw_alto` variable can be used to provide
@@ -45,7 +46,8 @@ additional splitting control:
 |             1   |          0   |  `:topleft`    |
 |             1   |          1   |  `:botright`   |
 
-To control sizing, see `g:netrw_winsize`
+
+To control sizing, see `g:netrw_winsize`  
 
 ### Show netrw if vim is launched without a filename or directory
 > ##### *:h netrw-activate*  
