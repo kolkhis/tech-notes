@@ -1,6 +1,17 @@
-Use vim filters to find the absolute or relative path of a file, and insert it into backticks for
-jumping purposes.
 
+# Ideas for organizing a notes system
+
+
+## Main idea
+* Make a "table of contents" file to hold headers and filepaths/names
+    * This will act as a centralized file
+* Use vim filters to find the absolute or relative path of a file, 
+    * insert filename/path into "table of contents"
+        * jump to it using `gf` in vim/neovim.
+* Use a script to get the headers in each note file
+    * Put the headers in the "table of contents" 
+    * Organize it so the filename appears as a header in "table of contents", 
+      and the headers from the files are bullet points underneath that header.  
 
 
 ```bash
