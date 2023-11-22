@@ -30,11 +30,41 @@ the public GPG keys for the given username.
 ## Adding to Authorized Keys
 
 If you find the need, you can easily add these keys
-to your `~/.ssh/authorized_keys` files with a one-liner.
-
+to your `~/.ssh/authorized_keys` files with a one-liner.  
 ```bash
 USER="Kolkhis"
 curl https://github.com/${USER}.keys | tee -a ~/.ssh/authorized_keys
+```
+
+### Turn it into a Script
+```bash
+#!/bin/bash
+# Check inputs: should be `scriptname username provider` 
+# or `scriptname username` for github default
+if [[ $# -ne 0 ]]; then
+    USER="$1"
+    shift
+    if [[ $# -ne 0 ]]; then
+        PROVIDER="$1"
+        case $PROVIDER in
+            gh|github|github.com)
+                GIT_PROVIDER="github.com";
+                ;;
+            gl|gitlab|gitlab.com)
+                GIT_PROVIDER="gitlab.com";
+                ;;
+            *)
+                GIT_PROVIDER="$1";
+                ;;
+        esac
+    else
+        GIT_PROVIDER="github.com"
+    fi
+else
+    printf "You did not specify a username to fetch the keys for!\n"
+fi
+
+curl https://${GIT_PROVIDER}/${USER}.keys | tee -a ~/.ssh/authorized_keys
 ```
 
 
