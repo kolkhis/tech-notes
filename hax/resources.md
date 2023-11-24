@@ -5,17 +5,23 @@
 * HackTheBox
 * Over The Wire
 * https://taggartinstitute.org/
+* PentesterLab  
 
 
 ## Random Notes
 
-As a blue teamer, you should run Blood Hound regularly and analyze its output.
-As a red teamer, your job is not to fix the vulnerabilities. Your job is to report
-the vulnerabilities to the client. It is their decision to make about how to reconfigure their
-environment.
+* When looking for XSS also look for SSTI or CSTI  
+
+
+* As a blue teamer, you should run Blood Hound regularly and analyze its output.
+* As a red teamer, your job is not to fix the vulnerabilities. Your job is to report
+  the vulnerabilities to the client. It is their decision to make about how to reconfigure their
+  environment.
+
 
 ### Escalation Paths (esc)
 `ESC<number>` : escalation paths
+
 
 ### Coercer
 [coercer.py](https://github.com/p0dalirius/Coercer)
