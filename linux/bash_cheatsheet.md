@@ -1,4 +1,9 @@
+
+
 # Linux Command Cheatsheet
+
+[Table of Contents](#Table-of-Contents)
+
 
 ## CLI Tools to Become Familiar With
 xclip  
@@ -11,7 +16,6 @@ tar
 parallel (GNU Parallel)  
 awk  
 sed  
-
 
 
 
@@ -28,6 +32,25 @@ cht.sh - cheat sheet website for curling anything
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
+
+## Run a Script when Any User Logs Into the System
+To run a script automatically when ANY user logs in, 
+add it to the `/etc/profile` file, or add it as a 
+shell (`.sh`) script in the `/etc/profile.d/` directory.  
+* `/etc/profile` is a POSIX shell script.
+```bash
+# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
+# Add anything here to be run at 
+printf "%s: %s" "$DATE" "$USER" >> /home/kolkhis/userlogs.log
+# This will timestamp the current user in userlogs.log
+```
+
+* `/etc/profile.d/` id a directory containing `.sh` scripts.  
+  Add a script here and it will be run when any user logs in.  
+```bash
+#!/bin/sh
+printf "%s: %s" "$DATE" "$USER" >> /home/kolkhis/userlogs.log
+```
 
 ## Important Linux Commands
 ### File and Directory Management
@@ -290,7 +313,7 @@ if [[ -z "$1" ]]; then
 elif [[ -n "$1" ]]; then
     echo "The first position argument is NOT an empty string."
 ```
-* `-n`: Argument is present
+* `-n`: Argument is present 
 * `-z`: Argument not present
 
 ## Check if a File Exists or is Larger Than 0 Bytes
@@ -304,7 +327,7 @@ elif [[ -n "$1" ]]; then
 
 
 ## Get Command Locations, Binaries, and Aliases
-* `find` - Finds a file:
+* `find` - Finds a file.
 * `which` - Shows which binary the command uses.
 * `file` - Determine the file type.
 * `type` - Builtin. Displays information about the command type.
@@ -576,20 +599,24 @@ done
 ## Process Substitution
 `man bash; /Process Substitution`
 Process substitution allows a process's input or output to be referred to using a filename.  
-It  takes the form of <(list) or >(list).  The process list is run asynchronously, and its input or output appears as a filename.  
+It takes the form of <(list) or >(list).  The process list is run asynchronously,
+and its input or output appears as a filename.  
 This filename is passed as an argument to the current command as the result of the expansion.  
 If the >(list) form is used, writing to the file will provide input for list.  
-If the <(list) form is used, the file passed as an argument should be read to obtain the output of list.  
+If the <(list) form is used, the file passed as an argument should be read 
+to obtain the output of list.  
 Process substitution is supported on systems that support
 named pipes (FIFOs) or the /dev/fd method of naming open files.  
 
 
 ## Transforming Strings with `tr`
 Transform strings
+### Arguments
 * `-c` 	Operations apply to characters not in the given set
 * `-d` 	Delete characters
 * `-s` 	Replaces repeated characters with single occurrence
 * `-t` 	Truncates
+### Character Classes
 * `[:upper:]` 	All upper case letters
 * `[:lower:]` 	All lower case letters
 * `[:digit:]` 	All digits
@@ -604,75 +631,77 @@ echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
 ## All Bash Conditional Flags
 
 * -a file
-          True if file exists.
+    * True if file exists.
 * -b file
-          True if file exists and is a block special file.
+    * True if file exists and is a block special file.
 * -c file
-          True if file exists and is a character special file.
+    * True if file exists and is a character special file.
 * -d file
-          True if file exists and is a directory.
+    * True if file exists and is a directory.
 * -e file
-          True if file exists.
+    * True if file exists.
 * -f file
-          True if file exists and is a regular file.
+    * True if file exists and is a regular file.
 * -g file
-          True if file exists and is set-group-id.
+    * True if file exists and is set-group-id.
 * -h file
-          True if file exists and is a symbolic link.
+    * True if file exists and is a symbolic link.
 * -k file
-          True if file exists and its ``sticky'' bit is set.
+    * True if file exists and its ``sticky'' bit is set.
 * -p file
-          True if file exists and is a named pipe (FIFO).
+    * True if file exists and is a named pipe (FIFO).
 * -r file
-          True if file exists and is readable.
+    * True if file exists and is readable.
 * -s file
-          True if file exists and has a size greater than zero.
+    * True if file exists and has a size greater than zero.
 * -t fd   
-          True if file descriptor fd is open and refers to a terminal.
+    * True if file descriptor fd is open and refers to a terminal.
 * -u file
-          True if file exists and its set-user-id bit is set.
+    * True if file exists and its set-user-id bit is set.
 * -w file
-          True if file exists and is writable.
+    * True if file exists and is writable.
 * -x file
-          True if file exists and is executable.
+    * True if file exists and is executable.
 * -G file
-          True if file exists and is owned by the effective group id.
+    * True if file exists and is owned by the effective group id.
 * -L file
-          True if file exists and is a symbolic link.
+    * True if file exists and is a symbolic link.
 * -N file
-          True if file exists and has been modified since it was last read.
+    * True if file exists and has been modified since it was last read.
 * -O file
-          True if file exists and is owned by the effective user id.
+    * True if file exists and is owned by the effective user id.
 * -S file
-          True if file exists and is a socket.
+    * True if file exists and is a socket.
 * file1 -ef file2
-          True if file1 and file2 refer to the same device and inode numbers.
+    * True if file1 and file2 refer to the same device and inode numbers.
 * file1 -nt file2
-          True if file1 is newer (according to modification date) than file2, or if file1  exists  and file2 does not.
+    * True if file1 is newer (according to modification date) than file2, or if file1  exists  and file2 does not.
 * file1 -ot file2
-          True if file1 is older than file2, or if file2 exists and file1 does not.
+    * True if file1 is older than file2, or if file2 exists and file1 does not.
 * -o optname
-          True  if the shell option optname is enabled.  See the list of options under the description
-          of the -o option to the set builtin below.
+    * True  if the shell option optname is enabled.  See the list of options under the description
+    * of the -o option to the set builtin below.
 * -v varname
-          True if the shell variable varname is set (has been assigned a value).
+    * True if the shell variable varname is set (has been assigned a value).
 * -R varname
-          True if the shell variable varname is set and is a name reference.
+    * True if the shell variable varname is set and is a name reference.
 * -z string
-          True if the length of string is zero.
+    * True if the length of string is zero.
    string
 * -n string
-          True if the length of string is non-zero.
+    * True if the length of string is non-zero.
 * string1 == string2
     * string1 = string2
-          True if the strings are equal.  = should be used with the test  command  for  POSIX  conformance.
-          When  used  with  the [[ command, this performs pattern matching as described above (Compound Commands).
+    * True if the strings are equal.  
+    * = should be used with the test  command  for  POSIX  conformance.
+    * When  used  with  the [[ command, this performs pattern matching as 
+      described in (Compound Commands).
 * string1 != string2
-          True if the strings are not equal.
+    * True if the strings are not equal.
 * string1 < string2
-          True if string1 sorts before string2 lexicographically.
+    * True if string1 sorts before string2 lexicographically.
 * string1 > string2
-          True if string1 sorts after string2 lexicographically.
+    * True if string1 sorts after string2 lexicographically.
 
 #### Arithmetic Operators:
 * `-eq`: (`==`) Is equal to   
@@ -681,6 +710,7 @@ echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
 * `-le`: (`<=`) Less than or equal to 
 * `-gt`: (`>`) Greater than
 * `-ge`: (`>=`) Greater than or equal to
+
 
 
 ## Interpreter Order of Operations
@@ -812,6 +842,53 @@ directs  only  the  standard output to file dirlist, because the standard error 
 from the standard output before the standard output was redirected to dirlist.
 
 
-##### Credit
-A lot of this was taken from [devhints.io](https://devhints.io/bash).
 
+# Table of Contents
+* [Recursively Get or Search Files](#Recursively-Get-or-Search-Files)
+* [Important Linux Commands](#Important-Linux-Commands)
+* [Run a Script when Any User Logs Into the System](#Run-a-Script-when-Any-User-Logs-Into-the-System)
+* [Miscellaneous Useful Commands](#Miscellaneous-Useful-Commands)
+* [Redirecting Standard Output AND Standard Error](#Redirecting-Standard-Output-AND-Standard-Error)
+* [CLI Tools to Become Familiar With](#CLI-Tools-to-Become-Familiar-With)
+* [Redirecting Standard Output AND Standard Error](#Redirecting-Standard-Output-AND-Standard-Error)
+* [SysAdmin Relevant - Firewall and Network commands](#SysAdmin-Relevant---Firewall-and-Network-commands)
+* [Get bits: Zero, random or random 0/1](#Get-bits:-Zero,-random-or-random-0/1)
+* [PS1, PS2, PS3, and PS4 Special Environment Variables](#PS1,-PS2,-PS3,-and-PS4-Special-Environment-Variables)
+* [Parameter Expansion (Slicing/Substitution)](#Parameter-Expansion-(Slicing/Substitution))
+* [Interpreter Order of Operations](#Interpreter-Order-of-Operations)
+* [All Bash Conditional Flags](#All-Bash-Conditional-Flags)
+* [Transforming Strings with `tr`](#Transforming-Strings-with-`tr`)
+* [Process Substitution](#Process-Substitution)
+* [Dictionaries (Associative Arrays)](#Dictionaries-(Associative-Arrays))
+* [List-like Arrays & String Manipulation/Slicing](#List-like-Arrays-&-String-Manipulation/Slicing)
+* [Arrays in Bash](#Arrays-in-Bash)
+* [Special Arguments/Parameters](#Special-Arguments/Parameters)
+* [Raising Errors](#Raising-Errors)
+* [Returning Values](#Returning-Values)
+* [Functions & Scripts](#Functions-&-Scripts)
+* [Glob Options](#Glob-Options)
+* [Options](#Options)
+* [Getting Options and Arguments](#Getting-Options-and-Arguments)
+* [Loops](#Loops)
+* [Compare Files](#Compare-Files)
+* [Stream Manipulation w/ `awk`, `grep`, and `sed`](#Stream-Manipulation-w/-`awk`,-`grep`,-and-`sed`)
+* [Changing the system's hostname](#Changing-the-system's-hostname)
+* [Source Relative Files](#Source-Relative-Files)
+* [Trapping Errors](#Trapping-Errors)
+* [Getting Help With Commands](#Getting-Help-With-Commands)
+* [Using `find` ](#Using-`find`-)
+* [Get Command Locations, Binaries, and Aliases](#Get-Command-Locations,-Binaries,-and-Aliases)
+* [Check if a File Exists or is Larger Than 0 Bytes](#Check-if-a-File-Exists-or-is-Larger-Than-0-Bytes)
+* [Check if an argument is empty](#Check-if-an-argument-is-empty)
+* [Disable Shellcheck From Within Shell Scripts](#Disable-Shellcheck-From-Within-Shell-Scripts)
+* [File and Directory Permissions](#File-and-Directory-Permissions)
+* [Cron, Cronjobs & Crontabs](#Cron,-Cronjobs-&-Crontabs)
+* [SSH Logs and Processes](#SSH-Logs-and-Processes)
+* [Terminal Colors](#Terminal-Colors)
+* [Definitions](#Definitions)
+* [Search Terms for Bash Man Page](#Search-Terms-for-Bash-Man-Page)
+* [Get the Directory of a Script](#Get-the-Directory-of-a-Script)
+* [Numeric Calculations & Random Numbers](#Numeric-Calculations-&-Random-Numbers)
+* [Using `xargs` to Transform Input into Arguments](#Using-`xargs`-to-Transform-Input-into-Arguments)
+* [Colored output for `less`](#Colored-output-for-`less`)
+* [Using Netcat](#Using-Netcat)
