@@ -9,7 +9,30 @@ List of all default vim keybindings/commands for each mode:
 * *:h insert-index* / *visual-index*  
 
 
+## Getting a List of Functions, or a Function's Arguments
 
+Use the `:fun` command to get a list of functions
+```vim
+" List all functions and their arguments.
+:fu[nction]	
+
+" List function {name}, annotated with line numbers unless "!" is given.
+:fu[nction][!] {name} 
+" {name} may be a |Dictionary| |Funcref| entry: 
+:function dict.init
+```
+
+## Debugging a Slow Vim
+
+You can use built-in profiling support: after launching vim do
+```vim
+:profile start profile.log
+:profile func *
+:profile file *
+" At this point do slow actions
+:profile pause
+:noautocmd qall!
+```
 
 ### Neovim Resources:
 * Nightly repo for `apt-get`:
