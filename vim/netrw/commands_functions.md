@@ -7,39 +7,45 @@
 ### Directory Browsing
 All of the directory browsing commands can take no arguments,
 direcory names, or **patterns** (`netrw-starstar`).  
-* `:Explore[!]  / :Ex[!] `: Explore directory of current file  
-* `:Hexplore[!] / :Hex[!]`: Horizontal Split & Explore  
-* `:Lexplore[!] / :Lex[!]`: Left Explorer Toggle  
-* `:Sexplore[!] / :Sex[!]`: Split&Explore current file's directory  
-* `:Vexplore[!] / :Vex[!]`: Vertical Split & Explore  
-* `:Texplore    / :Tex   `: Tab & Explore  
-* `:Rexplore    / :Rex   `: Return to/from Explorer  
+```vim
+:Explore[!]  / :Ex[!]  " Explore directory of current file  
+:Hexplore[!] / :Hex[!] " Horizontal Split & Explore  
+:Lexplore[!] / :Lex[!] " Left Explorer Toggle  
+:Sexplore[!] / :Sex[!] " Split&Explore current file's directory  
+:Vexplore[!] / :Vex[!] " Vertical Split & Explore  
+:Texplore    / :Tex    " Tab & Explore  
+:Rexplore    / :Rex    " Return to/from Explorer  
+```
 
 Patterns can be:
 ```bash
 :Ex */filepat    # Current direcory.
-:Ex **/filepat   # Recursive.
+:Ex **/filepat   # Recursive from current direcory.
 :Ex *//pattern   # Current direcory. Uses vimgrep.
 :Ex **//pattern  # Recursive. Uses vimgrep.
 ```
-
-If a pattern was used on one the above commands, 
-these commands become available too:  
-* `:Nexplore[!] / :Nex[!]`: Go to the next matching file of the pattern.  
+Using a pattern will add all matches to the **Argument List**.  
+If there are files in the **Argument List**, these commands become available too:  
+* `:Nexplore[!] / :Nex[!]`: Go to the next file in argument list.  
     * Can use `Shift + Up` if supported.
-* `:Pexplore[!] / :Pex[!]`: Go to the previous matching file of the pattern.  
+* `:Pexplore[!] / :Pex[!]`: Go to the previous file in argument list.  
     * Can use `Shift + Down` if supported.
 
 The optional bang (`[!]`) can be used to switch which side the netrw
 window is opened. By default:  
-* `:Lex` will open a netrw window on the Left, `:Lex!` will open it on the right.  
-    * This one is used for `<Plug>NetrwShrink`.
-* `:Vex` will open a netrw window on the Left, `:Vex!` will open it on the right.  
-* `:Sex` will open a netrw window on the top, `:Sex!` will open it on the left.  
-* `:Hex` will open a netrw window on the bottom, `:Hex!` will open it on the top.  
-#### Not available for `:Texplore` or `:Rexplore`.  
-
-
+* `:Vex`: Left  
+    * `:Vex!`: Right  
+* `:Sex`: Top  
+    * `:Sex!`: Left  
+* `:Hex`: Bottom  
+    * `:Hex!`: Top  
+* `:Lex`: Left  
+    * `:Lex!`: Right  
+    * This one is used for `<Plug>NetrwShrink`.  
+* `:Tex`: New Tab
+#### Using a bang `!` is not available for `:Texplore` or `:Rexplore`.  
+* `:Rex`: Return to/from Explorer  
+    * This can be used when using `:Ex` (full-window netrw)
 
 ## Functions
 
