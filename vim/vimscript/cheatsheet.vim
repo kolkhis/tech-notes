@@ -1,4 +1,11 @@
 
+						" *literal-Dict* *#{}*
+" To avoid having to put quotes around every key the #{} form can be used.  This
+" does require the key to consist only of ASCII letters, digits, '-' and '_'.
+" Example: >
+	" :let mydict = #{zero: 0, one_key: 1, two-key: 2, 333: 3}
+" Note that 333 here is the string "333".  Empty keys are not possible with #{}.
+
 " AUTOCOMPLETE:
 " The good stuff is documented in |ins-completion|
 " HIGHLIGHTS:

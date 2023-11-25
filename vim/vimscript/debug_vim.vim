@@ -1,6 +1,6 @@
 
-" DEBUGGING SLOW VIM:
-You can use built-in profiling support: after launching vim do
+" DEBUGGING A SLOW VIM:
+" You can use built-in profiling support: after launching vim do
 
 :profile start profile.log
 :profile func *
