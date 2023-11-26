@@ -53,8 +53,12 @@
 *   *FILE1* -ot *FILE2*
     * True if file1 is older than file2.  
 *   -t *FD*  
-    *   True if "File Descriptor" (*FD*) is opened on a terminal.  
-### File Descriptor (fd)
+    * True if ["File Descriptor"](#File-Descriptor) (*FD*) is opened on a terminal.  
+
+## Variables
+* 
+
+### File Descriptor 
 In Unix and Unix-like systems, a file descriptor is a non-negative 
 number that uniquely identifies an open file for the process.  
 Standard file descriptors are 0 (standard input), 1 (standard output), and 2 (standard error).  
