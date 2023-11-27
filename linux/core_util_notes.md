@@ -40,25 +40,25 @@ Trying `man 8 ls` will look in section 8 for `ls`
 * ... what else?
 </details>
 
-### Timezone change
-#### Get timezone for system:
-    * timedatectl
-#### Find your timezone:
-    * timedatectl list-timezones
-#### Change it:
-    * timedatectl set-timezone America/New_York
+## Timezone change
+* Get timezone for system:
+    * `timedatectl`
+* Find your timezone:
+    * `timedatectl list-timezones`
+* Change it:
+    * `timedatectl set-timezone America/New_York`
 
 
 ### Tmux vs Screen
 #### Multiple user session:
 * Both have multi-user support
 * Screen allows users to share a session, but be in different windows
-      * screen -r sessionowner/[pid.tty.host]
+    * screen -r sessionowner/[pid.tty.host]
 * Tmux session allows users to share a session, but switching windows switches for both users.
 
 * attach to existing session in tmux:
-      * `$ tmux attach -t 0`
-      * Where 0 is the target session from `tmux ls`
+    * `$ tmux attach -t 0`
+    * Where 0 is the target session from `tmux ls`
 
 
 
