@@ -69,17 +69,17 @@ Trying `man 8 ls` will look in section 8 for `ls`
 Putting ! at the end of the command in vim toggles the command on and off.
 
 Registers:
-`"tyy` <- yank line to register t
-`@t` <- play register as macro
+`"tyy` <- yank line to register t  
+`@t` <- play register as macro  
 
 Macros:
-`q[char]` <- start recording a macro in the [char] register. q again to stop recording.
-`@[char]` <- play the macro
+`q[char]` <- start recording a macro in the [char] register. q again to stop recording.  
+`@[char]` <- play the macro  
 
 Vim Filters:
-`:.![cmd]` <- use the current line as stdin for `[cmd]`, stdout on current line
+`:.![cmd]` <- use the current line as stdin for `[cmd]`, stdout on current line  
 
-`<C-o>p` <- quickly pastes register while in insert mode
+`<C-o>p` <- quickly pastes register while in insert mode  
 :h i_ctrl-o 
 
 <details>
@@ -87,10 +87,10 @@ Vim Filters:
 
 ##### Plain GPG Protected Credential Helper:
 1. Set git to use gpg
-`$ git config --global credential.credentialStore gpg`
+`$ git config --global credential.credentialStore gpg`  
 
 1. Generate gpg key
-    1. Run `$ gpg --full-generate-key`
+    1. Run `$ gpg --full-generate-key`  
     1. Specify the type. RSA/whatever (default) is good. (is ed25519 available?)
     1. Specify key size (4096)
     1. Enter when key will expire
@@ -114,10 +114,10 @@ It will look something like `rsa4096/<secret_key>` under the `sec` section. Only
 <details>
 <summary> Other Git Encryption Solutions:</summary> 
 
-Just use `ssh-keygen`
-`git-remote-gcrypt`
-`git-secret`
-`git-crypt`
+Just use `ssh-keygen`  
+`git-remote-gcrypt`  
+`git-secret`  
+`git-crypt`  
 
 BlackBox by StackOverflow
 
@@ -142,19 +142,19 @@ Where:
 
 [type]: Indicates the type of the commit. It should be one of the following:
 
-* feat: A new feature or functionality added.
+* feat: A new feature or functionality added.  
 
-* fix: A bug fix or error correction.
+* fix: A bug fix or error correction.  
 
-* docs: Documentation updates or changes.
+* docs: Documentation updates or changes.  
 
-* style: Changes to code formatting, indentation, etc.
+* style: Changes to code formatting, indentation, etc.  
 
-* refactor: Code refactoring or restructuring without adding new features or fixing bugs.
+* refactor: Code refactoring or restructuring without adding new features or fixing bugs.  
 
-* test: Adding or updating tests.
+* test: Adding or updating tests.  
 
-* chore: Maintenance tasks or other miscellaneous changes.
+* chore: Maintenance tasks or other miscellaneous changes.  
 
 
 [description]: A brief and concise description of the change made in the commit. It should start with a capitalized verb and should not exceed 50 characters.
