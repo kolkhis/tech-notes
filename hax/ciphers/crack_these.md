@@ -7,7 +7,6 @@ I strongly suggest piping to either "file" or "hexdump". Dumping random binary
 data in your terminal isn't cool.
 
 
-
 ## Tools
 
 * hashcat
@@ -17,6 +16,7 @@ data in your terminal isn't cool.
 * hd
 * gunzip
 * xz
+* `xfreerdp` is for RDP
 * ... What else?
 
 ### Hashcat searching
