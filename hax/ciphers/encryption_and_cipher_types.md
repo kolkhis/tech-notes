@@ -1,4 +1,18 @@
 
+
+## Base64
+Base64 is a way of encoding binary data in ASCII text, to help it survive transportation over
+network layers that aren't "8-bit clean".  
+There are generally 64 characters that will be present in a ton of character sets.  
+So, 64. Base64.
+```bash
+base64 -d
+```
+> "Base64 is a group of tetrasexagesimal binary-to-text encoding schemes that  
+> represent binary data in sequences of 24 bits that can be represented by  
+> four 6-bit Base64 digits"  
+>  - Wikipedia
+
 ## Stegonography
 Stegonography is hiding something in plain sight that can be recovered,
 in the most generalized sense.
@@ -35,19 +49,3 @@ PBKDF2 stands for "Password-Based Key Derivation Function 2."
 * The hash fn is applied repeatedly in each iteration to generate the final key
 
 
-
-
-## Recon
-recon: Go to linked and see what technologies they're using
-What tooling do they use? What's exposed to internet?
-
-Footprinting:
-```bash
-curl -I hostname.com/:port
-```
-ningx/1.25.2, now I just have to look for vulns in nginx 1.25.X
-
-
-
-## Diamond Model of Intrusion Analysis
-https://www.activeresponse.org/wp-content/uploads/2013/07/diamond.pdf
