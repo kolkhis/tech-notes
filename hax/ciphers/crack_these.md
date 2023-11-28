@@ -1,13 +1,22 @@
 
 # Puzzle Codes to Crack
 
+base64 usually ends with 0, 1, or 2 = signs
+
+I strongly suggest piping to either "file" or "hexdump". Dumping random binary
+data in your terminal isn't cool.
+
+search for it, the format is `hashcat -m <somenumber>` where `<somenumber>` is the type of hash
+
 ## Tools
 
+* hashcat
 * xxd
 * base64
 * openssl enc
 * hd
 * gunzip
+* xz
 * ... What else?
 
 
@@ -24,3 +33,7 @@ Wk5lNGFvRUtxenBWSTNZdjRMRUJXMHYyZmNyais5eGtwem55TjM2Zi91b0RkTWJXZ1FHZnE4MVhrVkdk
 
 ### Ok, 1 it is... 
 /Td6WFoAAATm1rRGAgAhARwAAAAQz1jM4AB7AFVdADqcyM7fkEzWksRKW8LDOw8L2nvn9Ow+NSvqbwuiXN5HyG7PptUUighU1D9jH4TF2kBSGUCckOUB9voiy6djepTLiqlMimtCAfk8Fs6R8JwpHAbVTQAAAAAAE1meTRlNH6gAAXF8i8ARTx+2830BAAAAAARZWg==
+
+
+### Should this be a string?
+"/Td6WFoAAATm1rRGAgAhARwAAAAQz1jM4B//ARRdACmURZ1gyBn4JmSIjib+MZX9x4eABpe77H+oCX4ENOqTjJ28OhWqqGO+kRFLn0FwxGy0KTG4Pnl9AIP/7hgkkcw/ZBtFFQI19zDVYOd9n5ZpgwXpI01+JmakruDp/EAc1ID7+9hx1+jgoxUqgyBvM6XHTxIgKcp8UsYY5OTYLifWSQnOcm90I5WJMHVxMGkBMcIIIYyZGBWWeUeORps1uCR02WvXFxq1e8cowdHZRt7U93/7DL3PODf64WYyAyjsq28l56FoeLnBKVpLMWesIDI+Z/fIXZgWXmiQtOSwhgkirIxxwsJZ09VEgbjz4d2zU2D7wJsB+wYrCuTL4smK0Vxap2fwG/ifb5pwotRyrCXE3JaAAADNh5uOIRcaOgABsAKAQAAAM6+cPrHEZ/sCAAAAAARZWg=="
