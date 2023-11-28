@@ -4,12 +4,11 @@ The ORIGINAL text-based browser
 Designed for systems with multiple users
 
 Why use lynx? 
-    * Speed
-    * Privacy
-    * Copypastability
-    * 
+* Speed
+* Privacy
+* Copypastability
 
-----------
+---
 
 ### Installing
 
@@ -17,7 +16,7 @@ Why use lynx?
 
 `type lynx`
 `# /usr/bin/lynx`
-----------
+---
 
 ### Get Rid of Default Bindings
 
@@ -100,30 +99,15 @@ w3m is a terminal browser that has support for images and JS.
 Prioritizes images over text (dumb)
 
 
-### Off-topic notes
-"Progressive Web Design (PWA)"
-Works for all users regardless of their browser choice.
+## Off-topic notes
+### "Progressive Web Design (PWA)"  
+Works for all users regardless of their browser choice.  
 - Important for blind users.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Transferring Files
 
 Never use FTP, only SFTP
-<!-- `zet` - Command -->
 dev.to BLOCKS TEXT BROWSERS LOL
 
 
@@ -131,34 +115,36 @@ dev.to BLOCKS TEXT BROWSERS LOL
 `curl` is what you're gonna use a lot
 
 
-vi mode for terminal:
-`set -o vi`
-Then you can search bash history with:
-/<search_term> (in normal mode, NOT insert mode.)
-Then `n` for next, `N` for previous.
+### vi mode for terminal:  
+`set -o vi`  
+Then you can search bash history with:  
+/<search_term> (in normal mode, NOT insert mode.)  
+Then `n` for next, `N` for previous.  
+
+### Security tip: arguments passed 
+
+Arguments passed on the cmdline can be seen by anyone on the system
 
 
-args on the cmdline can be seen by anyone on the system
-
-
-# Making Custom Binaries (executables)
+### Making Custom Binaries (executables)
 ~/.local/bin 
-    > Path for custom executables.
+> Path for custom executables.
 
 
-## CLI Tools to Become Familiar With
-xclip
-npv/nvp # sound clips, pulse audio
-ESXi
-Ncdu
-pandoc
-ffmpeg
+### CLI Tools to Become Familiar With
+* xclip
+* npv/nvp # sound clips, pulse audio
+* ESXi
+* Ncdu
+* pandoc
+* ffmpeg
 
 ### Some Bash Tips
-exec is the preferred way to hand off to another process.
+`exec` is the preferred way to hand off the current shell to another process.  
 
-exec bash -l
+`exec bash -l`
 > This will reload shell (for .bashrc etc reloads)
+> The `-l` makes bash act like a login shell.
 
 ### Untar file
 Download the file
