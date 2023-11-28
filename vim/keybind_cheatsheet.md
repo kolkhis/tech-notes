@@ -48,6 +48,18 @@ They must appear right after the command, before any other arguments.
 * `vib`: Go into visual mode and select inside parens (` ( ) `)
 * `viB`:  Go into visual mode and select inside braces (` { } `)
 
+* `ge`/`gE`: Go to the end of the previous `word` / `WORD` respectively.
+
+### Swapping Lines, Chars, and Words
+* `deep`: two exchange words (start with the cursor in the blank space before the first word).  
+    * `dawelp`: Does the same thing but you can be anywhere inside the first word.  
+
+### Windows
+
+* `<C-w><C-q>`: Close the current window.
+* `<C-w>hjkl`: Move to the window in the corresponding direction
+* `<C-w>r`: Rotate the position of the windows
+
 
 ---
 
