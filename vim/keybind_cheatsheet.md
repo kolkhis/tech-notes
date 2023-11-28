@@ -4,6 +4,30 @@
 ## Making Custom Keybindings
 >###### *:h map-precedence*
 >###### *:h map-arguments*
+
+
+### Mapping Modes
+| Command mode:  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
+|----------------|------|-----|-----|-----|-----|-----|------|------|
+| [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
+| n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |
+| [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |
+| i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |
+| c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |
+| v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |
+| x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |
+| s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |
+| o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |
+| t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |
+| l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |
+
+The `l` mode (Lang / Language Argument Mode) is used when using 
+an 'input method editor' (IME) for non-english characters.
+
+
+### Special Mapping Arguments
+>##### *:h map-arguments*
+
 ```vim
 nnoremap <buffer> <leader>sa rhs
 nnoremap <nowait> <leader>sa rhs  
@@ -11,12 +35,12 @@ nnoremap <silent> <leader>sa rhs
 nnoremap <script> <leader>sa rhs
 nnoremap <expr>   <leader>sa rhs
 nnoremap <unique> <leader>sa rhs
-" Getting help: :h map-buffer, :h map-nowait, etc
 ```
 These can be used in any order.  
 They must appear right after the command, before any other arguments.  
 
-### Clear Mappings
+
+### Clearing / Deleting Mappings
 ```vim
 :unmap <buffer> ,w
 :mapclear <buffer>
@@ -118,6 +142,50 @@ They must appear right after the command, before any other arguments.
 * `v_is`: (`is`)     extend highlighted area with inner sentence
 * `v_it`: (`it`)     extend highlighted area with inner tag block
 
+## Select mode
+In Select mode, vim behaves more like a standard graphical editor.  
+The same keybindings for motion you would use in a non-vim-enabled
+environment are applicable in Select mode.  
+
+Entering select mode:  
+* From Normal mode with:
+    * `gh` for character-wise selection  
+    * `gH` for line-wise selection  
+    * `g^H` for block-wise selection  
+* From Insert mode with:
+    * `<C-o>` followed by one of the above commands.
+* From Visual mode with `<C-g>` (`v_CTRL-G`)
+    * `<C-g>` Toggles between Visual and Select
+
+The main movement keys for Select Mode are the same as other editors:
+* Cursor Keys
+    * `<Up>`
+    * `<Down>`
+    * `<Left>`
+    * `<Right>`
+* Nav Keys
+    * `<Home>`
+    * `<End>`
+    * `<PageUp>`
+    * `<PageDown>`
+
+### Commands in Select mode:
+* Non-movement characters (without `<C-char>`) delete the selection.
+    * The typed character is inserted.
+* Non-printable movement commands, with the Shift key pressed, extend the
+  selection.  
+    * `keymodel` must include `startsel`.
+* Non-printable movement commands, with the Shift key NOT pressed,
+  stop Select mode.  
+    * `keymodel` must include `stopsel`.
+    * Otherwise, extends selection.
+* ESC stops Select mode.
+* `CTRL-O` switches to Visual mode for the duration of one command.
+* `CTRL-G` switches to Visual mode.
+* `CTRL-R` {register} selects the register to be used for the text that is
+  deleted when typing text.
+    * Unless you specify the `_` (black hole) register, the unnamed register is
+      also overwritten.
 
 ---
 
@@ -132,19 +200,18 @@ They must appear right after the command, before any other arguments.
 
 * `c_CTRL-B`: (`CTRL-B`)  cursor to start of command-line
 * `c_CTRL-E`: (`CTRL-E`)  cursor to end of command-line
-
 * `c_<Home>`: (`<Home>`)  cursor to start of command-line
-* `c_<End>`: (`<End>`)  cursor to end of command-line
+* `c_<End>` : (`<End>`)  cursor to end of command-line
+
 * `c_CTRL-G`: (`CTRL-G`)  next match when 'incsearch' is active
 
-* `c_<Delete>`: (`<Delete>`)  delete the character under the cursor
-* `c_<BS>`: (`<BS>`)  delete the character in front of the cursor
-* `c_CTRL-H`: (`CTRL-H`)  same as( `<BS>`)
 * `c_CTRL-J`: (`CTRL-J`)  same as( `<CR>`)
-* `c_<Esc>`: (`<Esc>`)  abandon command-line without executing it
 * `c_CTRL-[`: (`CTRL-[`)  same as( `<Esc>`)
+
 * `c_CTRL-\_CTRL-N`: (`CTRL-\ CTRL-N`) go to Normal mode, abandon command-line
 * `c_CTRL-\_CTRL-G`: (`CTRL-\ CTRL-G`) go to Normal mode, abandon command-line
+* `c_<Insert>`: (`<Insert>`) toggle insert/overstrike mode
+* `c_<LeftMouse>`: (`<LeftMouse>`) cursor at mouse click
 
 * `c_<Up>`: (`<Up>`)  recall previous command-line from history that
                       matches pattern in front of the cursor
@@ -152,31 +219,29 @@ They must appear right after the command, before any other arguments.
 * `c_<Down>`: (`<Down>`)  recall next command-line from history that
                           matches pattern in front of the cursor
 * `c_<S-Down>`: (`<S-Down>`) recall next command-line from history
-* `c_<Insert>`: (`<Insert>`) toggle insert/overstrike mode
-* `c_<LeftMouse>`: (`<LeftMouse>`) cursor at mouse click
+
 
 ### Completion
 * `c_wildchar`: 'wildchar' Do completion on the pattern in front of the
                            cursor (default:`<Tab>`)
 * `c_<Tab>`: (`<Tab>`)  if 'wildchar' is (`<Tab>`): Do completion on
                         the pattern in front of the cursor
-* `c_CTRL-I`: (`CTRL-I`)  same as <Tab>
+* `c_CTRL-I`: (`CTRL-I`)  same as `<Tab>`
 * `c_CTRL-L`: (`CTRL-L`)  do completion on the pattern in front of the
                           cursor and insert the longest common part
-* `c_CTRL-N`: (`CTRL-N`)  after using 'wildchar' with multiple matches:
-                          go to next match, otherwise: recall older
-                          command-line from history.
-* `c_CTRL-P`: (`CTRL-P`)  after using 'wildchar' with multiple matches:
-                          go to previous match, otherwise: recall older
-                          command-line from history.
+* `c_CTRL-N`: (`CTRL-N`)  
+    * after using 'wildchar' with multiple matches: go to next match
+    * otherwise: recall older command-line from history.
+* `c_CTRL-P`: (`CTRL-P`)  
+    * after using 'wildchar' with multiple matches: go to previous match
+    * otherwise: recall older command-line from history.
 * `c_<S-Tab>`: (`<S-Tab>`)  same as (`CTRL-P`)
 
 ### Quick Insertion
 * `c_CTRL-R_CTRL-W`: (`CTRL-R CTRL-W`) 
-    Places the current word under cursor onto 
-    the command line
-* `c_CTRL-R_CTRL-L`: (`CTRL-R CTRL-L`) Places the entire line under cursor onto 
-                                       the command line
+    * Places the current word under cursor onto the command line
+* `c_CTRL-R_CTRL-L`: (`CTRL-R CTRL-L`) 
+    * Places the entire line under cursor onto the command line
 * `c_CTRL-W`: (`CTRL-W`)  delete the word in front of the cursor
 * (`CTRL-Y`)  copy (yank) modeless selection
 * `c_CTRL-R`: (`CTRL-R {regname}`) insert the contents of a register or object
@@ -188,41 +253,7 @@ They must appear right after the command, before any other arguments.
 * `c_CTRL-]`: (`CTRL-]`)  trigger abbreviation (Doesn't work?)
 
 
-## Select mode
-Entering select mode:
-* From Normal mode with:
-    * `gh` for character-wise selection  
-    * `gH` for line-wise selection  
-    * `g^H` for block-wise selection  
-* From Insert mode with:
-    * `<C-o>` followed by one of the above commands.
-* From Visual mode with `<C-g>` (`v_CTRL-G`)
-    * `<C-g>` Toggles between Visual and Select
 
-In Select mode, vim behaves more like a standard graphical editor.  
-The same keybindings for motion you would use in a non-vim-enabled
-environment are applicable in Select mode.  
-In Select Mode you can highlight characters with `<Left>` and `<Right>`,
-words with `<C-Left>`/`<C-Right>`, etc.  
-
-Movement keys in this mode are the cursor keys,
-`<End>`, `<Home>`, `<PageUp>` and `<PageDown>`.
-
-### Commands in Select mode:
-- Printable characters, `<NL>` and `<CR>` cause the selection to be 
-  deleted, and Vim enters Insert mode.
-  The typed character is inserted.
-- Non-printable movement commands, with the Shift key pressed, extend the
-  selection.  'keymodel' must include "startsel".
-- Non-printable movement commands, with the Shift key NOT pressed,
-  stop Select mode.  'keymodel' must include "stopsel".
-- ESC stops Select mode.
-- CTRL-O switches to Visual mode for the duration of one command. *v_CTRL-O*
-- CTRL-G switches to Visual mode.
-- CTRL-R {register} selects the register to be used for the text that is
-  deleted when typing text. *v_CTRL-R*
-  Unless you specify the "_" (black hole) register, the unnamed register is
-  also overwritten.
 
 
 ## Netrw
@@ -271,5 +302,6 @@ Movement keys in this mode are the cursor keys,
 * `a`: Toggle through three hiding modes. Set the hiding list with `<C-h>`
 * `<Ctrl-H>`: Brings up a requestor allowing user to change the 
   file/directory hiding list in `g:netrw_list_hide`.  
+
 
 
