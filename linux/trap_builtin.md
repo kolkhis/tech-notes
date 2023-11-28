@@ -1,42 +1,49 @@
 
 
-# Using `trap` for Error Handling, Debugging, & Other Behavior
+# Using `trap` for Error Handling, Debugging, & Other Behavior  
 
-Syntax:
-```bash
-trap [action] [signal(s)]
+Syntax:  
+```bash  
+trap [action] [signal(s)]  
 ```
 
+You'll want to set your traps at the top of the script.  
+
+
 ## Linux Signals Used with `trap`
-```bash
-trap -l
+```bash  
+trap -l  
 ```
 The above command **`-l`ists** all signals that Linux uses.  
 
 Some common signals are:  
-* `SIGINT`: Signal interrupt, typically sent when the user presses Ctrl+C.
-* `SIGTERM`: Signal terminate, a request to gracefully terminate the process.
-* `EXIT`: Triggered when a script exits (0).
+* `SIGINT`: Signal interrupt, typically sent when the user presses Ctrl+C.  
+* `SIGTERM`: Signal terminate, a request to gracefully terminate the process.  
+* `EXIT`: Triggered when a script exits (0).  
 * `ERR`: Triggered when a script command returns a non-zero exit status.  
 
 
-All Signals have numeric representations along with the "symbolic names" given to them:
-* `SIGHUP (1)`: Hangup detected on controlling terminal or death of controlling process.  
-* `SIGINT (2)`: Interrupt from keyboard (Ctrl+C).  
-* `SIGQUIT (3)`: Quit from keyboard.  
-* `SIGILL (4)`: Illegal Instruction.  
-* `SIGABRT (6)`: Abort signal from abort system call.  
-* `SIGFPE (8)`: Floating-point exception.  
-* `SIGKILL (9)`: Kill signal.  
-* `SIGSEGV (11)`: Invalid memory reference.  
-* `SIGPIPE (13)`: Broken pipe: write to pipe with no readers.  
-* `SIGALRM (14)`: Timer signal from alarm system call.  
-* `SIGTERM (15)`: Termination signal.  
-* `SIGUSR1 (10) and SIGUSR2 (12)`: User-defined signals.  
+All Signals have numeric representations (up to 64), along with the "symbolic names" given to them.  
+Use `trap -l` for all of the linux-wide signals.  
+Not an exhaustive list:  
+|   **SIGNAL**     |      **TRIGGER**   |
+|------------------|--------------------|
+| `SIGHUP (1)`    | Hangup detected on controlling terminal or death of controlling process.  |
+| `SIGINT (2)`    | Interrupt from keyboard (Ctrl+C).  |
+| `SIGQUIT (3)`   | Quit from keyboard (`kill -SIGQUIT {PID}` command).  |
+| `SIGILL (4)`    | Illegal Instruction.  |
+| `SIGABRT (6)`   | Abort signal from abort system call.  |
+| `SIGFPE (8)`    | Floating-point exception.  |
+| `SIGKILL (9)`   | Kill signal.  |
+| `SIGSEGV (11)`  | Invalid memory reference.  |
+| `SIGPIPE (13)`  | Broken pipe: write to pipe with no readers.  |
+| `SIGALRM (14)`  | Timer signal from alarm system call.  |
+| `SIGTERM (15)`  | Termination signal (can be done with `kill -SIGTERM {PID}`).  |
+| `SIGUSR1 (10) and SIGUSR2 (12)`| User-defined signals.  |
 
-## Bash-specific Signals for Scripting and Error Handling
+## Bash-specific Signals for Scripting and Error Handling  
 * ### `ERR`  
-This pseudo-signal is trapped whenever a command in the script
+This pseudo-signal is trapped whenever a command in the script  
 returns a non-zero exit status (indicating failure).  
 It allows you to execute a specific action, like cleanup or logging,
 when an error occurs in the script.  
@@ -58,54 +65,112 @@ This allows actions to be taken just before the function or the sourced script c
 
 
 ## Use Cases and Examples for `trap`
-1. Cleanup on Script Exit
+
+### Script Cleanup  
+1. Cleanup on script exit:  
 To clean up files used in the script when 
-the `EXIT` signal (0) is encountered:
-```bash
-trap "rm -f /tmp/tmpfile; echo 'Cleanup performed';" EXIT
+the `EXIT` signal (0) is encountered, usually
+once the script is finished running:  
+```bash  
+trap "rm -f /tmp/tmpfile; echo 'Cleanup performed';" EXIT  
 ```
   
-2. Handling Interruptions
+### Handling Interruptions  
+2. Handling Script Interruptions:  
 If you want to handle user interruptions (like `CTRL-C`), 
-you can use `trap` on `SIGINT`:
-```bash
-trap "echo 'Script interrupted.'; exit 1" SIGINT
+you can use `trap` on `SIGINT`:  
+```bash  
+trap "echo 'Script interrupted.'; exit 1" SIGINT  
 ```
 
-3. Handling Errors
+### Handling Errors  
+3. Handling Errors  
 Error handling in bash can be done with `trap`.  
-Use the `trap` command on the `ERR` signal:
-```bash
-trap 'echo "An error has occurred. Exiting script..."; exit 1' ERR
+Use the `trap` command on the `ERR` signal:  
+```bash  
+trap 'echo "An error has occurred. Exiting script..."; exit 1' ERR  
 ```
 
-4. Debugging
+### Debugging
+4. Debugging Scripts or One-liners
 `trap` can also be used for debugging.  
 The `DEBUG` signal is encountered every 
-time a command is executed in the script.
-```bash
-trap 'echo "Command executed on line $LINENO"' DEBUG
+time a command is executed in the script.  
+```bash  
+trap 'echo "Command executed on line $LINENO"' DEBUG  
 ```
+
+## Check if a trap i9s set on a signal  
+To see if a trap is set on a signal, use the `-p` (print trap) option.  
+```bash  
+trap -p SIGINT  
+```
+Using trap with no options does the same thing.  
+
+To reset the signal to its untrapped,
+normal state, use a hyphen "-" and the  
+name of the trapped signal.  
+
+```bash  
+trap - SIGINT  
+trap -p SIGINT  # Should not print anything  
+```
+
+## Managing Signals Inside Scripts (Handler Functions / Callback Functions)  
+The `action` can be a bash/shell function, to be used as a callback for a trapped signal.  
+```bash  
+#!/bin/bash  
+
+# Set callback for multiple signals  
+trap graceful_shutdown SIGINT SIGQUIT SIGTERM  
+
+graceful_shutdown() {
+  echo -e "\nRemoving temporary file:" $temp_file  
+  rm -rf "$temp_file"  
+  exit  
+}
+
+temp_file=$(mktemp -p /tmp tmp.XXXXXXXXXX)  
+echo "Created temp file:" $temp_file  
+counter=0  
+while true  
+do 
+  echo "Loop number:" $((++counter))  
+  sleep 1  
+done  
+```
+
+
+
+
+
+## Resetting Traps and Signal Actions to Default  
+To reset the `trap` set on a signal, just call it again,
+this time with no action, or a dash `-` where the action would go.  
+```bash  
+# Reset EXIT to default behavior  
+trap EXIT  
+trap - EXIT  
+```
+
+
+
 
 ## Additional Notes on `trap`
-* Multiple Traps
-    * You can set multiple `trap` commands for different signals in the same script.
-* Disabling a Trap
-    * To disable a trap, use an empty string as the action.
-        * For example, trap "" SIGINT will ignore Ctrl+C.
-* Scope
-    * trap commands affect the current shell and its child processes.
-    * They do not affect the parent shell or other scripts not sourced by the current script.
-```bash
-trap "" SIGINT   # Ignore C-c (^C). This is not the same as resetting.
+* Multiple Traps  
+    * You can set multiple `trap` commands for different signals in the same script.  
+* Disabling a Trap  
+    * To disable a trap, use an empty string as the action.  
+        * For example, trap "" SIGINT will ignore Ctrl+C.  
+* Scope  
+    * trap commands affect the current shell and its child processes.  
+    * They do not affect the parent shell or other scripts not sourced by the current script.  
+```bash  
+trap "" SIGINT   # Ignore C-c (^C). This is not the same as resetting.  
 ```
 
-## Resetting Traps and Signal Actions to Default
-To reset the `trap` set on a signal, just call it again,
-this time with no action, or a dash `-` where the action would go.
-```bash
-# Reset EXIT to default behavior
-trap EXIT
-trap - EXIT
-```
+## Sources  
+
+* `man bash`
+* [HowToGeek](https://www.howtogeek.com/814925/linux-signals-bash/)  
 
