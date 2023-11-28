@@ -26,6 +26,9 @@ The format is `hashcat -m <somenumber>` where `<somenumber>` is the type of hash
 hashcat --help | grep AS-REP gives 18200
 ```
 
+### Stuff to look up
+* Converting octal to decimal (or binary)
+
 
 ## Codes
 
@@ -44,3 +47,11 @@ Wk5lNGFvRUtxenBWSTNZdjRMRUJXMHYyZmNyais5eGtwem55TjM2Zi91b0RkTWJXZ1FHZnE4MVhrVkdk
 
 ### Should this be a string?
 "/Td6WFoAAATm1rRGAgAhARwAAAAQz1jM4B//ARRdACmURZ1gyBn4JmSIjib+MZX9x4eABpe77H+oCX4ENOqTjJ28OhWqqGO+kRFLn0FwxGy0KTG4Pnl9AIP/7hgkkcw/ZBtFFQI19zDVYOd9n5ZpgwXpI01+JmakruDp/EAc1ID7+9hx1+jgoxUqgyBvM6XHTxIgKcp8UsYY5OTYLifWSQnOcm90I5WJMHVxMGkBMcIIIYyZGBWWeUeORps1uCR02WvXFxq1e8cowdHZRt7U93/7DL3PODf64WYyAyjsq28l56FoeLnBKVpLMWesIDI+Z/fIXZgWXmiQtOSwhgkirIxxwsJZ09VEgbjz4d2zU2D7wJsB+wYrCuTL4smK0Vxap2fwG/ifb5pwotRyrCXE3JaAAADNh5uOIRcaOgABsAKAQAAAM6+cPrHEZ/sCAAAAAARZWg=="
+
+
+
+### Incomplete WIP (hacking center):
+iVBORw0KGgoAAAANSUhEUgAAAFIAAABSAQMAAAD94hHYAAAABlBMVEUAAAD///+l2Z/dAAABHklEQVQokZXTsaqkMQgG0ICt4KsItgFfPZBWyKsItoI3Owyz13+aXatThPBpzKhPrfEv9iF5wmBAd5TsxFSNh4HD5waWL4uDyben8EH4crEm1vv+v74ZXvXO8/ENi7YU3vk/dlc+S2/q7pwnmQ756S5mXbzW0O7IDB7B9bAfRTFyhe5aKYcAhbozaeA85vqwOvrQO8VuZ/KyyindSTUFCUO7g6SOL8rqzp0xfIdRdxCihLjIw17iaMOpu0gGMuKu7rC0lTAXdd8WPUKZoDv2beMgvs7/cjnpYRqvd/ztmYJ4Zy7dnmwIwIO6qyLi4Pbq9nFjyQrW7rvDaLl3yMMgbiIM8LT+yWzz23pXL6geLg60MqVuH2xikQzd//lPfwATWwAFktW4SgAAAABJRU5ErkJggg==
+
+
+
