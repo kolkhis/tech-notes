@@ -7,14 +7,72 @@ You can read the help pages (like a book): `:h 1.1`
 List of all default vim keybindings/commands for each mode:  
 * *:h index*  
 * *:h insert-index* / *visual-index*  
+* *:h default-mappings*  
 
+## History
+There are actually five
+history tables:
+* one for `:` commands
+* one for search strings
+* one for expressions
+* one for input lines, typed for the `input()` function.
+* one for debug mode commands
+
+## Replace Tabs with Spaces
+### `:ret`
+Using:
+```vim
+:[range]ret[ab][!] [new_tabstop]
+```
+* If there's no tabstop size or it's zero, Vim uses `tabstop`.  
+* With `!`, Vim also replaces strings of only normal spaces with tabs where appropriate.
+* With `expandtab` on, Vim replaces all tabs with the appropriate number of spaces.  
+
+
+## Use an Ex Command on Lines Based on Range or Pattern
+
+* `:[range]g[lobal]/{pattern}/[cmd]` / `:g/{pattern}/[cmd]`
+    * Execute the Ex command [cmd] (default `:p`) on the
+      lines within [range] where {pattern} matches.
+
+* `:[range]g[lobal]!/{pattern}/[cmd]` / `:g!/{pattern}/[cmd]`
+    * Execute the Ex command `[cmd]` (default `:p`) on the
+      lines within `[range]` where `{pattern}` does NOT match.
+
+* `:v`: Same as `:g!`
+
+## Registers
+##### Getting help with registers: `:h quote_{reg}`/`:h quote{reg}`
+
+* Display the contents of all registers with `:reg`.  
+    * Display certain registers by passing them in as args: 
+    `:reg 123abc` (will display registers 1-3, and a-c)  
+* `:di`, `:dis`, `:display`: Same as `:reg`
+
+| **Register**  |  **Purpose**            |
+|---------------|-------------------------|
+|     `"#`      | Alternate file register |
+`"=` Expression Register.
+
+
+### Writing to a Register
+
+You can write to a register with a `:let` command `:h :let-@`.  Example: >
+    :let @/ = "the"
+
+
+## Command-line Window
+A command line window pre-populated with your command-line history.  
+To open:  
+* From Normal mode, use the `q:`, `q/` or `q?` command.
+The height of the window is specified with `cmdwinheight`
 
 ## Getting a List of Functions, or a Function's Arguments
 
 Use the `:fun` command to get a list of functions
 ```vim
 " List all functions and their arguments.
-:fu[nction]	
+:fu[nction] 
 
 " List function {name}, annotated with line numbers unless "!" is given.
 :fu[nction][!] {name} 
@@ -286,11 +344,11 @@ For this example, we'll be using the `a` key as a macro register.
 
 ### Making a Numbered List Using Macros
 1. Create the first list entry, make sure it starts with a number.
-2. qa	     - start recording into register 'a'
-3. Y	     - yank the entry
-4. p	     - put a copy of the entry below the first one
+2. qa        - start recording into register 'a'
+3. Y         - yank the entry
+4. p         - put a copy of the entry below the first one
 5. CTRL-A    - increment the number
-6. q	     - stop recording
+6. q         - stop recording
 7. `<count>@a` - repeat the yank, put and increment `<count>` times
 
 
@@ -557,3 +615,16 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 
 ## Random Stuff
 Using a <Del> in markdown will strikethrough all subsequent lines </Del>
+
+
+## Note Formatting Vim Regex Patterns  
+### Add Linebreaks for Easier Readability  
+Add two spaces (linebreak) at the end of each line that doesn't already have two spaces,
+isn't a comma, and isn't the end of a codeblock (3 backticks):  
+```regex  
+:%s/\([^,\| \{2}\|`\{3}]$\)/\1  /  
+```
+
+
+
+
