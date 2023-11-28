@@ -6,7 +6,7 @@ base64 usually ends with 0, 1, or 2 = signs
 I strongly suggest piping to either "file" or "hexdump". Dumping random binary
 data in your terminal isn't cool.
 
-search for it, the format is `hashcat -m <somenumber>` where `<somenumber>` is the type of hash
+
 
 ## Tools
 
@@ -18,6 +18,13 @@ search for it, the format is `hashcat -m <somenumber>` where `<somenumber>` is t
 * gunzip
 * xz
 * ... What else?
+
+### Hashcat searching
+When trying to find a hash, search for it.  
+The format is `hashcat -m <somenumber>` where `<somenumber>` is the type of hash  
+```bash
+hashcat --help | grep AS-REP gives 18200
+```
 
 
 ## Codes
