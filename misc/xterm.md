@@ -1,5 +1,6 @@
-# What is xterm?
 
+
+# What is xterm?
 
 * **xterm**: 
 
@@ -14,9 +15,12 @@
 
 * **What Does 'xterm Compatible' Mean?**
 
-    * Being 'xterm compatible' means that a terminal emulator can understand
-      and correctly interpret the control sequences (ANSI escape codes) used by xterm.
+    * Being 'xterm compatible' means that a terminal emulator can correctly 
+      interpret the control sequences (ANSI escape codes) used by xterm.
 
     * This includes a wide range of functions, from basic text styling 
       (like colors and font styles) to more advanced features (like cursor
       positioning, window title changes, and mouse events).
+
+
+
