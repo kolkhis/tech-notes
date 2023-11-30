@@ -21,6 +21,8 @@ the encoded data a multiple of four.
 
 * **Compressed Data:** Having `H4sIA` at the beginning of a string suggests that it 
   could be Base64-encoded, compressed data. 
+    * This is recognized from the gzip magic number (`1F 8B` in hex) which 
+      is translated to `H4sI` in Base64.
     * This specific sequence is commonly found at the start of strings  
       that are Base64 representations of data compressed using the gzip algorithm.  
 
@@ -36,6 +38,9 @@ base64 -d < file
 
 ## Base32 Encoding  
 * TOTP Codes are usually Base32-encoded.  
+    * The shared secret for TOTP needs to be 128-160 bits according to the RFC.
+    * (Microsoft uses 80, because ... Microsoft.) 
+    * "<-- Hello, World -->" is 160 bits. Super secure shared secret.
 * You can guess the base encoding often by looking at the string.  
 * There are 32 different characters in Base32.  
 * Base64 has both lower case and upper case.  
@@ -86,6 +91,25 @@ of gzip-compressed data.
 gunzip  can  currently  decompress files created by `gzip`, `zip`, `compress`, `compress -H` or `pack`.  
 Files created by zip can be uncompressed by gzip only if they have a single member compressed with the 'deflation' method.  
 
+
+
+## Identifying Factors of a NetPBM File (.pbm, .pgm, .ppm)
+A NetPBM file will usually start the first two lines with something like:
+```output
+P4
+96 8
+
+# or
+
+P1
+36 11
+```
+Basically `P{num}`, linebreak, `{num} {num}`.  
+Following lines will be a bunch of binary data.
+It might look something like:  
+```output
+<|`|f```f```fff|`ffl`ff```f~~~<
+```
 
 
 
