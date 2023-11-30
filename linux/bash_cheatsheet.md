@@ -29,9 +29,106 @@ cht.sh - cheat sheet website for curling anything
         times, and IP addresses (`pts` means SSH sessions)  
 `w` - Similar to `who`, with more details (load avg, system uptime)  
 
+
+---
+## Replacing All Occurrences of a String in Multiple Files
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
+
+---
+## Finding Files
+
+* `tree -I '.git'` - Tree view of current directory and subdirectories.
+    * -I(gnore) the `.git` directory.
+* `ls -I '.git'` - List current directory.
+    * -I(gnore) the `.git` directory.
+* `ls -I '.git' **/*.md` - List all markdown in current directory and subdirectories.
+    * -I(gnore) the `.git` directory.
+
+### The `find` Command
+The king: `find`. Has 5 "main" arguments.  
+`-H`, `-L`, `-P`, `-D` and `-O` must appear before the first path name if used.  
+You can specify the type of regex used with `-regextype` (`find -regextype help`)  
+
+### Testing Files with `find`
+There are a ton of tests available to `find`. 
+
+### Testing Timestamps of Files with `find`
+For testing the timestamps on files:  
+* `-daystart`: Measure times from the  beginning of today rather than from 24 hours ago.
+(for `-amin`, `-atime`, `-cmin`, `-ctime`, `-mmin`, and `-mtime`)
+
+|   **Option**  |  **Timestamp Tested**              |
+|---------------|------------------------------------|
+|   `-amin  ±n` |   Access Time in Minutes           | 
+|   `-atime ±n` |   Access Time in Days              | 
+|   `-cmin  ±n` |   Status Change Time in Minutes    | 
+|   `-ctime ±n` |   Status Change Time in Days       |
+|   `-mmin  ±n` |   Modification Time in Minutes     | 
+|   `-mtime ±n` |   Modification time in Days        |  
+
+* `±`: Plus or Minus - `n` can be positive or negative.
+    * `-amin +5`: Finds files accessed **MORE** than `5` minutes ago.
+    * `-amin -5`: Finds files accessed **LESS** than `5` minutes ago.
+    * `-amin 5`: Finds files accessed **EXACTLY** `5` minutes ago.
+
+* `stat {file}` will show all three of `{file}`'s timestamps.
+* Access Time (`atime`):
+    * This timestamp is updated when the contents of a file are read by any command or application.
+* Modification Time (`mtime`):
+    * This timestamp is updated when the file's content is modified.
+    * If you edit a file and save changes, its modification time is updated.
+    * It does not change when the file's metadata (like permissions or ownership) are changed.
+* Change Time (`ctime`):
+    * Often confused with the modification time, the change time is updated when the
+      file's **metadata** *or* **content** is changed.
+    * This includes changes to the file's **permissions,** **ownership,** and **content.**
+    * It's important to note that `ctime` is not the creation time of the file. Unix and traditional Linux filesystems do not store the creation time of a file.
+ 
+### `find` Options
+### Global Options
+* `-depth`: Process each directory's contents before the directory itself.  
+    * `-d`: POSIX-compatible `-depth`
+    * The `-delete` action also implies `-depth`.
+* `-ignore_readdir_race`: `find` won't give an error message when it fails to `stat` a file.
+    * `-noignore_readdir_race`: Turns off the effect of `-ignore_readdir_race`.  
+* `-maxdepth levels`: Descend at most `levels` levels of directories below the starting points.
+* `-mindepth levels`: Don't apply any tests or actions at levels less than `levels`.
+* `-mount`: Don't descend directories on other filesystems.
+    * An alternate name for `-xdev`, for compatibility with some other versions of `find`.
+* `-noleaf`: Don't optimize by assuming that directories contain 2 fewer subdirectories than their hard link count (`.` and `..`).
+    * This option is needed when searching filesystems that don't follow the Unix 
+      directory-link convention, like CD-ROM or MS-DOS filesystems or AFS volume mount points.
+* `-path pattern`: File name matches shell pattern `pattern`.  
+    * The metacharacters do not treat  `/'  or  `.' specially; so, for example,
+    ```bash
+    find . -path "./sr*sc"
+    ```
+    will print an entry for a directory called `./src/misc`.
+
+* `-follow`: Deprecated - use `-L` instead
+* `-help` / `--help`: help.
+
+
+
+### Change How `find` Handles Symbolic Links
+The first 3 deal with symbolic links:
+* `-P`: Never follow symbolic links. (default)
+* `-L`: Follow symbolic links
+* `-H`: Don't follow symbolic links, except while processing the command line arguments.
+### Get Diagnostic Information from `find`
+* `-D debugopts`: Print diagnostic information; 
+    * use to diagnose problems with why find is not doing what you want.
+    * `debugopts` should be comma separated. 
+    * `find -D help` for full list of options.
+        * `exec`: info on `-exec`, `-execdir`, `-ok`, & `-okdir`  
+        * `all`: enables all of the other debug options (except help)
+### `find` Query Optimization
+* `-Olevel`:  Enables query optimisation. *Should* make `find` run faster or consume less resources.
+    * `-O0`:  Same as `-O1`
+    * `-O1`:  Default.
+    * `-O2` and `-O3`: More optimized stuff, rtfm 🙃
 
 ## Run a Script when Any User Logs Into the System
 To run a script automatically when ANY user logs in, 
@@ -508,12 +605,12 @@ fi
 ## Special Arguments/Parameters
 Full list [here](https://web.archive.org/web/20230318164746/https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)
 * `${PIPESTATUS[n]}`: return value of piped commands (array)
-* `$#`:	Number of arguments
-* `$*`:	All positional arguments (as a single word)
-* `$@`:	All positional arguments (as separate strings)
-* `$1`:	First argument
-* `$_`:	Last argument of the previous command
-* `$?`:	Exit code/Return code of the last command
+* `$#`: Number of arguments
+* `$*`: All positional arguments (as a single word)
+* `$@`: All positional arguments (as separate strings)
+* `$1`: First argument
+* `$_`: Last argument of the previous command
+* `$?`: Exit code/Return code of the last command
 * `$0`: The name of the shell or the shell script (filename). Set by the shell itself. (`argv[0]`)
 * `$$`: The process ID (PID) of the shell. In an explicit subshell it expands to the PID of the current "main shell", not the subshell. This is different from $BASHPID!
 * `$!`: The process ID (PID) of the most recently executed background pipeline (like started with command &)
@@ -612,17 +709,17 @@ named pipes (FIFOs) or the /dev/fd method of naming open files.
 ## Transforming Strings with `tr`
 Transform strings
 ### Arguments
-* `-c` 	Operations apply to characters not in the given set
-* `-d` 	Delete characters
-* `-s` 	Replaces repeated characters with single occurrence
-* `-t` 	Truncates
+* `-c`  Operations apply to characters not in the given set
+* `-d`  Delete characters
+* `-s`  Replaces repeated characters with single occurrence
+* `-t`  Truncates
 ### Character Classes
-* `[:upper:]` 	All upper case letters
-* `[:lower:]` 	All lower case letters
-* `[:digit:]` 	All digits
-* `[:space:]` 	All whitespace
-* `[:alpha:]` 	All letters
-* `[:alnum:]` 	All letters and digits
+* `[:upper:]`   All upper case letters
+* `[:lower:]`   All lower case letters
+* `[:digit:]`   All digits
+* `[:space:]`   All whitespace
+* `[:alpha:]`   All letters
+* `[:alnum:]`   All letters and digits
 ```bash
 echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
 #=> WELCOME TO THIS WONDERFUL SHELL
@@ -764,27 +861,27 @@ dir=${src%$base}  #=> "/path/to/" (dirpath)
 
 ### Substitution
 ```bash
-${foo%suffix} 	Remove suffix
-${foo#prefix} 	Remove prefix
-${foo%%suffix} 	Remove long suffix
-${foo/%suffix} 	Remove long suffix
-${foo##prefix} 	Remove long prefix
-${foo/#prefix} 	Remove long prefix
-${foo/from/to} 	Replace first match
-${foo//from/to} 	Replace all
-${foo/%from/to} 	Replace suffix
-${foo/#from/to} 	Replace prefix
+${foo%suffix}   Remove suffix
+${foo#prefix}   Remove prefix
+${foo%%suffix}  Remove long suffix
+${foo/%suffix}  Remove long suffix
+${foo##prefix}  Remove long prefix
+${foo/#prefix}  Remove long prefix
+${foo/from/to}  Replace first match
+${foo//from/to}     Replace all
+${foo/%from/to}     Replace suffix
+${foo/#from/to}     Replace prefix
 ```
 
 ### Substrings
 ```bash
-${foo:0:3} 	    # Substring (position, length)
-${foo:(-3):3} 	# Substring from the right
+${foo:0:3}      # Substring (position, length)
+${foo:(-3):3}   # Substring from the right
 ```
 
 ### Getting the Length of a String/Variable
 ```bash
-${#foo} 	   # Length of $foo
+${#foo}        # Length of $foo
 ```
 
 ## PS1, PS2, PS3, and PS4 Special Environment Variables
