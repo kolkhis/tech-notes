@@ -546,7 +546,8 @@ find . -perm -a+r -perm /a+w \! -perm /a+x
     * Often confused with the modification time, the change time is updated when the  
       file's **metadata** *or* **content** is changed.  
     * This includes changes to the file's **permissions,** **ownership,** and **content.**  
-    * It's important to note that `ctime` is not the creation time of the file. Unix and traditional Linux filesystems do not store the creation time of a file.  
+    * It's important to note that `ctime` is not the creation time of the file.
+        * Unix and traditional Linux filesystems do not store the creation time of a file.  
 * `stat {file}` will show all three of `{file}`'s timestamps.  
 * Modification Time: `ls -lt` will list files with their modification times.  
 * Access Time: Use `ls --time=atime -lt` to list files with access times.  
