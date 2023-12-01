@@ -81,6 +81,13 @@ Note: inside the `[ ]` (collection), all metacharacters behave like ordinary cha
     * `/[-0-9]/`  
 * Same with `[`:
     * `/[[0-9]`
+---
+To avoid the need for escaping a lot of things (like capture groups), set the
+`very magic` flag:  
+```regex
+:s/\v(capture|any|of|these)/\1/g 
+```
+The above substitution just replaces the captures with themselves, so no changes are made.
 
 
 ### Ignoring Case in a Pattern
@@ -114,6 +121,7 @@ you'll need to use one of these:
 `[=a=]` will match characters like `a`, `à`, `á`, `â`, etc., because  
 they are all variations of the base character `a` with different accents.  
 
+---
 
 ## Range of Operation  
 * `<number>`: an absolute line number  
@@ -127,16 +135,21 @@ they are all variations of the base character `a` with different accents.
 * `\?`: the previous line where the previously used search pattern matches  
 * `\&`: the next line where the previously used substitute pattern matches  
 
+---
 
 ## Capture Groups and Backreferences  
 You can group parts of the pattern expression by enclosing them 
-with `\(` and `\)` (escaped parentheses).  
-`\(captured\)`
+with `\(` and `\)` (escaped parentheses, unless `very magic` is set).  
+```regex
+\(captured\)
+```
 
 Using `\|` you can combine several expressions 
-into one which matches any of its components.  
+into one, matching any of its components.  
 The first one matched will be used.  
-`\(Date:\|Subject:\|From:\)\(\s.*\)`
+```regex
+\(Date:\|Subject:\|From:\)\(\s.*\)
+```
 
 
 Then they can be referenced in the substitute with:  
