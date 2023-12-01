@@ -31,14 +31,27 @@ cht.sh - cheat sheet website for curling anything
 
 
 ---
+
+## Check which sudo commands a user has access to
+Check which sudo commands are available to the current user:
+```bash
+sudo -l
+```
+
+Check which sudo commands are availabe for a different user:
+```bash
+sudo -l -u user
+```
+
+---
 ## Replacing All Occurrences of a String in Multiple Files
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
 
 ---
-## Finding Files
 
+## Finding Files
 * `tree -I '.git'` - Tree view of current directory and subdirectories.
     * -I(gnore) the `.git` directory.
 * `ls -I '.git'` - List current directory.
@@ -51,8 +64,19 @@ The king: `find`. Has 5 "main" arguments.
 `-H`, `-L`, `-P`, `-D` and `-O` must appear before the first path name if used.  
 You can specify the type of regex used with `-regextype` (`find -regextype help`)  
 
+
 ### Testing Files with `find`
-There are a ton of tests available to `find`. 
+There are a ton of tests available to `find`.  
+```bash
+find -name "*.md" -not -path "./directory/*"    # Find .md files not in `directory`
+find -name "*.md" \! -path "./directory/*"      # Same as above
+
+find . -type d -o -name '*.txt'                 # Find any .txt files or directories
+
+find . -type f -a -name '*.py'                  # Find files ending with .py
+find . -type f -name '*.py'                     # Same as above (-a is optional)
+```
+
 
 ### Testing Timestamps of Files with `find`
 For testing the timestamps on files:  
@@ -74,6 +98,8 @@ For testing the timestamps on files:
     * `-amin 5`: Finds files accessed **EXACTLY** `5` minutes ago.
 
 * `stat {file}` will show all three of `{file}`'s timestamps.
+
+## The Three Timestamps Explained
 * Access Time (`atime`):
     * This timestamp is updated when the contents of a file are read by any command or application.
 * Modification Time (`mtime`):
@@ -84,7 +110,13 @@ For testing the timestamps on files:
     * Often confused with the modification time, the change time is updated when the
       file's **metadata** *or* **content** is changed.
     * This includes changes to the file's **permissions,** **ownership,** and **content.**
-    * It's important to note that `ctime` is not the creation time of the file. Unix and traditional Linux filesystems do not store the creation time of a file.
+    * It's important to note that `ctime` is not the creation time of the file.
+        * Unix and traditional Linux filesystems do not store the creation time of a file.
+
+* `stat {file}` will show all three of `{file}`'s timestamps.  
+* Modification Time: `ls -lt` will list files with their modification times.  
+* Access Time: Use `ls --time=atime -lt` to list files with access times.  
+* Change Time: Use `ls --time=ctime -lt` to list files with change times.  
  
 ### `find` Options
 ### Global Options
@@ -112,24 +144,6 @@ For testing the timestamps on files:
 
 
 
-### Change How `find` Handles Symbolic Links
-The first 3 deal with symbolic links:
-* `-P`: Never follow symbolic links. (default)
-* `-L`: Follow symbolic links
-* `-H`: Don't follow symbolic links, except while processing the command line arguments.
-### Get Diagnostic Information from `find`
-* `-D debugopts`: Print diagnostic information; 
-    * use to diagnose problems with why find is not doing what you want.
-    * `debugopts` should be comma separated. 
-    * `find -D help` for full list of options.
-        * `exec`: info on `-exec`, `-execdir`, `-ok`, & `-okdir`  
-        * `all`: enables all of the other debug options (except help)
-### `find` Query Optimization
-* `-Olevel`:  Enables query optimisation. *Should* make `find` run faster or consume less resources.
-    * `-O0`:  Same as `-O1`
-    * `-O1`:  Default.
-    * `-O2` and `-O3`: More optimized stuff, rtfm 🙃
-
 ## Run a Script when Any User Logs Into the System
 To run a script automatically when ANY user logs in, 
 add it to the `/etc/profile` file, or add it as a 
@@ -150,28 +164,6 @@ printf "%s: %s" "$DATE" "$USER" >> /home/kolkhis/userlogs.log
 ```
 
 ## Important Linux Commands
-### File and Directory Management
-```bash
-ls      # Show contents of current directory
-pwd     # Show current directory
-cd      # Change directory
-mkdir   # Create directory
-mdir  
-touch   # Create a file or update file timestamp
-cp      # Copy file or directory
-mv      # Move or rename file or directory
-rm      # Remove/delete file or directory
-```
-
-### File Viewing and Editing
-```bash
-cat
-less
-more
-vi
-vim
-gedit
-```
 
 ### User and Group Management
 ```bash
@@ -226,7 +218,32 @@ free    # Get RAM/swapfile information
 lscpu   # Get CPI information
 lshw    # Get all system information
 lsblk   # Get information about block devices
+ulimit  # Get current settings about current system limits & more
 ```
+
+#### "others"
+```bash
+mdir  
+gedit
+```
+
+
+## Get or Increase the Limit of Open Files
+There are soft limits and hard limits:
+* Soft limits are the currently enforced limits
+* Hard limits are the max value that can't be passed by setting the soft limit.
+Getting the current max file limit:  
+```bash
+ulimit -a
+```
+Set Open Files limit for the current shell:  
+```bash
+ulimit -n 2048  # Set to 2048 for the current shell
+```
+Note that this only sets it for the current shell and doesn't persist.  
+By default, these limits are usually in `/etc/security/limits.conf`,  
+and the default limits can be set there.  
+
 
 ## Recursively Get or Search Files
 To add a filename on each line, either `ls -1` or `find` can be used.  
