@@ -36,3 +36,8 @@ chatnets = {
 Use `/connect twitch` and `/disconnect twitch` as necessary.  
 But if you're dedicated, just set `autoconnect = "yes"`.
 
+---
+
+
+## LCOLONQ IRC Channel
+`#cyberspace on IRC at colonq.computer:26697 (over TLS)`
