@@ -18,6 +18,17 @@ awk
 sed  
 
 
+## Tools to Check Out for Networking/Admin:
+* `pfsense` - A tool for authentication
+* `ss -ntulp` - system information
+* `OpenSCAP` - benchmarking tool  
+* `nmap` - maps the server if you don't have permissions  
+    * Good for external mapping without permissions  
+* `ss` or `netstat` are internal with elevated permissions for viewing  
+    * Used locally with elevated permissions, it's better than `nmap`?  
+
+
+
 
 ## Miscellaneous Useful Commands
 cht.sh - cheat sheet website for curling anything  
@@ -241,6 +252,12 @@ Set Open Files limit for the current shell:
 ulimit -n 2048  # Set to 2048 for the current shell
 ```
 Note that this only sets it for the current shell and doesn't persist.  
+To make it persist, you can either add the above command to `.bashrc`, 
+or try:
+```bash
+someUser hard nofile 2048
+su - someUser
+```
 By default, these limits are usually in `/etc/security/limits.conf`,  
 and the default limits can be set there.  
 

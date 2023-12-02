@@ -1,3 +1,17 @@
+## Check out:
+* `pfsense` - A tool for authentication
+* `ss -ntulp`
+* `OpenSCAP` - benchmarking tool  
+* `nmap`  
+    * `nmap` maps the server if you don't have permissions  
+        * good for external mapping without permissions  
+* `ss` or `netstat` are internal with elevated permissions for viewing  
+    * Used locally with elevated permissions, it's better than `nmap`?  
+
+A command for programatically checking servers (prod-k8s in this example):
+```bash  
+for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
+```
 
 
 ## Builtin 
