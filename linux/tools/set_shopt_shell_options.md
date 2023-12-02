@@ -6,6 +6,8 @@
 > Opens the bash man page to the `shopt` options and descriptions.
 
 
+* `shopt -p`: Display all settable options.
+
 
 ## `set`
 
@@ -35,25 +37,25 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 ### Options and Arguments
 * `shopt -s option`: Enables an option.
 * `shopt -u option`: Disables an option.
-* `shopt -p`: Display all settable options.
 * `shopt -q`: Quiet mode. Nothing is output.
 
 ### Uses
-* `shopt -s nullglob`: Useful when you want patterns that could match filenames to expand to an empty string when no filenames match.
+* `shopt -s nullglob`: Useful when you want patterns that could match filenames
+                       to expand to an empty string when no filenames match.
 * `shopt -s dotglob`: Useful when you want patterns to include files that start with a dot (.).
 
 
 
 ## Exhaustive List of Shell Options
 
-### For set
+### `set`:
 * `-e`: Exit on error.
 * `-f`: Disable filename expansion.
 * `-H`: Enable ! style history substitution.
 * `-u`: Treat unset variables as an error.
 * `-x`: Debug mode.
 
-### For shopt
+### All `shopt` 
 * `cdspell`: Autocorrects minor spelling errors in a cd command.
 * `checkhash`: Checks that commands found in hash tables exist.
 * `cmdhist`: Save multi-line commands in the history as a single line.
