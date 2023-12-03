@@ -64,7 +64,7 @@ Trapped when a shell function or a sourced script executes its last command.
 This allows actions to be taken just before the function or the sourced script completes.  
 
 ## Signals Available to the `kill` Command
-The default signal for kill is TERM.  
+The default signal for kill is TERM (`SIGTERM`).  
 You can just run `kill -l` (or `-L`) to get the list of available signals.  
 Too lazy? Here.  
 |   1 - SIGHUP  | 2 - SIGINT | 3 - SIGQUIT | 4 - SIGILL | 5 - SIGTRAP |
@@ -81,6 +81,12 @@ Too lazy? Here.
 | 53 - SIGRTMAX-11 | 54 - SIGRTMAX-10 | 55 - SIGRTMAX-9 | 56 - SIGRTMAX-8 | 57 - SIGRTMAX-7|
 | 58 - SIGRTMAX-6 | 59 - SIGRTMAX-5 | 60 - SIGRTMAX-4 | 61 - SIGRTMAX-3 | 62 - SIGRTMAX-2|
 | 63 - SIGRTMAX-1 | 64 - SIGRTMAX |
+
+## Getting a Signal from a Number
+```bash
+kill -l 11
+#       ^ the number of the signal you want the name of
+```
 
 
 ## Use Cases and Examples for `trap`
