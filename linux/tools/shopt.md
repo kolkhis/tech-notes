@@ -53,6 +53,42 @@ When setting or unsetting options, the return status is zero unless an optname i
 
 ---  
 
+## Default Values (for me)
+The output of:
+```bash
+shopt | column
+```
+with a clean `.bashrc`:
+| Option            |   Value |      Option      |       Value    |
+|-------------------|-----|----------------------|----------------|
+| autocd            | off |          globstar               | off |
+| assoc_expand_once | off |          gnu_errfmt             | off |
+| cdable_vars       | off |          histappend             | off |
+| cdspell           | off |          histreedit             | off |
+| checkhash         | off |          histverify             | off |
+| checkjobs         | off |          hostcomplete           | off |
+| checkwinsize      | on  |          huponexit              | off |
+| cmdhist           | on  |          inherit_errexit        | off |
+| compat31          | off |          interactive_comments   | on  |
+| compat32          | off |          lastpipe               | off |
+| compat40          | off |          lithist                | off |
+| compat41          | off |          localvar_inherit       | off |
+| compat42          | off |          localvar_unset         | off |
+| compat43          | off |          login_shell            | on  |
+| compat44          | off |          mailwarn               | off |
+| complete_fullquote| on  |          no_empty_cmd_completion| off |
+| direxpand         | off |          nocaseglob             | off |
+| dirspell          | off |          nocasematch            | off |
+| dotglob           | off |          nullglob               | off |
+| execfail          | off |          progcomp               | on  |
+| expand_aliases    | on  |          progcomp_alias         | off |
+| extdebug          | off |          promptvars             | on  |
+| extglob           | on  |          restricted_shell       | off |
+| extquote          | on  |          shift_verbose          | off |
+| failglob          | off |          sourcepath             | on  |
+| force_fignore     | on  |          xpg_echo               | off |
+| globasciiranges   | on  |
+ 
 
 ## The List of `shopt` Options  
 
