@@ -103,7 +103,7 @@ sudo -l
 
 Check which sudo commands are availabe for a different user:  
 ```bash  
-sudo -l -u user  
+sudo -l -U user  
 ```
 
 ---  
