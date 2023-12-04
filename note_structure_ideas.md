@@ -13,17 +13,39 @@
     * Organize it so the filename appears as a header in "table of contents", 
       and the headers from the files are bullet points underneath that header.  
 
+* Use absolute paths for filenames (easier for `gf` to find the files).
+    * Add headers (1s and 2s) sequentially underneath the filename.
+    * Add empty lines between files and their headers
+    * Add command line tool that auto-greps the specified term/phrase
+
+* In bashrc, add autocmd keybind for `contents.md` gf: `?/notes/<CR>gf`
+```vim
+au! BufEnter contents.md nnoremap gf ?/notes/<CR>gf 
+```
+^ Try that?
+
+
+
+## Note Formatting Vim Regex Patterns
+Add two spaces (linebreak) at the end of each line that doesn't already have two spaces,
+isn't a comma, and isn't the end of a codeblock (3 backticks):
+```regex
+:%s/\([^,\| \{2}\|`\{3}]$\)/\1  /
+```
+Assume in all greps that headers and sentences will end with two spaces
+
+---
+
+## Looping over files in notes directory
 
 ```bash
-
 note_files=$(find . -name '*.md')
 existing=0
-for f in $note_files; do
+while read -r f; do
     if [[ grep -q "$f" "${NOTES_HOME}/contents.md" ]]; then
         existing += 1
         continue
-        
-
+done < <(find ~/notes -name '*.md')
 ```
 
 
