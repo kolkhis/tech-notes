@@ -41,6 +41,49 @@ cht.sh - cheat sheet website for curling anything
 `w` - Similar to `who`, with more details (load avg, system uptime)  
 
 
+---
+
+## Using Grep
+* Print lines that match patterns.
+The greps:
+```bash
+grep
+egrep
+fgrep
+rgrep 
+```
+* `grep` uses "basic regex" by default.
+* `grep -E` enables "extended regex."  
+    * Basic vs Extended Regular Expressions:
+        * In basic regular expressions the meta-characters 
+          `?`, `+`, `{`, `|`, `(`, and `)` lose their special meaning. 
+        * Instead use the backslashed versions `\?`, `\+`, `\{`, `\|`, `\(`, and `\)`.
+### Alternation (matching any one of multiple expressions)
+Two regular expressions can be joined by the "infix" operator,  `|;`.  
+The resulting regular expression matches any string matching either alternate expression.  
+
+---
+
+## Control Sequences
+Also known as "escape codes."  
+| Control Sequence | Produces              |
+|------------------|-----------------------|
+|       `\n`       |    newline            |
+|       `\l`       |    line-feed          |
+|       `\r`       |    return             |
+|       `\t`       |    tab                |
+|       `\b`       |    backspace          |
+|       `\f`       |    form-feed          |
+|       `\s`       |    space              |
+|  `\E` and `\e`   | escape character      |
+|      `^x`        |`control-x` (`x`=char) |
+
+
+
+
+
+
+
 ---  
 
 ## Heredocs in Linux  
@@ -51,26 +94,20 @@ Heredocs can shove standard input(`stdin`) into a command
 from within a script.  
 ```bash  
 COMMAND << limit_string  
-.  
 data  
-.  
 variables  
-.  
 text  
-.  
 limit_string  
 ```
 
 * `COMMAND`: This can be any Linux command that accepts redirected input.  
     * Note, the `echo` command doesn't accept redirected input.  
     * If you need to write to the screen, you can use the `cat` command, which does.  
-
 * `<<`: The redirection operator.  
 * `limit_string`: This is a label.  
     * It can be whatever you like as long as it doesn't appear 
       in the list of data you're redirecting into the command.  
     * It is used to mark the end of the text, data, and variables list.  
-
 * Data List: A list of data to be fed to the command.  
     * It can contain commands, text, and variables.  
     * The contents of the data list are fed into the command one  
@@ -80,18 +117,14 @@ limit_string
 ```bash  
 #!/bin/bash
 cat << "_end_of_text"
-
 Your user name is: $(whoami)
-
 Your current working directory is: $PWD
-
 Your Bash version is: $BASH_VERSION
-
 _end_of_text
 ```
-
 The output of the `whoami` cmd will be printed, since it
 was run in a subshell.  
+
 
 ---  
 
