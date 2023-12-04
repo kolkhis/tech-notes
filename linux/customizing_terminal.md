@@ -45,6 +45,8 @@ Any ANSI color control sequences need to be wrapped in `\[` and `\]`:
 export PS1="\[\e[38;5;20m\]\u:\h \$ \[\e[0m\]"
             #256-color ANSI         # Reset
 ```
+* 38;5;0 to 38;5;255 for 88-color and 256-color modes foreground colors.
+* 48;5;0 to 48;5;255 for 88-color and 256-color modes background colors.
 
 ## Modifying the PS2 Environment Variable
 
