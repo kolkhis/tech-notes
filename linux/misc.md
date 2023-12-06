@@ -214,4 +214,181 @@ nmap -sS
 ```
 
 
+## GREP_COLORS  
+* Note: `-v` matches NON-MATCHING lines.  
+
+  Specifies the colors and other attributes used to highlight various parts of `grep` output.  
+  Its value is a colon-separated list of capabilities that defaults to:  
+  ```bash  
+  # Default:  
+  GREP_COLORS='ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36' 
+  ```
+  with  the  `rv` and `ne` boolean capabilities unset / omitted (false).  
+
+  Supported capabilities are as follows:  
+
+* `sl=`:  
+    * Color for matching lines.  
+    * SGR substring for whole selected lines.  
+        * (i.e., matching lines when `-v` option is omitted, or non-matching lines when `-v` is specified).  
+    * If the boolean (`rv`) capability and the `-v` option are both specified,
+       it applies to context matching lines instead. 
+    * The default is empty (i.e., the terminal's default color pair).  
+
+* `cx=`:  
+    * Color for the context (lines where there's a match, but not the match itself)  
+    * SGR substring for whole context lines (i.e., non-matching lines when the `-v`
+      option is omitted, or matching lines when `-v` is specified).  
+    * If the boolean (`rv`) capability and the `-v` option are both specified: 
+        * it applies to selected non-matching lines instead. 
+    * The default is empty (i.e., the terminal's default color pair).  
+
+* `rv`:  
+    * Invert match and context colors.  
+    * Boolean value that reverses (swaps) the meanings of the `sl=` and `cx=` capabilities when  
+       the  `-v` option is specified.  
+    * The default is false (i.e., the capability is omitted).  
+
+* `mt=01;31`:  
+    * Color for matching txt in any matching line.  
+    * SGR substring for matching non-empty text in any matching line 
+        * (i.e., a selected line when  the `-v` command-line option is omitted,
+          or a context line when `-v` is specified).  
+    * Setting this is equivalent to setting both `ms=` and `mc=` at once  to  the  same  value.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `ms=01;31`:  
+    * Color for matches in a selected line. 
+    * SGR substring for matching non-empty text in a selected line. 
+        * (This is only used when the `-v` command-line option is omitted.)  
+    * The effect of the `sl=` (or `cx=` if `rv`) capability remains active when this kicks in.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `mc=01;31`:  
+    * Color for matching text in a context line  
+    * SGR substring for matching non-empty text in a context line.  
+    * (This is only used when the `-v` command-line option is specified.)  
+    * The effect of the `cx=` (or `sl=` if `rv`) capability remains active when this kicks in.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `fn=35`:  
+    * Color for filenames before any text  
+    * SGR substring for file names prefixing any content line.  
+    * The default is a magenta text foreground over the terminal's default background.  
+
+* `ln=32`:  
+    * Color for line numbers in any line  
+    * SGR substring for line numbers prefixing any content line.  
+    * The default is a green text foreground over the terminal's default background.  
+
+* `bn=32`:  
+    * Color for byte offsets before any line  
+    * SGR substring for byte offsets prefixing any content line.  
+    * The default is a green text foreground over the terminal's default background.  
+
+* `se=36`:  
+    * Color for separators between selected lines. 
+        * `:` = selected lines  
+        * `-` = context lines  
+        * `--` = adjacent context lines  
+    * SGR substring for separators that are inserted between 
+        * selected line fields (`:`),
+        * between context line fields, (`-`), and 
+        * between groups of adjacent lines when nonzero context is specified (`--`). 
+    * The default is a cyan text foreground over the terminal's default background.  
+
+* `ne`:  
+    * Boolean value. Disables Erase in Line (`EL`).  
+    * Prevents clearing to the end of line using Erase in Line (`EL`) to  
+      Right (`\33[K`) each time a colorized item ends.  
+        * This is needed on terminals on which `EL` is not supported.  
+    * It is otherwise useful on terminals for which the  
+      `back_color_erase` (`bce`) boolean terminfo capability does not apply, when the chosen  
+      highlight colors do not affect the background, or when EL is too slow or causes too  
+      much flicker.  
+    * The default is false (unset) (i.e., the capability is omitted).  
+
+  Boolean capabilities have no `=...` part. 
+  They are unset (i.e., false) by default, and become true if they're set.  
+
+ See the Select Graphic Rendition (`SGR`) section in the documentation of the text terminal  
+ that is used for permitted values and their meaning as character attributes. 
+
+ These substring values are integers in decimal representation and can be concatenated with  
+ semicolons. 
+
+
+```bash  
+GREP_COLORS='ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36' 
+```
+* Common values to concatenate include 
+    * 1 for bold.  
+    * 4 for underline.  
+    * 5 for blink.  
+    * 7 for inverse.  
+    * 39 for default foreground color.  
+    * 30 to 37 for foreground colors.  
+    * 90 to 97 for 16-color mode foreground colors.  
+    * 38;5;0 to 38;5;255 for 88-color and 256-color modes foreground colors.  
+    * 48;5;0 to 48;5;255 for 88-color and 256-color modes background colors.  
+    * 49 for default background color.  
+    * 40 to 47 for background colors.  
+    * 100 to 107 for 16-color mode background colors.  
+
+`grep` takes care of assembling the result into a complete SGR sequence (`\33[...m`).  
+
+
+
+
+* `cx=`: context  
+    * Color for the context (lines where there's a match, but not the match itself)  
+    * The default is empty (i.e., the terminal's default color pair).  
+
+* `rv`: reverse  
+    * Boolean value. Invert match and context colors. 
+    * Default false, true if set.  
+
+* `mt=01;31`: matching text  
+    * Color for matching txt in any matching line.  
+    * Setting this is the same as setting `ms=` and `mc=` at once to the same value.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `ms=01;31`: matching selected  
+    * Color for matches in a selected line. 
+    * The effect of the `sl=` (or `cx=` if `rv`) remains active when this kicks in.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `sl=`: 
+    * Color for whole matching lines.  
+    * The default is empty (i.e., the terminal's default color pair).  
+
+* `mc=01;31`: matching context  
+    * Color for matching text in a context line  
+    * The effect of the `cx=` (or `sl=` if `rv`) capability remains active when this kicks in.  
+    * The default is a bold red text foreground over the current line background.  
+
+* `fn=35`: file names  
+    * Color for filenames that come at the beginning of any line  
+    * The default is a magenta text foreground over the terminal's default background.  
+
+* `ln=32`: line numbers  
+    * Color for line numbers in any line  
+    * The default is a green text foreground over the terminal's default background.  
+
+* `bn=32`:  
+    * Color for byte offsets before any line  
+    * The default is a green text foreground over the terminal's default background.  
+
+* `se=36`:  
+    * Color for separators between selected lines. 
+        * `:` = selected lines  
+        * `-` = context lines  
+        * `--` = adjacent context lines  
+    * The default is a cyan text foreground over the terminal's default background.  
+
+* `ne`:  
+    * Boolean value. Disables Erase in Line (`EL`).  
+    * Prevents clearing to the end of line using Erase in Line (`EL`) to  
+      Right (`\33[K`) each time a colorized item ends.  
+    * The default is false (unset). True if set.  
 
