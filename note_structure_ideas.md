@@ -36,6 +36,12 @@ Assume in all greps that headers and sentences will end with two spaces
 
 ---
 
+## Grepping for Matches
+Using the `-n` option for `grep` will output the line number of the match.
+
+
+---
+
 ## Looping over files in notes directory
 
 ```bash
