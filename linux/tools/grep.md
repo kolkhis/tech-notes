@@ -3,6 +3,23 @@
 # The Grep Command  
 Print lines that match patterns.  
 
+## tl;dr:
+Syntax:
+```bash
+grep -E '^expression$' [filename]
+grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
+#
+# -n: Line Numbers; -r: recusive; -E: Extended Regex
+```
+* `-n` will output the line number of the match.
+    * No effect used with `-r`/`-R`
+* `-E` will enable *Extended* regex.
+* `-r` will recursively search starting from working directory. 
+    * When a file is provided, this doesn't have any effect.
+    * `-R` is the same as `-r` but will follow symlinks.
+* `-l` will only print the filenames of files with matches.
+    * `-L` will output the filenames of files WITHOUT matches.
+
 
 ## Using Grep  
 The greps:  
@@ -77,7 +94,7 @@ grep -i 'pattern' filename
 
 ---  
 
-Note on fgrep (Fixed Strings)  
+Note on `fgrep` (Fixed Strings)  
 
 `fgrep` or `grep -F` treats the pattern as a fixed string.  
 It matches the literal text provided as the pattern.  
@@ -130,12 +147,12 @@ Note: `grep` takes care of assembling the result into a complete SGR sequence (`
     * Boolean value. Invert match and context colors. 
     * Default false, true if set.  
 
-* `mt=01;31`: matching text  
+* `mt=01;31`: matching text  (same as `ms`?)
     * Color for matching txt in any matching line.  
     * Setting this is the same as setting `ms=` and `mc=` at once to the same value.  
     * The default is a bold red text foreground over the current line background.  
 
-* `ms=01;31`: matching selected  
+* `ms=01;31`: matching selected (matched text)  
     * Color for matches in a selected line. 
     * The effect of the `sl=` (or `cx=` if `rv`) remains active when this kicks in.  
     * The default is a bold red text foreground over the current line background.  
