@@ -50,6 +50,26 @@ They must appear right after the command, before any other arguments.
 
 ## Normal Mode
 
+
+The `CTRL-G j` and `CTRL-G k` commands can be used to insert text in front of a
+column.  Example: 
+```c
+int i;
+int j;
+```
+Position the cursor on the first `int`, type `istatic <C-G>j       `.  The
+result is: 
+```c
+static int i;
+       int j;
+```
+When inserting the same text in front of the column in every line, use the
+Visual blockwise command `I` `v_b_I`.
+
+
+Using `CTRL-O` splits undo: the text typed before and after it is undone
+separately.
+
 ### Toggling Case
 * `gUgU` / `gUU`: Make current line uppercase.
 * `gugu` / `guu`: Make current line lowercase.
@@ -109,6 +129,8 @@ They must appear right after the command, before any other arguments.
 
 ## Visual Mode
 ##### *:h visual-index*
+##### *:h blockwise-operators*
+For Visual Block mode: `blockwise-operators`
 
 ### Basic Operations
 * `v_o`: (`o`)     move cursor to other corner of area

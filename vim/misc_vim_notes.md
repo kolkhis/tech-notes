@@ -9,6 +9,17 @@ List of all default vim keybindings/commands for each mode:
 * *:h insert-index* / *visual-index*  
 * *:h default-mappings*  
 
+## Neovim Resources:
+* Nightly repo for `apt-get`:
+    * `sudo add-apt-repository ppa:neovim-ppa/unstable -y`
+* [API docs](https://neovim.io/doc/user/api.html#API)
+* [Pynvim docs](https://pynvim.readthedocs.io/en/latest/usage/python-plugin-api.html#nvim-api-methods-vim-api)
+* [Lua reference](https://learnxinyminutes.com/docs/lua/)
+* [Regex](https://www.vimregex.com/) 
+    * *:h character-classes*  
+* [`vim.fn` Functions](https://neovim.io/doc/user/usr_41.html#function-list)
+
+
 ## History
 There are actually five
 history tables:
@@ -17,6 +28,8 @@ history tables:
 * one for expressions
 * one for input lines, typed for the `input()` function.
 * one for debug mode commands
+
+
 
 ## Replace Tabs with Spaces
 ### `:ret`
@@ -103,17 +116,6 @@ You can use built-in profiling support: after launching vim do
 :profile pause
 :noautocmd qall!
 ```
-
-### Neovim Resources:
-* Nightly repo for `apt-get`:
-    * `sudo add-apt-repository ppa:neovim-ppa/unstable -y`
-* [API docs](https://neovim.io/doc/user/api.html#API)
-* [Pynvim docs](https://pynvim.readthedocs.io/en/latest/usage/python-plugin-api.html#nvim-api-methods-vim-api)
-* [Lua reference](https://learnxinyminutes.com/docs/lua/)
-* [Regex](https://www.vimregex.com/) 
-    * *:h character-classes*  
-* [`vim.fn` Functions](https://neovim.io/doc/user/usr_41.html#function-list)
-
 
 ## Regex with vim
 ### Pattern atom
@@ -415,6 +417,19 @@ Or Ex mode editing.
 * `c_CTRL-u` will remove all the text between the cursor and the beginning of the command (to the `:`)
 * `c_CTRL-p`/`c_CTRL-n` will insert the last command executed / cycle through command history.
 * `c_CTRL-a` (double tap in tmux) will dump all commands?
+* `c_CTRL-b` will put cursor at the start of the line.
+* `c_CTRL-e` will put cursor at the end of the line.
+
+Special words for command mode (can be used with `expand()`):
+* `<cfile>`: is replaced with the path name under the cursor (like what `gf` uses)
+* `<cword>`: is replaced with the word under the cursor (like `star`)
+* `<cWORD>`: is replaced with the WORD under the cursor (see `WORD`)
+* `<afile>`: When executing autocmds, is replaced with the file name of the buffer
+             being edited, or the file for a read or write. (`E495`)
+* `<amatch>`: When executing autocmds, is replaced with the pattern match for
+    which this autocommand was executed.
+
+
 
 
 ### Command Line Ranges
@@ -627,6 +642,7 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 
 ## Random Stuff
 Using a <Del> in markdown will strikethrough all subsequent lines </Del>
+Empty filename for `%` or `#` only works with `:p:h`
 
 
 ## Note Formatting Vim Regex Patterns  
@@ -640,3 +656,38 @@ isn't a comma, and isn't the end of a codeblock (3 backticks):
 
 
 
+--- 
+Bootleg Autopairs Mapping
+```vim
+inoremap <Left>  <C-G>U<Left>
+inoremap <Right> <C-G>U<Right>
+inoremap <expr> <Home> col('.') == match(getline('.'), '\S') + 1 ?
+\ repeat('<C-G>U<Left>', col('.') - 1) :
+\ (col('.') < match(getline('.'), '\S') ?
+        \     repeat('<C-G>U<Right>', match(getline('.'), '\S') + 0) :
+        \     repeat('<C-G>U<Left>', col('.') - 1 - match(getline('.'), '\S')))
+inoremap <expr> <End> repeat('<C-G>U<Right>', col('$') - col('.'))
+inoremap ( ()<C-G>U<Left>
+```
+This makes it possible to use the cursor keys in Insert mode, without starting
+a new undo block and therefore using `.` (redo) will work as expected.  Also
+entering a text like (with the "(" mapping from above):
+
+   Lorem ipsum (dolor
+
+will be repeatable by using `.` to the expected
+
+   Lorem ipsum (dolor)
+
+---
+
+
+
+## Things to look into
+
+
+* `i_backspacing`
+* `i_CTRL-X`
+* `i_CTRL-V_digit` - number system conversion  
+* `i_CTRL-G`
+* `:inoremap <C-H> <C-G>u<C-H>`

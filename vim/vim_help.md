@@ -1,4 +1,7 @@
 
+* `:h inserting-ex`: Ex Commands for insert actions and manipulating modes in insert mode
+    * Adding `!` to `:a` or `:i` toggles `autoindent`
+
 * `:h map-table`: Get a table of all map modes for keymapping, and what modes they affect.
 
 * `:h default-digraphs`
