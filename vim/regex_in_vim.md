@@ -180,14 +180,16 @@ Word boundaries can be denoted by escaped angle brackets: `\<word\>`
 |   `\m`  |    `\M`   | Matches of the Preceding Atom               |
 |---------|-----------|---------------------------------------------|
 | Magic   | No Magic  |  Non-Greedy                                 |
-|`\{-n,m}` `\{-n,m}`  | `n` to `m`,      as few as possible         |
-|`\{-n}`   `\{-n}`    | `n`           exactly                       |
-|`\{-n,}`  `\{-n,}`   | at least `n`  as few as possible            |
-|`\{-,m}`  `\{-,m}`   | 0 to `m`      as few as possible            |
-|`\{-}`    `\{-}`     | 0 or more   as few as possible              |
+|`\{-n,m}`|`\{-n,m}`  | `n` to `m`,      as few as possible         |
+|`\{-n}`  |`\{-n}`    | `n`           exactly                       |
+|`\{-n,}` |`\{-n,}`   | at least `n`  as few as possible            |
+|`\{-,m}` |`\{-,m}`   | 0 to `m`      as few as possible            |
+|`\{-}`   |`\{-}`     | 0 or more   as few as possible              |
 
-If a `-` appears immediately after the `{`, then a 
-*shortest match first* (non-greedy) algorithm is used.  
+* Remember: 
+    * If a dash (`-`) appears immediately after the opening brace,
+     `{`, then the *shortest match first* algorithm is used.  
+    * i.e.,  `\{-...}` = Non-Greedy  
 
 ### Non-greedy `pattern-multi-items`:  
 |   `\m`  |    `\M`   | Matches of the Preceding Atom               |
@@ -592,9 +594,21 @@ This matches white space, end-of-lines, and blank lines, then "foo" at start-of-
 * `\zs`: Matches at any position, but not inside `[]`, and sets the start of the  
         match there.  
 
-```regex
-:s/\(everything\)\@<=after the previous
-:s/\(everything\)\zsafter the previous
+```regex  
+:s/\(everything\)\@<=after the previous  
+:s/\(everything\)\zsafter the previous  
 ```
-The two above essentially do the same thing.
+The two above essentially do the same thing.  
+
+### Make it Non-Greedy  
+When using the brace notation (`\{1,}`), you can easily make it non-greedy.  
+* If a dash (`-`) appears immediately after the opening brace,
+ `{`, then the *shortest match first* algorithm is used.  
+    * i.e.,  `\{-...}` = Non-Greedy  
+
+So:  
+* `\{-}` is a non-greedy version of `*`
+* `\{-1}` is a non-greedy version of `+`
+
+
 
