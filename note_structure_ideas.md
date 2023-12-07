@@ -45,9 +45,9 @@ Using the `-n` option for `grep` will output the line number of the match.
 ```bash  
 grep -r -n -E -A 3 '^#?#\s\s?.*$'  
 ```
-* `-r`: recursive  
-* `-n`: include line numbers  
-* `-E`: use extended regular expressions  
+* `-r`: recursive  (`-r(ecursive)`)
+* `-n`: include line numbers  (`-n(umbers)`) 
+* `-E`: use extended regular expressions  (`-E(xtended)`)
 * `-A 3`: includes the next 3 lines after the match in the output
 
 
