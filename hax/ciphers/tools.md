@@ -7,6 +7,7 @@
 * hd
 * gunzip
 * xz
+* tcpdump
 * `xfreerdp` is for RDP
 * ... What else?
 
