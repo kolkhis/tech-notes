@@ -289,6 +289,7 @@ The main movement keys for Select Mode are the same as other editors:
     * This can be disabled by setting the `g:netrw_nogx` variable.
 
 ### Browsing
+Changing the current directory (or working directory):
 * `gn`: Change the "tree top" to the word below cursor (see `:Ntree`)
 * `u`/`U`: Jump to previous/next directory in browsing history.
     * Change `g:netrw_dirhistmax` to increase the amount of directories saved. (default 10)
