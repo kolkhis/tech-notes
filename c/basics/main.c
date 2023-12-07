@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +9,9 @@ int main()
     int characterAge;
     characterAge = 25;
 
+    /* Single quotes for chars */
+    char someChar = 'b';
+    /* Double quotes for strings (char arrays) */
     char characterName[] = "John"; 
 
     printf("There's some guy named %s.\n", characterName);
@@ -39,11 +43,20 @@ int main()
     {
         putchar(*c++);
     }
+    printf("\n");
 
-    double piDub = 3.14159;
-    float  piFlo = 3.14;
-    printf("Pi as a Double: %f\nPi as a float: %f", piDub, piFlo);
+    /* Doubles and Floats: both store floats */
+    float  piFlo = 3.14;        // 32-bit 
+    double piDub = 3.141592;     // 64-bit (double precision)
+    printf("Pi as a Double: %f\nPi as a float: %f\n", piDub, piFlo);
+    printf("Float: 32-bits.\nDouble: 64-bits.\n");
+    printf("%f + %f = %f\n", piDub, piFlo, piDub + piFlo);
 
+    double x = 3.14;
+    double y = 2.00;
+    double powerOfThree = pow(3.14, 2.00);
+    /* MATH */
+    printf("\n%f to the power of %f: %f\n", x, y, powerOfThree);
 
     return 0;
 }
