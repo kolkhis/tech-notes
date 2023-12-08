@@ -1,9 +1,10 @@
 
-# Amazon EC2
+# Amazon EC2 (Elastic Compute Cloud)
 
 ## What is an EC2 Instance?  
 Short answer: a Virtual Machine.  
 There are so many compute options. Tons of instance types. Great for raw compute.  
+
 
 EC2 is compute capacity.  
 It's designed to be able to scale. 
@@ -44,12 +45,83 @@ It's very good at scaling horizontally (spinning up more instances of that lambd
 
 
 
+---  
+
+Disaster Recovery (DR) Architecture.  
+Recovery Time Objective (RTO)  
+
+
+## EC2 Instance Types  
+
+### General Purpose Instance Types  
+Balance of compute, memory, and networking resources.  
+
+Use cases:  
+Broad range of applicable use cases.  
+* Business critical applications  
+* Small/Mid-sized Databases  
+
+### Database Optimized Instance Types  
+Low latency and high Input/Output per Second (IOPS)  
+
+Offers low latency  
+Use cases:  
+* NoSQL Databases  
+* Data Warehousing  
+* Distributed File Systems  
+
+
+### Compute Optimized Instance Types:  
+Compute - CPU intensive apps and DBs  
+Suitable for workloads like:  
+* HPC  
+* Batch Processing  
+* Video Encoding  
+
+### Accelerated Computing Instance Types  
+(P2 G3 F1)  
+Use cases:  
+* Machine Learning  
+* Graphics workloads  
+* Game and Application Streaming  
+
+Uses hardware accelerators to expedite data processing.  
+
+
+
+### Memory Optimized Instance Types  
+Delivers fast performance for memory-intensive workloads.  
+
+Use Cases:  
+* High-performance databases  
+* Real-time big data analytics  
+
+
 ---
 
-Disaster Recovery (DR) Architecture.
-Recovery Time Objective (RTO)
+## Regions, 
+AWS Region: Geographical location that implements it's operations and data centers.
+- Region names are usually `region-direction-number` (`us-east-1`)
+- In each region you have Availability Zones (AZ).
+    - AZ are clusters of data centers
+    - an AZ will be a subset of the region (`us-east-1a`, `us-east-1b`)
+A VPC is a region-scope service.
+VPC has subnets. So you can have a subnet in `us-east-1a`, and a subnet in `us-east-1b`.  
+
+So if you launch a service in an AZ, you must also launch a mirror of it in another AZ.
 
 
 
+Choosing region:
+Compliance: If it contains data that is bound by local regulations, then select the appropriate
+region.
+Latency: Choosing an AWS Region with close proximity to your userbase location can achieve lower
+network latency.
+Cost: AWS services are priced differently from one Region to another. Some Regions have lower
+costs than others, which can reult in a cost reduction for the same deployment
+
+Services and features Availability: Newer services/features only exist in certain regions.
+
+You can use multiple Regions for one application.
 
 

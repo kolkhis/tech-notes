@@ -35,3 +35,4 @@ Parallelize
 ## Misc
 Choosing the right storage type for the use-case.
 Prob don't wanna run a DB on S3 (might wanna use \*Block)
+
