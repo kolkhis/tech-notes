@@ -24,11 +24,52 @@ List of all default vim keybindings/commands for each mode:
 Pressing `!` and then doing a motion will select the lines that the motion  
 would have traversed, and put them in the Ex command line.  
 E.g., `!}` at the top of a paragraph will put the whole paragraph selection  
-into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).  
+into the Ex Command Line (for example, `:.,.+4!` for a 4-line paragraph).  
 
 
 
-## History  
+## Normal Mode Commands on Visual Selection with `:'<,'>norm`
+You can execute arbitrary normal mode commands on the visual selection  
+with `:'<,'>norm`.  
+For instance:  
+```vim  
+"Add an exclamation point to the end of each selected line  
+:'<,'>norm A!  
+"Bind this to a key for quick access 
+vnoremap '<leader>no' call norm :'<,'>norm 
+```
+Another example:  
+```vim  
+" Add a markdown todo box at the beginning of each line  
+:'<,'>norm ^i* [ ] <Esc>  
+```
+Relevant hotkey(s):
+* `gv`: Reselect last visual selection
+
+
+## Encrypting Files with Vim  
+See `~/notes/vim/encrypt.md`.  
+Use `:X` to encrypt a file.  
+Basically locks it behind a password.  
+Uses the `cryptmethod` to determine encryption algorithm.  
+```vim  
+" Start encryption  
+:X  
+" Enter passphrase twice  
+" Write file to encrypt it  
+:w  
+```
+Files can be programatically checked for encryption:  
+```vim  
+" Check if file is encrypted  
+has('crypt-blowfish2')  
+" Check for encryption functionality  
+if v:version > 704 || (v:version == 704 && has('patch401')) 
+```
+
+
+
+## History Tables  
 There are actually five  
 history tables:  
 * one for `:` commands  
@@ -36,6 +77,7 @@ history tables:
 * one for expressions  
 * one for input lines, typed for the `input()` function.  
 * one for debug mode commands  
+
 
 ## Replace Tabs with Spaces  
 ### `:ret`
@@ -380,11 +422,11 @@ For this example, we'll be using the `a` key as a macro register.
 
 ### Making a Numbered List Using Macros  
 1. Create the first list entry, make sure it starts with a number.  
-2. qa        - start recording into register 'a'  
-3. Y         - yank the entry  
-4. p         - put a copy of the entry below the first one  
-5. CTRL-A    - increment the number  
-6. q         - stop recording  
+2. `qa`        - start recording into register 'a'  
+3. `Y`         - yank the entry  
+4. `p`         - put a copy of the entry below the first one  
+5. `CTRL-A`    - increment the number  
+6. `q`         - stop recording  
 7. `<count>@a` - repeat the yank, put and increment `<count>` times  
 
 
@@ -451,6 +493,14 @@ Special words for command mode (can be used with `expand()`):
 * `<amatch>`: When executing autocmds, is replaced with the pattern match for  
     which this autocommand was executed.  
 
+Paste the contents of a register into the command line:
+* `CTRL-R w`: Pastes the contents of the `w` register into the command line (can be any register).
+* Special Registers for `<C-r>`/`CTRL-R`:
+    * `CTRL-F`:  the Filename under the cursor
+    * `CTRL-P`:  the Filename under the cursor, expanded with `path` as in `gf`
+    * `CTRL-W`:  the Word under the cursor
+    * `CTRL-A`:  the WORD under the cursor; see `WORD`
+    * `CTRL-L`:  the line under the cursor
 
 
 
@@ -543,18 +593,24 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
     * `set ur=10000`  
 
 ### Misc `:!{cmd}` Notes  
-Any "%" in {cmd} is expanded to the current file name.  
-Any "#" in {cmd} is expanded to the alternate file name.  
+Any `%` in `{cmd}` is expanded to the current file name.  
+Any `#` in `{cmd}` is expanded to the alternate file name.  
 Special characters are not escaped, use quotes or  
-shellescape(): >  
-    :!ls "%"  
-    :exe "!ls " .. shellescape(expand("%"))  
+`shellescape()`:   
+```vim
+:!ls "%"  
+:exe "!ls " .. shellescape(expand("%"))  
+```
 
 To avoid the hit-enter prompt use: >  
-    :silent !{cmd}  
+```vim
+:silent !{cmd}  
+```
 
-Repeat last ":!{cmd}".  
-    :!!  
+Repeat last `:!{cmd}`.  
+```vim
+:!!  
+```
 
 ##### More from the author of the Recursive macro tip  
 Now, if I call it again, register 'a' contains a macro that does my change, moves to the next spot, and then calls itself again.  
