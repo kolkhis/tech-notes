@@ -1,5 +1,5 @@
 
-# Vim Regex  
+# Vim Regex and Pattern Matching
 
 ## Very Magic  
 
@@ -37,6 +37,28 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 |  match without retry          |  `atom\@>`  |   `(?>atom)`    |
 |  conservative quantifiers     |  `\{-n,m}`  |`*?`, `+?`, `??`, `{}?`|
 
+* Vim beginnings and ends:
+    * Vim's `^` and `$` always match at embedded newlines, and you get two separate atoms. 
+    * With `\%^` and `\%$`, you only match at the very start and end of the text.
+
+* Perl beginnings and ends:
+    * In Perl, `^` and `$` only match at the beginning and end of the text by default.
+        * But, you can set the `m` flag, which lets them match at embedded newlines as well.
+
+
+### Unique to Vim
+* Changing the magic-ness of a pattern:  `\v` `\V` `\m` `\M`
+   (very useful for avoiding backslashitis)
+* Sequence of *optionally* matching atoms:  `\%[atoms]`
+* `\&` (which is to `\|` what "and" is to "or";  it forces several branches
+   to match at one spot)
+* Matching lines/columns by number:  `\%5l` `\%5c` `\%5v`
+* Setting the start and end of the match:  `\zs` `\ze`
+
+### Unique to Perl
+* Execution of arbitrary code in the regex:  `(?{perl code})`
+* Conditional expressions:  `(?(condition)true-expr|false-expr)`
+
 
 ### Important Help Files  
 * `:h pattern-overview`
@@ -44,47 +66,59 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 * `:h character-classes`
 * `:syn-ext-match`
 
-## Metacharacters (Escaped Characters)  
+---
+
+## Metacharacters (Escaped Characters) and Character Classes
 ##### `:h character-classes`  
 
-#### Whitespace:  
-| Character Class  |  Matches  |
-|------------------|-----------|
-| `.`| any character except new line  |
-| `\s`| whitespace character  |
-| `\S`| non-whitespace character  |
-#### Digits:  
-| Character Class  |  Matches  |
-|------------------|-----------|
-| `\d`| digit  |
-| `\D`| non-digit  |
-| `\x`| hex digit  |
-| `\X`| non-hex digit  |
-| `\o`| octal digit  |
-| `\O`| non-octal digit  |
-#### Words:  
-| Character Class  |  Matches  |
-|------------------|-----------|
-| `\h`| head of word character (a,b,c...z,A,B,C...Z and _ )  |
-| `\H`| non-head of word character  |
-| `\p`| printable character  |
-| `\P`| like `\p`, but excluding digits  |
-| `\w`| word character  |
-| `\W`| non-word character  |
-| `\a`| alphabetic character  |
-| `\A`| non-alphabetic character  |
-| `\l`| lowercase character  |
-| `\L`| non-lowercase character  |
-| `\u`| uppercase character  |
-| `\U`| non-uppercase character  |
-#### Special Characters:  
-| Character Class  |  Matches  |
-|------------------|-----------|
-| `\e` | matches `<Esc>` |  
-| `\t` | matches `<Tab>` |  
-| `\r` | matches `<CR>`  |  
-| `\b` | matches `<BS>`  |  
-| `\n` | matches an end-of-line |
+### Whitespace:  
+|  Character Class  |  Matches                      |
+|-------------------|-------------------------------|
+| `.`               | any character except new line |
+| `\s`              | whitespace character          |
+| `\S`              | non-whitespace character      |
+
+### Digits:  
+|  Character Class  |  Matches      |
+|-------------------|---------------|
+|  `\d`             | digit             |
+|  `\D`             | non-digit         |
+|  `\x`             | hex digit         |
+|  `\X`             | non-hex digit     |
+|  `\o`             | octal digit       |
+|  `\O`             | non-octal digit   |
+|  `\%d`            | Decimal (base10)  |
+|  `\%o`            | Octal (base8)     |
+|  `\%x`            | Hexadecimal (base16) up to 2 hexadecimal characters  |
+|  `\%u`            | Hexadecimal (base16) up to 4 hexadecimal characters  |
+|  `\%u`            | Hexadecimal (base16) up to 8 hexadecimal characters  |
+
+>#### NOTE: With `%\o`, Octal numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.
+
+### Letters:  
+|  Character Class  |  Matches                                      |
+|-------------------|-----------------------------------------------|
+| `\h`              | head of word character (`a-z`, `A-Z` and `_`) |
+| `\H`              | non-head of word character                    |
+| `\p`              | printable character                           |
+| `\P`              | like `\p`, but excluding digits               |
+| `\w`              | word character                                |
+| `\W`              | non-word character                            |
+| `\a`              | alphabetic character                          |
+| `\A`              | non-alphabetic character                      |
+| `\l`              | lowercase character                           |
+| `\L`              | non-lowercase character                       |
+| `\u`              | uppercase character                           |
+| `\U`              | non-uppercase character                       |
+
+### Special Characters:  
+|  Character Class  |  Matches                      |
+|-------------------|-------------------------------|
+| `\e`              | matches `<Esc>`               |  
+| `\t`              | matches `<Tab>`               |  
+| `\r`              | matches `<CR>`                |  
+| `\b`              | matches `<BS>`                |  
+| `\n`              | matches an `EOL` (end-of-line)|
 
 
 ## Tricks:  
@@ -116,7 +150,7 @@ The above substitution just replaces the captures with themselves, so no changes
 * `\c`: will force the entire pattern to ignore case 
 * `\C`: will enforce case-sensitive matching for the whole pattern  
 
-
+## Including End-of-Line (EOL) and Start-of-Line (SOL) in Pattern Matches
 ### Matching a Character Class *and* End of Line  
 Adding an underscore `_` between the backslash and character  
 for a character class will make it also include end-of-line.  
@@ -126,7 +160,7 @@ For example:
 ```
 will match whitespace, blank lines, and end-of-line.  
 
-### Matching Start-of-Line *after* Another Atom  
+## Matching Start-of-Line *after* Another Atom  
 * `\_^`: Matches start-of-line.  
 Example:  
 ```regex  
@@ -134,11 +168,8 @@ Example:
 ```
 This matches white space, end-of-lines, and blank lines, then "foo" at start-of-line.  
 
-
 ### Word Boundaries in Vim Regex  
 Word boundaries can be denoted by escaped angle brackets: `\<word\>`
-
-`\=` Matches 0 or 1 of the preceding atom, as many as possible.  
 
 ## Overview of Multi Items  
 * `pattern-overview`
@@ -242,7 +273,8 @@ they are all variations of the base character `a` with different accents.
 
 ---  
 
-## Capture Groups and Backreferences  
+## Capture Groups and Backreferences with Substitutions and Other Pattern Commands  
+##### Commands: `:s`, `:g`, `:v`   
 You can group parts of the pattern expression by enclosing them 
 with `\(` and `\)` (escaped parentheses, unless `very magic` is set).  
 ```regex  
@@ -577,8 +609,73 @@ Use `\(foo\)\@<!bar` (`\@<!`).
  characters, up to 0x7fffffff  
 
 
+## Matching Decimal, Octal, and Hexadecimal Number Systems
 
-### Neat Ones  
+* `\%d`: Matching Decimal (base10)
+* `\%o`: Matching Octal (base8)
+* `\%x`: Matching Hexadecimal (base16)
+    * Up to 2 hexadecimal characters
+* `\%u`:  Matching Hexadecimal (base16)
+    * Up to 4 hexadecimal characters
+* `\%U`:  Matching Hexadecimal (base16) 
+    * Up to 8 hexadecimal characters
+
+### Examples
+* `\%d123`:     Matches the character specified with a decimal number.  
+    * Must be followed by a non-digit.
+* `\%o40`:      Matches the character specified with an octal number up to `0o377`.
+    * Numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.
+* `\%x2a`:      Matches the character specified with up to *two* hexadecimal characters.
+* `\%u20AC`:    Matches the character specified with up to *four* hexadecimal characters.
+* `\%U1234abcd`: Matches the character specified with up to *eight* hexadecimal characters, up to `0x7fffffff`
+
+---
+
+* `/[[=`/`[==]`
+    - An equivalence class. Match accented `a` characters (i.e., `â`, `ã`, `å`, etc.)
+
+* `[..]`
+    - A collation element.
+    - This currently simply accepts a single
+      character in the form: `[.a.]`
+
+## Collections
+* `[]`: A Collection - Matches any single character in the collection.
+    * `\%[]`  A sequence of optionally matched atoms. This always matches.
+        * The longest match is used with this.
+    * `\_[]`: A collection that also matches end-of-line.
+    * `[\n]`: With `\_` *prepended* the collection OR `\n` *in* the collection also
+              includes the end-of-line.
+Starting a collection with `^` will make it match
+everything BUT what is in the collection:  
+```regex
+^[^\d]
+```
+The above will match a line that does NOT start with
+a digit character.
+
+### Collection Limitations / Caveats
+
+
+There can be no `\(\)`, `\%(\)` or `\z(\)` items inside the `[]`, and `\%[]` does not nest.
+
+### Collection Examples
+```regex
+/index\%[[[]0[]]]
+```
+Matches `index`, `index[`, `index[0`, and `index[0]`.
+
+
+## Good Ones to Remember
+* `\%(\)`: A pattern enclosed by escaped parentheses.
+    * Just like `\(\)`, but without counting it as a sub-expression.
+    * This allows using more groups and it's a little bit faster.
+
+* `~`/`\~`:  Matches the last given substitute string.
+* `\<`: Matches the beginning of a word: The next char is the first char of a word.
+* `\>`: Matches the end of a word: The previous char is the last char of a word.
+
+* `\_.`: Matches any single character or end-of-line.
 * `\_^`: Matches start-of-line.  
 Example:  
 ```regex  
