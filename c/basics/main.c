@@ -46,17 +46,23 @@ int main()
     printf("\n");
 
     /* Doubles and Floats: both store floats */
-    float  piFlo = 3.14;        // 32-bit 
-    double piDub = 3.141592;     // 64-bit (double precision)
+    float  piFlo = 3.14;         // 32-bit / 4 bytes
+    double piDub = 3.141592;     // 64-bit / 8 bytes (double precision)
     printf("Pi as a Double: %f\nPi as a float: %f\n", piDub, piFlo);
     printf("Float: 32-bits.\nDouble: 64-bits.\n");
     printf("%f + %f = %f\n", piDub, piFlo, piDub + piFlo);
 
+    /* MATH */
     double x = 3.14;
     double y = 2.00;
-    double powerOfThree = pow(3.14, 2.00);
-    /* MATH */
-    printf("\n%f to the power of %f: %f\n", x, y, powerOfThree);
+    double* yr = &y;
+    double* xr = &x;
+    /* Needs to be compiled with `gcc -lm` ([l]ook [m]ath) */
+    double powerOfPointers = pow(*yr, *xr);
+    /* Does NOT NEED to be compiled with `gcc -lm` */
+    double powerOfNumbers = pow(3.14, *xr);
+    printf("\nNumbers : %f to the power of %f: %f\n", x, y, powerOfNumbers);
+    printf("Pointers: %f to the power of %f: %f\n", *xr, *yr, powerOfPointers);
 
     return 0;
 }
