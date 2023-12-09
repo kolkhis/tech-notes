@@ -48,8 +48,12 @@ grep -r -n -E -A 3 '^#?#\s\s?.*$'
 * `-r`: recursive  (`-r(ecursive)`)
 * `-n`: include line numbers  (`-n(umbers)`) 
 * `-E`: use extended regular expressions  (`-E(xtended)`)
-* `-A 3`: includes the next 3 lines after the match in the output
+* `-A 3`: includes the next 3 lines after the match in the output (`-A`fter)
 
+---
+
+Idea: Add vim/nvim integration.
+* nvim: Use floating windows with a fzf or something to preview the file @ line
 
 
 ---  
