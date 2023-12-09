@@ -1,4 +1,5 @@
 
+" :h builtin
 						" *literal-Dict* *#{}*
 " To avoid having to put quotes around every key the #{} form can be used.  This
 " does require the key to consist only of ASCII letters, digits, '-' and '_'.
@@ -18,7 +19,8 @@
 
 
 " SNIPPETS:
-" Read an empty HTML template from a file and move cursor to title
+" Read an empty HTML template from a file ($HOME/.vim/.skeleton.html) 
+" and move cursor to title
 nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a
 
 
