@@ -51,35 +51,35 @@
 * Six Sigma White Belt 
     * [Six Sigma Council](https://www.sixsigmacouncil.org/six-sigma-white-belt-certification/)  
 
+---
 
+* Free Learning Resources (some courtesy of @Arthvadrr)  
+    * [The Odin Project](https://www.theodinproject.com/dashboard) 
+    * [CS50](https://cs50.harvard.edu/x/2022/) 
+    * [CS50 Web-Dev](https://pll.harvard.edu/course/cs50s-web-programming-python-and-javascript?delta=0) 
+    * [CS50 Game-Dev](https://pll.harvard.edu/course/cs50s-introduction-game-development?delta=0) 
+    * [Free Code Camp](https://www.freecodecamp.org/learn/) 
+    * [Stack Overflow](https://stackoverflow.com/) 
+    * [Scrimba](https://scrimba.com/) 
+    * [MDN Web Tutorials](https://developer.mozilla.org/en-US/docs/Web/Tutorials) 
 
-Free Learning Resources: (some courtesy of @Arthvadrr)  
-The Odin Project: https://www.theodinproject.com/dashboard  
-CS50: https://cs50.harvard.edu/x/2022/  
-CS50 Web-Dev: https://pll.harvard.edu/course/cs50s-web-programming-python-and-javascript?delta=0  
-CS50 Game-Dev: https://pll.harvard.edu/course/cs50s-introduction-game-development?delta=0  
-Free Code Camp: https://www.freecodecamp.org/learn/  
-Stack Overflow: https://stackoverflow.com/  
-Scrimba: https://scrimba.com/  
-MDN Web Tutorials: https://developer.mozilla.org/en-US/docs/Web/Tutorials  
+* Front End 
+    * [Front End Mentor](https://www.frontendmentor.io/) 
+    * [Front End Practice](https://www.frontendpractice.com/projects) 
+    * [CSS-Tricks](https://css-tricks.com/) 
 
-Front End:  
-Front End Mentor: https://www.frontendmentor.io/  
-Front End Practice: https://www.frontendpractice.com/projects  
-CSS-Tricks: https://css-tricks.com/  
+* Javascript (courtesy of @Arthvadrr)  
+    * [Mozilla](https://developer.mozilla.org/en-US/) 
+    * [TC39](https://tc39.es/) 
 
-Javascript: (courtesy of @Arthvadrr)  
-Mozilla:https://developer.mozilla.org/en-US/  
-TC39: https://tc39.es/  
-
-Editors: (courtesy of @Arthvadrr)  
-VS Code: https://code.visualstudio.com/  
-Jet Brains Fleet: https://www.jetbrains.com/fleet/ (free for now)  
-Jet Brains Webstorm: https://www.jetbrains.com/webstorm/ (not free)  
-Sublime Text: https://www.sublimetext.com/ 
-*Notepad++:" https://notepad-plus-plus.org/downloads/  
-Vim: https://www.vim.org/ (hard mode CLI editor)  
+* Editors (courtesy of @Arthvadrr)  
+    * [VS Code](https://code.visualstudio.com/) 
+    * [Jet Brains Fleet](https://www.jetbrains.com/fleet/)(free for now)  
+    * [Jet Brains Webstorm](https://www.jetbrains.com/webstorm/)(not free)  
+    * [Sublime Text](https://www.sublimetext.com/)
+    * [Notepad++](https://notepad-plus-plus.org/downloads/) 
+    * [Vim](https://www.vim.org/)(hard mode CLI editor)  
 
 Career:  
-Cracking the Coding Interview: https://www.crackingthecodinginterview.com/resources.html (courtesy @import raisin ) 
+* [Cracking the Coding Interview](https://www.crackingthecodinginterview.com/resources.html) (courtesy @import raisin ) 
 

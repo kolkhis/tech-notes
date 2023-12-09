@@ -50,6 +50,14 @@ grep -r -n -E -A 3 '^#?#\s\s?.*$'
 * `-E`: use extended regular expressions  (`-E(xtended)`)
 * `-A 3`: includes the next 3 lines after the match in the output (`-A`fter)
 
+
+### Grepping for a Specific Header
+Grep for a header of any type that contains `Substitute` or `Substitution`:
+```bash
+grep -r -E '^#{1,}\s+.*Substitut.*'
+```
+
+
 ---
 
 Idea: Add vim/nvim integration.
