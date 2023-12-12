@@ -2,6 +2,11 @@
 # Manipulating Windows in Vim  
 >#### `:h :vert`/`:vertical`
 
+TODO: 
+Take notes on:
+1. Floating windows and popups in nvim/lua
+1. All builtin window handling functions.
+
 ## Easy Formatting  
 | Ex Command        | Effect            |
 |-------------------|-------------------|

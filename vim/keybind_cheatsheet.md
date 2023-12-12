@@ -55,25 +55,27 @@ They must appear right after the command, before any other arguments.
 
 ## Normal Mode  
 
-
-The `CTRL-G j` and `CTRL-G k` commands can be used to insert text in front of a  
-column.  Example: 
+### Insert text at the same position on the line below/above  
+The `CTRL-G j` and `CTRL-G k` commands can be used 
+to insert text in front of a column.  
+Example: 
 ```c  
 int i;  
 int j;  
 ```
-Position the cursor on the first `int`, type `istatic <C-G>j       `.  The  
-result is: 
+Position the cursor on the first `int`, type `istatic <C-G>j       `.  
+The result is: 
 ```c  
 static int i;  
        int j;  
 ```
-When inserting the same text in front of the column in every line, use the  
-Visual blockwise command `I` `v_b_I`.  
+To insert the same text in front of the column in every line,
+use the Visual blockwise command `I`.   
+`:h v_b_I`.  
 
 
-Using `CTRL-O` splits undo: the text typed before and after it is undone  
-separately.  
+Using `CTRL-G u` splits undo: the text typed before and after it is undone separately.  
+Using `CTRL-O` does the same thing after performing an action.  
 
 ### Toggling Case  
 * `gUgU` / `gUU`: Make current line uppercase.  
