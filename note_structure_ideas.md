@@ -1,6 +1,6 @@
 
 # Ideas for organizing a notes system  
-
+Sturgeon's Law - "Ninety percent of everything is crap."
 
 ## Main idea  
 * Make a "table of contents" file to hold headers and filepaths/names  
