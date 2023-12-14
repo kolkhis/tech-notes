@@ -10,7 +10,7 @@ the tmux command prompt (`:`).
 
 
 ## Default Keybindings (not exhaustive)  
-To see a full list: `man tmux`, `/DEFAULT KEY BINDINGS`
+To see a full list: `man tmux` -> `/DEFAULT KEY BINDINGS`
 ```
 m           Mark the current pane (see select-pane -m).  
 M           Clear the marked pane.  
@@ -28,8 +28,8 @@ t           Show the time.
 ############# Making and Killing Windows and Panes #############  
 &           Kill the current window.  
 x           Kill the current pane.  
-%           Split the current pane into two, left and right.  
-"           Split the current pane into two, top and bottom.  
+%           Split the current pane vertically, left and right.  
+"           Split the current pane horizontally, top and bottom.  
 
 ############# Moving Panes #############  
 {           Swap the current pane with the previous pane.  
@@ -59,7 +59,22 @@ n           Change to the next window.
 l           Move to the previously selected window.  
 o           Select the next pane in the current window.  
 w           Choose the current window interactively.  
+^           Move to the previous window  
 ```
+
+## The Marked Pane  
+Mark a pane with the `select-pane -m` command.  
+Unmark it with either `select pane -M`, or marking a different pane.  
+
+* `-m` and `-M`: Set and clear the `marked pane`.  
+    * There is one marked pane at a time. 
+    * Setting a new one clears the last.  
+
+The marked pane is the default target for `-s` to:  
+* `join-pane` (`joinp`)
+* `move-pane` (`movep`)
+* `swap-pane` (`swapp`)
+* `swap-window` (`swapw`)  
 
 
 
@@ -313,8 +328,8 @@ Get the basename and directory name of the variable with:
 * `b:`: `basename(3)` 
 * `d:`: `dirname(3)` 
 
-### Escaping Special Characters
-Escape special characters automatically with `q`.
+### Escaping Special Characters  
+Escape special characters automatically with `q`.  
 * `q:` will escape `sh(1)` special characters. 
     * With a `h` suffix (`${q:h}`), escape hash characters (so `#` becomes `##`).  
 
