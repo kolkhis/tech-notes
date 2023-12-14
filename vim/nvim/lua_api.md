@@ -9,6 +9,22 @@
 Always `vim.inspect()` tables.  
 
 
+## Using a String as a Table Key 
+Table keys will automatically be accessible as strings.  
+```lua  
+myTable = { key = "value" }
+print(myTable['key'])  
+-- value  
+```
+But if you *need* a key that has some special characters in it,
+you can enclose it in square brackets `[ ]`.  
+```lua  
+myTable = { ['<C-k>'] = "Value" }
+print(myTable['<C-k>'])  
+-- Value  
+```
+This is useful for when some part of the nvim API returns funky stuff.  
+
 ## Running Lua From Vimscript  
 ###### *:h v:lua-call*  
 Using `v:lua` as a prefix, you can run lua from vimscript.  
@@ -87,13 +103,66 @@ vim.api.nvim_get_mode().mode
 vim.api.nvim_get_mode()['mode']  
 ```
 It returns:  
-- `'n'` for normal mode  
-- `'i'` for insert mode  
-- `'v'` for visual mode  
-- `'V'` for visual line mode  
+- `'i'` for Insert mode  
+- `'n'` for Normal mode  
+- `'v'` for Visual mode  
+- `'V'` for Visual Line mode 
 - `'<C-V>'` for visual block mode  
 - `'t'` for terminal mode  
+- `'s'` for Select mode  
+- `'S'` for Select Line mode  
+- `'ic'` for Insert mode completion  
+- `'R'` for Replace mode  
+- `'Rv'` for Virtual Replace mode  
+- `'c'` for Command-line mode  
+- `'cv'` for Vim Ex mode  
+- `'ce'` for Normal Ex mode  
+- `'r'` for Prompt mode  
+- `'rm'` for More prompt mode  
+- `'r?'` for Confirm prompt mode  
 
+
+Or, `vim.api.nvim_get_mode().mode` return values in a table:  
+| Mode | Return Value |
+|-|-|  
+| Insert mode | `'i'` |
+| Normal mode | `'n'` |
+| Visual mode | `'v'` |
+| Visual Line mode | `'V'` |
+| Visual Block mode | `['<C-V>']` |
+| Terminal mode | `'t'` |
+| Select mode | `'s'` |
+| Select Line mode | `'S'` |
+| Insert mode completion | `'ic'` |
+| Replace mode | `'R'` |
+| Virtual Replace mode | `'Rv'` |
+| Command-line mode | `'c'` |
+| Vim Ex mode | `'cv'` |
+| Normal Ex mode | `'ce'` |
+| Prompt mode | `'r'` |
+| More prompt mode | `'rm'` |
+| Confirm prompt mode | `['r?']` |
+
+
+
+
+--   askPrompt = {
+--     n = 'Ask Cody about file > ',
+--     v = 'Ask Cody about selection > ', 
+--     V = 'Ask Cody about selection > ',
+--     s = 'Ask Cody about selection > ',
+--     S = 'Ask Cody about selection > ',
+--     i = 'Ask Cody about selection > ',
+--     ic = 'Ask Cody about selection > ',
+--     R = 'Ask Cody about selection > ',
+--     Rv = 'Ask Cody about selection > ',
+--     c = 'Ask Cody about selection > ',
+--     cv = 'Ask Cody about selection > ',
+--     ce = 'Ask Cody about selection > ',
+--     r = 'Ask Cody about selection > ',
+--     rm = 'Ask Cody about selection > ',
+--     ['<C-V>'] = 'Ask Cody about selection > ',
+--   },
 
 ### Keymap Modes  
 - `:h map-table` for all the different modes for keymaps.  
@@ -101,14 +170,14 @@ See `../keybind_cheatsheet.md`.
 
 
 ## Get a List of Global Keymaps  
-Get a list of all the global keymaps for a given mode:
-```lua
-local maps = nvim_get_keymap({'n'})
-print(vim.inspect(vim.api.nvim_get_keymap('n')))
+Get a list of all the global keymaps for a given mode:  
+```lua  
+local maps = nvim_get_keymap({'n'})  
+print(vim.inspect(vim.api.nvim_get_keymap('n')))  
 ```
-Or, to get a list of *all* keymaps for all modes:
-```lua
-print(vim.inspect(vim.api.nvim_get_keymap('')))
+Or, to get a list of *all* keymaps for all modes:  
+```lua  
+print(vim.inspect(vim.api.nvim_get_keymap('')))  
 ```
 
 
