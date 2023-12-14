@@ -43,8 +43,8 @@ Another example:
 " Add a markdown todo box at the beginning of each line  
 :'<,'>norm ^i* [ ] <Esc>  
 ```
-Relevant hotkey(s):
-* `gv`: Reselect last visual selection
+Relevant hotkey(s):  
+* `gv`: Reselect last visual selection  
 
 
 ## Encrypting Files with Vim  
@@ -407,19 +407,6 @@ For this example, we'll be using the `a` key as a macro register.
 ## Paste a Recorded Macro  
 * `"qp` - Paste the macro recorded in the register `q`
 
-## tl;dr: Recursive Macros  
-* **Position my cursor where I want to make the first change**  
-* `qa` - start recording into register `a`
-* **Make all my changes, doing it in a way that should apply cleanly to all locations**  
-* `q` - stop recording  
-* **Position cursor on next location I want changed**  
-* `@a` - run the macro to test and make sure it works as intended  
-* `qA` - start recording to append to macro register `a`
-* **Move cursor to next location to change**  
-* `@a`
-* `q`
-
-
 ### Making a Numbered List Using Macros  
 1. Create the first list entry, make sure it starts with a number.  
 2. `qa`        - start recording into register 'a'  
@@ -493,14 +480,14 @@ Special words for command mode (can be used with `expand()`):
 * `<amatch>`: When executing autocmds, is replaced with the pattern match for  
     which this autocommand was executed.  
 
-Paste the contents of a register into the command line:
-* `CTRL-R w`: Pastes the contents of the `w` register into the command line (can be any register).
-* Special Registers for `<C-r>`/`CTRL-R`:
-    * `CTRL-F`:  the Filename under the cursor
+Paste the contents of a register into the command line:  
+* `CTRL-R w`: Pastes the contents of the `w` register into the command line (can be any register).  
+* Special Registers for `<C-r>`/`CTRL-R`:  
+    * `CTRL-F`:  the Filename under the cursor  
     * `CTRL-P`:  the Filename under the cursor, expanded with `path` as in `gf`
-    * `CTRL-W`:  the Word under the cursor
+    * `CTRL-W`:  the Word under the cursor  
     * `CTRL-A`:  the WORD under the cursor; see `WORD`
-    * `CTRL-L`:  the line under the cursor
+    * `CTRL-L`:  the line under the cursor  
 
 
 
@@ -543,18 +530,23 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 * `/_CTRL-G` & `/_CTRL-T` will cycle through the matches for the current search pattern  
 
 
-### Various Options  
-* `:h: options`  
-* `:h: emoji`  
+## Browsing the List of Options  
+Browse the list of options with:  
+```vim  
+:browse set | :bro se  
+:options    | :opt  
+```
 
-* `emoji`: Emoji characters are full width    
-    * `set emo`    `noemo`  
+## Various Options  
+* `:h :options`  
+* `:h :emoji`  
 
 * `splitkeep`: Determines scroll behavior for split windows    
-    * `set cursorspk` / `spk`  
+    * `set cursorspk=cursor` / `spk=cursor`  
+    * Can be changed to `screen` or `topline`  
 
-* `clipboard`: "unnamed" to use the * register like unnamed register    
-    * "autoselect" to always put selected text on the clipboard  
+* `clipboard`: `unnamed` to use the `*` register like unnamed register    
+    * `autoselect` to always put selected text on the clipboard  
     * `set cb=unnamedplus`  
 
 * `backspace`: Specifies what `<BS>`, `CTRL-W,` etc. can do in Insert mode  
@@ -565,10 +557,10 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
     * `set cpt=.,w,b,u,t`  
 
 * `completeopt`: Whether to use a popup menu for Insert mode completion  
-    * `set cot=menuone,noselect,`  
+    * `set cot=menuone,noselect,preview,`  
 
 
-#### More Tab Options  
+### More Tab Options  
 * `vartabstop`: list of number of spaces a tab counts for  
     * (local to buffer)  
     * `set vts=`  
@@ -576,12 +568,13 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
     * (local to buffer)  
     * `set vsts=`  
 
-##### Formatting Options For `gq`
+#### Formatting Options For `gq`
 * `formatexpr`: expression used for "gq" to format lines  
     * (local to buffer)  
     * `set fex=v:lua.vim.lsp.formatexpr()`  
 
-#### Undo Options  
+### Undo Options  
+See the undo list with `:undol[ist]` (only contains metadata).  
 * `undolevels`: maximum number of changes that can be undone  
     * (global or local to buffer)  
     * `set ul=1000`  
@@ -597,44 +590,61 @@ Any `%` in `{cmd}` is expanded to the current file name.
 Any `#` in `{cmd}` is expanded to the alternate file name.  
 Special characters are not escaped, use quotes or  
 `shellescape()`:   
-```vim
+```vim  
 :!ls "%"  
 :exe "!ls " .. shellescape(expand("%"))  
 ```
 
-To avoid the hit-enter prompt use: >  
-```vim
+To avoid the hit-enter prompt use:  
+```vim  
 :silent !{cmd}  
 ```
 
 Repeat last `:!{cmd}`.  
-```vim
+```vim  
 :!!  
 ```
 
-##### More from the author of the Recursive macro tip  
-Now, if I call it again, register 'a' contains a macro that does my change, moves to the next spot, and then calls itself again.  
-It will run repeatedly until it encounters an error.  
-This could be trying to move past the end of the buffer, finding no matches for a search, search hitting the end of buffer if `nowrapscan` is set, or any other command failure indicating all the changes are complete.  
-Quick and easy way to process an entire file!  
+## tl;dr: Recursive Macros  
+* **Position my cursor where I want to make the first change**  
+* `qa` - start recording into register `a`
+* **Make all my changes, doing it in a way that should apply cleanly to all locations**  
+* `q` - stop recording  
+* **Position cursor on next location I want changed**  
+* `@a` - run the macro to test and make sure it works as intended  
+* `qA` - start recording to append to macro register `a`
+* **Move cursor to next location to change**  
+* `@a`
+* `q`
 
-The other thing I want to mention is more fundamental: text-objects.  
-I hesitate to mention it because you said "uncommon commands" and I hope everyone using Vim already knows about those and uses them constantly.  
-But in case you don't know about them, go find them in the help and change your life.  
-You'll get to do things like `"=aB"` to re-indent an entire C-style code block (from anywhere in the block) or `cit` to delete everything within the current XML tag and drop you into insert mode ready to add new content.  
-Note these also combine really well with macro techniques mentioned above, as well.  
+Register `a` contains a macro that does the change,
+moves to the next spot, and then calls itself again.  
+It will run recursively until it encounters an error.  
+
+This could be 
+* Trying to move past the end of the buffer.  
+* Finding no matches for a search.  
+* Search hitting the end of buffer if `nowrapscan` is set.   
+* Any other command failure indicating all the changes are complete.  
+
+##### `:h text-objects`  
 
 
-
-### Using the `=` Register for Formulas  
+### Using the `=` Register for Formulas (The Expression Register)  
 Using the = register to calculate numeric inputs for motions.  
 
-For example `@=237*8<cr><c-a>` to increment a value by 237\*8.  
-There are a number of ways to go about this and it might seems odd but I use it surprisingly often.  
+For example `@=237*8<cr><c-a>` to increment a value by `237*8`.  
+There are a number of ways to go about this.  
 
-Also I don’t think many people make use of onoremap or omap for operator pending mode, basically to expand your set of motions (eg define in( to work just like i( but on the next pair of parens)  
+Make use of onoremap or omap for operator pending mode,
+basically to expand your set of motions.  
+E.g., define `in(` to work just like `i(` but on the next pair of parens. 
 
-I don’t find myself using zg or zug or the other variants for modifying spellcheck, but I guess I don’t use spell check too often. 
+Using `zg`/`zug`, `zw`/`zuw`, or the other variants for modifying spellcheck, you
+can add or remove words from the wordlist used for:
+```vim
+:setlocal spell spelllang=en_us
+```
 
 I find gi helpful and didn’t use it for the longest time.  
 Also `<c-a>` and `<c-d>` in Ex mode for autocompleting all strings or showing a list (when you don’t set list in wildmode).  
@@ -757,3 +767,6 @@ will be repeatable by using `.` to the expected
 * `i_CTRL-V_digit` - number system conversion  
 * `i_CTRL-G`
 * `:inoremap <C-H> <C-G>u<C-H>`
+
+
+

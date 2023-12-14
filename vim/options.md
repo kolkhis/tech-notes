@@ -1,6 +1,8 @@
 
+`:options`
 
-# Breakdown of All Options
+
+# Lua Breakdown of All Options
 
 ```lua
 local opts = {

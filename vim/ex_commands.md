@@ -4,6 +4,13 @@
 
 * See `++opt` for the possible values of `++opt`.  
 
+## Browsing the List of Options  
+Browse the list of options with:  
+```vim  
+:browse set | :bro se  
+:options    | :opt  
+```
+
 ### `ex-flags`
 These flags are supported by a selection of Ex commands.  They print the line  
 that the cursor ends up after executing the command:  
@@ -15,17 +22,92 @@ The flags can be combined, thus `l#` uses both a line number and `:list` style o
 
 ---  
 
-### Ex Commands for Inputting Text 
+## Ex Commands for Inputting Text 
 
 * `:a` `:append`
     * Insert several lines of text below the specified line.  
 * `:i` `:in` `:insert`
     * Insert several lines of text above the specified line.  
 
+---  
+
+## Redirecting the Output of Ex Commands 
+Using `:redir`, you can redirect the output of Ex commands.  
+### Redirect Ex command output into a file  
+You can redirect into files:  
+```vim  
+" Overwrite file with output:  
+:redir > {file}   
+" Append file with output:  
+:redir >> {file}
+:YourExCommands  
+:redir END  
+```
+
+### Redirect Ex command output into a register  
+You can also redirect into registers:  
+```vim  
+" Redirect Ex commands' outputs into register `a`:  
+:redir @a  
+" Optionally, you can use `@a>`:  
+:redir @a> 
+:YourExCommands  
+" Append Ex commands' outputs to register `a`:  
+:redir @a>>  
+:redir END  
+```
+Then you can paste them with `"ap`, or `:put a`.  
+Leaving out (omitting) the `>` in `:redir @a>` is recommended for 
+backwards-compatibility.  
+
+### Redirect Ex command output into system clipboard  
+Redirect to the selection or clipboard:  
+```vim  
+" Overwrite selection/clipboard: 
+:redir @*  
+:redir @+  
+" Or, optionally:  
+:redir @*>  
+:redir @+>  
+" Append to selection/clipboard: 
+:redir @*>>  
+:redir @+>>  
+" Append messages to the unnamed register:  
+:redir @">>       
+:YourExCommands  
+:redir END  
+```
+
+### Redirect Ex command output into variables  
+You can redirect Ex cmd output into variables; 
+if the variable doesn't exist, then it is created.  
+Only string variables can be used.  
+To redirect into variables:  
+```vim  
+" Redefine the variable with Ex cmd output:  
+:redir => {var}
+" Append messages to an existing variable:    
+:redi[r] =>> {var}  
+```
+Note: The variable will remain empty until redirection ends.  
+
+---  
+
+## Using the Filter Command  
+```vim  
+:filt[er][!] {pattern} {command}
+:filt[er][!] /{pattern}/ {command}
+```
+Restrict the output of `{command}` to lines matching with `{pattern}`.  
+For example, to list only xml files from the `oldfiles` command:  
+```vim  
+:filter /\.xml$/ oldfiles  
+```
+If the `[!]` is given, restricts the output of `{command}`
+to lines that do NOT match `{pattern}`.  
 
 
 ## Useful for Scripting  
-
 
 ### Insert Mode / Replace Mode  
 * `:star[tinsert][!]`
@@ -54,11 +136,11 @@ The flags can be combined, thus `l#` uses both a line number and `:list` style o
         * This can be used when you want to edit that file instead: `:e! #`
 
 An example on how to use `:r !`: 
-```vim
-:r !uuencode binfile binfile
+```vim  
+:r !uuencode binfile binfile  
 ```
-This command reads "binfile", uuencodes it and reads it into the current
-buffer.  Useful when you are editing e-mail and want to include a binary file.
+This command reads "binfile", uuencodes it and reads it into the current  
+buffer.  Useful when you are editing e-mail and want to include a binary file.  
 
 * `:{range}r[ead] [++opt] [name]`
     * Insert the file `name` (default: current file) below the specified line.  
@@ -85,7 +167,7 @@ buffer.  Useful when you are editing e-mail and want to include a binary file.
 
 
 
-# Ex special characters             
+## Ex special characters             
 * `cmdline-special`
 
 Note: These are special characters in the executed command line.  If you want  
@@ -123,67 +205,103 @@ For an absolute path, you need to add `:p`.  See `filename-modifiers`.
 The ```#<n``` item returns an absolute path, but it will start with `~/` for files  
 below your home directory.  
 
-Spaces are escaped except for shell commands. Can use quotes for those:
+Spaces are escaped except for shell commands. Can use quotes for those:  
 ```vim  
 :!ls "%"  
 :r !spell "%"  
 ```
 
-Also see |`=|.  
+
+## Dynamically Generating Temporary Files  
+Generate a (non-existent) filename located in the Nvim root 
+`tempdir` with `tempname()` (or `vim.fn.tempname()` in lua).  
+Scripts can use the filename as a temporary file.  
+```vim  
+let tmpfile = tempname()  
+exe "redir > " .. tmpfile  
+```
 
 
-## Ex Mode Special Words
-* `<cword>`: is replaced with the word under the cursor (like `star`)
-* `<cWORD>`: is replaced with the WORD under the cursor (see `WORD`)
+## Ex Command Substitution  
+#####  ``` `= ```
+You can have the backticks expanded as a Vim expression, instead of as an  
+external command, by putting an equal sign right after the first backtick.  
+e.g.: 
+```vim  
+:e `=tempname()`
+```
+The expression can contain just about anything, so this can also be used to  
+avoid the special meaning of `"`, `|`, `%` and `#`.  
 
-* `<cexpr>`: is replaced with the word under the cursor, including more
-    to form a C expression.
-    * when the cursor is on `arg` of `ptr->arg` then the result is `ptr->arg`;
-    * when the cursor is on `]` of `list[idx]` then the result is
-    `list[idx]`.
+### Using Expanded Variables  
+* Environment variables in the expression are expanded when evaluating the expression:  
+```vim  
+:e `=$HOME .. '/.vimrc'`
+```
+This will expand `$HOME` to `/home/yourUsername` (or wherever your home is.)  
 
-* `<cfile>`: is replaced with the path name under the cursor (like what `gf` uses)
+### Using Literal Variable Names  
+* This one uses the literal string `$HOME` and it will be used literally:  
+```vim  
+:e `='$HOME' .. '/.vimrc'`
+```
+This will use the string `'$HOME'`, resulting in `'$HOME/.vimrc'`.  
 
-* `<afile>`: When executing autocmds, is replaced with the file name of the buffer
-             being edited, or the file for a read or write. (`E495`)
+If the expression returns a string then names are separated with line breaks.  
+When the result is a `List` then each item is used as a name.  
+Line breaks also separate names.  
 
-* `<abuf>`: When executing autocmds, is replaced with the currently effective buffer number.
-    * It is not set for all events, also see `bufnr()`.
+## Ex Mode Special Words  
+* `<cword>`: is replaced with the word under the cursor (like `star`)  
+* `<cWORD>`: is replaced with the WORD under the cursor (see `WORD`)  
+
+* `<cexpr>`: is replaced with the word under the cursor, including more  
+    to form a C expression.  
+    * when the cursor is on `arg` of `ptr->arg` then the result is `ptr->arg`;  
+    * when the cursor is on `]` of `list[idx]` then the result is  
+    `list[idx]`.  
+
+* `<cfile>`: is replaced with the path name under the cursor (like what `gf` uses)  
+
+* `<afile>`: When executing autocmds, is replaced with the file name of the buffer  
+             being edited, or the file for a read or write.   
+* `<abuf>`: When executing autocmds, is replaced with the currently effective buffer number.  
+    * It's not set for all events, also see `bufnr()`.  
     * For `:r file` and `:so file` it is the current buffer,
-      the file being read/sourced is not in a buffer. (`E496`)
+      the file being read/sourced is not in a buffer.   
 
-* `<amatch>`: When executing autocmds, is replaced with the match for
-    which this autocommand was executed. (`E497`)
-    * It differs from `<afile>` when the file name isn't used to
-      match with (for `FileType`, `Syntax` and `SpellFileMissing` events).
-    * When the match is with a file name, it is expanded to the full path.
+* `<amatch>`: When executing autocmds, is replaced with the match for  
+    which this autocommand was executed.   
+    * It differs from `<afile>` when the file name isn't used to  
+      match with (for `FileType`, `Syntax` and `SpellFileMissing` events).  
+    * When the match is with a file name, it is expanded to the full path.  
 
-* `<sfile>`: When executing a `:source` command, is replaced with the
-             file name of the sourced file. (`E498`)
+* `<sfile>`: When executing a `:source` command, is replaced with the  
+             file name of the sourced file.   
     * When executing a function, is replaced with the call stack,
-      as with `<stack>` (this is for backwards compatibility, using `<stack>` or
-      `<script>` is preferred).
-    * Note that filename-modifiers are useless when `<sfile>` is not used inside a script.
+      as with `<stack>` (this is for backwards compatibility, using `<stack>` or  
+      `<script>` is preferred).  
+    * Note that filename-modifiers are useless when `<sfile>` is not used inside a script.  
 
-* `<stack>`: Is replaced with the call stack, using
-             `function {function-name}[{lnum}]` for a function line
-             and `script {file-name}[{lnum}]` for a script line, and
-             `..` in between items.  E.g.:
+* `<stack>`: Is replaced with the call stack, using  
+             `function {function-name}[{lnum}]` for a function line  
+             and `script {file-name}[{lnum}]` for a script line, and  
+             `..` in between items.  E.g.:  
     * `function {function-name1}[{lnum}]..{function-name2}[{lnum}]`
-    * If there is no call stack you get error (`E489`).
+    * If there is no call stack you get error (`E489`).  
 
-* `<script>`: When executing a `:source` command, is replaced with the file
+* `<script>`: When executing a `:source` command, is replaced with the file  
               name of the sourced file.  
-    * When executing a function, is replaced with the file name of the
-      script where it is defined.
-    * If the file name cannot be determined you get error (`E1274`).
+    * When executing a function, is replaced with the file name of the  
+      script where it is defined.  
+    * If the file name cannot be determined you get error (`E1274`).  
 
-* `<slnum>`: When executing a `:source` command, is replaced with the line number. (`E842`)
-    * When executing a function it's the line number relative to the start of the function.
+* `<slnum>`: When executing a `:source` command, is replaced with the line number.   
+    * When executing a function it's the line number relative to the start of the function.  
 
-* `<sflnum>`: When executing a script, is replaced with the line number.
-    * It differs from `<slnum>` in that `<sflnum>` is replaced with
-      the script line number in any situation. (`E961`)
+* `<sflnum>`: When executing a script, is replaced with the line number.  
+    * It differs from `<slnum>` in that `<sflnum>` is replaced with  
+      the script line number in any situation.   
 
 ## `filename-modifiers`
 
@@ -222,26 +340,26 @@ The file name modifiers can be used after
     * `:S` Escape special characters for use with a shell command (see `shellescape()`).  
 
 
-## Examples
+## Examples  
 
 Examples, when the file name is `src/version.c`, & current dir `/home/mool/vim`:  
-|   Modifier              |   End Result                      |
-|-------------------------|-----------------------------------|
-|   `:p`                  |   /home/mool/vim/src/version.c    |
-|   `:p:.`                |   src/version.c                   |
-|   `:p:~`                |   ~/vim/src/version.c             |
-|   `:h`                  |   src                             |
-|   `:p:h`                |   /home/mool/vim/src              |
-|   `:p:h:h`              |   /home/mool/vim                  |
-|   `:t`                  |   version.c                       |
-|   `:p:t`                |   version.c                       |
-|   `:r`                  |   src/version                     |
-|   `:p:r`                |   /home/mool/vim/src/version      |
-|   `:t:r`                |   version                         |
-|   `:e`                  |   c                               |
-|   `:s?version?main?`    |   src/main.c                      |
-|   `:s?version?main?:p`  |   /home/mool/vim/src/main.c       |
-|   `:p:gs?/?\\?`         |   \home\mool\vim\src\version.c    |
+|   Modifier              |     End Result                      |
+|-------------------------|-------------------------------------|
+|   `:p`                  |   `/home/mool/vim/src/version.c`    |
+|   `:p:.`                |   `src/version.c`                   |
+|   `:p:~`                |   `~/vim/src/version.c`             |
+|   `:h`                  |   `src`                             |
+|   `:p:h`                |   `/home/mool/vim/src`              |
+|   `:p:h:h`              |   `/home/mool/vim`                  |
+|   `:t`                  |   `version.c`                       |
+|   `:p:t`                |   `version.c`                       |
+|   `:r`                  |   `src/version`                     |
+|   `:p:r`                |   `/home/mool/vim/src/version`      |
+|   `:t:r`                |   `version`                         |
+|   `:e`                  |   `c`                               |
+|   `:s?version?main?`    |   `src/main.c`                      |
+|   `:s?version?main?:p`  |   `/home/mool/vim/src/main.c`       |
+|   `:p:gs?/?\\?`         |   `\home\mool\vim\src\version.c`    |
 
 Examples, when the file name is `src/version.c.gz`: 
 |   Modifier              |   End Result                      |
@@ -256,7 +374,59 @@ Examples, when the file name is `src/version.c.gz`:
 |     `:r:r`              |      src/version                  |    
 |     `:r:r:r`            |      src/version                  |    
   
+---  
+
+## Debugging with gdb  
+##### *:h termdebug-stepping*/*:h :Run*  
+The main commands you'll use are `:Run`, to run the program, and  
+`:Arguments` to set the arguments.  
+
+These are the Ex commands for *running* Gnu Debugger (gdb):  
+| Command               |       Effect                                                  |
+|-----------------------|---------------------------------------------------------------|
+| `:Run [args]`         | run the program with `[args]` or the previous arguments       |
+| `:Arguments {args}`   | set arguments for the next `:Run`                             |
+| `:Break`              | set a breakpoint at the current line; a sign will be displayed|
+| `:Clear`              | delete the breakpoint at the current line                     |
+| `:Step`               | execute the gdb "step" command                                |
+| `:Over`               | execute the gdb "next" command (`:Next` is a Vim command)     |
+| `:Until`              | execute the gdb "until" command                               |
+| `:Finish`             | execute the gdb "finish" command                              |
+| `:Continue`           | execute the gdb "continue" command                            |
+| `:Stop`               | interrupt the program                                         |
 
 
+### Inspecting variables 
+##### *:h termdebug-variables*/*:h :Evaluate*  
+
+| Command               |       Effect                              |
+|-----------------------|-------------------------------------------|
+| `:Evaluate`           | evaluate the expression under the cursor  |
+| `K`                   | same (see `termdebug_map_K` to disable)   |
+| `:Evaluate {expr}`    | evaluate `{expr}`                         |
+| `:'<,'>Evaluate`      | evaluate the Visually selected text       |
+
+
+
+### Navigating stack frames  
+##### *:h termdebug-frames*/*:h :Frame*/*:h :Up*/*:h :Down*  
+
+| Command               |       Effect                              |
+|-----------------------|-------------------------------------------|
+| `:Frame [frame]` | select frame `[frame]`, which is a frame number,address, or function name (default: current frame)  |
+| `:Up [count]`     | go up `[count]` frames (default: 1; the frame that called the current)  |
+| `+`               | same (see `termdebug_map_plus` to disable)  |
+| `:Down [count]`   | go down `[count]` frames (default: 1; the frame called by the current)|
+| `-`               | same (see `termdebug_map_minus` to disable)  |
+
+
+### Other commands 
+| Command   |       Effect                              |
+|-----------|-------------------------------------------|
+| `:Gdb`    | Jump to the gdb window.  
+| `:Program`| Jump to the window with the running program.  
+| `:Source` | Jump to the window with the source code, create it if there isn't one.  
+| `:Asm`    | Jump to the window with the disassembly, create it if there isn't one.  
+| `:Var`    | Jump to the window with the local and argument variables, create it if there isn't one. This window updates whenever the program is stopped. |
 
 
