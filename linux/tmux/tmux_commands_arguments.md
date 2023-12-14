@@ -3,6 +3,14 @@
 To see all commands in a nice little table, check out the [Table of Commands](#Table-of-`tmux-list-commands`-Output).  
 The options aren't explained there like they are in the [list](List-of-tmux-Commands-and-their-Options/Argumnents), but it's easier to look at.  
 
+## Useful Commands Quickref 
+Note: `-t` is usually `target`.
+|  Command      | Alias |  Effect  |
+|-|-|-|
+| `list-panes [-ast]`| `lsp` | `-a`: List all panes on server. `-s`: List panes for a session |
+| `list-windows [-afFt]`| `lsp` | `-a`: List all windows on server. `-F`: Format for each line. `-f`: Filter.
+
+
 ## List of tmux Commands and their Options/Argumnents  
 `tmux list-commands`
 
@@ -205,6 +213,14 @@ The options aren't explained there like they are in the [list](List-of-tmux-Comm
     * -D: Down  
     * -L: Left  
     * -R: Right  
+    * -m and -M: Set and clear the `marked pane`.
+        * There is one marked pane at a time. 
+        * Setting a new one clears the last.
+        * The marked pane is the default target for `-s` to:
+            * `join-pane`,
+            * `move-pane`,
+            * `swap-pane`
+            * `swap-window`.
 
 64. select-window  
     * -t: Target window  
