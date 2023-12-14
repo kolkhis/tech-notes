@@ -13,6 +13,9 @@ A command for programatically checking servers (prod-k8s in this example):
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
 
+## Playing Games on Linux
+Use Proton - a version of WINE made specifically for gaming.
+
 
 ## Builtin 
 * `: [arguments]`
