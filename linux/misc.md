@@ -34,12 +34,25 @@ dmesg | head
 uname -a  
 ```
 
+## sudoers and sudoing
+* List of sudoers or sudo users is found in `/etc/sudoers`
+* sudoers uses per-user timestamp files for credential caching.  
+* Once a user has been authenticated (by running `sudo [cmd]` and entering password),
+  a record is written containing the user-ID that was used to authenticate, the
+  terminal session ID, the start time of the session leader (or parent process) and
+  a time stamp (using a monotonic clock if one is available).
+* The authenticated user can sudo without a password for 15 minutes,
+  unless overridden by the `timestamp_timeout` option.
+
 
 ## Encrypt a file with Vi  
 ```vim 
 :X  
 ```
-By default, uses Rot13.  
+By default, uses Blowfish2.  
+It's said to be extremely insecure, and was removed by
+Neovim due to implementation flaws and vulnerability.  
+Use GPG instead.  
 
 
 ## Run a script when any user logs in.  

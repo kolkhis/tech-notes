@@ -7,7 +7,7 @@ This is where incoming traffic should go first.
 * It's in a zone that's not as trusted as systems on the network.  
 
 Outside traffic can go in through the DMZ. 
-It sits there and things can go into the system through
+It sits there and things can go into the system through  
 bastions (e.g., web servers, bastion hosts).  
 
 
@@ -86,8 +86,6 @@ Some examples of benchmarks:
 CIS Ubuntu Benchmarks  
 * Scored  
 * Unscored  
-
-
 
 An ansible playbook can go through and check for these things.  
 
