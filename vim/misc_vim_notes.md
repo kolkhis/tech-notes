@@ -27,6 +27,30 @@ E.g., `!}` at the top of a paragraph will put the whole paragraph selection
 into the Ex Command Line (for example, `:.,.+4!` for a 4-line paragraph).  
 
 
+## Searching with :vimgrep or :vim  
+To use `:vimgrep` (`:vim`)  to search for patterns across files  
+in the current directory, use the syntax:  
+```vim  
+:vim /pattern/ *  
+```
+To search recursively:  
+* Note: You may need to enable the `globstar` in your shell for this to work.  
+```vim  
+:vim /pattern/ **/*  
+```
+This uses the `globstar` feature in bash.  
+The recursive searching goes up to 100 directories deep.  
+* `:vimgrep` puts all matching files in the `quickfix list`/`error list`.  
+* Just like in substitutions, the `/` can be swapped for another char (i.e., `;`)  
+To get the list of all files that were matched (the quickfix list):  
+```vim  
+:cope  
+```
+
+To search for a fixed string instead of a pattern, use the `f` flag:  
+```vim  
+:vimgrep /myString/f **/*  
+```
 
 ## Normal Mode Commands on Visual Selection with `:'<,'>norm`
 You can execute arbitrary normal mode commands on the visual selection  
@@ -47,16 +71,16 @@ Relevant hotkey(s):
 * `gv`: Reselect last visual selection  
 
 
-## Encrypting Files with Vim  
+## Encrypting Files with Vim (NOT RECOMMENDED) 
 See `~/notes/vim/encrypt.md`.  
+* This only works in vim, not Neovim.  
+* Generally uses the blowfish encryption method, though it can be changed.  
 Use `:X` to encrypt a file.  
 Basically locks it behind a password.  
 Uses the `cryptmethod` to determine encryption algorithm.  
 ```vim  
-" Start encryption  
 :X  
-" Enter passphrase twice  
-" Write file to encrypt it  
+" Enter passphrase twice and write file to encrypt it  
 :w  
 ```
 Files can be programatically checked for encryption:  
@@ -70,8 +94,7 @@ if v:version > 704 || (v:version == 704 && has('patch401'))
 
 
 ## History Tables  
-There are actually five  
-history tables:  
+There are actually five history tables:  
 * one for `:` commands  
 * one for search strings  
 * one for expressions  
@@ -91,10 +114,12 @@ Using:
 
 
 ## Use an Ex Command on Lines Based on Range or Pattern  
+Execute arbitrary commands on *matching* patterns by using `:g` (`:global`).  
+Execute arbitrary commands on *NON-matching* patterns by using `:g!` (`:global!`) or `:v` (`:vglobal`).  
 
 * `:[range]g[lobal]/{pattern}/[cmd]` / `:g/{pattern}/[cmd]`
-    * Execute the Ex command [cmd] (default `:p`) on the  
-      lines within [range] where {pattern} matches.  
+    * Execute the Ex command `[cmd]` (default `:p`) on the  
+      lines within `[range]` where `{pattern}` matches.  
 
 * `:[range]g[lobal]!/{pattern}/[cmd]` / `:g!/{pattern}/[cmd]`
     * Execute the Ex command `[cmd]` (default `:p`) on the  
@@ -240,7 +265,7 @@ Pressing `U` (`<Shift-u>`) undoes all the changes made on the
 last line that was edited. This command is a change by itself,
 which is undone by the normal undo (`u`).  
 
-## Use `man` in NeoVim  
+## Use `man` in Neovim  
 In nvim (not vim as of right now) `:Man {cmd}` will pull up  
 the man page for the given cmd. Defined by the `'keywordprg'/ 'kp'`
 option.  
@@ -640,10 +665,10 @@ Make use of onoremap or omap for operator pending mode,
 basically to expand your set of motions.  
 E.g., define `in(` to work just like `i(` but on the next pair of parens. 
 
-Using `zg`/`zug`, `zw`/`zuw`, or the other variants for modifying spellcheck, you
-can add or remove words from the wordlist used for:
-```vim
-:setlocal spell spelllang=en_us
+Using `zg`/`zug`, `zw`/`zuw`, or the other variants for modifying spellcheck, you  
+can add or remove words from the wordlist used for:  
+```vim  
+:setlocal spell spelllang=en_us  
 ```
 
 I find gi helpful and didn’t use it for the longest time.  
