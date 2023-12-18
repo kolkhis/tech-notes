@@ -10,7 +10,6 @@
 * Networking Primer 
     * [ProLUG (het_tanis) Video](https://www.youtube.com/watch?v=KgqvYeT_l7M)  
 
-
 ## Topics  
 
 * Python 
@@ -82,4 +81,27 @@
 
 Career:  
 * [Cracking the Coding Interview](https://www.crackingthecodinginterview.com/resources.html) (courtesy @import raisin ) 
+
+
+## Some certs
+
+### GENERAL
+* Comptia 
+    * Net+
+    * Sec+
+        * Net+ and Sec+ feed into the Federal Directive Standard 8570 (DOD Baseline Certifications)
+        * That means that they're requirements for some gov't jobs
+    * Cloud+
+    * Data+
+
+### HANDS-ON
+* Linux foundation
+    * CKA
+    * CKAD
+    * CKS Certs
+
+### ACADEMIC
+* ISC2 
+    * CISSP 
+    * CCSP
 
