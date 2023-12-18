@@ -131,16 +131,3 @@ If you can see the type, you know so much more about what it's supposed to repre
 `println` - Prints to stderr
 `fmt.Println` - Prints to stdout
 
-
-Disability:
-Sounds like a good framing point for STAR method.
-Also one of the very few nice things about leetcode-style interviews is
-that it's a very low bar entry point (as far as prerequisite experience) for
-people pivoting their careers entirely, coming out of bootcamps, etc.
-As long as you play the game.
-
-Situation - the situation you had to deal with 
-Task - the task you were given to do 
-Action - the action you took 
-Result - what happened as a result of your action and what you learned from the experience
-
