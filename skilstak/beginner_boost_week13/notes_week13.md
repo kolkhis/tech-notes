@@ -1,34 +1,34 @@
 ### Grok Internet Networking
-    * Ethernet
-        * Routing
-            * Local Area Network (LAN)
-            * Wide Area Network  (WAN)
-            * Ethernet Address (machine address)
-            * Dynamic Host Control Protocol (DHCP)
-        * Ports
-        * Network Address Translation (NAT)
-    * IP
-    * TCP/IP
-    * UDP
-    * Domain Names
-        * Discovery
-            * `whois`
-            * <https://shodan.io>
-        * Registrars
-        * localhost 127.0.0.1
-        * Reserved
-        * `/etc/hosts`
-    * HTTP/HTTPS
-    * TLS
-    * SSH (Secure Shell)
-        * `~/.ssh/config`
-    * Beware of legacy: FTP, Telnet, Gopher
+* Ethernet
+    * Routing
+        * Local Area Network (LAN)
+        * Wide Area Network  (WAN)
+        * Ethernet Address (machine address)
+        * Dynamic Host Control Protocol (DHCP)
+    * Ports
+    * Network Address Translation (NAT)
+* IP
+* TCP/IP
+* UDP
+* Domain Names
+    * Discovery
+        * `whois`
+        * <https://shodan.io>
+    * Registrars
+    * localhost 127.0.0.1
+    * Reserved
+    * `/etc/hosts`
+* HTTP/HTTPS
+* TLS
+* SSH (Secure Shell)
+    * `~/.ssh/config`
+* Beware of legacy: FTP, Telnet, Gopher
 
 ### Common Network Query Commands
-    * `dig`, `nslookup`,
-    * `ifconfig`, `ipconfig`, `ip`, `ss`
-    * `ping`
-    * `nmap`
+* `dig`, `nslookup`,
+* `ifconfig`, `ipconfig`, `ip`, `ss`
+* `ping`
+* `nmap`
 
 
 
