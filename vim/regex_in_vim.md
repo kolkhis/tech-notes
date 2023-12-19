@@ -1,5 +1,5 @@
 
-# Vim Regex and Pattern Matching
+# Vim Regex and Pattern Matching  
 
 ## Very Magic  
 
@@ -37,25 +37,25 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 |  match without retry          |  `atom\@>`  |   `(?>atom)`    |
 |  conservative quantifiers     |  `\{-n,m}`  |`*?`, `+?`, `??`, `{}?`|
 
-* Vim beginnings and ends:
+* Vim beginnings and ends:  
     * Vim's `^` and `$` always match at embedded newlines, and you get two separate atoms. 
-    * With `\%^` and `\%$`, you only match at the very start and end of the text.
+    * With `\%^` and `\%$`, you only match at the very start and end of the text.  
 
-* Perl beginnings and ends:
-    * In Perl, `^` and `$` only match at the beginning and end of the text by default.
-        * But, you can set the `m` flag, which lets them match at embedded newlines as well.
+* Perl beginnings and ends:  
+    * In Perl, `^` and `$` only match at the beginning and end of the text by default.  
+        * But, you can set the `m` flag, which lets them match at embedded newlines as well.  
 
 
-### Unique to Vim
+### Unique to Vim  
 * Changing the magic-ness of a pattern:  `\v` `\V` `\m` `\M`
-   (very useful for avoiding backslashitis)
+   (very useful for avoiding backslashitis)  
 * Sequence of *optionally* matching atoms:  `\%[atoms]`
-* `\&` (which is to `\|` what "and" is to "or";  it forces several branches
-   to match at one spot)
+* `\&` (which is to `\|` what "and" is to "or";  it forces several branches  
+   to match at one spot)  
 * Matching lines/columns by number:  `\%5l` `\%5c` `\%5v`
 * Setting the start and end of the match:  `\zs` `\ze`
 
-### Unique to Perl
+### Unique to Perl  
 * Execution of arbitrary code in the regex:  `(?{perl code})`
 * Conditional expressions:  `(?(condition)true-expr|false-expr)`
 
@@ -66,9 +66,9 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 * `:h character-classes`
 * `:syn-ext-match`
 
----
+---  
 
-## Metacharacters (Escaped Characters) and Character Classes
+## Metacharacters (Escaped Characters) and Character Classes  
 ##### `:h character-classes`  
 
 ### Whitespace:  
@@ -93,7 +93,7 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 |  `\%u`            | Hexadecimal (base16) up to 4 hexadecimal characters  |
 |  `\%u`            | Hexadecimal (base16) up to 8 hexadecimal characters  |
 
->#### NOTE: With `%\o`, Octal numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.
+>#### NOTE: With `%\o`, Octal numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.  
 
 ### Letters:  
 |  Character Class  |  Matches                                      |
@@ -150,7 +150,7 @@ The above substitution just replaces the captures with themselves, so no changes
 * `\c`: will force the entire pattern to ignore case 
 * `\C`: will enforce case-sensitive matching for the whole pattern  
 
-## Including End-of-Line (EOL) and Start-of-Line (SOL) in Pattern Matches
+## Including End-of-Line (EOL) and Start-of-Line (SOL) in Pattern Matches  
 ### Matching a Character Class *and* End of Line  
 Adding an underscore `_` between the backslash and character  
 for a character class will make it also include end-of-line.  
@@ -290,24 +290,30 @@ The first one matched will be used.
 
 
 Then they can be referenced in the substitute with:  
-* `&`:  the whole matched pattern     
-* `\0`: the whole matched pattern     
-* `\1`: the matched pattern in the first pair of \(\)     
-* `\2`: the matched pattern in the second pair of \(\)    
-... ...       
-* `\9`: the matched pattern in the ninth pair of \(\)     
-* `~`: the previous substitute string     
-* `\L`: the following characters are made lowercase  
-* `\U`: the following characters are made uppercase  
-* `\E`: end of \U and \L  
-* `\e`: end of \U and \L  
-* `\r`: split line in two at this point  
-* `\l`: next character made lowercase  
-* `\u`: next character made uppercase  
+* `&`:  The whole matched pattern     
+* `\0`: The whole matched pattern     
+* `\1`, ..., `\9`: The matched pattern in the `n`'th capture group (`\(...\)`)  
+    * The numbering is done based on which `\(` comes first in the pattern (left to right).  
+* `~`: The previous substitute string  
+* `\L`: The following characters are made lowercase  
+* `\U`: The following characters are made uppercase  
+* `\E`: End of `\U` and `\L`  
+* `\e`: End of `\U` and `\L`  
+* `\r`: Split line in two at this point  
+* `\b`: Insert a `<BS>`  
+* `\l`: Next character made lowercase  
+* `\u`: Next character made uppercase  
+* `<CR>`: Split line in two at this point (Type the `<CR>` as `CTRL-Q <Enter>`\*)  
+* `\<CR>`: Insert a carriage-return (`CTRL-M`) (Type the `<CR>` as `CTRL-Q <Enter>`\*)  
+* `\n`: Insert a `<NL>` (`<NUL>` in the file) (does NOT break the line)  
+* `\t`: Insert a `<Tab>`  
+* `\\`: Insert a single backslash  
+* `\x`: Is any character not mentioned above: Reserved for future expansion  
+
+\* *Some systems support `CTRL-V <Enter>` to insert the literals*  
 
 
-
-### Flags  
+## Flags  
 
 * `g`: Global, replaces all occurrences on each line.  
 * `i`: Case insensitive.  
@@ -318,18 +324,42 @@ Then they can be referenced in the substitute with:
 * `p`: Print the line containing the last substitute.  
     * `#`: Like `p` and prepend the line number. 
     * `l`: Like `p` but print the text like `:list`.  
-
 * `&` Must be the first one. Keep the flags from the previous substitute command.  
       Examples:  
     * `:&&`
     * `:s/this/that/&`
 
 * `r`: Only useful in combination with `:&` or `:s` without arguments.  
-`:&r` works the same way as `:~`:  When the search pattern is empty, use the  
-previously used search pattern instead of the search pattern from the  
-last substitute or `:global`.  If the last command that did a search  
-was a substitute or `:global`, there is no effect. 
+* `:&r` works the same way as `:~`:  
+    * When the search pattern is empty, use the  previously used search pattern  
+      instead of the search pattern from the last `:s` or `:global`.  
+    * If the last command that did a search was a `:s` or `:global`, there is no effect. 
 
+---  
+### Two and Three Letter `:substitute` Commands  
+You can use flags directly in the in the commands so you don't need to specify them at the end:  
+|   |  c |  e |  g |  i |  I |  n |  p |  l |  r  
+|---|----|----|----|----|----|----|----|----|---  
+| g | `:sgc` | `:sge` | `:sg`  | `:sgi` | `:sgI` | `:sgn` | `:sgp` | `:sgl` | `:sgr`
+| I | `:sIc` | `:sIe` | `:sIg` | `:sIi` | `:sI`  | `:sIn` | `:sIp` | `:sIl` | `:sIr`
+| c | `:sc`  | `:sce` | `:scg` | `:sci` | `:scI` | `:scn` | `:scp` | `:scl`
+| r | `:src` |        | `:srg` | `:sri` | `:srI` | `:srn` | `:srp` | `:srl` | `:sr`
+| i | `:sic` | `:sie` |        | `:si`  | `:siI` | `:sin` | `:sip` |        | `:sir`
+| e  
+| n  
+| p  
+| l  
+
+Exceptions:  
+* `:scr`  is  `:scriptnames`
+* `:se`   is  `:set`
+* `:sig`  is  `:sign`
+* `:sil`  is  `:silent`
+* `:sn`   is  `:snext`
+* `:sp`   is  `:split`
+* `:sl`   is  `:sleep`
+* `:sre`  is  `:srewind`
+ 
 
 
 ### Repeating Substitutions  
@@ -609,73 +639,73 @@ Use `\(foo\)\@<!bar` (`\@<!`).
  characters, up to 0x7fffffff  
 
 
-## Matching Decimal, Octal, and Hexadecimal Number Systems
+## Matching Decimal, Octal, and Hexadecimal Number Systems  
 
-* `\%d`: Matching Decimal (base10)
-* `\%o`: Matching Octal (base8)
-* `\%x`: Matching Hexadecimal (base16)
-    * Up to 2 hexadecimal characters
-* `\%u`:  Matching Hexadecimal (base16)
-    * Up to 4 hexadecimal characters
+* `\%d`: Matching Decimal (base10)  
+* `\%o`: Matching Octal (base8)  
+* `\%x`: Matching Hexadecimal (base16)  
+    * Up to 2 hexadecimal characters  
+* `\%u`:  Matching Hexadecimal (base16)  
+    * Up to 4 hexadecimal characters  
 * `\%U`:  Matching Hexadecimal (base16) 
-    * Up to 8 hexadecimal characters
+    * Up to 8 hexadecimal characters  
 
-### Examples
+### Examples  
 * `\%d123`:     Matches the character specified with a decimal number.  
-    * Must be followed by a non-digit.
-* `\%o40`:      Matches the character specified with an octal number up to `0o377`.
-    * Numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.
-* `\%x2a`:      Matches the character specified with up to *two* hexadecimal characters.
-* `\%u20AC`:    Matches the character specified with up to *four* hexadecimal characters.
+    * Must be followed by a non-digit.  
+* `\%o40`:      Matches the character specified with an octal number up to `0o377`.  
+    * Numbers below `0o40` must be followed by a *non-octal digit* or a *non-digit*.  
+* `\%x2a`:      Matches the character specified with up to *two* hexadecimal characters.  
+* `\%u20AC`:    Matches the character specified with up to *four* hexadecimal characters.  
 * `\%U1234abcd`: Matches the character specified with up to *eight* hexadecimal characters, up to `0x7fffffff`
 
----
+---  
 
 * `/[[=`/`[==]`
-    - An equivalence class. Match accented `a` characters (i.e., `â`, `ã`, `å`, etc.)
+    - An equivalence class. Match accented `a` characters (i.e., `â`, `ã`, `å`, etc.)  
 
 * `[..]`
-    - A collation element.
-    - This currently simply accepts a single
+    - A collation element.  
+    - This currently simply accepts a single  
       character in the form: `[.a.]`
 
-## Collections
-* `[]`: A Collection - Matches any single character in the collection.
-    * `\%[]`  A sequence of optionally matched atoms. This always matches.
-        * The longest match is used with this.
-    * `\_[]`: A collection that also matches end-of-line.
-    * `[\n]`: With `\_` *prepended* the collection OR `\n` *in* the collection also
-              includes the end-of-line.
-Starting a collection with `^` will make it match
+## Collections  
+* `[]`: A Collection - Matches any single character in the collection.  
+    * `\%[]`  A sequence of optionally matched atoms. This always matches.  
+        * The longest match is used with this.  
+    * `\_[]`: A collection that also matches end-of-line.  
+    * `[\n]`: With `\_` *prepended* the collection OR `\n` *in* the collection also  
+              includes the end-of-line.  
+Starting a collection with `^` will make it match  
 everything BUT what is in the collection:  
-```regex
-^[^\d]
+```regex  
+^[^\d]  
 ```
-The above will match a line that does NOT start with
-a digit character.
+The above will match a line that does NOT start with  
+a digit character.  
 
-### Collection Limitations / Caveats
+### Collection Limitations / Caveats  
 
 
-There can be no `\(\)`, `\%(\)` or `\z(\)` items inside the `[]`, and `\%[]` does not nest.
+There can be no `\(\)`, `\%(\)` or `\z(\)` items inside the `[]`, and `\%[]` does not nest.  
 
-### Collection Examples
-```regex
-/index\%[[[]0[]]]
+### Collection Examples  
+```regex  
+/index\%[[[]0[]]]  
 ```
-Matches `index`, `index[`, `index[0`, and `index[0]`.
+Matches `index`, `index[`, `index[0`, and `index[0]`.  
 
 
-## Good Ones to Remember
-* `\%(\)`: A pattern enclosed by escaped parentheses.
-    * Just like `\(\)`, but without counting it as a sub-expression.
-    * This allows using more groups and it's a little bit faster.
+## Good Ones to Remember  
+* `\%(\)`: A pattern enclosed by escaped parentheses.  
+    * Just like `\(\)`, but without counting it as a sub-expression.  
+    * This allows using more groups and it's a little bit faster.  
 
-* `~`/`\~`:  Matches the last given substitute string.
-* `\<`: Matches the beginning of a word: The next char is the first char of a word.
-* `\>`: Matches the end of a word: The previous char is the last char of a word.
+* `~`/`\~`:  Matches the last given substitute string.  
+* `\<`: Matches the beginning of a word: The next char is the first char of a word.  
+* `\>`: Matches the end of a word: The previous char is the last char of a word.  
 
-* `\_.`: Matches any single character or end-of-line.
+* `\_.`: Matches any single character or end-of-line.  
 * `\_^`: Matches start-of-line.  
 Example:  
 ```regex  
