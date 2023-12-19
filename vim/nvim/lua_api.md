@@ -25,6 +25,8 @@ print(myTable['<C-k>'])
 ```
 This is useful for when some part of the nvim API returns funky stuff.  
 
+
+
 ## Running Lua From Vimscript  
 ###### *:h v:lua-call*  
 Using `v:lua` as a prefix, you can run lua from vimscript.  
@@ -32,6 +34,8 @@ E.g.,
 ```vim  
 :echo v:lua.vim.api.nvim_get_mode().mode  
 ```
+
+
 
 ## Setting Vim Options from Lua  
 ##### *:h vim.o* | *vim.opt*  
@@ -54,6 +58,8 @@ vim.o.listchars = 'space:_,tab:>~'
 -- or  
 vim.opt.listchars = { space = '_', tab = '>~' }
 ```
+
+
 
 ## Option Objects  
 Note that `vim.opt` returns an `Option` object, not the value of the option,
@@ -83,6 +89,8 @@ vim.opt.wildignore:remove({ "node_modules" })
 ```
 
 
+
+
 ## Tab Completion Keymap  
 This is already handled by nvim-cmp (must be remapped from `<Enter>`), but this is neat to know:  
 ```lua  
@@ -92,10 +100,13 @@ end, { expr = true })
 ```
 
 
+
 ## Modes  
 ### Getting Current Mode  
 `vim.api.nvim_get_mode()`: does not return 'v' for visual mode. 
 It returns a table, with the keys `['blocking']` and `['mode']`.  
+* `vim.api.nvim_get_mode().blocking`:
+    * `true` if Nvim is waiting for input, otherwise `false`.
 To get the mode: 
 ```lua  
 vim.api.nvim_get_mode().mode 
@@ -122,7 +133,7 @@ It returns:
 - `'r?'` for Confirm prompt mode  
 
 
-Or, `vim.api.nvim_get_mode().mode` return values in a table:  
+`vim.api.nvim_get_mode().mode` return values in a table:  
 | Mode | Return Value |
 |-|-|  
 | Insert mode | `'i'` |
@@ -142,6 +153,35 @@ Or, `vim.api.nvim_get_mode().mode` return values in a table:
 | Prompt mode | `'r'` |
 | More prompt mode | `'rm'` |
 | Confirm prompt mode | `['r?']` |
+
+`vim.api.nvim_get_mode().mode` return values in a table:  
+
+Here's some lua that will get the current mode:
+```lua
+local modes = {
+    ['i'] = 'Insert mode',
+    ['n'] = 'Normal mode',
+    ['v'] = 'Visual mode',
+    ['V'] = 'Visual Line mode',
+    ['<C-V>'] = 'Visual Block mode',
+    ['t'] = 'Terminal mode',
+    ['s'] = 'Select mode',
+    ['S'] = 'Select Line mode',
+    ['ic'] = 'Insert mode completion',
+    ['R'] = 'Replace mode',
+    ['Rv'] = 'Virtual Replace mode',
+    ['c'] = 'Command-line mode',
+    ['cv'] = 'Vim Ex mode',
+    ['ce'] = 'Normal Ex mode',
+    ['r'] = 'Prompt mode',
+    ['rm'] = 'More prompt mode',
+    ['r?'] = 'Confirm prompt mode',
+}
+vim.keymap.set('', )
+```
+
+
+
 
 
 
