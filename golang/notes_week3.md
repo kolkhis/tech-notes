@@ -83,7 +83,7 @@ text := scanner.Text()
 followed by one mandatory newline. Automatically truncates. Don't use ReadLines.
 Always use `bufio.NewScanner(os.Stdin)`
 
-## BAD GO CODE:
+## BAD GO CODE (if/else if chains):
 BAD GO: `else if` statements.
 ```go
     if name == "Robin" {
@@ -96,7 +96,7 @@ BAD GO: `else if` statements.
         fmt.Println("Well, as a King you have to know these things, you know.")
     }
 ```
-## GOOD GO CODE:
+## GOOD GO CODE (swich case):
 In Go, switch statements are the preferred idiomatic way for conditionals.
 ```go
     switch strings.ToLower(name) {
@@ -116,7 +116,7 @@ The Go equivalent in the `fallthrough` keyword.
 
 ## Types
 Go is a STRICTLY TYPED language.
-> Why TypeScript instead of JavaScript?
+
 In most projects BEGINNERS work on, types probably don't matter all that much.
 Simple projects, it's fine to write code however you want. Using types could be too complex.
 
@@ -128,7 +128,7 @@ One of the most important things about writing code is making it self-documentin
 If you can see the type, you know so much more about what it's supposed to represent.
 
 
-> Add to a `learn-go/hello` module
-`println` - Prints to stderr
-`fmt.Println` - Prints to stdout
+## Printing Lines
+* `println` - Prints to stderr
+* `fmt.Println` - Prints to stdout
 

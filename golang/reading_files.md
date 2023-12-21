@@ -61,7 +61,7 @@ This reads the file `input.txt` line by line.
 1. Make a new scanner object from the file 
     * [`scanner := bufio.NewScanner(file)`](https://pkg.go.dev/bufio#Scanner)
 1.  Iterate over the lines of the file.
-    * Call [`scanner.Scan()`](https://pkg.go.dev/bufio#Scanner.Scan)
+    * Call [`scanner.Scan()`](https://pkg.go.dev/bufio#Scanner.Scan) to iterate over the lines.
     * ```go
       for scanner.Scan() { 
           fmt.Println(scanner.Text())
