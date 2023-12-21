@@ -14,7 +14,7 @@ Create a new module for each week (keeping them in one repository)
 `go install -o ./testbin` - will output to the specified path/name
 
 
-## Command line arguments
+## Command Line Arguments & Environment Variables
 In go, the `os` module can be used to get command line arguments.
 
 `~/Repos/github.com/kolkhis/learn-go/hi`
@@ -72,13 +72,14 @@ text := scanner.Text()
 fmt.println("You entered:", text)
 ```
 
-`scanner := bufio.NewScanner(os.Stdin)` - Can replace `os.Stdin` with any input (files)
-
+```go
+scanner := bufio.NewScanner(os.Stdin) // Can replace `os.Stdin` with any input (files)
 scanner.Scan() 
 // Truncates the EOL
 text := scanner.Text()  
+```
 
-ScanLines is the default. Strips trailing and EOL marker. EOL marker is optional carriage return
+`ScanLines` is the default. Strips trailing and EOL marker. EOL marker is optional carriage return
 followed by one mandatory newline. Automatically truncates. Don't use ReadLines.
 Always use `bufio.NewScanner(os.Stdin)`
 
