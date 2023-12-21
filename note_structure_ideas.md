@@ -27,6 +27,15 @@ au! BufEnter contents.md nnoremap gf ?/notes/<CR>gf
 ```
 ^ Try that?  
 
+## Utilizing Folds
+Idea: Fold each of the files and their headers, make `]j` close the current fold and open the next
+one.  Or, use `{` and `}` to jump between folds like that.
+```vim
+au! BufEnter contents.md nnoremap ]j zc]zzo
+au! BufEnter contents.md nnoremap } zc]zzo
+au! BufEnter contents.md nnoremap { zc[zzo
+```
+
 
 ### Note Formatting Vim Regex Patterns  
 Add two spaces (linebreak) at the end of each line that doesn't already have two spaces,
