@@ -76,4 +76,41 @@ This reads the file `input.txt` line by line.
 1. At the end of the function, `file.Close()` will be called.
 
 
+## Creating Files in Go
+
+Creating files is pretty much the same as opening existing files.  
+But, instead of `os.Open()`, we use `os.Create()`.  
+
+```go
+package main
+
+import (
+	"io"
+	"log"
+	"os"
+)
+
+func main() {
+	if err := write("readme.txt", "This is a readme file"); err != nil {
+		log.Fatal("failed to write file:", err)
+	}
+}
+
+func write(fileName string, text string) error {
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = io.WriteString(file, text)
+	if err != nil {
+		return err
+	}
+
+	return file.Close()
+}
+```
+
+
+
 
