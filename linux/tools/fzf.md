@@ -152,7 +152,7 @@ fzf --multi --bind 'ctrl-a:select-all+accept'
 fzf --multi --bind 'ctrl-a:select-all' --bind 'ctrl-a:+accept'  
 ```
 
-## Replacements for Parentheses
+## Replacements for Parentheses  
 An action denoted with (`...`) suffix takes an argument.  
 ```bash  
 fzf --bind 'ctrl-a:change-prompt(NewPrompt> )'  
@@ -215,15 +215,77 @@ fzf --bind '?:preview:cat {}' --preview-window hidden
 
 ---  
 
-## Changing the Preview Window's Attributes  
+## Customizing fzf Display  
+
+### Changing the Preview Window's Attributes/Display  
 
 The `change-preview-window` action can be used to change the properties of the preview window.  
 Unlike the `--preview-window` option, you can specify multiple sets of options 
 separated  by  `|` characters.  
 
 * Rotate through the options using `CTRL-/`
-```bash
-fzf  --preview  'cat  {}' --bind 'ctrl-/:change-preview-window(right,70%|down,40%,border-horizontal|hidden|right)'
+```bash  
+fzf  --preview  'cat  {}' --bind 'ctrl-/:change-preview-window(right,70%|down,40%,border-horizontal|hidden|right)'  
 ```
+
+### Changing Main Window's Display
+
+There are a number of options you can pass to fzf to customize its display.  
+
+```bash
+fzf --multi \
+--height=50% \
+--margin=5%,2%,2%,5% \
+--layout=reverse-list \
+--border=double \
+--info=inline \
+--prompt='$>' \
+--pointer='→' \
+--marker='♡' \
+--header='CTRL-c or ESC to quit' \
+--color='dark,fg:magenta'
+```
+
+* `--height`
+    * `--min-height`
+    * You can pass in a number of rows or a screen percentage (`--height=10%`)
+                
+
+
+## Multiple Selections with fzf  
+Enable multiple selections with the `--multi` (`-m`) option.  
+By default, the `<Tab>` and `<Shift-Tab>` keys are bound to toggle the current selection.  
+On `<Enter>`, all the selected files/directories are given to stdout.  
+
+
+
+## Adding Line Numbers to fzf  
+You can use the `nl` command to add line numbers to the entries.  
+But, you'll need to let `fzf` know not to match those line numbers.  
+To do that, you'd use the `--nth` option.  
+```bash  
+find . -type f | nl | fzf --nth=2
+```
+The `--nth` option tells fzf which entry to match with the query.  
+The line numbers and the entries will be separated by whitespace, the 
+numbers coming first, and the entries coming second.  
+So, `--nth=2` is used.  
+
+
+Here are some examples of the possible values we can give to the `--nth` option:  
+| Value | Description  
+|-------|------------  
+| `2`   | Only match the 2nd field.  
+| `-1`  | Only match the last field.  
+| `-2`  | Only match the 2nd to last field.  
+| `3..5`| Only match from the 3rd to the 5th field.  
+| `2..` | Only match from the 2nd to the last field.  
+| `..-3`| Only match from the 1st to the 3rd to last field.  
+| `..`  | Match all the fields.  
+
+> `man fzf` -> `/FIELD INDEX EXPRESSION`  
+
+
+
 
 
