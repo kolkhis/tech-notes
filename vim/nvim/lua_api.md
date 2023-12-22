@@ -105,8 +105,8 @@ end, { expr = true })
 ### Getting Current Mode  
 `vim.api.nvim_get_mode()`: does not return 'v' for visual mode. 
 It returns a table, with the keys `['blocking']` and `['mode']`.  
-* `vim.api.nvim_get_mode().blocking`:
-    * `true` if Nvim is waiting for input, otherwise `false`.
+* `vim.api.nvim_get_mode().blocking`:  
+    * `true` if Nvim is waiting for input, otherwise `false`.  
 To get the mode: 
 ```lua  
 vim.api.nvim_get_mode().mode 
@@ -114,23 +114,23 @@ vim.api.nvim_get_mode().mode
 vim.api.nvim_get_mode()['mode']  
 ```
 It returns:  
-- `'i'` for Insert mode  
-- `'n'` for Normal mode  
-- `'v'` for Visual mode  
-- `'V'` for Visual Line mode 
-- `'<C-V>'` for visual block mode  
-- `'t'` for terminal mode  
-- `'s'` for Select mode  
-- `'S'` for Select Line mode  
-- `'ic'` for Insert mode completion  
-- `'R'` for Replace mode  
-- `'Rv'` for Virtual Replace mode  
-- `'c'` for Command-line mode  
-- `'cv'` for Vim Ex mode  
-- `'ce'` for Normal Ex mode  
-- `'r'` for Prompt mode  
-- `'rm'` for More prompt mode  
-- `'r?'` for Confirm prompt mode  
+* `'i'` for Insert mode  
+* `'n'` for Normal mode  
+* `'v'` for Visual mode  
+* `'V'` for Visual Line mode 
+* `'<C-V>'` for visual block mode  
+* `'t'` for terminal mode  
+* `'s'` for Select mode  
+* `'S'` for Select Line mode  
+* `'ic'` for Insert mode completion  
+* `'R'` for Replace mode  
+* `'Rv'` for Virtual Replace mode  
+* `'c'` for Command-line mode  
+* `'cv'` for Vim Ex mode  
+* `'ce'` for Normal Ex mode  
+* `'r'` for Prompt mode  
+* `'rm'` for More prompt mode  
+* `'r?'` for Confirm prompt mode  
 
 
 `vim.api.nvim_get_mode().mode` return values in a table:  
@@ -154,10 +154,9 @@ It returns:
 | More prompt mode | `'rm'` |
 | Confirm prompt mode | `['r?']` |
 
-`vim.api.nvim_get_mode().mode` return values in a table:  
 
-Here's some lua that will get the current mode:
-```lua
+Here's some lua that will get the current mode:  
+```lua  
 local modes = {
     ['i'] = 'Insert mode',
     ['n'] = 'Normal mode',
@@ -177,32 +176,54 @@ local modes = {
     ['rm'] = 'More prompt mode',
     ['r?'] = 'Confirm prompt mode',
 }
-vim.keymap.set('', )
+vim.keymap.set('', )  
 ```
 
+## Getting the Mode Using Vimscript  
+The `mode()` function will return the current mode.  
+
+| Mode | Return Value |
+|-|-|  
+| `'n'`         | Normal  
+| `'no'`        | Operator-pending  
+| `'nov'`       | Operator-pending (forced charwise `o_v`)  
+| `'noV'`       | Operator-pending (forced linewise `o_V`)  
+| `'noCTRL-V'`  | Operator-pending (forced blockwise `o_CTRL-V` - `CTRL-V` is one character)  
+| `'niI'`       | Normal using `i_CTRL-O` in `Insert-mode`
+| `'niR'`       | Normal using `i_CTRL-O` in `Replace-mode`
+| `'niV'`       | Normal using `i_CTRL-O` in `Virtual-Replace-mode`
+| `'nt'`        | Normal in `terminal-emulator` (insert goes to Terminal mode)  
+| `'ntT'`       | Normal using `t_CTRL-\_CTRL-O` in `Terminal-mode`
+| `'v'`         | Visual by character  
+| `'vs'`        | Visual by character using `v_CTRL-O` in Select mode  
+| `'V'`         | Visual by line  
+| `'Vs'`        | Visual by line using `v_CTRL-O` in Select mode  
+| `'CTRL-V'`    | Visual blockwise  
+| `'CTRL-Vs'`   | Visual blockwise using `v_CTRL-O` in Select mode  
+| `'s'`         | Select by character  
+| `'S'`         | Select by line  
+| `'CTRL-S'`    | Select blockwise  
+| `'i'`         | Insert  
+| `'ic'`        | Insert mode completion `compl-generic`
+| `'ix'`        | Insert mode `i_CTRL-X` completion  
+| `'R'`         | Replace `R`
+| `'Rc'`        | Replace mode completion `compl-generic`
+| `'Rx'`        | Replace mode `i_CTRL-X` completion  
+| `'Rv'`        | Virtual Replace `gR`
+| `'Rvc'`       | Virtual Replace mode completion `compl-generic`
+| `'Rvx'`       | Virtual Replace mode `i_CTRL-X` completion  
+| `'c'`         | Command-line editing  
+| `'cr'`        | Command-line editing overstrike mode `c_<Insert>`
+| `'cv'`        | Vim Ex mode `gQ`
+| `'cvr'`       | Vim Ex mode while in overstrike mode `c_<Insert>`
+| `'r'`         | Hit-enter prompt  
+| `'rm'`        | The -- more -- prompt  
+| `'r?'`        | A `:confirm` query of some sort  
+| `'!'`         | Shell or external command is executing  
+| `'t'`         | Terminal mode: keys go to the job  
 
 
 
-
-
-
---   askPrompt = {
---     n = 'Ask Cody about file > ',
---     v = 'Ask Cody about selection > ', 
---     V = 'Ask Cody about selection > ',
---     s = 'Ask Cody about selection > ',
---     S = 'Ask Cody about selection > ',
---     i = 'Ask Cody about selection > ',
---     ic = 'Ask Cody about selection > ',
---     R = 'Ask Cody about selection > ',
---     Rv = 'Ask Cody about selection > ',
---     c = 'Ask Cody about selection > ',
---     cv = 'Ask Cody about selection > ',
---     ce = 'Ask Cody about selection > ',
---     r = 'Ask Cody about selection > ',
---     rm = 'Ask Cody about selection > ',
---     ['<C-V>'] = 'Ask Cody about selection > ',
---   },
 
 ### Keymap Modes  
 - `:h map-table` for all the different modes for keymaps.  
@@ -439,30 +460,105 @@ Not supported yet:
 * `vim.tbl_isempty({t})`: Checks if a table is empty.  
 * `vim.trim({s})`: Trim whitespace (Lua pattern "%s") from both sides of a string.  
 
+Open buffers, tabs, windows, etc.:
+* `nvim_list_bufs()`: Gets the current list of buffer handles.
+* `nvim_list_tabpages()`: Gets the current list of tabpage handles.
+* `nvim_list_wins()`: Gets the current list of window handles.
+* `nvim_set_current_buf({buffer})`: Sets the current buffer.
+* `nvim_set_current_line({line})`: Sets the current line.
+* `nvim_set_current_tabpage({tabpage})`: Sets the current tabpage.
+* `nvim_set_current_win({window})`: Sets the current window.
+* `nvim_set_current_dir({dir})`: Changes the global working directory.
+
+Variables
+* `nvim_set_var({name}, {value})`: Sets a global (g:) variable.
+* `nvim_set_vvar({name}, {value})`: Sets a v: variable, if it is not readonly.
+
+Calculating what's on screen
+* `nvim_strwidth({text})`: Calculates the number of display cells occupied by `text`.
+
+
+### RPC Only:
+* `nvim_subscribe({event})`: Subscribes to event broadcasts.
+* `nvim_unsubscribe({event})`: Unsubscribes to event broadcasts.
+* `nvim_buf_detach({buffer})`: Deactivates buffer-update events on the channel.
+* `nvim_ui_attach({width}, {height}, {options})`: Activates UI events on the channel.
+* `nvim_ui_detach()`: Deactivates UI events on the channel.
+    * Not labelled RPC only, but related:
+    * `nvim_list_uis()`: Gets a list of dictionaries representing attached UIs.
+* `nvim_ui_term_event({event}, {value})`: Tells Nvim when a terminal event has occurred
+* `nvim_ui_set_focus({gained})`: Tells the nvim server if focus was gained or lost by the GUI.
+* `nvim_set_client_info({name}, {version}, {type}, {methods}, {attributes})`
+    * Self-identifies the client.
+
+
+
+* `nvim_notify({msg}, {log_level}, {opts})`: Notify the user with a message.
+
+
+* `nvim_put({lines}, {type}, {after}, {follow})`: Puts text at cursor, in any mode.
+    * Compare `:put` and `p` which are always linewise.
+* `nvim_paste({data}, {crlf}, {phase})`: Pastes at cursor, in any mode.
+    * Invokes the `vim.paste` handler, which handles each mode appropriately.
+    * Sets redo/undo. Faster than `nvim_input()`.
+* `nvim_open_term({buffer}, {*opts})`: Open a terminal instance in a buffer
+* `nvim_out_write({str})`: Writes a message to the Vim output buffer.
+* `nvim_load_context({dict})`: Sets the current editor state from the given |context| map.
+
+
+For possible Python plugins:
+* `nvim_list_chans()`: Get information about all open channels. `:h channel`
+
 * `vim.validate({opt})`: Validates a parameter specification (types and values).  
     ```lua  
     function user.new(name, age, hobbies)  
         -- Check types  
-        vim.validate{
+        vim.validate({
             name={name, 'string'},
                 age={age, 'number'},
                 hobbies={hobbies, 'table'},
-        }
+        })
     end  
     -- Checking values AND types  
-    vim.validate{arg1={{'foo'}, 'table'}, arg2={'foo', 'string'}}
+    vim.validate({arg1={{'foo'}, 'table'}, arg2={'foo', 'string'}})
        --> NOP (success)  
-    vim.validate{arg1={1, 'table'}}
+    vim.validate({arg1={1, 'table'}})
        --> error('arg1: expected table, got number')  
-    vim.validate{arg1={3, function(a) return (a % 2) == 0 end, 'even number'}}
+    vim.validate({arg1={3, function(a) return (a % 2) == 0 end, 'even number'}})
        --> error('arg1: expected even number, got 3')  
 
     -- Multiple types can be given as a list. (Success if the type is in the list given)  
-        vim.validate{arg1={{'foo'}, {'table', 'string'}}, arg2={'foo', {'table', 'string'}}}
+        vim.validate({arg1={{'foo'}, {'table', 'string'}}, arg2={'foo', {'table', 'string'}}})
         -- NOP (success)  
-        vim.validate{arg1={1, {'string', 'table'}}}
+        vim.validate({arg1={1, {'string', 'table'}}})
         -- error('arg1: expected string|table, got number')  
     ```
+
+
+## +cmd - Running Commands on Files when Opening 
+A lot of Ex commands accept `+cmd`, i.e., a command to be run on the file.  
+
+The `[+cmd]` argument can be used to position the cursor in the newly opened
+file, or execute any other command:
+| Command     |  What it Does
+|-------------|--------------
+| `+`         | Start at the last line.
+| `+{num}`    | Start at line `{num}`.
+| `+/{pat}`   | Start at first line containing `{pat}`.
+| `+{command}`| Execute `{command}` after opening the new file.
+
+`{command}` is any Ex command.
+
+To include a white space in the `{pat}` or `{command}`, precede it with a
+backslash.  Double the number of backslashes.  
+```vim
+:edit  +/The\ book           file
+:edit  +/dir\ dirname\\      file
+:edit  +set\ dir=c:\\\\temp  file
+```
+Note that in the last example the number of backslashes is halved twice: Once
+for the `+cmd` argument and once for the `:set` command.
+
 
 ## Terminal Codes and Key Codes  
 
@@ -512,6 +608,9 @@ vim.keycode({str})
 
 
 ## Vim Highlighting and Syntax  
+Plugin to check out: [colorbuddy.nvim](https://github.com/tjdevries/colorbuddy.nvim)  
+Colorbuddy is only for Neovim.  
+
 ### Highlights  
 > *:h :hi-normal* | *:highlight-normal*  
 > *:h :highlight* | *:hi*  
@@ -522,14 +621,16 @@ vim.keycode({str})
 ### Namespace Highlighting  
 Get or create a namespace used for buffer highlights and 
 virtual text with `nvim_create_namespace()`.   
-    - Returns a Namespace ID  
+* Returns a Namespace ID  
+
 To get existing, non-anonymous namespaces `nvim_get_namespaces()`  
-    - Returns a Dictionary that maps from Names to Namespace IDs.  
-This namespace can then be used to add highlights or 'extmarks'.  
+* Returns a Dictionary that maps from Names to Namespace IDs.  
+
+This namespace can then be used to add highlights or `extmarks`.  
 
 Get the active highlight namespace with `nvim_get_hl_ns()`.  
-* Returns Namespace id, or -1  
-* Returns -1 when `nvim_win_set_hl_ns()` has not been 
+* Returns Namespace ID, or -1  
+* Returns -1 when `nvim_win_set_hl_ns()` hasn't been 
   called for the window (or was called with a namespace of -1).  
 
 Extmarks are often used with namespace highlights.  
@@ -558,52 +659,51 @@ Related to namespace highlighting:
 ### Testing Syntax Time When Syntax is Slow  
 > *:h :syntime*  
 
-#### Highlighting Naming Conventions  
+### Highlighting Naming Conventions & Default Highlight Groups  
 > *:h group-name* *{group-name}*  
 
 * `Comment`: any comment  
 * `Constant`: any constant  
-* `String`:    a string constant: "this is a string"  
-* `Character`: a character constant: 'c', '\n'  
-* `Number`:    a number constant: 234, 0xff  
+* `String`: a string constant: `"this is a string"`  
+* `Character`: a character constant: `c`, `\n`  
+* `Number`: a number constant: 234, 0xff  
 * `Boolean`: a boolean constant: TRUE, false  
-* `Float`:    a floating point constant: 2.3e10  
+* `Float`: a floating point constant: `2.3e10`  
 
 * `Identifier`: any variable name  
 * `Function`: function name (also: methods for classes)  
 
 * `Statement`: any statement  
 * `Conditional`: if, then, else, endif, switch, etc.  
-* `Repeat`:    for, do, while, etc.  
-* `Label`:    case, default, etc.  
-* `Operator`: "sizeof", "+", "*", etc.  
+* `Repeat`: for, do, while, etc.  
+* `Label`: case, default, etc.  
+* `Operator`: `sizeof`, `+`, `*`, etc.  
 * `Keyword`: any other keyword  
 * `Exception`: try, catch, throw  
 
 * `PreProc`: generic Preprocessor  
 * `Include`: preprocessor #include  
-* `Define`:    preprocessor #define  
-* `Macro`:    same as Define  
+* `Define`: preprocessor #define  
+* `Macro`: same as Define  
 * `PreCondit`: preprocessor #if, #else, #endif, etc.  
 
-* `Type`:    int, long, char, etc.  
+* `Type`: int, long, char, etc.  
 * `StorageClass`: static, register, volatile, etc.  
 * `Structure`: struct, union, enum, etc.  
 * `Typedef`: A typedef  
 
 * `Special`: any special symbol  
 * `SpecialChar`: special character in a constant  
-* `Tag`:    you can use CTRL-] on this  
+* `Tag`: you can use CTRL-] on this  
 * `Delimiter`: character that needs attention  
 * `SpecialComment`: special things inside a comment  
-* `Debug`:    debugging statements  
+* `Debug`: debugging statements  
 
 * `Underlined`: text that stands out, HTML links  
 
-* `Ignore`:    left blank, hidden  |hl-Ignore|
-* `Error`:    any erroneous construct  
-* `Todo`:    anything that needs extra attention; mostly the  
-* ``       keywords TODO FIXME and XXX  
+* `Ignore`: left blank, hidden  |hl-Ignore|
+* `Error`: any erroneous construct  
+* `Todo`: anything that needs extra attention; mostly the  keywords TODO FIXME and XXX  
 
 
 

@@ -3,11 +3,13 @@
 # Misc Vim Notes  
 
 You can read the help pages (like a book): `:h 1.1`  
-
+Information on Vimscript and Vimscript functions are found in `usr_41.txt`.  
+* See [Vim Script for Python Developers](https://gist.github.com/yegappan/16d964a37ead0979b05e655aa036cad0)
 List of all default vim keybindings/commands for each mode:  
 * *:h index*  
 * *:h insert-index* / *visual-index*  
 * *:h default-mappings*  
+
 
 ## Neovim Resources:  
 * Nightly repo for `apt-get`:  
@@ -41,6 +43,7 @@ To search recursively:
 This uses the `globstar` feature in bash.  
 The recursive searching goes up to 100 directories deep.  
 * `:vimgrep` puts all matching files in the `quickfix list`/`error list`.  
+    * Using `:lvimgrep` (or `:lvim`) will use the `location list` instead.  
 * Just like in substitutions, the `/` can be swapped for another char (i.e., `;`)  
 To get the list of all files that were matched (the quickfix list):  
 ```vim  

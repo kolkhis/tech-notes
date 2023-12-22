@@ -2,7 +2,93 @@
 # Useful Ex Commands  
 
 
+## Buffer List
+Use `:buffers` (or `:files`, or `:ls`) to see the buffer list.  
+
+* `:bad {fname}`: Add a file to the buffer list without 
+    loading it, if it wasn't listed yet.  
+    * You can specify a line number to go to when it's first entered.
+    * `:bad 16 file.txt` will go to line 16 of `file.txt` when you first enter it.
+* `:balt {fname}`: Same as `:badd`, but also set the alternate file for the current
+                    window to `{fname}`.
+
+* `:b`: Edit buffer given by number, name, or partial name.
+* `:sb`: Like `:b` but edit in a split.
+* `:br`/`:bf`: Go to the first buffer in the buffer list.  
+    * `:sbr`/`:sbf`: Same as above but do it in a split.  
+* `:bl`: Go to the last buffer in the buffer list.  
+    * `:sbl`: Same as above but do it in a split.  
+* `:bm`: Go to the next buffer that has been modified.  
+    * You can specify a number and go to the `n`th modified buffer.
+    * Also finds buffers not in the buffer list. 
+* `:unhide`: Rearranges the screen to open one window for each loaded buffer in the buffer list.
+* `:ba`/`:ball` Rearrange the screen to open one window for each buffer in the buffer list.
+    * When a count is given, this is the maximum number of windows to open.  
+
+### Buffer Types
+There are different buffer types, here are a few:
+* quickfix
+* help
+* terminal
+* directory
+* scratch
+* unlisted
+
+## Quickfix List
+The following commands create or modify the quickfix list:
+* `:vimgrep`
+* `:grep`
+* `:helpgrep`
+* `:make`
+* ... There are more
+
+## Location List
+You can prepend `l` to a lot of the commands that manipulate the 
+quickfix list to use the location list instead.  
+The following commands create or modify the location list:
+* `:lvimgrep`
+* `:lgrep`
+* `:lhelpgrep`
+* `:lmake`
+* ... There are more
+
+
+
+## ++opt - Options/Flags for Ex Commands  
 * See `++opt` for the possible values of `++opt`.  
+
+The `[++opt]` argument can be used to set some options for one command, and to  
+specify the behavior for bad characters.  
+
+The form is: `++{optname}` or `++{optname}={value}`  
+Where `{optname}` is one of: `++ff`, `++enc`, `++bin`, `++nobin`, `++edit`
+
+| `{optname}` |Long `{optname}`| Purpose  
+|-|-|-|
+|    `++ff`     |   `++fileformat` | overrides the `fileformat` option  
+|    `++enc`    |   `++encoding`   | overrides the `fileencoding` option  
+|    `++bin`    |   `++binary`     | sets the `binary` option  
+|    `++nobin`  |   `++nobinary`   | resets the `binary` option  
+|    `++bad`    |                  | specifies behavior for bad characters  
+|    `++edit`   |                  | for `:read`: keeps options as if editing a file  
+|    `++p`      |                  | for `:write`: creates the file's parent directory  
+The `++edit` option is specific to the `:read` command.  
+The `++p` option is specific to the `:write` command.  
+
+
+The `++p` flag creates the parent directory of the file if it does not exist.  
+```vim  
+:edit foo/bar/file.txt  
+:write ++p  
+```
+That will do `mkdir -p foo/bar; touch file.txt` and then write the file.  
+This can be set as default behavior with an autocmd: 
+```vim  
+" Auto-create parent directories (except for URIs "://").  
+au BufWritePre,FileWritePre * if @% !~# '\(://\)' | call mkdir(expand('<afile>:p:h'), 'p') | endif  
+```
+
+
 
 ## Browsing the List of Options  
 Browse the list of options with:  
