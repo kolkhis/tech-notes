@@ -71,9 +71,9 @@ Unmark it with either `select pane -M`, or marking a different pane.
     * Setting a new one clears the last.  
 
 The marked pane is the default target for `-s` to:  
-* `join-pane` (`joinp`)
-* `move-pane` (`movep`)
-* `swap-pane` (`swapp`)
+* `join-pane` (`joinp`)  
+* `move-pane` (`movep`)  
+* `swap-pane` (`swapp`)  
 * `swap-window` (`swapw`)  
 
 
@@ -758,5 +758,55 @@ Get current state of border status:
 display-message -p "#{pane-border-status}" 
 ```
 
+## Window Flags  
+The flag is one of the following symbols appended to the window name:  
+|Flag |  Meaning 
+|-|-  
+| `*` | Denotes the current window.  
+| `-` | Marks the last window (previously selected).  
+| `#` | Window activity is monitored and activity has been detected. (`monitor-activity` window option)  
+| `!` | Window bells are monitored and a bell has occurred in the window.  
+| `~` | The window has been silent for the monitor-silence interval.  
+| `M` | The window contains the marked pane.  
+| `Z` | The window's active pane is zoomed.  
+
+## Session Option for Monitoring Activity in a Window  
+* `monitor-activity [on | off]`
+    * Monitor for activity in the window.  
+    * Windows with activity are highlighted in the status line.  
+* Window flag `#` 
+    * Indicates window activity is monitored and activity has been detected. 
+* `activity-action [any | none | current | other]`
+    * Set action on window activity when monitor-activity is on.  
+* `visual-activity [on | off | both]`
+    * If on, display a message instead of sending a bell when activity occurs in a window for  
+      which the monitor-activity window option is enabled.  
+* `monitor-bell [on | off]`
+    * Monitor for a bell in the window.  
+
+Or, monitor for a lack of activity  
+* `monitor-silence [interval]`
+    * Monitor for silence (no activity) in the window within interval seconds.  
+    * Windows that have been silent for the interval are highlighted in the status line.  
+    * An interval of zero disables the monitoring.  
+
+Hooks for activity:  
+* `alert-activity`: Run when a window has activity. For `monitor-activity`.  
+* `alert-bell`: Run when a window has received a bell. For `monitor-bell`.  
+* `alert-silence`: Run when a window has been silent. For `monitor-silence`.  
 
 
+## Hook Commands  
+* `set-hook [-agpRuw] [-t target-pane] hook-name command`
+    * Sets hook `hook-name` to `command`. (or unsets with `-u`)  
+    * The flags are the same as for `set-option`.  
+    * With `-R`, run `hook-name` immediately.  
+
+* `show-hooks [-gpw] [-t target-pane]`
+    * Shows hooks.  
+    * The flags are the same as for `show-options`.  
+
+Example:  
+```tmux  
+set-hook -g alert-activity 'display "Activity detected."'  
+```

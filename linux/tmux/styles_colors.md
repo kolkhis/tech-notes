@@ -12,13 +12,10 @@
 ## Embedded Styles  
 
 
-fg=colour Set the foreground colour.  
-bg=colour Set the background colour.  
+* `fg=colour`: Set the foreground colour.  
+* `bg=colour`: Set the background colour.  
+* `fill=colour`: Fill the available space with a background colour if appropriate.  
 
-fill=colour  
-     Fill the available space with a background colour if appropriate.  
-
-none    Set no attributes (turn off any active attributes).  
 
 ## Attributes  
 * `acs`
@@ -35,52 +32,52 @@ none    Set no attributes (turn off any active attributes).
 * `curly-underscore`
 * `dotted-underscore`
 * `dashed-underscore`
-        Set an attribute.  
-        Any of the attributes may be prefixed with ‘no’ to unset.  
+* `none`: Set no attributes (turn off any active attributes).  
 
-align=left (or noalign), align=centre, align=right  
-         Align text to the left, centre or right of the available space if appropriate.  
+Set an attribute.  
+Any of the attributes may be prefixed with `no` to unset.  
 
+## Alignment  
+Align text to the left, centre or right of the available space if appropriate.  
+* `align=left` 
+* `align=centre`
+* `align=right`  
+* `noalign`
 
+---  
 
+Mark the position of the various window list components in the `status-format` option  
+* `list=on`: Marks the start of the list.  
+    * This is where the list of windows will begin in the status line.  
+* `list=focus`: Part of the list that's kept in focus if trimmed.  
+    * Typically the current window.  
+* `list=left-marker`: Indicator char(s) for when the list is trimmed.  
+* `list=right-marker`: Indicator char(s) for when the list is trimmed.  
+* `nolist`: Ends the window list in `status-format`
 
-
-* `list=on`
-* `list=focus`
-* `list=left-marker`
-* `list=right-marker`
-* `nolist`
-     Mark the position of the various window list components in the `status-format` option:  
-         `list=on` marks the start of the list;  
-         `list=focus` is the part of the list that should be kept in focus if the 
-            entire list won't fit in the available space (typically the current window);  
-         `list=left-marker` and `list=right-marker` mark the text to be used to mark that  
-         text has been trimmed from the left or right of the list if there is not enough space.  
+---  
 
 * `push-default`
-* `pop-default`
-             Store the current colours and attributes as the default or reset to the previous de‐  
-             fault.  
-             A `push-default` affects any subsequent use of the default term until a  
-             `pop-default`.  
-             Only one default may be pushed (each `push-default` replaces 
-             the previous saved default).  
+Store the current colours and attributes as the default or reset to the previous default.  
+    * Each `push-default` replaces the previous saved default.  
+* `pop-default`: Remove the current default set by `push-default`
 
-* `range=left`
-* `range=right`
-* `range=window|X`
-* `norange`
-             Mark a range in the `status-format` option.  
-             `range=left` and `range=right` are the text used for the `StatusLeft` and `StatusRight` mouse keys.  
-             `range=window|X` is the range for a window passed to the `Status` mouse key, where `X` is a window index.  
 
+### Mouse Stuff  
+* Specify the text used for the `StatusLeft` and `StatusRight` mouse keys.  
+    * `range=left` 
+    * `range=right`
+* `range=window|X`:Defines the range for a specific window in the status line,
+where X is the window index, for use with the `Status` mouse key.  
+* `norange`: End a range in the `status-format`
+ 
 
 
 ## Examples  
 
-```bash  
-fg=yellow bold underscore blink  
-bg=black,fg=default,noreverse  
+```tmux  
+#[fg=yellow bold underscore blink] 
+#[bg=black,fg=default,noreverse] 
 ```
 
 
@@ -111,42 +108,99 @@ The flag is one of the following symbols appended to the window name:
 |-|-  
 | `*` | Denotes the current window.  
 | `-` | Marks the last window (previously selected).  
-| `#` | Window activity is monitored and activity has been detected.  
+| `#` | Window activity is monitored and activity has been detected. (`monitor-activity` window option)  
 | `!` | Window bells are monitored and a bell has occurred in the window.  
 | `~` | The window has been silent for the monitor-silence interval.  
 | `M` | The window contains the marked pane.  
 | `Z` | The window's active pane is zoomed.  
 
 
-### Automatic Refreshing
+### Automatic Refreshing  
 The status line is automatically refreshed at `interval` if it has changed.  
 The interval can be changed with the `status-interval` session option.  
 
 
-### Status Line Commands
-Commands related to the status line are as follows:
+### Status Line Commands  
+Commands related to the status line are as follows:  
 
-```bash
-# Open the tmux command prompt in a client.
-command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]
+```bash  
+# Open the tmux command prompt in a client.  
+command-prompt [-1ikNTW] [-I inputs] [-p prompts] [-t target-client] [template]  
 
-# Ask for confirmation before executing command.
-confirm-before [-p prompt] [-t target-client] command
-(alias: confirm)
+# Ask for confirmation before executing command.  
+confirm-before [-p prompt] [-t target-client] command  
+(alias: confirm)  
 
-# Display a menu on target-client.
-display-menu [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position]
-(alias: menu)
+# Display a menu on target-client.  
+display-menu [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position]  
+(alias: menu)  
 
-# Display a message.
-display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]
-(alias: display)
+# Display a message.  
+display-message [-aINpv] [-c target-client] [-d delay] [-t target-pane] [message]  
+(alias: display)  
 
-# Display a popup running shell-command on target-client
-display-popup [-CE] [-c target-client] [-d start-directory] [-h height] [-t target-pane] [-w
-(alias: popup)
+# Display a popup running shell-command on target-client  
+display-popup [-CE] [-c target-client] [-d start-directory] [-h height] [-t target-pane] [-w  
+(alias: popup)  
 ```
 
+## Session Option for Monitoring Activity  
+* `monitor-activity [on | off]`
+    * Monitor for activity in the window.  
+    * Windows with activity are highlighted in the status line.  
+* Window flag `#` 
+    * Indicates window activity is monitored and activity has been detected. 
+* `activity-action [any | none | current | other]`
+    * Set action on window activity when monitor-activity is on.  
+* `visual-activity [on | off | both]`
+    * If on, display a message instead of sending a bell when activity occurs in a window for  
+      which the monitor-activity window option is enabled.  
+* `monitor-bell [on | off]`
+    * Monitor for a bell in the window.  
 
+Or, monitor for a lack of activity  
+* `monitor-silence [interval]`
+    * Monitor for silence (no activity) in the window within interval seconds.  
+    * Windows that have been silent for the interval are highlighted in the status line.  
+    * An interval of zero disables the monitoring.  
 
+Hooks for activity:  
+* `alert-activity`: Run when a window has activity. For `monitor-activity`.  
+* `alert-bell`: Run when a window has received a bell. For `monitor-bell`.  
+* `alert-silence`: Run when a window has been silent. For `monitor-silence`.  
+
+```tmux  
+set-hook -g alert-activity 'display "Activity detected."'  
+```
+
+## Hook Commands  
+* `set-hook [-agpRuw] [-t target-pane] hook-name command`
+    * Sets hook `hook-name` to `command`. (or unsets with `-u`)  
+    * The flags are the same as for `set-option`.  
+    * With `-R`, run `hook-name` immediately.  
+
+* `show-hooks [-gpw] [-t target-pane]`
+    * Shows hooks.  
+    * The flags are the same as for `show-options`.  
+
+---  
+
+## Menus
+Each menu consists of items followed by a key shortcut shown in brackets.
+A blank single-quoted string will insert a horizontal rule.  
+The format for each item is `"String to show" key "command-to-run"`.  
+```tmux
+bind-key -T prefix > display-menu -T "#[align=centre]#{pane_index} (#{pane_id})" -x P -y P 
+"Horizontal Split" h "split-window -h" 
+"Vertical Split" v "split-window -v" 
+'' 
+"#{?#{>:#{window_panes},1},,-}Swap Up" u "swap-pane -U" 
+"#{?#{>:#{window_panes},1},,-}Swap Down" d "swap-pane -D" 
+"#{?pane_marked_set,,-}Swap Marked" s swap-pane 
+'' 
+Kill X kill-pane 
+Respawn R "respawn-pane -k" 
+"#{?pane_marked,Unmark,Mark}" m "select-pane -m" 
+"#{?#{>:#{window_panes},1},,-}#{?window_zoomed_flag,Unzoom,Zoom}" z "resize-pane -Z"  
+```
 
