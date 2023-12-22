@@ -225,6 +225,46 @@ let s2 = s->trim(' ', 2)
 echo $"<{s2}>"
 ```
 
+### Fuzzy Matching Strings
+Use the `matchfuzzy()` function to fuzzily-search for a substring.  
+```vim
+let str_list = ['crow', 'clay', 'cobb']
+let m = matchfuzzy(str_list, 'cay')
+echo m
+```
+
+### String Methods
+|Method |  VimScript
+|-|-
+| `capitalize()` | `'one two'->substitute('.', '\u&', '')`
+| `count()` | `"abbc"->count('b')`
+| `endswith()` | `'running' =~# 'ing$'`
+| `expandtabs()` | `"a\tb"->substitute("\t", repeat(' ', 8), 'g')`
+| `find()` | `"running"->stridx('nn')`
+| `index()` | `'hello'->stridx('e')`
+| `isalnum()` | `str =~ '^[[:alnum:]]\+'`
+| `isalpha()` | `str =~ '^\a\+$'`
+| `isdigit()` | `str =~ '^\d\+$'`
+| `islower()` | `str =~ '^\l\+$'`
+| `isspace()` | `str =~ '^\s\+$'`
+| `istitle()` | `str =~ '\(\<\u\l\+\>\)\s\?'`
+| `isupper()` | `str =~ '^\u\+$'`
+| `join()` | `join(['a', 'b', 'c'], ':')`
+| `lower()` | `'Hello'->tolower()`
+| `lstrip()` | `'  vim  '->trim(' ', 1)`
+| `partition()` | ``'ab-cd-ef'->matchlist('\(.\{-}\)\(-\)\(.*\)')[1:3]``
+| `replace()` | `'abc'->substitute('abc', 'xyz', 'g')`
+| `rfind()` | `'running'->strridx('ing')`
+| `rindex()` | `'running'->strridx('ing')`
+| `rpartition()` | `` 'ab-cd-ef'->matchlist('\(.*\)\(-\)\(.*\)')[1:3]``
+| `rstrip()` | `'  vim  '->trim(' ', 2)`
+| `split()` | `'a-b-c'->split('-')`
+| `splitlines()` | `"one\ntwo"->split("\n")`
+| `startswith()` | `'running' =~# '^run'`
+| `strip()` | `'  vim  '->trim()`
+| `title()` | `'onE twO'->substitute('\<\(.\)\(\S\+\)\>', '\u\1\L\2', 'g')`
+| `upper()` | `'Hello'->toupper()`
+| `translate()` | `'abcd'->tr('bd', '12')`
 
 ## Heredoc  
 Assigning multi-line values to a variable.  
