@@ -6,16 +6,16 @@
 
 
 ## CLI Tools to Become Familiar With  
-xclip  
-npv/nvp # sound clips, pulse audio  
-ESXi  
-Ncdu  
-pandoc  
-ffmpeg  
-tar  
-parallel (GNU Parallel)  
-awk  
-sed  
+* xclip  
+* npv/nvp # sound clips, pulse audio  
+* ESXi  
+* Ncdu  
+* pandoc  
+* ffmpeg  
+* tar  
+* parallel (GNU Parallel)  
+* awk  
+* sed  
 
 
 ## Tools to Check Out for Networking/Admin:  
@@ -33,15 +33,42 @@ sed
 ## Miscellaneous Useful Commands  
 cht.sh - cheat sheet website for curling anything  
 
-`xxd` - hex dumping / reversing hex dumps  
-`ncal` - View a command-line calendar  
-`ps aux | grep ssh` - List all processes containing "ssh" in their names.  
-`who` - List of users currently logged in, along with their usernames, terminal devices, login  
-        times, and IP addresses (`pts` means SSH sessions)  
-`w` - Similar to `who`, with more details (load avg, system uptime)  
+* `xxd` - hex dumping / reversing hex dumps  
+* `ncal` - View a command-line calendar  
+* `ps aux | grep ssh` - List all processes containing "ssh" in their names.  
+* `who` - List of users currently logged in, along with their usernames, terminal devices, 
+          login times, and IP addresses (`pts` means SSH sessions)  
+* `w` - Similar to `who`, with more details (load avg, system uptime)  
+* `free -h` - Get amount of memory being used, and how much is free
 
 
 ---
+
+
+## Using tput to get Terminal Information or Manipulate the Terminal
+The `tput` command can get or set various terminal capabilities.  
+
+### `tput` Examples
+* Get the number of columns for the current terminal instance
+    * ```bash
+      tput cols
+      ```
+* Clear the screen and send the sequence to move the cursor to 
+  row 0, column 0 (the upper left corner of the screen).
+    * ```bash
+      tput clear
+      tput cup 0 0
+      ```
+* Send the sequence to move the cursor to row 23, column 4.
+    * ```bash
+      tput cup 23 4
+* Set the shell variables bold, to begin `stand-out mode` sequence,
+  and offbold, to end `stand-out mode` sequence, for the current terminal.
+    * ```bash
+      bold=`tput smso` offbold=`tput rmso`
+      ```
+    * `smso` - set mode stand-out (bold)
+    * `rmso` - remove mode stand-out (bold)
 
 ## Using Grep
 * Print lines that match patterns.
@@ -57,7 +84,8 @@ rgrep
     * Basic vs Extended Regular Expressions:
         * In basic regular expressions the meta-characters 
           `?`, `+`, `{`, `|`, `(`, and `)` lose their special meaning. 
-        * Instead use the backslashed versions `\?`, `\+`, `\{`, `\|`, `\(`, and `\)`.
+        * You need to escape them to get the functionality:
+          `\?`, `\+`, `\{`, `\|`, `\(`, and `\)`.
 ### Alternation (matching any one of multiple expressions)
 Two regular expressions can be joined by the "infix" operator,  `|;`.  
 The resulting regular expression matches any string matching either alternate expression.  
@@ -65,7 +93,7 @@ The resulting regular expression matches any string matching either alternate ex
 ---
 
 ## Control Sequences
-Also known as "escape codes."  
+Also known as "escape codes" or "escape sequences."  
 | Control Sequence | Produces              |
 |------------------|-----------------------|
 |       `\n`       |    newline            |

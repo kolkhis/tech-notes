@@ -114,7 +114,7 @@ done
 ```
 
 
-## Can you set a variable of one data point?  
+## Set a variable of one data point  
 ```bash  
 ```
 
@@ -136,7 +136,7 @@ Every time the `file.sh` file changes, `entr` will run bash, with the commands `
 It was fed the file via stdin with "Process Substitution" (`< <(file.sh)`).  
 Using `entr -c` will eliminate the need for the `clear;` command.  
 
-## Can you make your system count to 100?  
+## Make your system count to 100  
 This can either be done with a C-style loop, the `seq` command, or "brace expansion."  
 Respectively:  
 ```bash  
@@ -148,7 +148,7 @@ echo {1..100}
 ```
 
 
-## Can you loop over a list from the command line?  
+## Loop over a list from the command line  
 ```bash  
 list=$(find . -name *.py); # Predefining a list. Can do this inline too.  
 # Looping over the array itself  
@@ -157,13 +157,13 @@ list=$(find . -name *.py); for n in "${list[@]}"; do echo "Current item:"; echo 
 list=$(find . -name *.py); for n in ${#list}; do  echo $list[$n]; done  
 ```
 
-## Can you loop over a list from a file?  
+## Loop over a list from a file  
 ```bash  
 while read -r linevar; do echo "Current item:"; echo $linevar; done <file  
 ```
 
 
-## Can you test a variable against an expected (known) value?  
+## Test a variable against an expected (known) value  
 ```bash  
 if [[ "$var" == "known value" ]]; then  
     echo "$var is known value"  
@@ -171,12 +171,12 @@ fi
 ```
 
 
-## Can you get the headers from a HTTP request?  
+## Get the headers from a HTTP request  
 ```bash  
 curl -i hostname.com/:port  
 ```
 
-## Can you list the number of CPUs?  
+## List the number of CPUs  
 CPU info is stored in `/proc/cpuinfo`
 ```bash  
 cat /proc/cpuinfo | grep cores  
@@ -187,26 +187,43 @@ This displays all the information you'd want about your system's CPU.
 lscpu | grep "CPU(s)"  
 ```
 
-## Can you find the manufacturer of the CPU?  
+## Find the manufacturer of the CPU  
 ```bash  
 lscpu | grep "Vendor ID"  
 ```
 
 
-## Can you find the architecture of this chip?  
+## Find the architecture of this chip  
 ```bash  
 lscpu | grep "Architecture"  
 ```
 
-## Can you tell the speed in MHz?  
+## Tell the speed in MHz  
 ```bash  
 lscpu | grep "MHz"  
 ```
 
-## Can you tell me if this system is physical or virtual?  
-dmidecode?  
+## Tell me if this system is physical or virtual  
+```bash
+dmidecode -s system-manufacturer
+```
+* If it's a phyical system, you'll see the manufacturer (e.g., `Dell Inc.`).  
+* If it's a virtual system, you'll see some sort of virtualization:
+    * `QEMU`
+    * `Gmbh` (VirtualBox)
 
-## Can you tell me how much RAM we have?  
+```bash
+dmidecode
+```
+* `dmidecode` is for dumping a computer's `DMI` (`SMBIOS`) table contents in a 
+  human-readable format.
+    * `SMBIOS` stands for "System Management BIOS", while 
+    * `DMI` stands for "Desktop Management Interface."
+* This table contains a description of the system's hardware components,
+  and other useful pieces of information such as serial numbers and BIOS revision.
+
+
+## Tell me how much RAM we have  
 Use the `free` command to see RAM statistics.  
 ```bash  
 free -h  
@@ -214,21 +231,25 @@ free -h | awk '{print $2}' | sed -E 's/^used/total memory/'
 free -h | awk '{printf $2}' | sed -E 's/^used/total memory/'  
 ```
 Since the first column does not have a header, `awk '{print $2}'` will show  
-the "total" column, but the header is "used".  
+the `total` column, but the header is `used`.  
 So, passing it through `sed` can fix that.  
 
-## Can you tell me how much RAM we are using?  
+* The `free` field shows unused memory (MemFree and SwapFree in /proc/meminfo)
+    * ```bash
+        cat /proc/meminfo | grep -E "MemFree|SwapFree"
+        ```
+
+## Tell me how much RAM we are using  
 Using `free -h`, just like checking total RAM.  
 ```bash  
 free -h | awk '{print $3}' | sed -E 's/^free/\nRAM in Use/'  
 ```
 
-## How do you connect to another server?  
+## Connect to another server  
 ```bash  
 nc -dz  
 nmap -sS  
 ```
-
 
 ## GREP_COLORS  
 * Note: `-v` matches NON-MATCHING lines.  
@@ -324,8 +345,8 @@ nmap -sS
       much flicker.  
     * The default is false (unset) (i.e., the capability is omitted).  
 
-  Boolean capabilities have no `=...` part. 
-  They are unset (i.e., false) by default, and become true if they're set.  
+  Boolean capabilities (`ne` and `rv`) have no `=...` part. 
+  They are unset (`false`) by default, and become `true` if they're set.  
 
  See the Select Graphic Rendition (`SGR`) section in the documentation of the text terminal  
  that is used for permitted values and their meaning as character attributes. 
