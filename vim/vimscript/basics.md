@@ -1,6 +1,7 @@
 
 # Vim Script Basics  
 
+
 ## Type Conversion  
 
 | Conversion         | VimScript  
@@ -199,43 +200,43 @@ let s = "Hello World"
 let s2 = s->substitute("Hello", "New", 'g')  
 ```
 
-### Split a String
-Use the `string` method `string->split(separator)` to split a string.
-```vim
-let s = "a:b:c"
-let s2 = s->split(":")
+### Split a String  
+Use the `string` method `string->split(separator)` to split a string.  
+```vim  
+let s = "a:b:c"  
+let s2 = s->split(":")  
 ```
 
-### Trimming/Stripping Strings of Whitespace
+### Trimming/Stripping Strings of Whitespace  
 Use the `string` method `string->trim(char, direction)`
-Direction is:
-* `0`: Remove from beginning and end (default)
-* `1`: Remove from beginning
-* `2`: Remove from end
-```vim
-let s = "  vim  "
-" strip leading and trailing whitespace
-let s2 = s->trim()
-echo $"<{s2}>"
-" strip leading space characters
-let s2 = s->trim(' ', 1)
-echo $"<{s2}>"
-" strip trailing space characters
-let s2 = s->trim(' ', 2)
-echo $"<{s2}>"
+Direction is:  
+* `0`: Remove from beginning and end (default)  
+* `1`: Remove from beginning  
+* `2`: Remove from end  
+```vim  
+let s = "  vim  "  
+" strip leading and trailing whitespace  
+let s2 = s->trim()  
+echo $"<{s2}>"  
+" strip leading space characters  
+let s2 = s->trim(' ', 1)  
+echo $"<{s2}>"  
+" strip trailing space characters  
+let s2 = s->trim(' ', 2)  
+echo $"<{s2}>"  
 ```
 
-### Fuzzy Matching Strings
+### Fuzzy Matching Strings  
 Use the `matchfuzzy()` function to fuzzily-search for a substring.  
-```vim
-let str_list = ['crow', 'clay', 'cobb']
-let m = matchfuzzy(str_list, 'cay')
-echo m
+```vim  
+let str_list = ['crow', 'clay', 'cobb']  
+let m = matchfuzzy(str_list, 'cay')  
+echo m  
 ```
 
-### String Methods
-|Method |  VimScript
-|-|-
+### String Methods  
+|Method |  VimScript  
+|-|-  
 | `capitalize()` | `'one two'->substitute('.', '\u&', '')`
 | `count()` | `"abbc"->count('b')`
 | `endswith()` | `'running' =~# 'ing$'`
@@ -265,6 +266,188 @@ echo m
 | `title()` | `'onE twO'->substitute('\<\(.\)\(\S\+\)\>', '\u\1\L\2', 'g')`
 | `upper()` | `'Hello'->toupper()`
 | `translate()` | `'abcd'->tr('bd', '12')`
+
+
+
+
+## Appending to a List  
+Call the `list->add()` method to append to a list.  
+```vim  
+let l = [1, 2, 3]  
+call add(l, 4)  
+let l = l->add(5)  
+let l = add(l, 6)  
+echo(l)  
+" [1, 2, 3, 4, 5, 6]  
+```
+
+## Join Two Lists / Extend a List  
+Join or extend a list with another list with the `list->extend()` method.  
+Or, to concatenate a list, use the `+` operator.  
+```vim  
+let l = []  
+call extend(l, [1, 2])  
+let l = l->extend([3, 4])  
+let l = extend(l, [5, 6])  
+let l += [7, 8]  
+echo(l)  
+" [1, 2, 3, 4, 5, 6, 7, 8]  
+let l = [1, 2] + [3, 4]  
+echo(l)  
+" [1, 2, 3, 4]  
+```
+
+
+## Insert an Item Into a List  
+Insert an item into a list with the `list->insert(obj, idx)` method.  
+```vim  
+let l = [2, 4]  
+" Insert before index 1  
+eval l->insert(3, 1)  
+" Insert just before last item  
+eval l->insert(5, -1) 
+" Insert at the beginning  
+eval l->insert(1)  
+echo(l)  
+" [1, 2, 3, 4, 5]  
+```
+
+## Remove an Item from a List  
+Use the `list->remove(idx)` method, or `unlet` to remove an item from a list.  
+```vim  
+let l = [4, 5, 6]  
+let idx = index(l, 5)  
+if idx != -1  
+  call remove(l, idx)  
+endif  
+unlet l[0]  
+" [6]  
+```
+
+## Remove the Last Item from a List  
+Use the `list->remove(-1)` method to remove (and return) the last item from a list.  
+```vim  
+let l = [1, 2, 3, 4, 5]  
+let last_item = l->remove(-1)  
+eval l->remove(-1)  
+echo(last_item)  
+" 5  
+echo(l)  
+" [1, 2, 3] 
+```
+
+## Find the Index of an Item in a List  
+Use the `list->index()` method to get the index of an item in a list.  
+```vim  
+let l = [1, 2, 3]  
+let idx = l->index(2)  
+echo(idx)  
+" 1  
+```
+
+## Find the index of an item in a List of Dictionaries by the item value  
+Use the `list->indexof()` method to get the index of a dictionary value.  
+This should be passed 
+```vim  
+let colors = [{'color': 'red'}, {'color': 'green'}, {'color': 'blue'}]  
+let idx = indexof(colors, {i, v -> v.color == 'blue'})  
+echo(idx)  
+" 2
+let idxx = colors->indexof({i, v -> v.color == 'blue'})  
+echo(idxx)  
+" 2
+```
+
+## List Slicing  
+To slice a list, you can use the square bracket slice notation (`l[:-1]`) or  
+the `list->slice()` method.  
+* `slice()` does not include the `end` index.  
+    * This can also be used on strings.  
+```vim  
+let l = [1, 2, 3, 4]  
+let x = l->slice(0, 2)  
+echo(x)  
+" [1, 2]  
+let y = l[0:2]  
+echo(y)  
+" [1, 2, 3]  
+echo(l[-2:])  
+" [3, 4]  
+```
+
+
+## Adding multiple items to a list using repetition
+Use the `list->repeat()` method to add multiples of an item to a list.  
+```vim
+let l = ['vim']->repeat(4)
+```
+
+## Count number of occurrences of an item in a list
+Use the `list->count()` method to find all occurrences of an item in a list.  
+```vim
+let l = [2, 4, 4, 5]
+let x = l->count(2)
+echo(x)
+" 1
+```
+
+## Get the length of a list
+Use the `list->len()` method to get the length of a list.  
+```vim
+let l = [1, 2, 3, 4]
+let x = l->len()
+echo(x)
+" 4
+```
+
+
+
+## Dictionaries  
+Dictionaries can be defined just like in Python.  
+```vim  
+let colors = { 'name': 'Kolkhis', 'age': 'Nunya' }
+```
+To avoid having to put quotes around every key, the `#{}` syntax can be used.  
+```vim  
+let colors = { name: 'Kolkhis', age: 'Nunya' }
+```
+
+
+
+## The -> syntax  
+The `->` syntax can be used variables to call methods availale for the type 
+of variable that calls it.  
+Essentially it passes in `self` as the first argument.  
+
+This also allows for chaining, passing the value that one method returns to the  
+next method: 
+```vim  
+mylist->filter(filterexpr)->map(mapexpr)->sort()->join()  
+```
+
+Example of using a lambda:  
+```vim  
+GetPercentage()->{x -> x * 100}()->printf('%d%%')  
+```
+
+When using `->` the `expr7` operators will be applied first, so:  
+```vim  
+-1.234->string()  
+"  Is equivalent to: >  
+(-1.234)->string()  
+```
+`->name(` can not contain white space.  
+There can be white space before the `->` and after the `(`,
+so you can split the lines like this: 
+```vim  
+mylist  
+\ ->filter(filterexpr)  
+\ ->map(mapexpr)  
+\ ->sort()  
+\ ->join()  
+```
+When using the lambda form there can't be white space between the `}` and the `(`.  
+
 
 ## Heredoc  
 Assigning multi-line values to a variable.  
