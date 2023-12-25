@@ -40,6 +40,8 @@ cht.sh - cheat sheet website for curling anything
           login times, and IP addresses (`pts` means SSH sessions)  
 * `w` - Similar to `who`, with more details (load avg, system uptime)  
 * `free -h` - Get amount of memory being used, and how much is free
+* `inotify` - Monitoring filesystem events
+    * `inotify-tools` extends the capabilities of this 
 
 
 ---
