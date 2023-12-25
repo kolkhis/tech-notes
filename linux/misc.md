@@ -210,7 +210,7 @@ dmidecode -s system-manufacturer
 * If it's a phyical system, you'll see the manufacturer (e.g., `Dell Inc.`).  
 * If it's a virtual system, you'll see some sort of virtualization:
     * `QEMU`
-    * `Gmbh` (VirtualBox)
+    * `innotek Gmbh` (VirtualBox)
 
 ```bash
 dmidecode
