@@ -15,6 +15,8 @@ The term "cron" comes from the Greek word "chronos," meaning "time."
 * Cron Table (crontab): The configuration file where cron jobs are defined.
 * Cron Daemon: The background service that runs the cron jobs.
 
+In `/etc/crontab`, you can check to see the `PATH`s that cron is going to have.
+
 ## How to Use Cron
 
 
@@ -36,6 +38,7 @@ A cron job is defined by a line in the crontab, which has the following format:
     1. Day of the month (1-31)
     1. Month (1-12)
     1. Day of the week (0-7, where both 0 and 7 are Sunday)
+
 For example, to run a Python script every day at 3:30 PM:
 ```bash
 30 15 * * * python3 /path/to/the_script.py
@@ -68,6 +71,12 @@ script.
 ```bash
 @reboot python3 /path/to/the_script.py
 ```
+
+1. **Troubleshooting**: 
+    * Make sure it executes when I run it.
+    * Set it into cron
+    * Make sure that cron is running it (and putting it to logs somewhere)
+    * Make the script log somewhere so I can see where it's getting in the cron executions.
 
 
 
