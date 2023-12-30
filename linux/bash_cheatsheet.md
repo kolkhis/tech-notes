@@ -668,10 +668,15 @@ for i in {5..50..5}; do
     echo "Welcome $i"  
 done  
 
-# Reading lines  
+# Loop over lines from a file in bash
 while read -r line; do  
   echo "$line"  
-done <file.txt  # Reading from `file.txt`
+done < file.txt  # Reading from `file.txt`
+
+# Loop over lines from a command 
+while read -r line; do  
+  echo "$line"  
+done < <(find . -maxdepth 1 -name '*.txt')  # All .txt files in current dir
 
 # Forever (Infinite Loop)  
 while true; do  
@@ -683,14 +688,17 @@ done
 ```bash  
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do 
     case $1 in  
-      -V | --version )  
+      -V | --version)  
         echo "$version";  
-        exit;;  
+        exit;
+        ;;  
       -s | --string )  
         shift; 
-        string=$1 ;;  
+        string=$1;
+        ;;  
       -f | --flag )  
-        flag=1 ;;  
+        flag=1;
+        ;;  
     esac;  
     shift;  
 done  

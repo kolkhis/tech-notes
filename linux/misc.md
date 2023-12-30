@@ -16,6 +16,11 @@ for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "
 ## Playing Games on Linux
 Use Proton - a version of WINE made specifically for gaming.
 
+## Update to Newer Versions of Stuff
+```bash
+sudo update-alternatives --config java
+sudo update-alternatives --config javac
+```
 
 ## Builtin 
 * `: [arguments]`
