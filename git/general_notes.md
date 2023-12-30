@@ -10,6 +10,7 @@ man git-stash
 ## Basic Git Commands  
 The options lists for these aren't exhaustive.  
 They're just examples.  
+
 ## Git Status  
 Shows the status of changes as untracked, modified, or staged.  
 It's a quick way to see what changes are pending.  
@@ -22,8 +23,17 @@ git status
 
 
 ## Git Diff  
+`git diff`  
+By default, shows the changes to unstaged git files (already part of the repository).  
 
-## See changes from the current commit and the previous commit  
+* Show changes for cached / staged files
+  ```bash
+  git diff --cached  
+  ```
+
+
+### See changes from the current commit and the previous commit  
+`git diff commit1 commit2`  
 * Using `HEAD` will refer to the last commit you made.  
 * Using `HEAD~1` will refer to the commit before that.  
     * `HEAD~2` will show 2 commits back, etc.  
@@ -31,6 +41,10 @@ git status
 ```bash  
 git diff HEAD HEAD~1  
 ```
+
+## Git Add
+`git add`  
+Adds files to the staging area.  
 
 
 ## Git Log  
@@ -44,6 +58,30 @@ git log
     * `--all`: Shows all commits from all branches.  
     * `--author="name"`: Filters commits by a specific author.  
     * `--decorate`: Shows branch and tag names on commits.  
+
+### See log history for a specific file
+To see log history for a specific file, use `git log -p` or `git log --patch`.
+```bash
+git log -p README.md    # Show all commits for the file
+```
+
+### See log history for a specific range of commits
+To see log history for a specific range of commits, use `git log commit1..commit2`.
+This uses a two-dot range notation (excludes endpoints).
+```bash
+git log HEAD~9..HEAD        # See the last 9 commits
+git log HEAD..origin/main   # See commits from the current branch to the main branch
+```
+This shows what has happened between `commit1` and `commit2`, but not `commit2`.
+
+You can specify a three-dot range notation to see commits between two branches.  
+This includes the endpoints.  
+```bash
+git fetch
+git log HEAD...FETCH_HEAD  # Show commits from the current branch to the remote branch
+```
+This means "show everything that is reachable from either one, but exclude anything that is
+reachable from both of them".
 
 
 ## Git Branch  
