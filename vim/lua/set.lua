@@ -1,10 +1,6 @@
 M = {}
 -------------------
----
----
----
----
----
+--- Test code for a different implementation of `set.lua`
 ---
 ---
 -------------------
