@@ -46,6 +46,7 @@ git diff HEAD HEAD~1
 `git add`  
 Adds files to the staging area.  
 
+---
 
 ## Git Log  
 Shows the commit history.  
@@ -83,6 +84,7 @@ git log HEAD...FETCH_HEAD  # Show commits from the current branch to the remote 
 This means "show everything that is reachable from either one, but exclude anything that is
 reachable from both of them".
 
+---
 
 ## Git Branch  
 Lists, creates, or deletes branches.  
@@ -95,6 +97,7 @@ git branch
     * `-D`: Force deletes a branch, even if it has unmerged changes.  
     * `-m`: Renames a branch.  
 
+---
 
 ## Git Checkout  
 Switches branches or restores working tree files.  
@@ -105,6 +108,7 @@ git checkout branch_name
     * `-b [new-branch]`: Creates and switches to a new branch.  
     * `-- [file-name]`: Discards changes in the working directory for specific files.  
 
+---
 
 ## Git Merge  
 Merges another branch into your current branch.  
@@ -115,6 +119,7 @@ git merge branch_name
     * `--no-ff`: Creates a merge commit even if a fast-forward merge is possible.  
     * `--abort`: Aborts the merge process in case of conflicts.  
 
+---
 
 ## Git Stash  
 Temporarily stores modified, tracked files.  
@@ -126,6 +131,7 @@ git stash
     * `list`: Lists all stashed changes.  
     * `drop`: Deletes a specific stash.  
 
+---
 
 ## Git Fetch  
 Purpose: Downloads objects and refs from a remote repository.  
@@ -136,6 +142,7 @@ git fetch
     * `--all`: Fetches from all remotes.  
     * `-p` or `--prune`: Deletes any remote-tracking references that no longer exist on the remote.  
 
+---
 
 ## Git Pull  
 Purpose: Fetches from and integrates with another repository or local branch.  
@@ -145,6 +152,7 @@ git pull
 * Options:  
     * `--rebase`: Instead of merging, it rebases the current branch.  
 
+---
 
 ## Git Reset  
 Resets current HEAD to a specified state.  
@@ -156,6 +164,7 @@ git reset
     * `--soft`: Does not touch the index file or the working tree.  
     * `[commit]`: Resets to a specific commit.  
 
+---
 
 ## Git Diff  
 Shows changes between commits, commit and working tree, etc.  
@@ -166,6 +175,7 @@ git diff
     * `--[cached | staged]`: Shows changes in the staging area.  
     * `[commit1] [commit2]`: Compares two commits.  
 
+---
 
 ## Git Blame  
 Shows what revision and author last modified each line of a file.  
