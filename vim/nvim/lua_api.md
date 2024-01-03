@@ -8,6 +8,102 @@
 
 Always `vim.inspect()` tables.  
 
+## Getting the current line or a range of lines
+### Getting the current line
+To get the current line, use any of the following functions.
+
+#### Using the Nvim API
+The simplest method using the Nvim API:
+* `vim.api.nvim_get_current_line()`
+```lua
+local line = vim.api.nvim_get_current_line()
+```
+  
+#### Using Vimscript functions
+The simplest method using a Vimscript function:
+* A Vimscript function, `vim.fn.getline()`:
+```lua
+local line = vim.fn.getline('.')
+```
+  
+Less simple Vimscript methods:
+* To get only a single line, `vim.fn.getbufoneline(bufnr, linenr)`
+```lua
+local line = vim.fn.getbufoneline(vim.fn.bufnr('%'), linenr)
+```
+
+Both of those methods return the line the cursor is currently on.  
+
+### Getting a range of lines
+To get a range of lines, use:
+* `vim.api.nvim_buf_get_lines(buf, start, end, strict_indexing)`:
+    * This function uses zero-based indexing for line numbers.
+        * i.e., line number `0` is the first line.  
+    * The `end` is non-inclusive.  
+    * Pass `0` to `buf` to use the current buffer.  
+
+```lua
+--- Get the first 10 lines of the current buffer
+local first_ten_lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
+ 
+--- Get everything from line 10 to the end of the buffer
+local lines_from_10_to_end = vim.api.nvim_buf_get_lines(0, 10, -1, false)
+ 
+-- Get the current line and the line after
+local line_no = vim.fn.line('.')
+local line = vim.api.nvim_buf_get_lines(0, line_no - 1, line_no + 1, true)
+```
+
+Alternatively, you can use a Vimscript function:
+* `vim.fn.getbufline(buf, start, end)`
+    * This is similar to `vim.api.nvim_buf_get_lines()`, but uses 1-based indexing
+      for line numbers.  
+        * i.e., line number `1` is the first line.
+    * It returns a table of lines, based on the given line number, in
+      the given buffer (`%` for current buffer).
+    * To get the current buffer number, use `vim.fn.bufnr('%')`
+
+```lua
+-- Get the current line
+local line_no = vim.fn.line('.')
+local line = vim.fn.getbufline(vim.fn.bufnr('%'), line_no)[1]
+-- or
+local line = vim.fn.getbufline('%', line_no)[1]
+ 
+-- Get the current line and the line after
+local lines = vim.fn.getbufline('%', line_no, line_no + 1)
+ 
+-- Get the first 10 lines of the current buffer
+local first_ten_lines = vim.fn.getbufline(0, 0, 10)
+```
+
+
+### Getting lines of the visual selection
+First, get the line numbers of the visual selection:
+```lua
+local ln_start = unpack(vim.api.nvim_buf_get_mark(0, '<'))
+local ln_end = unpack(vim.api.nvim_buf_get_mark(0, '>'))
+-- or
+local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")
+```
+Then, use `vim.api.nvim_buf_get_lines()` to get the lines:
+```lua
+local lines = vim.api.nvim_buf_get_lines(0, ln_start - 1, ln_end, false)
+```
+
+## Loop over lines of visual selection
+This function will loop over the lines of the visual selection, and
+save them into a table:
+
+```lua
+function M:loop_selection()
+    local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")
+    S = {}
+    for i = ln_start, ln_end do
+        S[i] = vim.fn.getline(i)
+    end
+end
+```
 
 ## Using a String as a Table Key 
 Table keys will automatically be accessible as strings.  
