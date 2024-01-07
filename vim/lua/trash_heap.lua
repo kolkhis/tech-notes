@@ -17,11 +17,18 @@ https://www.vimregex.com/
 -- Nightly repo for apt
 -- sudo add-apt-repository ppa:neovim-ppa/unstable -y
 
+anything in nvim/plugin will load/run at runtime.
+
+package.loaded has a table of loaded packages.
+vim.api.nvim_get_keymaps
+
 
 
 -- `c/word` <- change to searched text
 -- `c?word` <- same as above, change backwards to search term
 
+Disable LSP for current buffer
+-- :lua vim.lsp.diagnostics.disable(vim.api.nvim_get_current_buf())
 
 --[=[ Regex with vim ]=]--
 
@@ -51,17 +58,15 @@ For more info, :h pattern-atoms
         /h.\{-}s will match: 'his'
         /h.*s will match: 'his is a s'
         Read more on non-greedy matching
-    \{min,max} greedy match preceding character min to max times (including min and max)
-        min or max can be left unspecified as they default to 0 and infinity respectively
-        greedy match, tries to match as much as possible
-    \{-min,max} non-greedy match, tries to match as less as possible
+    \{min,max} greedy match preceding atom min to max times (including endpoints)
+        min or max can be left blank; they default to `0` and `infinity`. 
+        tries to match as much as possible
+    \{-min,max} non-greedy match, tries to match as few as possible
     \{number} match exactly with specified number
-        /c\{5} match exactly 'ccccc'
 
 For more info, 
 :h pattern-overview
 :h character-classes
-
 
 
 
@@ -112,10 +117,6 @@ https://neovim.io/doc/user/usr_41.html#function-list
 
 
 --[[
-anything in nvim/plugin will load/run at runtime.
-
-package.loaded has a table of loaded packages.
-vim.api.nvim_get_keymaps
 
   --[[  Neo-Tree Setup  ]]
   -- Switching from neo-tree to harpoon
@@ -137,6 +138,7 @@ vim.api.nvim_get_keymaps
   --     vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
   --   end,
   -- })
+
 --[[  End of Neo-Tree Setup  ]]
   --
 
@@ -171,8 +173,6 @@ Location list (do the same thing, but with :lvim[grep])
 :h cdo
 
 
-Disable LSP for current buffer
--- :lua vim.lsp.diagnostics.disable(vim.api.nvim_get_current_buf())
 
 --]=======]
 
