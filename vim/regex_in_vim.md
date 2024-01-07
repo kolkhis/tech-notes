@@ -20,7 +20,7 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 |     `*`  |   `*`   |    `\*`   |   `\*`    | Any number of the previous atom  |
 |     `~`  |   `~`   |    `\~`   |   `\~`    | Latest substitute string         |
 |     `()` |   `\(\)`|    `\(\)` |   `\(\)`  | Group as an atom                 |
-|     `\|` |   `\\|` |    `\\|`  |   `\\|`   | Nothing: separates alternatives  |
+|     `\|` |   `\\|` |    `\\|`  |   `\\|`   | Nothing: separates alternatives (logical `OR`)|
 |     `\\` |   `\\`  |    `\\`   |   `\\`    | Literal backslash                |
 |     `\{` |   `{`   |    `{`    |   `{`     | Literal curly brace              |
 
@@ -29,7 +29,7 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 |-------------------------------|-------------|-----------------|
 |  force case insensitivity     |  `\c`       |   `(?i)`        |
 |  force case sensitivity       |  `\C`       |   `(?-i)`       |
-|  backref-less grouping        |  `\%(atom\)`|   `(?:atom)`    |
+|  Non-capturing grouping       |  `\%(atom\)`|   `(?:atom)`    |
 |  0-width match                |  `atom\@=`  |   `(?=atom)`    |
 |  0-width non-match            |  `atom\@!`  |   `(?!atom)`    |
 |  0-width preceding match      |  `atom\@<=` |   `(?<=atom)`   |
@@ -74,13 +74,13 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 ### Whitespace:  
 |  Character Class  |  Matches                      |
 |-------------------|-------------------------------|
-| `.`               | any character except new line |
-| `\s`              | whitespace character          |
+| `.`               | Any character except new line |
+| `\s`              | Any whitespace character      |
 | `\S`              | non-whitespace character      |
 
 ### Digits:  
-|  Character Class  |  Matches      |
-|-------------------|---------------|
+|  Character Class  |  Matches          |
+|-------------------|-------------------|
 |  `\d`             | digit             |
 |  `\D`             | non-digit         |
 |  `\x`             | hex digit         |
@@ -130,7 +130,7 @@ you can use a different seperator.
 " To replace all occurrences of "vi" with "vim"  
 :%s:\<vi\>:vim:g  
 ```
-* `\%[]`: **Optionally** matches inside the collection `[ ]`
+* `\%[]`: *Optionally* matches inside the collection/set `[ ]`
 
 Note: inside the `[ ]` (collection), all metacharacters behave like ordinary characters.  
 * If you want to include `-` (dash) in your range put it first:  
@@ -669,9 +669,10 @@ Use `\(foo\)\@<!bar` (`\@<!`).
     - This currently simply accepts a single  
       character in the form: `[.a.]`
 
-## Collections  
-* `[]`: A Collection - Matches any single character in the collection.  
-    * `\%[]`  A sequence of optionally matched atoms. This always matches.  
+## Collections / Sets  
+* `[]`: A Collection (sometimes called a 'set') - Matches any single character in the collection. 
+    * Think of this as a custom character class. A set will only match a single character.  
+    * `\%[]`  A sequence of optionally matched characters. This always matches.  
         * The longest match is used with this.  
     * `\_[]`: A collection that also matches end-of-line.  
     * `[\n]`: With `\_` *prepended* the collection OR `\n` *in* the collection also  
@@ -698,7 +699,7 @@ Matches `index`, `index[`, `index[0`, and `index[0]`.
 
 ## Good Ones to Remember  
 * `\%(\)`: A pattern enclosed by escaped parentheses.  
-    * Just like `\(\)`, but without counting it as a sub-expression.  
+    * Just like `\(\)`, but without counting it as a capture (no backref).  
     * This allows using more groups and it's a little bit faster.  
 
 * `~`/`\~`:  Matches the last given substitute string.  
