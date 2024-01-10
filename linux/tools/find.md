@@ -45,6 +45,7 @@ You can specify the type of regex used with `-regextype` (`find -regextype help`
 ##### Examples start on line 1147 of `man find`
 
 ### Skipping directories (Omitting directories)  
+Skip directories with `find`:
 * To **SKIP** the directory `./src/emacs` and print all other files found:  
 ```bash  
 find . -path ./src/emacs -prune -o -print  
