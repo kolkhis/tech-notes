@@ -7,6 +7,19 @@
 >   - Rob, 2023
 
 
+## Table of Contents
+
+- [Quickref](#quickref)
+- [Possible Editors for Go](#possible-editors-for-go)
+- [Go and Git](#go-and-git)
+- [Recommended](#recommended)
+- [Starting a Project](#starting-a-project)
+- [Writing a Package](#writing-a-package)
+    * [Running the Package](#Running-the-Package)  
+- [Internal Packages](#internal-packages)
+* [Building Executables for Other Operating Systems](#Building-Executables-for-Other-Operating-Systems)  
+
+
 Reading the Go documentation and the Go stdlib is the best way to learn Go.  
 
 ## Quickref
@@ -14,8 +27,6 @@ Reading the Go documentation and the Go stdlib is the best way to learn Go.
 * [Starting a Project](#Starting-a-Project)  
 * [Writing a Package](#Writing-a-Package)  
 * [Internal Packages](#Internal-Packages)- 
-* [Running the Package](#Running-the-Package)  
-* [Building Executables for Other Operating Systems](#Building-Executables-for-Other-Operating-Systems)  
 
 
 
@@ -42,6 +53,8 @@ get_go_source_code(){
 }
 ```
 
+
+
 ## Starting a Project  
 Every single project starts with:
 ```bash
@@ -57,8 +70,15 @@ Specifically means you have a `main()` function.
 * Some people use the naming convention `main.go` if they're writing a command.  
 
 
-### Package/Module:  
-Packages (or sometimes called Modules) are used as external libraries.  
+### Modules  
+
+* Module 
+    * Having a `go.mod` file dictates that it is a module.
+    * Will primarily be in a repo managed by git.
+
+### Packages
+
+Packages (seaparate from Modules) are used as external libraries.  
 * Some people use the naming convention of `lib.go` if 
 they're writing a package/module.  
 * These projects usually *won't* have a `main()` function in its main file.  

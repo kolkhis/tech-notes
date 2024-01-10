@@ -25,3 +25,14 @@ func main() {
 }
 ```
 Will output `hello world`
+
+
+## File Structure for `main.go`
+
+Most common practice is to make a `cmd` directory, and then another
+subdirectory named after the current project, i.e., `cmd/my-project`, and 
+put your `main.go` file in there.
+
+
+
+
