@@ -27,6 +27,14 @@
 * `ss` or `netstat` are internal with elevated permissions for viewing  
     * Used locally with elevated permissions, it's better than `nmap`?  
 
+## CDPATH
+
+The search path for the cd command.  This is a colon-separated list of  directories  in
+which  the shell looks for destination directories specified by the cd command.
+A sample value is `.:~:/usr`.
+
+* Once the CDPATH is set, the cd command will search only in the directories present in the CDPATH variable only.
+* More details at [The Unix School](https://www.theunixschool.com/2012/04/what-is-cdpath.html)
 
 
 
