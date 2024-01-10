@@ -5,9 +5,8 @@
 Get your oauth token [here](https://twitchapps.com/tmi/).
 
 ## Set the client up for Twitch
-> Example using `irssi`, using SSL  
-
 ### Set up the Server Block
+Example using `irssi`, with SSL enabled:  
 ```lua
 -- Server block
 server = {
@@ -37,6 +36,7 @@ Use `/connect twitch` and `/disconnect twitch` as necessary.
 But if you're dedicated, just set `autoconnect = "yes"`.
 
 ---
+
 
 
 ## LCOLONQ IRC Channel
