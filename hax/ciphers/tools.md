@@ -9,6 +9,7 @@
 * xz
 * tcpdump
 * `xfreerdp` is for RDP
+* iconv
 * ... What else?
 
 ### Hashcat searching
