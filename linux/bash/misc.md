@@ -1,0 +1,1 @@
+/home/kolkhis/notes/linux/misc.md
