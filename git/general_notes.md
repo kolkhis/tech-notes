@@ -296,3 +296,17 @@ Combine other options with `-l` to match optional pattern(s):
 * `-r`, `--remotes`: Shows the remote branch name.
     * Combine with `-d` to delete remote branches.
 
+
+## Git Reset
+### Rolling back to a previous commit
+To roll back a git commit, use `git reset` with the either the `--soft` or `--hard` flag.
+* `--soft`: Does not discard the changes made, leaves them in the staging area.
+* `--hard`: Discards the changes made and removes them from the staging area.
+    * **NOTE**: This permanently deletes your changes. Make sure you have a backup of your work before using this flag.
+
+```bash
+git reset --soft HEAD~1  # Rolls back to the previous commit, leaves changes in the staging area
+```
+
+
+
