@@ -1,6 +1,10 @@
 
 # Miscellaneous Python Notes
 
+## Python HTTP Server
+
+You can use `python3 -m http.server` to serve a directory.
+
 
 ## MkDocs Static Website
 
