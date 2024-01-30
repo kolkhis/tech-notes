@@ -69,6 +69,16 @@ For this example, we'll be using the `a` key as a macro register.
 1. Now, call your recursive macro with `@a` (assuming you chose the `a` register)  
 
 
+## Making a Numbered List Using Macros
+1. Create the first list entry, make sure it starts with a number.
+2. `qa`	     : start recording into register 'a'
+3. `Y`	     : yank the entry
+4. `p`	     : put a copy of the entry below the first one
+5. `CTRL-A`  : increment the number
+6. `q`	     : stop recording
+7. `<cnt>@a` : repeat the yank, put and increment `<count>` times
+
+
 
 ## Etc  
 
