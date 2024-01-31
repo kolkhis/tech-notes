@@ -27,14 +27,14 @@
 * `ss` or `netstat` are internal with elevated permissions for viewing  
     * Used locally with elevated permissions, it's better than `nmap`?  
 
-## CDPATH
+## CDPATH  
 
-The search path for the cd command.  This is a colon-separated list of  directories  in
-which  the shell looks for destination directories specified by the cd command.
-A sample value is `.:~:/usr`.
+The search path for the cd command.  This is a colon-separated list of  directories  in  
+which  the shell looks for destination directories specified by the cd command.  
+A sample value is `.:~:/usr`.  
 
-* Once the CDPATH is set, the cd command will search only in the directories present in the CDPATH variable only.
-* More details at [The Unix School](https://www.theunixschool.com/2012/04/what-is-cdpath.html)
+* Once the CDPATH is set, the cd command will search only in the directories present in the CDPATH variable only.  
+* More details at [The Unix School](https://www.theunixschool.com/2012/04/what-is-cdpath.html)  
 
 
 
@@ -47,62 +47,108 @@ cht.sh - cheat sheet website for curling anything
 * `who` - List of users currently logged in, along with their usernames, terminal devices, 
           login times, and IP addresses (`pts` means SSH sessions)  
 * `w` - Similar to `who`, with more details (load avg, system uptime)  
-* `free -h` - Get amount of memory being used, and how much is free
-* `inotify` - Monitoring filesystem events
+* `free -h` - Get amount of memory being used, and how much is free  
+* `inotify` - Monitoring filesystem events  
     * `inotify-tools` extends the capabilities of this 
 
+---  
 
----
+## Expansion via Indirection  
+In Bash, the `!` character is used to expand a variable name to its value.  
+This is known as "expansion via indirection."  
 
+```bash  
+VARIABLE_NAME="world"  
+greeting="VARIABLE_NAME"  
+ 
+echo ${!greeting} 
+# outputs: world  
+```
+So `greeting` holds a string, which is the name of the 
+variable (`VARIABLE_NAME`) that holds the value (`world`).  
 
-## Using tput to get Terminal Information or Manipulate the Terminal
-The `tput` command can get or set various terminal capabilities.  
+### Using Indirection with Arrays (Lists) and Associative Arrays (Dictionaries)  
 
-### `tput` Examples
-* Get the number of columns for the current terminal instance
-    * ```bash
-      tput cols
+This can be used on arrays (lists) and associative arrays (dictionaries) as to  
+access the keys or values of all elements:  
+* Indirection with arrays (lists):  
+    * Using indirection on a list will return the indices of all elements in the list.  
+    * ```bash  
+      FRUITS=('Apple' 'Banana' 'Orange') && echo ${!FRUITS[@]}  
+      # outputs: Keys of all elements, space-separated 
+      0 1 2
       ```
-* Clear the screen and send the sequence to move the cursor to 
-  row 0, column 0 (the upper left corner of the screen).
-    * ```bash
-      tput clear
-      tput cup 0 0
-      ```
-* Send the sequence to move the cursor to row 23, column 4.
-    * ```bash
-      tput cup 23 4
-* Set the shell variables bold, to begin `stand-out mode` sequence,
-  and offbold, to end `stand-out mode` sequence, for the current terminal.
-    * ```bash
-      bold=`tput smso` offbold=`tput rmso`
-      ```
-    * `smso` - set mode stand-out (bold)
-    * `rmso` - remove mode stand-out (bold)
 
-## Using Grep
-* Print lines that match patterns.
-The greps:
-```bash
-grep
-egrep
-fgrep
+* Indirection with associative arrays (dictionaries):  
+    * Using indirection on a dictionary will return the keys of each 
+      element in the dictionary.  
+    * ```bash  
+      declare -A sounds  
+ 
+      sounds[dog]="bark"  
+      sounds[cow]="moo"  
+      sounds[bird]="tweet"  
+      sounds[wolf]="howl"  
+      echo "${!sounds[@]}"  
+      # outputs: All keys in the dictionary  
+      ```
+
+---  
+
+## Using Grep  
+See [grep](../tools/grep.md).  
+* Print lines that match patterns.  
+The greps:  
+```bash  
+grep  
+egrep  
+fgrep  
 rgrep 
 ```
-* `grep` uses "basic regex" by default.
+* `grep` uses "basic regex" by default.  
 * `grep -E` enables "extended regex."  
-    * Basic vs Extended Regular Expressions:
+    * Basic vs Extended Regular Expressions:  
         * In basic regular expressions the meta-characters 
           `?`, `+`, `{`, `|`, `(`, and `)` lose their special meaning. 
-        * You need to escape them to get the functionality:
-          `\?`, `\+`, `\{`, `\|`, `\(`, and `\)`.
-### Alternation (matching any one of multiple expressions)
+        * You need to escape them to get the functionality:  
+          `\?`, `\+`, `\{`, `\|`, `\(`, and `\)`.  
+### Alternation (matching any one of multiple expressions)  
 Two regular expressions can be joined by the "infix" operator,  `|;`.  
 The resulting regular expression matches any string matching either alternate expression.  
 
----
 
-## Control Sequences
+---  
+
+## Using tput  
+Using `tput`, you can to get terminal information or manipulate the terminal.  
+i.e., `tput` can get or set various terminal capabilities.  
+
+### `tput` Examples  
+* Get the number of columns for the current terminal instance  
+    * ```bash  
+      tput cols  
+      ```
+* Clear the screen and send the sequence to move the cursor to 
+  row 0, column 0 (the upper left corner of the screen).  
+    * ```bash  
+      tput clear  
+      tput cup 0 0  
+      ```
+* Send the sequence to move the cursor to row 23, column 4.  
+    * ```bash  
+      tput cup 23 4  
+* Set the shell variables bold, to begin `stand-out mode` sequence,
+  and offbold, to end `stand-out mode` sequence, for the current terminal.  
+    * ```bash  
+      bold=`tput smso` offbold=`tput rmso`
+      ```
+    * `smso` - set mode stand-out (bold)  
+    * `rmso` - remove mode stand-out (bold)  
+
+---  
+
+
+## Control Sequences  
 Also known as "escape codes" or "escape sequences."  
 | Control Sequence | Produces              |
 |------------------|-----------------------|
@@ -117,12 +163,8 @@ Also known as "escape codes" or "escape sequences."
 |      `^x`        |`control-x` (`x`=char) |
 
 
-
-
-
-
-
 ---  
+
 
 ## Heredocs in Linux  
 See `./tools/heredocs.md`
@@ -153,14 +195,14 @@ limit_string
 
 ### Example  
 ```bash  
-#!/bin/bash
-cat << "_end_of_text"
-Your user name is: $(whoami)
-Your current working directory is: $PWD
-Your Bash version is: $BASH_VERSION
-_end_of_text
+#!/bin/bash  
+cat << "_end_of_text"  
+Your user name is: $(whoami)  
+Your current working directory is: $PWD  
+Your Bash version is: $BASH_VERSION  
+_end_of_text  
 ```
-The output of the `whoami` cmd will be printed, since it
+The output of the `whoami` cmd will be printed, since it  
 was run in a subshell.  
 
 
@@ -254,7 +296,7 @@ For testing the timestamps on files:
 ### `find` Options  
 ### Global Options  
 * `-depth`: Process each directory's contents before the directory itself.  
-    * `-d`: POSIX-compatible `-depth`
+    * `-d`: POSIX-compliant `-depth`
     * The `-delete` action also implies `-depth`.  
 * `-ignore_readdir_race`: `find` won't give an error message when it fails to `stat` a file.  
     * `-noignore_readdir_race`: Turns off the effect of `-ignore_readdir_race`.  
@@ -676,7 +718,7 @@ for i in {5..50..5}; do
     echo "Welcome $i"  
 done  
 
-# Loop over lines from a file in bash
+# Loop over lines from a file in bash  
 while read -r line; do  
   echo "$line"  
 done < file.txt  # Reading from `file.txt`
@@ -684,7 +726,7 @@ done < file.txt  # Reading from `file.txt`
 # Loop over lines from a command 
 while read -r line; do  
   echo "$line"  
-done < <(find . -maxdepth 1 -name '*.txt')  # All .txt files in current dir
+done < <(find . -maxdepth 1 -name '*.txt')  # All .txt files in current dir  
 
 # Forever (Infinite Loop)  
 while true; do  
@@ -698,14 +740,14 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do
     case $1 in  
       -V | --version)  
         echo "$version";  
-        exit;
+        exit;  
         ;;  
       -s | --string )  
         shift; 
-        string=$1;
+        string=$1;  
         ;;  
       -f | --flag )  
-        flag=1;
+        flag=1;  
         ;;  
     esac;  
     shift;  
@@ -825,49 +867,95 @@ for i in "${arrayName[@]}"; do          # Iterating over an array
 done  
 ```
 
+
 ## Dictionaries (Associative Arrays)  
 ```bash  
 declare -A sounds  
 # Declares sound as a Dictionary object (aka associative array).  
-
+ 
 sounds[dog]="bark"  
 sounds[cow]="moo"  
 sounds[bird]="tweet"  
 sounds[wolf]="howl"  
-
+ 
 # Working with dictionaries  
-echo "${sounds[dog]}" # Dog's sound  
-echo "${sounds[@]}"   # All values  
-echo "${!sounds[@]}"  # All keys  
-echo "${#sounds[@]}"  # Number of elements  
-unset sounds[dog]     # Delete dog  
-
-# Iterate over values  
+echo "${sounds[dog]}" # Access an element of a dictionary  
+echo "${sounds[@]}"   # Get all values of a dictionary  
+echo "${!sounds[@]}"  # Get all keys of a dictionary  
+echo "${#sounds[@]}"  # Get number of elements of a dictionary  
+unset sounds[dog]     # Delete an element of a dictionary  
+ 
+# Iterate over values of a dictionary  
 for val in "${sounds[@]}"; do  
   echo "$val"  
 done  
-
-# Iterate over keys  
+ 
+# Iterate over keys of a dictionary 
 for key in "${!sounds[@]}"; do  
   echo "$key"  
 done  
 ```
 
 
+## Process Substitution in Bash  
+See [process substitution](./process_substitution.md)
 
+Process substitution is for treating command outputs as files.  
+ 
+This is useful for using commands in place of files 
+for commands that only accept files.
 
+* Note: Process substitution is not POSIX-compliant.  
+    It's promarily supported in Bash and Zsh.  
+### Overview  
+
+* Process substitution is used to treat the output of a process  
+  as a filename, which can then be passed to other commands.  
+* This feature is available in Bash and other shells that support it, like Zsh.  
+
+### Syntax  
+
+* **`<(list)`**: This form is used when you want to treat the output of `list` as an input file. For example, `cat <(ls)` will execute `ls` and then `cat` the output as if it were a file.  
+* **`>(list)`**: This form is for treating the input to the process as an output file. For example, `echo "Hello" > >(cat)` will pass "Hello" to `cat` as its input.  
+
+### How It Works  
+
+* Bash replaces each `>(list)` and `<(list)` with a filename.  
+    * This filename points to a FIFO (named pipe), or a file 
+      in `/dev/fd` that is connected to standard input (stdin) or  
+      output of the `list` process.  
+* The `list` process is executed asynchronously, meaning the 
+  main command and `list` can run at the same time.  
+
+### Examples  
+
+1. **Comparing Two Dynamic Sets of Data**  
+    ```bash  
+    diff <(ls dir1) <(ls dir2)  
+    ```
+    This command compares the output of `ls` in two different directories.
 
 ## Process Substitution  
 `man bash; /Process Substitution`
-Process substitution allows a process's input or output to be referred to using a filename.  
-It takes the form of <(list) or >(list).  The process list is run asynchronously,
+Process substitution allows a process's input or output to  
+be referred to using a filename.  
+ 
+It takes the form of `<(list)` or `>(list)`.  
+The process `list` is run asynchronously,
 and its input or output appears as a filename.  
-This filename is passed as an argument to the current command as the result of the expansion.  
-If the >(list) form is used, writing to the file will provide input for list.  
-If the <(list) form is used, the file passed as an argument should be read 
-to obtain the output of list.  
+ 
+This filename is passed as an argument to the current command  
+as the result of the expansion.  
+ 
+If the `>(list)` form is used, writing to the file will 
+provide input for `list`.  
+ 
+If the `<(list)` form is used, the file passed as an argument  
+should be read to obtain the output of `list`.  
+ 
 Process substitution is supported on systems that support  
 named pipes (FIFOs) or the /dev/fd method of naming open files.  
+ 
 
 
 ## Transforming Strings with `tr`
@@ -893,29 +981,39 @@ echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
 See `./conditionals_in_bash.md`  
 * -a file  
     * True if file exists.  
+    * Check if file exists.  
 * -b file  
     * True if file exists and is a block special file.  
+    * Check if file exists and is a block special file.  
 * -c file  
     * True if file exists and is a character special file.  
+    * Check if file exists and file is a character special file.  
 * -d file  
     * True if file exists and is a directory.  
+    * Check if directory exists.  
 * -e file  
     * True if file exists.  
+    * Check if file exists.  
 * -f file  
-    * True if file exists and is a regular file.  
+    * True if file exists and file is a regular file.  
 * -g file  
     * True if file exists and is set-group-id.  
 * -h file  
     * True if file exists and is a symbolic link.  
+    * Check if file exists and file is a symlink. 
 * -k file  
     * True if file exists and its ``sticky'' bit is set.  
+    * Check if file exists and has sticky bit set. 
 
 * -p file  
     * True if file exists and is a named pipe (FIFO).  
+    * Check if file exists and is a named pipe. 
 * -r file  
     * True if file exists and is readable.  
+    * Check if file exists and is readable. 
 * -s file  
     * True if file exists and has a size greater than zero.  
+    * Check if file exists and is not empty. 
 * -t fd   
     * True if file descriptor fd is open and refers to a terminal.  
 * -u file  
@@ -942,8 +1040,8 @@ See `./conditionals_in_bash.md`
 * file1 -ot file2
     * True if file1 is older than file2, or if file2 exists and file1 does not.  
 * -o optname  
-    * True  if the shell option optname is enabled.  See the list of options under the description  
-    * of the -o option to the set builtin below.  
+    * True if the shell option optname is enabled. 
+    * See the list of options under the description of the `-o` option to the set builtin below.  
 * -v varname  
     * True if the shell variable varname is set (has been assigned a value).  
 * -R varname  
@@ -956,7 +1054,7 @@ See `./conditionals_in_bash.md`
 * string1 == string2
     * string1 = string2
     * True if the strings are equal.  
-    * = should be used with the test  command  for  POSIX  conformance.  
+    * = should be used with the test command for POSIX-compliance. 
     * When  used  with  the [[ command, this performs pattern matching as 
       described in (Compound Commands).  
 * string1 != string2
