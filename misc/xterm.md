@@ -16,7 +16,7 @@
 * **What Does 'xterm Compatible' Mean?**
 
     * Being 'xterm compatible' means that a terminal emulator can correctly 
-      interpret the control sequences (ANSI escape codes) used by xterm.
+      interpret the ANSI control sequences (ANSI color codes) used by xterm.
 
     * This includes a wide range of functions, from basic text styling 
       (like colors and font styles) to more advanced features (like cursor
