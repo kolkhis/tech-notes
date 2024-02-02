@@ -34,5 +34,5 @@ subdirectory named after the current project, i.e., `cmd/my-project`, and
 put your `main.go` file in there.
 
 
-
+"n to m" is a "many to many" mapping
 
