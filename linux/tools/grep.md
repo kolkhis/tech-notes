@@ -30,9 +30,12 @@ fgrep
 rgrep 
 ```
 * `grep`: Uses Basic Regular Expressions (BRE) by default.  
-* `egrep`: Equivalent to `grep -E`, it uses Extended Regular Expressions (ERE).  
-* `fgrep`: Equivalent to `grep -F`, it treats the pattern as a fixed string, not a regular expression.  
-* `rgrep`: Equivalent to `grep -r`, it recursively searches directories.  
+* `egrep`: Uses Extended Regular Expressions (ERE).  
+    * Equivalent to `grep -E`
+* `fgrep`: Treats the pattern as a fixed string, not a regular expression.  
+    * Equivalent to `grep -F`
+* `rgrep`: Recursively searches directories.  
+    * Equivalent to `grep -r`
 
 ###  Basic vs Extended Regular Expressions:  
 * Basic Regular Expressions (BRE)  
@@ -47,7 +50,7 @@ rgrep
 
 ### Alternation (matching any one of multiple expressions)  
 
-* The alternation operator / infix operator (`|`) 
+* The "alternation operator" or "infix operator" (`|`, the `OR` operator) 
   is used to match any one of multiple expressions.  
 * It acts as an `or` operator between multiple regular expressions.  
 * For example, `grep 'cat|dog' filename` will match any line containing 'cat' or 'dog'.  
@@ -61,40 +64,43 @@ rgrep
 - `-l`: List only the names of files with matching lines, once for each file.  
 - `-r` or `-R`: Recursively search directories for the pattern.  
 - `--color`: Highlight the matching text.  
+- `--exclude-dir=PATTERN`: Skip any directory with a name that matches the given pattern.
+    * Uses shell globbing.
 
 
 
 
 ## Exmaples  
-Count Occurrences of a Word:  
+
+### Count Occurrences of a Word:  
 ```bash  
 grep -c 'word' filename  
 ```
 
 ---  
 
-Search Recursively in Directory:  
+### Search Recursively in Directory:  
 ```bash  
 grep -r 'pattern' /path/to/directory  
 ```
 
 ---  
 
-Find Lines Not Containing the Pattern:  
+### Find Lines Not Containing the Pattern:  
 ```bash  
 grep -v 'pattern' filename  
 ```
 
 ---  
 
-Search While Ignoring Case:  
+### Search While Ignoring Case:  
 ```bash  
 grep -i 'pattern' filename  
 ```
 
 ---  
 
-Note on `fgrep` (Fixed Strings)  
+## Note on `fgrep` (Fixed Strings)  
 
 `fgrep` or `grep -F` treats the pattern as a fixed string.  
 It matches the literal text provided as the pattern.  
@@ -190,11 +196,5 @@ Note: `grep` takes care of assembling the result into a complete SGR sequence (`
     * Prevents clearing to the end of line using Erase in Line (`EL`) to  
       Right (`\33[K`) each time a colorized item ends.  
     * The default is false (unset). True if set.  
-
-
-See the Select Graphic Rendition (`SGR`) section in the documentation of the text terminal  
- that is used for permitted values and their meaning as character attributes. 
-
-
 
 
