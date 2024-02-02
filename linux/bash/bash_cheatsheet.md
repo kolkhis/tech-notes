@@ -16,6 +16,7 @@
 * parallel (GNU Parallel)  
 * awk  
 * sed  
+* top
 
 
 ## Tools to Check Out for Networking/Admin:  
