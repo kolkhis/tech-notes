@@ -39,7 +39,7 @@ the braces apply to all commands inside the braces.
  
 Redirect the output of multiple commands to the same file:  
 ```bash  
-{ date; echo "Hello, World!"; } > output.txt  
+{ date; printf "Hello, World!\n"; } > output.txt  
 ```
 This will put the following into `output.txt`:  
 ```plaintext  
@@ -49,7 +49,8 @@ Hello, World!
 
 This can be useful for generating reports:  
 ```bash  
-{ printf "Header Info\n";  
+{ 
+  printf "Header Info\n";  
   date;  
   printf "Footer Info\n";  
 } > report.txt  
@@ -94,25 +95,6 @@ So, when you see `echo "Error encountered during execution." >&2`, it means
 ---
 
 
-### Local Scoped Variable Modifications Inside Functions
- 
-Limit the scope of variable changes (inside a function) without
-spawning a subshell:
-```bash
-{
-  local localVar="temporary value";
-  echo "Inside: $localVar";
-}
-echo "Outside: $localVar"  # localVar is not accessible here if within a function
-```
-Using `local` implies this example is meant to be inside a function.
-Without `local`, the variable's scope would still be global, but modifications
-would be contained within the `{ }`.
-
-
----
-
-
 ### Creating Complex Pipelines
  
 Use command grouping to create complex pipelines, where the output
@@ -134,9 +116,9 @@ This searches through the combined output of the two `echo` commands.
 Execute a group of commands only if a certain file exists:
 ```bash
 [[ -f "config.cfg" ]] && {
-  echo "Loading configuration...";
+  printf "Loading configuration...\n";
   source config.cfg;
-  echo "Configuration loaded.";
+  printf "Configuration loaded.\n";
 }
 ```
 
@@ -152,7 +134,7 @@ all cleanup steps are taken together:
 {
   rm -f temp1.txt;
   rm -f temp2.txt;
-  echo "Temporary files removed.";
+  printf "Temporary files removed.\n";
 } >> cleanup.log
 ```
 
