@@ -29,7 +29,7 @@ Take notes on:
 :verbose pwd  
 [tabpage] /path/to/current  
 
-" Split Find:  
+" Split Find (:split with :find):  
 :[N]sf[ind] [++opt] [+cmd] {file}        *:sf* *:sfi* *:sfind* *splitfind*  
 ```
 
