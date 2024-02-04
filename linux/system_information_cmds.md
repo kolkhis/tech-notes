@@ -3,6 +3,26 @@
 
 ## Disk and System Information
 
+### vmstat
+`vmstat` is a command that shows you the status of the virtual memory and CPU usage of your system.
+
+### Check which version of linux is running
+The command to check which version of Linux is running:
+```bash
+cat /etc/*release
+```
+To check which version of kernel is running:
+```bash
+uname -r
+```
+
+To see how the system booted, and what kernel parameters were passed
+when the system was started:
+```bash
+cat /proc/cmdline
+```
+
+
 
 ### Get System Information
 * `uname -a`: Check kernel/OS  
