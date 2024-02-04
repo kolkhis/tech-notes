@@ -52,6 +52,107 @@ cht.sh - cheat sheet website for curling anything
 * `inotify` - Monitoring filesystem events  
     * `inotify-tools` extends the capabilities of this 
 
+---
+
+## Check which version of linux is running
+The command to check which version of Linux is running:
+```bash
+# Check linux version
+cat /etc/*release
+```
+To check which version of kernel is running:
+```bash
+# Check kernel version
+uname -r
+```
+
+---  
+
+## Check how much memory is being used
+To check RAM usage:
+```bash
+var=$(free -h | grep Mem | awk '{print $3}')  # This is how much RAM is being used
+# Or, simply:
+vmstat 1 5
+```
+To check swap usage:
+```bash
+free -h | grep Swap | awk '{print $3}'  # How much swap is being used
+```
+
+
+---
+
+## Check CPU usage
+To check how much CPU power is being used:
+```bash
+# Checking CPU usage
+mpstat 1 5
+```
+
+---
+
+## Check which processes are executing on the processor
+Check CPU usage for each process:
+```bash
+# Check process cpu usage
+pidstat 1 5
+```
+
+---
+
+## Check network usage and load of the system
+Check the network usage of the system, and check the load of the system:
+```bash
+sar -n DEV 1 5
+```
+
+Check TCP packets and errors:
+```bash
+sar -n TCP,ETCP 1 5
+```
+Tried using my brain, maybe you can tell me if this is right:
+`int* p` declares a pointer to an integer called `p`
+`int *p` declares and integer which is a derefereced `p` object
+`int*p` is a stroke
+
+---
+
+
+---
+
+## Check Running Processes
+See what processes are running on the system:
+```bash
+ps -ef
+```
+* `-e`: Show every process on the system
+* `-f`: Show full command lines (full-format listing)
+    * Causes the command arguments to be printed.  
+    * `-F` is Extra-full-format.
+
+---  
+
+## Give a user full sudo access
+You can add them directly to the `/etc/sudoers` file.
+Or, you can add them to their own files in `/etc/sudoers.d/`
+```bash
+usermod -G 
+```
+**NOTE:** in the `/etc/sudoers` file, lines starting with one hash `#` are **NOT
+COMMENTS.** Those lines are **NOT** ignored (see `man sudoers(5)`).  
+The lines need to have two `##` in order to be comments
+
+### Rule of Least Privilege
+* The "rule of least privilege" is to give only the minimum access needed to a user.
+    * Also called the "principle of least privilege."
+
+
+```bash
+cat /etc/
+```
+
+
 ---  
 
 ## Expansion via Indirection  
