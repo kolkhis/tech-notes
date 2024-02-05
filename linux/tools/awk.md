@@ -6,18 +6,28 @@ Awk is a programming language for text processing and data wrangling
 (sometimes called data munging).  
 
 
-[Learn X in Y Minutes](https://learnxinyminutes.com/docs/awk/) where `X = awk`
+A great resource: [Learn X in Y Minutes](https://learnxinyminutes.com/docs/awk/) where `X = awk`
+
+
+* A note on examples:  
+Some of the examples in these notes will assume that awk is being run from the command line.  
+E.g.,:  
+```bash
+awk 'pattern {action;}' file.txt  
+```
+The starting command `awk`, input file, and single quotes will be assumed.  
+If there's an example that doesn't start with `awk`, this applies.  
 
 
 
 ## Table of Contents  
 
 * [Syntax](#syntax)  
+* [Field and Record Separators](#field-and-record-separators)  
 * [Simple Examples](#simple-examples)  
     * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file)  
     * [Searching for a Pattern in the Entire Line](#searching-for-a-pattern-in-the-entire-line)  
     * [Modifying an Entire Line](#modifying-an-entire-line)  
-* [Field and Record Separators](#field-and-record-separators)  
 * [Built-in Variables in awk](#built-in-variables-in-awk)  
 * [Line Variables (Field Variables)](#line-variables-field-variables)  
 * [Patterns and Actions](#patterns-and-actions)  
@@ -29,6 +39,7 @@ Awk is a programming language for text processing and data wrangling
     * [Awk Numeric Functions](#awk-numeric-functions)  
     * [Awk Time Functions](#awk-time-functions-gnu-awk)  
 
+
 ## Syntax  
 The basic syntax of using `awk`:  
 ```bash  
@@ -38,6 +49,30 @@ awk [options] 'program' input-file(s)
 * `options`: Command-line options, such as `-f` to specify a file containing an `awk` script.  
 * `program`: A set of instructions for `awk` to execute, typically enclosed in single quotes.  
 * `input-file(s)`: The file(s) `awk` will process. If omitted, `awk` reads from the standard input.  
+
+
+## Field and Record Separators  
+Awk recognizes two types of separators:  
+
+1. The field separator, which is the character or string that 
+   separates **fields** (columns) in a record.  
+
+2. The record separator, which is the character or string that  
+    separates **records** (lines) in a file.  
+
+* By default, `awk` uses any whitespace as the field separator 
+  and a newline as the record separator.  
+* You can specify a field separator using the `-F` option:  
+```bash  
+awk -F: '{print($1)}' /etc/passwd  
+```
+**Note**: Parentheses are optional for the `print` function.  
+* You can also specify a new field separator from within the `awk` program, using 
+  the `BEGIN` block:  
+    ```bash  
+    awk 'BEGIN { FS=":" } {print($1)}' /etc/passwd  
+    ```
+  
 
 
 ## Simple Examples  
@@ -58,23 +93,6 @@ awk '/pattern/ {print $0}' file.txt
 awk 'BEGIN {FS=":"} {print $1, $2}' /etc/passwd  
 ```
 
-
-
-## Field and Record Separators  
-Awk recognizes two types of separators:  
-
-1. The field separator, which is the character or string that 
-   separates **fields** (columns) in a record.  
-
-2. The record separator, which is the character or string that  
-    separates **records** (lines) in a file.  
-
-* By default, `awk` uses any whitespace as the field separator 
-  and a newline as the record separator.  
-* You can specify a field separator using the `-F` option:  
-```bash  
-awk -F: '{print $1}' /etc/passwd  
-```
 
 ## Built-in Variables in awk  
 These are builtin variables in awk:  
@@ -142,44 +160,119 @@ Use a `for` loop to print each field in a line:
 awk '{ for(i=1; 1<=NF; i++) print($i); }' file.txt  
 ```
 
----
+---  
 
-## The Begin Keyword
-The `BEGIN` keyword is used to initialize variables, perform 
-initialization tasks, and to perform any other tasks that need to be 
-done before the first record is processed.
+## The BEGIN Keyword  
+The `BEGIN` keyword is a block of code that is executed before the main program starts processing  
+input.  
+It's used to initialize variables, perform initialization tasks, and to perform any 
+other tasks that need to be done before the first record is processed.  
 
-* Purpose: The `BEGIN` block in `awk` is executed once before any input lines are processed.
-    * It's the perfect place to initialize variables or print headers in your output.
-* Usage: You might use `BEGIN` to set the Field Separator (`FS`) to parse CSV files or to print a title row for a report.
+* Purpose: The `BEGIN` block in `awk` is executed once before any input lines are processed.  
+    * It's the perfect place to initialize variables or print headers in your output.  
+* Usage: You might use `BEGIN` to set the Field Separator (`FS`) to parse CSV files or to print a title row for a report.  
 
-### Examples Using `BEGIN`
-
-Loop over the fields of a line and perform a substitution on each field:  
+Example:  
 ```bash  
-awk 'BEGIN {FS=" "} /^#/ for(i=0;i<=NF;i++) {
-    gsub("a", "x", $i)  
-    print($i);  
+awk 'BEGIN {FS=" "; count=0;} { count++; printf("Line number: %d", count) }' myfile  
+```
+This prints the line number of each line in the files as it is being processed.  
+
+## The END Keyword  
+The `END` keyword is similar to `BEGIN`, but happens at the end of the program.  
+It's used to perform any cleanup tasks after all the input lines have been processed.  
+
+* Purpose: The `END` block is executed once after all input lines have been processed.  
+    * It's ideal for summarizing data, such as calculating averages or totals.  
+* Usage: Use `END` to perform actions that should only occur after all input has been read.  
+    * E.g., displaying a total count of processed records.  
+
+Example:  
+```bash  
+awk '{ count++ } END { printf("Total Records: %d", count)}' myfile  
+```
+* Here, the `count` variable is *implicitly* initialized to 0.  
+    * This means that variable declaration is not required 
+    * While declaration is not required, it is encouraged.  
+* Then when the input is finished being processed, the `END` block is run.  
+    * Here, it prints the total number of records processed (the number of lines).  
+
+## Examples Using `BEGIN` and `END`
+
+### Output the Number of Headers in a Markdown File  
+Using a pattern to count the number of headers in a markdown file:  
+```bash  
+awk 'BEGIN {FS=" "; count=0;} /^#/ {count++} END {print(count)} ' ./conditionals_in_bash.md  
+```
+Output the current count each time a header line is found:  
+```bash  
+awk 'BEGIN {count = 0;} 
+    /^#/ {
+        count++; 
+        print("Header number " count " found.");  
+    } 
+    END {print(count);  
+    } ' ./conditionals_in_bash.md 
+```
+When using multiple lines, the opening brace (`{`) must be on the same line as their  
+corresponding block declaration.  i.e., the `BEGIN` or `END` keyword, patterns, etc.  
+If they're not, the block will be treated as the main program.  
+
+---  
+
+### Loop Over the Fields of a Line  
+Loop over the fields of a line and perform a substitution on each field.  
+Set the field separator to a space (which is default but for example purposes):  
+```awk  
+BEGIN {FS=" "} 
+/^#/ { for(i=0;i<=NF;i++) {
+        gsub("a", "x", $i);  
+        print($i)  
     }
-}' ./conditionals_in_bash.md 
+}  "./conditionals_in_bash.md" 
 ```
 Replaces all occurrences of `a` with `x` in each field, then prints that field.  
 
 
 Let's add some conditionals:  
-```bash  
-awk 'BEGIN {FS=" "} /^#/ { for(i=0;i<=NF;i++) {
+```awk  
+BEGIN {FS=" "} /^#/ { 
+for(i=0;i<=NF;i++) {
     if ( i == 1 ) {
         print("-X-")  
     }
-    else{
+    else {
         gsub("a", "x", $i)  
         print($i);  
     }
-}
-}' ./conditionals_in_bash.md 
+} 
+} "./conditionals_in_bash.md" 
 ```
 Does the same thing as before, but prints `-X-` instead of the first field.  
+
+---  
+
+
+### Loop over the fields of header lines in a markdown file  
+
+Loop over the fields of header line and perform a substitution on each field.  
+Keep track of how many header lines are found, and how many substitutions are made:  
+```awk  
+BEGIN {
+FS=" "; headers=0; subs=0;  
+} 
+/^#/ { 
+    for(i=0;i<=NF;i++) {
+        subs+=gsub("a", "x", $i);  
+        printf("Header: %d - %s Subs: %d\n", count, $i, subs)  
+    }
+    headers++  
+}
+END {
+printf("Total Substitutions: %d\nTotal Headers: %d\n", subs, headers)  
+} "./conditionals_in_bash.md" 
+```
+
 
 ## Passing External Variables  
 
