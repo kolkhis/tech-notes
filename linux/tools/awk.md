@@ -94,25 +94,33 @@ awk 'BEGIN {FS=":"} {print $1, $2}' /etc/passwd
 ```
 
 
-## Built-in Variables in awk  
+## Variables in Awk
+
+### Built-in Variables
 These are builtin variables in awk:  
 * `FS`: Field separator variable (default is whitespace).  
 * `OFS`: Output field separator (default is a space).  
 * `NR`: Number of the current record.  
 * `NF`: Number of fields in the current record.  
 
-## Line Variables (Field Variables)  
+### Line Variables (Field Variables)  
 
 `awk` processes text data as a series of records, which are, by  
 default, individual lines in the input text.  
 
 * Each record is automatically split into fields based on a field 
   separator, whitespace by default, can be changed with the `-F` option.  
-    * Can also be changed with the `FS` variable from inside `awk`.  
-* Fields within a record are accessed using `$1`, `$2`, `$3`, etc., where `$1` is the first field, `$2` is the second field, and so on.  
+    * The separator can also be changed with the `FS` variable from inside `awk`.  
+* Fields in a record are accessed using `$1`, `$2`, `$3`, etc.
+    * `$1` is the first field, `$2` is the second field, and so on.  
+    * `$0` is the entire line.
 
-* `$1`, `$2`, etc., allow you to work with individual pieces of data within a line. 
-* `$0` lets you work with the whole line.  
+### Declaring Variables 
+When you use a variable in `awk`, it is automatically initialized.  
+That means it does not need to be explicitly declared.  
+```bash
+awk 'BEGIN {var = "value"} {print(var)}'
+```
 
 
 ## Patterns and Actions  
@@ -141,7 +149,7 @@ Print the length of the second field:
 awk '{print length($2)}' file.txt  
 ```
 
-## Control Structures (Conditionals) in awk  
+## Control Structures in awk  
 
 `awk` supports common control structures like `if-else`, `while`, `for`, and `do-while`.  
 
@@ -160,7 +168,131 @@ Use a `for` loop to print each field in a line:
 awk '{ for(i=1; 1<=NF; i++) print($i); }' file.txt  
 ```
 
+---
+
+
+## Conditionals in Awk
+
+### 1. Relational Operators
+
+Relational operators compare two values or expressions.  
+awk supports the following relational operators: 
+* `<`  
+* `<=`  
+* `==`  
+* `!=`  
+* `>=`  
+* `>`
+* `~` (regex match) 
+* `!~` (regex not match)
+
+
+### Examples:
+
+* **Numeric Comparison**:
+```bash
+awk '$1 > 100 { print $0 }' data.txt
+```
+* This prints lines where the value in the first field is greater than 100.
+
+
+* **String Equality**:
+```bash
+awk '$2 == "admin" { print $0 }' /etc/passwd
+```
+* This prints lines from the `/etc/passwd` file where the second field is "admin".
+
+    
+* **Not Equal**:
+```bash
+awk 'NF != 5 { print $0 }' data.txt
+```
+This prints lines that don't have exactly 5 fields.
+
+
+---
+
+
+## Logical Operators
+
+Logical operators are used to combine multiple conditions. `awk` supports logical AND (`&&`), OR (`||`), and NOT (`!`).
+
+### Examples:
+
+1. **Logical AND**:
+```bash
+awk '$1 > 100 && $2 < 200 { print $0 }' data.txt
+```
+* This prints lines where the first field is "John" or the second field is 50 or more.
+    
+* **Logical NOT**:
+```bash
+awk '!($1 == "admin") { print $0 }' /etc/passwd
+```
+This prints lines where the first field is not "admin".
+
+
+---
+
+
+## Regular Expression Match
+
+Regex in awk is available: the `~` (match) and `!~` (not match)
+operators are used with regular expressions to test if a field or
+string matches or doesn't match a given pattern.
+
+### Examples:
+    
+1. **Regular Expression Match**:
+```bash
+awk '$1 ~ /^admin/ { print $0 }' /etc/passwd
+```
+* This prints lines where the first field starts with "admin".
+    
+* **Regular Expression Not Match**:
+```bash
+awk '$1 !~ /^root/ { print $0 }' /etc/passwd
+```
+* This prints lines where the first field does not start with "root".
+    
+* **Field Match**:
+```bash
+awk '$3 ~ /[0-9]+/ { print $0 }' data.txt
+```
+This prints lines where the third field contains one or more digits.
+
+
+---
+
+
+## Conditional (Ternary) Operator
+
+The ternary operator `?:` is used to choose between two values based on a condition.  
+It is the only ternary operator in `awk`.  
+
+### Examples:
+
+1. **Inline Conditions**:
+```bash
+awk '{ print ($1 > 50) ? "High" : "Low" }' data.txt
+```
+* This prints "High" if the first field is greater than 50, and "Low" otherwise.
+
+* **Field Selection**:
+```bash
+awk '{ print ($1 > $2) ? $1 : $2 }' data.txt
+```
+* This prints the larger of the first two fields.
+
+* **Adjust Output Based on Conditions**:
+```bash
+awk '{ printf("%s - %s\n", $1, ($2 > 100) ? "Expensive" : "Cheap")}' prices.txt
+```
+This prints each item's name and categorizes it as "Expensive" or "Cheap" based on the second field.
+
+
 ---  
+
 
 ## The BEGIN Keyword  
 The `BEGIN` keyword is a block of code that is executed before the main program starts processing  
@@ -168,7 +300,7 @@ input.
 It's used to initialize variables, perform initialization tasks, and to perform any 
 other tasks that need to be done before the first record is processed.  
 
-* Purpose: The `BEGIN` block in `awk` is executed once before any input lines are processed.  
+* Purpose: The `BEGIN` block in `awk` is executed one time, before any input lines are processed.  
     * It's the perfect place to initialize variables or print headers in your output.  
 * Usage: You might use `BEGIN` to set the Field Separator (`FS`) to parse CSV files or to print a title row for a report.  
 
@@ -176,13 +308,13 @@ Example:
 ```bash  
 awk 'BEGIN {FS=" "; count=0;} { count++; printf("Line number: %d", count) }' myfile  
 ```
-This prints the line number of each line in the files as it is being processed.  
+This prints the line number of each line in the file.  
 
 ## The END Keyword  
 The `END` keyword is similar to `BEGIN`, but happens at the end of the program.  
 It's used to perform any cleanup tasks after all the input lines have been processed.  
 
-* Purpose: The `END` block is executed once after all input lines have been processed.  
+* Purpose: The `END` block is executed one time, after all input lines have been processed.  
     * It's ideal for summarizing data, such as calculating averages or totals.  
 * Usage: Use `END` to perform actions that should only occur after all input has been read.  
     * E.g., displaying a total count of processed records.  
@@ -290,6 +422,7 @@ Anything in square brackets `[ ]` is optional.
 1. `gsub(r, s [, t])`: Globally substitutes `s` for each match of the regular  
    expression `r` in the string `t`.  
     * If `t` is not supplied, operates on `$0`.  
+    * Several chars/strings can be given to `r` with the OR `|` operator: `"a|b"`
 2. `index(s, t)`: Returns the index of the substring `t` in the string `s`.  
     * Returns `0` if `t` is not provided.  
 3. `length([s])`: Returns the length of string `s`.  
@@ -328,5 +461,21 @@ Anything in square brackets `[ ]` is optional.
     * Without arguments, formats the current time.  
 2. `systime()`: Returns the current time as a timestamp (number of seconds 
    since the "epoch", `1970-01-01 00:00:00 UTC`).  
+
+
+## Using Awk as an Interpreter
+ 
+When running `awk` without feeding it any input, either via pipe or file, it will run the 
+program given as a script.
+ 
+It will process user input as records (lines), as if it were reading from a file.
+ 
+E.g.:
+```bash
+awk 'BEGIN {FS=" "} {gsub("a|e|i", "x", $0); printf("%s - %d\n", $0, length($0))}'
+```
+This will wait for input, and will replace each 
+occurrence of `a`, `e`, or `i` with `x`, and
+output the result.
 
 
