@@ -6,6 +6,7 @@
 
 ```lua
 local opts = {
+
     aleph = {
         allows_duplicates = true,
         commalist = false,
@@ -21,6 +22,8 @@ local opts = {
         type = "number",
         was_set = false
     },
+
+
     allowrevins = {
         allows_duplicates = true,
         commalist = false,
@@ -36,6 +39,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     ambiwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -51,6 +55,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     arabic = {
         allows_duplicates = true,
         commalist = false,
@@ -66,6 +71,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     arabicshape = {
         allows_duplicates = true,
         commalist = false,
@@ -81,6 +87,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     autochdir = {
         allows_duplicates = true,
         commalist = false,
@@ -96,6 +103,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     autoindent = {
         allows_duplicates = true,
         commalist = false,
@@ -111,6 +119,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     autoread = {
         allows_duplicates = true,
         commalist = false,
@@ -126,6 +135,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     autowrite = {
         allows_duplicates = true,
         commalist = false,
@@ -141,6 +151,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     autowriteall = {
         allows_duplicates = true,
         commalist = false,
@@ -156,6 +167,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     background = {
         allows_duplicates = true,
         commalist = false,
@@ -171,6 +183,7 @@ local opts = {
         type = "string",
         was_set = true
     },
+
     backspace = {
         allows_duplicates = false,
         commalist = true,
@@ -186,6 +199,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     backup = {
         allows_duplicates = true,
         commalist = false,
@@ -201,6 +215,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     backupcopy = {
         allows_duplicates = false,
         commalist = true,
@@ -216,6 +231,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     backupdir = {
         allows_duplicates = false,
         commalist = true,
@@ -231,6 +247,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     backupext = {
         allows_duplicates = true,
         commalist = false,
@@ -246,6 +263,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     backupskip = {
         allows_duplicates = false,
         commalist = true,
@@ -261,6 +279,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     belloff = {
         allows_duplicates = false,
         commalist = true,
@@ -276,6 +295,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     binary = {
         allows_duplicates = true,
         commalist = false,
@@ -291,6 +311,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     bomb = {
         allows_duplicates = true,
         commalist = false,
@@ -306,6 +327,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     breakat = {
         allows_duplicates = true,
         commalist = false,
@@ -321,6 +343,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     breakindent = {
         allows_duplicates = true,
         commalist = false,
@@ -336,6 +359,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     breakindentopt = {
         allows_duplicates = false,
         commalist = true,
@@ -351,6 +375,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     browsedir = {
         allows_duplicates = true,
         commalist = false,
@@ -366,6 +391,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     bufhidden = {
         allows_duplicates = true,
         commalist = false,
@@ -381,6 +407,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     buflisted = {
         allows_duplicates = true,
         commalist = false,
@@ -396,6 +423,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     buftype = {
         allows_duplicates = true,
         commalist = false,
@@ -411,6 +439,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     casemap = {
         allows_duplicates = false,
         commalist = true,
@@ -426,6 +455,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cdhome = {
         allows_duplicates = true,
         commalist = false,
@@ -441,6 +471,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cdpath = {
         allows_duplicates = false,
         commalist = true,
@@ -456,6 +487,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cedit = {
         allows_duplicates = true,
         commalist = false,
@@ -471,6 +503,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     channel = {
         allows_duplicates = true,
         commalist = false,
@@ -486,6 +519,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     charconvert = {
         allows_duplicates = true,
         commalist = false,
@@ -501,6 +535,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cindent = {
         allows_duplicates = true,
         commalist = false,
@@ -516,6 +551,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cinkeys = {
         allows_duplicates = false,
         commalist = true,
@@ -531,6 +567,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cinoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -546,6 +583,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cinscopedecls = {
         allows_duplicates = false,
         commalist = true,
@@ -561,6 +599,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cinwords = {
         allows_duplicates = false,
         commalist = true,
@@ -576,6 +615,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     clipboard = {
         allows_duplicates = false,
         commalist = true,
@@ -591,6 +631,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cmdheight = {
         allows_duplicates = true,
         commalist = false,
@@ -606,6 +647,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     cmdwinheight = {
         allows_duplicates = true,
         commalist = false,
@@ -621,6 +663,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     colorcolumn = {
         allows_duplicates = false,
         commalist = true,
@@ -636,6 +679,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     columns = {
         allows_duplicates = true,
         commalist = false,
@@ -651,6 +695,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     comments = {
         allows_duplicates = false,
         commalist = true,
@@ -666,6 +711,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     commentstring = {
         allows_duplicates = true,
         commalist = false,
@@ -681,6 +727,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     compatible = {
         allows_duplicates = true,
         commalist = false,
@@ -696,6 +743,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     complete = {
         allows_duplicates = false,
         commalist = true,
@@ -711,6 +759,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     completefunc = {
         allows_duplicates = true,
         commalist = false,
@@ -726,6 +775,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     completeopt = {
         allows_duplicates = false,
         commalist = true,
@@ -741,6 +791,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     completeslash = {
         allows_duplicates = true,
         commalist = false,
@@ -756,6 +807,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     concealcursor = {
         allows_duplicates = true,
         commalist = false,
@@ -771,6 +823,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     conceallevel = {
         allows_duplicates = true,
         commalist = false,
@@ -786,6 +839,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     confirm = {
         allows_duplicates = true,
         commalist = false,
@@ -801,6 +855,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     copyindent = {
         allows_duplicates = true,
         commalist = false,
@@ -816,6 +871,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cpoptions = {
         allows_duplicates = true,
         commalist = false,
@@ -831,6 +887,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     cursorbind = {
         allows_duplicates = true,
         commalist = false,
@@ -846,6 +903,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cursorcolumn = {
         allows_duplicates = true,
         commalist = false,
@@ -861,6 +919,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cursorline = {
         allows_duplicates = true,
         commalist = false,
@@ -876,6 +935,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     cursorlineopt = {
         allows_duplicates = false,
         commalist = true,
@@ -891,6 +951,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     debug = {
         allows_duplicates = true,
         commalist = false,
@@ -906,6 +967,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     define = {
         allows_duplicates = true,
         commalist = false,
@@ -921,6 +983,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     delcombine = {
         allows_duplicates = true,
         commalist = false,
@@ -936,6 +999,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     dictionary = {
         allows_duplicates = false,
         commalist = true,
@@ -951,6 +1015,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     diff = {
         allows_duplicates = true,
         commalist = false,
@@ -966,6 +1031,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     diffexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -981,6 +1047,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     diffopt = {
         allows_duplicates = false,
         commalist = true,
@@ -996,6 +1063,8 @@ local opts = {
         type = "string",
         was_set = false
     },
+
+
     digraph = {
         allows_duplicates = true,
         commalist = false,
@@ -1011,6 +1080,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     directory = {
         allows_duplicates = false,
         commalist = true,
@@ -1026,6 +1096,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     display = {
         allows_duplicates = false,
         commalist = true,
@@ -1041,6 +1112,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     eadirection = {
         allows_duplicates = true,
         commalist = false,
@@ -1056,6 +1128,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     edcompatible = {
         allows_duplicates = true,
         commalist = false,
@@ -1071,6 +1144,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     emoji = {
         allows_duplicates = true,
         commalist = false,
@@ -1086,6 +1160,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     encoding = {
         allows_duplicates = true,
         commalist = false,
@@ -1101,6 +1176,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     endoffile = {
         allows_duplicates = true,
         commalist = false,
@@ -1116,6 +1192,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     endofline = {
         allows_duplicates = true,
         commalist = false,
@@ -1131,6 +1208,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     equalalways = {
         allows_duplicates = true,
         commalist = false,
@@ -1146,6 +1224,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     equalprg = {
         allows_duplicates = true,
         commalist = false,
@@ -1161,6 +1240,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     errorbells = {
         allows_duplicates = true,
         commalist = false,
@@ -1176,6 +1256,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     errorfile = {
         allows_duplicates = true,
         commalist = false,
@@ -1191,6 +1272,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     errorformat = {
         allows_duplicates = false,
         commalist = true,
@@ -1206,6 +1288,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     eventignore = {
         allows_duplicates = false,
         commalist = true,
@@ -1221,6 +1304,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     expandtab = {
         allows_duplicates = true,
         commalist = false,
@@ -1236,6 +1320,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     exrc = {
         allows_duplicates = true,
         commalist = false,
@@ -1251,6 +1336,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     fileencoding = {
         allows_duplicates = true,
         commalist = false,
@@ -1266,6 +1352,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fileencodings = {
         allows_duplicates = false,
         commalist = true,
@@ -1281,6 +1368,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fileformat = {
         allows_duplicates = true,
         commalist = false,
@@ -1296,6 +1384,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fileformats = {
         allows_duplicates = false,
         commalist = true,
@@ -1311,6 +1400,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fileignorecase = {
         allows_duplicates = true,
         commalist = false,
@@ -1326,6 +1416,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     filetype = {
         allows_duplicates = true,
         commalist = false,
@@ -1341,6 +1432,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fillchars = {
         allows_duplicates = false,
         commalist = true,
@@ -1356,6 +1448,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fixendofline = {
         allows_duplicates = true,
         commalist = false,
@@ -1371,6 +1464,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     foldclose = {
         allows_duplicates = false,
         commalist = true,
@@ -1386,6 +1480,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldcolumn = {
         allows_duplicates = true,
         commalist = false,
@@ -1401,6 +1496,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldenable = {
         allows_duplicates = true,
         commalist = false,
@@ -1416,6 +1512,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     foldexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -1431,6 +1528,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldignore = {
         allows_duplicates = true,
         commalist = false,
@@ -1446,6 +1544,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldlevel = {
         allows_duplicates = true,
         commalist = false,
@@ -1461,6 +1560,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     foldlevelstart = {
         allows_duplicates = true,
         commalist = false,
@@ -1476,6 +1576,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     foldmarker = {
         allows_duplicates = false,
         commalist = true,
@@ -1491,6 +1592,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldmethod = {
         allows_duplicates = true,
         commalist = false,
@@ -1506,6 +1608,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldminlines = {
         allows_duplicates = true,
         commalist = false,
@@ -1521,6 +1624,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     foldnestmax = {
         allows_duplicates = true,
         commalist = false,
@@ -1536,6 +1640,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     foldopen = {
         allows_duplicates = false,
         commalist = true,
@@ -1551,6 +1656,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     foldtext = {
         allows_duplicates = true,
         commalist = false,
@@ -1566,6 +1672,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     formatexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -1581,6 +1688,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     formatlistpat = {
         allows_duplicates = true,
         commalist = false,
@@ -1596,6 +1704,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     formatoptions = {
         allows_duplicates = true,
         commalist = false,
@@ -1611,6 +1720,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     formatprg = {
         allows_duplicates = true,
         commalist = false,
@@ -1626,6 +1736,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     fsync = {
         allows_duplicates = true,
         commalist = false,
@@ -1641,6 +1752,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     gdefault = {
         allows_duplicates = true,
         commalist = false,
@@ -1656,6 +1768,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     grepformat = {
         allows_duplicates = false,
         commalist = true,
@@ -1671,6 +1784,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     grepprg = {
         allows_duplicates = true,
         commalist = false,
@@ -1686,6 +1800,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     guicursor = {
         allows_duplicates = false,
         commalist = true,
@@ -1701,6 +1816,7 @@ local opts = {
         type = "string",
         was_set = true
     },
+
     guifont = {
         allows_duplicates = false,
         commalist = true,
@@ -1716,6 +1832,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     guifontwide = {
         allows_duplicates = false,
         commalist = true,
@@ -1731,6 +1848,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     guioptions = {
         allows_duplicates = true,
         commalist = false,
@@ -1746,6 +1864,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     guitablabel = {
         allows_duplicates = true,
         commalist = false,
@@ -1761,6 +1880,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     guitabtooltip = {
         allows_duplicates = true,
         commalist = false,
@@ -1776,6 +1896,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     helpfile = {
         allows_duplicates = true,
         commalist = false,
@@ -1791,6 +1912,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     helpheight = {
         allows_duplicates = true,
         commalist = false,
@@ -1806,6 +1928,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     helplang = {
         allows_duplicates = false,
         commalist = true,
@@ -1821,6 +1944,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     hidden = {
         allows_duplicates = true,
         commalist = false,
@@ -1836,6 +1960,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     highlight = {
         allows_duplicates = false,
         commalist = true,
@@ -1851,6 +1976,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     history = {
         allows_duplicates = true,
         commalist = false,
@@ -1866,6 +1992,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     hkmap = {
         allows_duplicates = true,
         commalist = false,
@@ -1881,6 +2008,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     hkmapp = {
         allows_duplicates = true,
         commalist = false,
@@ -1896,6 +2024,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     hlsearch = {
         allows_duplicates = true,
         commalist = false,
@@ -1911,6 +2040,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     icon = {
         allows_duplicates = true,
         commalist = false,
@@ -1926,6 +2056,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     iconstring = {
         allows_duplicates = true,
         commalist = false,
@@ -1941,6 +2072,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     ignorecase = {
         allows_duplicates = true,
         commalist = false,
@@ -1956,6 +2088,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     imcmdline = {
         allows_duplicates = true,
         commalist = false,
@@ -1971,6 +2104,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     imdisable = {
         allows_duplicates = true,
         commalist = false,
@@ -1986,6 +2120,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     iminsert = {
         allows_duplicates = true,
         commalist = false,
@@ -2001,6 +2136,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     imsearch = {
         allows_duplicates = true,
         commalist = false,
@@ -2016,6 +2152,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     inccommand = {
         allows_duplicates = true,
         commalist = false,
@@ -2031,6 +2168,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     include = {
         allows_duplicates = true,
         commalist = false,
@@ -2046,6 +2184,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     includeexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -2061,6 +2200,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     incsearch = {
         allows_duplicates = true,
         commalist = false,
@@ -2076,6 +2216,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     indentexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -2091,6 +2232,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     indentkeys = {
         allows_duplicates = false,
         commalist = true,
@@ -2106,6 +2248,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     infercase = {
         allows_duplicates = true,
         commalist = false,
@@ -2121,6 +2264,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     insertmode = {
         allows_duplicates = true,
         commalist = false,
@@ -2136,6 +2280,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     isfname = {
         allows_duplicates = false,
         commalist = true,
@@ -2151,6 +2296,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     isident = {
         allows_duplicates = false,
         commalist = true,
@@ -2166,6 +2312,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     iskeyword = {
         allows_duplicates = false,
         commalist = true,
@@ -2181,6 +2328,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     isprint = {
         allows_duplicates = false,
         commalist = true,
@@ -2196,6 +2344,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     joinspaces = {
         allows_duplicates = true,
         commalist = false,
@@ -2211,6 +2360,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     jumpoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -2226,6 +2376,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     keymap = {
         allows_duplicates = true,
         commalist = false,
@@ -2241,6 +2392,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     keymodel = {
         allows_duplicates = false,
         commalist = true,
@@ -2256,6 +2408,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     keywordprg = {
         allows_duplicates = true,
         commalist = false,
@@ -2271,6 +2424,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     langmap = {
         allows_duplicates = false,
         commalist = true,
@@ -2286,6 +2440,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     langmenu = {
         allows_duplicates = true,
         commalist = false,
@@ -2301,6 +2456,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     langnoremap = {
         allows_duplicates = true,
         commalist = false,
@@ -2316,6 +2472,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     langremap = {
         allows_duplicates = true,
         commalist = false,
@@ -2331,6 +2488,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     laststatus = {
         allows_duplicates = true,
         commalist = false,
@@ -2346,6 +2504,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     lazyredraw = {
         allows_duplicates = true,
         commalist = false,
@@ -2361,6 +2520,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     linebreak = {
         allows_duplicates = true,
         commalist = false,
@@ -2376,6 +2536,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     lines = {
         allows_duplicates = true,
         commalist = false,
@@ -2391,6 +2552,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     linespace = {
         allows_duplicates = true,
         commalist = false,
@@ -2406,6 +2568,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     lisp = {
         allows_duplicates = true,
         commalist = false,
@@ -2421,6 +2584,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     lispoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -2436,6 +2600,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     lispwords = {
         allows_duplicates = false,
         commalist = true,
@@ -2451,6 +2616,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     list = {
         allows_duplicates = true,
         commalist = false,
@@ -2466,6 +2632,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     listchars = {
         allows_duplicates = false,
         commalist = true,
@@ -2481,6 +2648,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     loadplugins = {
         allows_duplicates = true,
         commalist = false,
@@ -2496,6 +2664,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     magic = {
         allows_duplicates = true,
         commalist = false,
@@ -2511,6 +2680,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     makeef = {
         allows_duplicates = true,
         commalist = false,
@@ -2526,6 +2696,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     makeencoding = {
         allows_duplicates = true,
         commalist = false,
@@ -2541,6 +2712,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     makeprg = {
         allows_duplicates = true,
         commalist = false,
@@ -2556,6 +2728,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     matchpairs = {
         allows_duplicates = false,
         commalist = true,
@@ -2571,6 +2744,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     matchtime = {
         allows_duplicates = true,
         commalist = false,
@@ -2586,6 +2760,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     maxcombine = {
         allows_duplicates = true,
         commalist = false,
@@ -2601,6 +2776,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     maxfuncdepth = {
         allows_duplicates = true,
         commalist = false,
@@ -2616,6 +2792,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     maxmapdepth = {
         allows_duplicates = true,
         commalist = false,
@@ -2631,6 +2808,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     maxmempattern = {
         allows_duplicates = true,
         commalist = false,
@@ -2646,6 +2824,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     menuitems = {
         allows_duplicates = true,
         commalist = false,
@@ -2661,6 +2840,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     mkspellmem = {
         allows_duplicates = true,
         commalist = false,
@@ -2676,6 +2856,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     modeline = {
         allows_duplicates = true,
         commalist = false,
@@ -2691,6 +2872,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     modelineexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -2706,6 +2888,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     modelines = {
         allows_duplicates = true,
         commalist = false,
@@ -2721,6 +2904,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     modifiable = {
         allows_duplicates = true,
         commalist = false,
@@ -2736,6 +2920,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     modified = {
         allows_duplicates = true,
         commalist = false,
@@ -2751,6 +2936,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     more = {
         allows_duplicates = true,
         commalist = false,
@@ -2766,6 +2952,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     mouse = {
         allows_duplicates = true,
         commalist = false,
@@ -2781,6 +2968,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     mousefocus = {
         allows_duplicates = true,
         commalist = false,
@@ -2796,6 +2984,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     mousehide = {
         allows_duplicates = true,
         commalist = false,
@@ -2811,6 +3000,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     mousemodel = {
         allows_duplicates = true,
         commalist = false,
@@ -2826,6 +3016,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     mousemoveevent = {
         allows_duplicates = true,
         commalist = false,
@@ -2841,6 +3032,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     mousescroll = {
         allows_duplicates = true,
         commalist = true,
@@ -2856,6 +3048,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     mouseshape = {
         allows_duplicates = false,
         commalist = true,
@@ -2871,6 +3064,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     mousetime = {
         allows_duplicates = true,
         commalist = false,
@@ -2886,6 +3080,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     nrformats = {
         allows_duplicates = false,
         commalist = true,
@@ -2901,6 +3096,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     number = {
         allows_duplicates = true,
         commalist = false,
@@ -2916,6 +3112,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     numberwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -2931,6 +3128,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     omnifunc = {
         allows_duplicates = true,
         commalist = false,
@@ -2946,6 +3144,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     opendevice = {
         allows_duplicates = true,
         commalist = false,
@@ -2961,6 +3160,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     operatorfunc = {
         allows_duplicates = true,
         commalist = false,
@@ -2976,6 +3176,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     packpath = {
         allows_duplicates = false,
         commalist = true,
@@ -2991,6 +3192,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     paragraphs = {
         allows_duplicates = true,
         commalist = false,
@@ -3006,6 +3208,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     paste = {
         allows_duplicates = true,
         commalist = false,
@@ -3021,6 +3224,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     pastetoggle = {
         allows_duplicates = true,
         commalist = false,
@@ -3036,6 +3240,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     patchexpr = {
         allows_duplicates = true,
         commalist = false,
@@ -3051,6 +3256,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     patchmode = {
         allows_duplicates = true,
         commalist = false,
@@ -3066,6 +3272,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     path = {
         allows_duplicates = false,
         commalist = true,
@@ -3081,6 +3288,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     preserveindent = {
         allows_duplicates = true,
         commalist = false,
@@ -3096,6 +3304,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     previewheight = {
         allows_duplicates = true,
         commalist = false,
@@ -3111,6 +3320,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     previewwindow = {
         allows_duplicates = true,
         commalist = false,
@@ -3126,6 +3336,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     prompt = {
         allows_duplicates = true,
         commalist = false,
@@ -3141,6 +3352,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     pumblend = {
         allows_duplicates = true,
         commalist = false,
@@ -3156,6 +3368,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     pumheight = {
         allows_duplicates = true,
         commalist = false,
@@ -3171,6 +3384,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     pumwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -3186,6 +3400,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     pyxversion = {
         allows_duplicates = true,
         commalist = false,
@@ -3201,6 +3416,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     quickfixtextfunc = {
         allows_duplicates = true,
         commalist = false,
@@ -3216,6 +3432,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     quoteescape = {
         allows_duplicates = true,
         commalist = false,
@@ -3231,6 +3448,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     readonly = {
         allows_duplicates = true,
         commalist = false,
@@ -3246,6 +3464,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     redrawdebug = {
         allows_duplicates = true,
         commalist = true,
@@ -3261,6 +3480,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     redrawtime = {
         allows_duplicates = true,
         commalist = false,
@@ -3276,6 +3496,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     regexpengine = {
         allows_duplicates = true,
         commalist = false,
@@ -3291,6 +3512,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     relativenumber = {
         allows_duplicates = true,
         commalist = false,
@@ -3306,6 +3528,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     remap = {
         allows_duplicates = true,
         commalist = false,
@@ -3321,6 +3544,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     report = {
         allows_duplicates = true,
         commalist = false,
@@ -3336,6 +3560,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     revins = {
         allows_duplicates = true,
         commalist = false,
@@ -3351,6 +3576,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     rightleft = {
         allows_duplicates = true,
         commalist = false,
@@ -3366,6 +3592,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     rightleftcmd = {
         allows_duplicates = true,
         commalist = false,
@@ -3381,6 +3608,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     ruler = {
         allows_duplicates = true,
         commalist = false,
@@ -3396,6 +3624,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     rulerformat = {
         allows_duplicates = true,
         commalist = false,
@@ -3411,6 +3640,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     runtimepath = {
         allows_duplicates = false,
         commalist = true,
@@ -3426,6 +3656,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     scroll = {
         allows_duplicates = true,
         commalist = false,
@@ -3441,6 +3672,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     scrollback = {
         allows_duplicates = true,
         commalist = false,
@@ -3456,6 +3688,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     scrollbind = {
         allows_duplicates = true,
         commalist = false,
@@ -3471,6 +3704,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     scrolljump = {
         allows_duplicates = true,
         commalist = false,
@@ -3486,6 +3720,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     scrolloff = {
         allows_duplicates = true,
         commalist = false,
@@ -3501,6 +3736,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     scrollopt = {
         allows_duplicates = false,
         commalist = true,
@@ -3516,6 +3752,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     sections = {
         allows_duplicates = true,
         commalist = false,
@@ -3531,6 +3768,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     secure = {
         allows_duplicates = true,
         commalist = false,
@@ -3546,6 +3784,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     selection = {
         allows_duplicates = true,
         commalist = false,
@@ -3561,6 +3800,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     selectmode = {
         allows_duplicates = false,
         commalist = true,
@@ -3576,6 +3816,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     sessionoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -3591,6 +3832,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shada = {
         allows_duplicates = false,
         commalist = true,
@@ -3606,6 +3848,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shadafile = {
         allows_duplicates = false,
         commalist = true,
@@ -3621,6 +3864,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shell = {
         allows_duplicates = true,
         commalist = false,
@@ -3636,6 +3880,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellcmdflag = {
         allows_duplicates = true,
         commalist = false,
@@ -3651,6 +3896,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellpipe = {
         allows_duplicates = true,
         commalist = false,
@@ -3666,6 +3912,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellquote = {
         allows_duplicates = true,
         commalist = false,
@@ -3681,6 +3928,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellredir = {
         allows_duplicates = true,
         commalist = false,
@@ -3696,6 +3944,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellslash = {
         allows_duplicates = true,
         commalist = false,
@@ -3711,6 +3960,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     shelltemp = {
         allows_duplicates = true,
         commalist = false,
@@ -3726,6 +3976,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     shellxescape = {
         allows_duplicates = true,
         commalist = false,
@@ -3741,6 +3992,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shellxquote = {
         allows_duplicates = true,
         commalist = false,
@@ -3756,6 +4008,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     shiftround = {
         allows_duplicates = true,
         commalist = false,
@@ -3771,6 +4024,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     shiftwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -3786,6 +4040,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     shortmess = {
         allows_duplicates = true,
         commalist = false,
@@ -3801,6 +4056,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     showbreak = {
         allows_duplicates = true,
         commalist = false,
@@ -3816,6 +4072,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     showcmd = {
         allows_duplicates = true,
         commalist = false,
@@ -3831,6 +4088,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     showcmdloc = {
         allows_duplicates = true,
         commalist = false,
@@ -3846,6 +4104,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     showfulltag = {
         allows_duplicates = true,
         commalist = false,
@@ -3861,6 +4120,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     showmatch = {
         allows_duplicates = true,
         commalist = false,
@@ -3876,6 +4136,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     showmode = {
         allows_duplicates = true,
         commalist = false,
@@ -3891,6 +4152,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     showtabline = {
         allows_duplicates = true,
         commalist = false,
@@ -3906,6 +4168,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     sidescroll = {
         allows_duplicates = true,
         commalist = false,
@@ -3921,6 +4184,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     sidescrolloff = {
         allows_duplicates = true,
         commalist = false,
@@ -3936,6 +4200,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     signcolumn = {
         allows_duplicates = true,
         commalist = false,
@@ -3951,6 +4216,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     smartcase = {
         allows_duplicates = true,
         commalist = false,
@@ -3966,6 +4232,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     smartindent = {
         allows_duplicates = true,
         commalist = false,
@@ -3981,6 +4248,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     smarttab = {
         allows_duplicates = true,
         commalist = false,
@@ -3996,6 +4264,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     smoothscroll = {
         allows_duplicates = true,
         commalist = false,
@@ -4011,6 +4280,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     softtabstop = {
         allows_duplicates = true,
         commalist = false,
@@ -4026,6 +4296,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     spell = {
         allows_duplicates = true,
         commalist = false,
@@ -4041,6 +4312,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     spellcapcheck = {
         allows_duplicates = true,
         commalist = false,
@@ -4056,6 +4328,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     spellfile = {
         allows_duplicates = false,
         commalist = true,
@@ -4071,6 +4344,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     spelllang = {
         allows_duplicates = false,
         commalist = true,
@@ -4086,6 +4360,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     spelloptions = {
         allows_duplicates = false,
         commalist = true,
@@ -4101,6 +4376,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     spellsuggest = {
         allows_duplicates = false,
         commalist = true,
@@ -4116,6 +4392,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     splitbelow = {
         allows_duplicates = true,
         commalist = false,
@@ -4131,6 +4408,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     splitkeep = {
         allows_duplicates = true,
         commalist = false,
@@ -4146,6 +4424,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     splitright = {
         allows_duplicates = true,
         commalist = false,
@@ -4161,6 +4440,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     startofline = {
         allows_duplicates = true,
         commalist = false,
@@ -4176,6 +4456,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     statuscolumn = {
         allows_duplicates = true,
         commalist = false,
@@ -4191,6 +4472,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     statusline = {
         allows_duplicates = true,
         commalist = false,
@@ -4206,6 +4488,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     suffixes = {
         allows_duplicates = false,
         commalist = true,
@@ -4221,6 +4504,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     suffixesadd = {
         allows_duplicates = false,
         commalist = true,
@@ -4236,6 +4520,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     swapfile = {
         allows_duplicates = true,
         commalist = false,
@@ -4251,6 +4536,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     switchbuf = {
         allows_duplicates = false,
         commalist = true,
@@ -4266,6 +4552,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     synmaxcol = {
         allows_duplicates = true,
         commalist = false,
@@ -4281,6 +4568,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     syntax = {
         allows_duplicates = true,
         commalist = false,
@@ -4296,6 +4584,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     tabline = {
         allows_duplicates = true,
         commalist = false,
@@ -4311,6 +4600,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     tabpagemax = {
         allows_duplicates = true,
         commalist = false,
@@ -4326,6 +4616,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     tabstop = {
         allows_duplicates = true,
         commalist = false,
@@ -4341,6 +4632,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     tagbsearch = {
         allows_duplicates = true,
         commalist = false,
@@ -4356,6 +4648,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     tagcase = {
         allows_duplicates = true,
         commalist = false,
@@ -4371,6 +4664,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     tagfunc = {
         allows_duplicates = true,
         commalist = false,
@@ -4386,6 +4680,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     taglength = {
         allows_duplicates = true,
         commalist = false,
@@ -4401,6 +4696,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     tagrelative = {
         allows_duplicates = true,
         commalist = false,
@@ -4416,6 +4712,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     tags = {
         allows_duplicates = false,
         commalist = true,
@@ -4431,6 +4728,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     tagstack = {
         allows_duplicates = true,
         commalist = false,
@@ -4446,6 +4744,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     termbidi = {
         allows_duplicates = true,
         commalist = false,
@@ -4461,6 +4760,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     termencoding = {
         allows_duplicates = true,
         commalist = false,
@@ -4476,6 +4776,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     termguicolors = {
         allows_duplicates = true,
         commalist = false,
@@ -4491,6 +4792,7 @@ local opts = {
         type = "boolean",
         was_set = true
     },
+
     termpastefilter = {
         allows_duplicates = false,
         commalist = true,
@@ -4506,6 +4808,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     termsync = {
         allows_duplicates = true,
         commalist = false,
@@ -4521,6 +4824,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     terse = {
         allows_duplicates = true,
         commalist = false,
@@ -4536,6 +4840,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     textwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -4551,6 +4856,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     thesaurus = {
         allows_duplicates = false,
         commalist = true,
@@ -4566,6 +4872,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     thesaurusfunc = {
         allows_duplicates = true,
         commalist = false,
@@ -4581,6 +4888,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     tildeop = {
         allows_duplicates = true,
         commalist = false,
@@ -4596,6 +4904,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     timeout = {
         allows_duplicates = true,
         commalist = false,
@@ -4611,6 +4920,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     timeoutlen = {
         allows_duplicates = true,
         commalist = false,
@@ -4626,6 +4936,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     title = {
         allows_duplicates = true,
         commalist = false,
@@ -4641,6 +4952,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     titlelen = {
         allows_duplicates = true,
         commalist = false,
@@ -4656,6 +4968,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     titleold = {
         allows_duplicates = true,
         commalist = false,
@@ -4671,6 +4984,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     titlestring = {
         allows_duplicates = true,
         commalist = false,
@@ -4686,6 +5000,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     ttimeout = {
         allows_duplicates = true,
         commalist = false,
@@ -4701,6 +5016,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     ttimeoutlen = {
         allows_duplicates = true,
         commalist = false,
@@ -4716,6 +5032,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     ttyfast = {
         allows_duplicates = true,
         commalist = false,
@@ -4731,6 +5048,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     undodir = {
         allows_duplicates = false,
         commalist = true,
@@ -4746,6 +5064,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     undofile = {
         allows_duplicates = true,
         commalist = false,
@@ -4761,6 +5080,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     undolevels = {
         allows_duplicates = true,
         commalist = false,
@@ -4776,6 +5096,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     undoreload = {
         allows_duplicates = true,
         commalist = false,
@@ -4791,6 +5112,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     updatecount = {
         allows_duplicates = true,
         commalist = false,
@@ -4806,6 +5128,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     updatetime = {
         allows_duplicates = true,
         commalist = false,
@@ -4821,6 +5144,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     varsofttabstop = {
         allows_duplicates = true,
         commalist = true,
@@ -4836,6 +5160,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     vartabstop = {
         allows_duplicates = true,
         commalist = true,
@@ -4851,6 +5176,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     verbose = {
         allows_duplicates = true,
         commalist = false,
@@ -4866,6 +5192,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     verbosefile = {
         allows_duplicates = true,
         commalist = false,
@@ -4881,6 +5208,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     viewdir = {
         allows_duplicates = true,
         commalist = false,
@@ -4896,6 +5224,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     viewoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -4911,6 +5240,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     viminfo = {
         allows_duplicates = true,
         commalist = false,
@@ -4926,6 +5256,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     viminfofile = {
         allows_duplicates = true,
         commalist = false,
@@ -4941,6 +5272,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     virtualedit = {
         allows_duplicates = false,
         commalist = true,
@@ -4956,6 +5288,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     visualbell = {
         allows_duplicates = true,
         commalist = false,
@@ -4971,6 +5304,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     warn = {
         allows_duplicates = true,
         commalist = false,
@@ -4986,6 +5320,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     whichwrap = {
         allows_duplicates = true,
         commalist = true,
@@ -5001,6 +5336,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     wildchar = {
         allows_duplicates = true,
         commalist = false,
@@ -5016,6 +5352,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     wildcharm = {
         allows_duplicates = true,
         commalist = false,
@@ -5031,6 +5368,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     wildignore = {
         allows_duplicates = false,
         commalist = true,
@@ -5046,6 +5384,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     wildignorecase = {
         allows_duplicates = true,
         commalist = false,
@@ -5061,6 +5400,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     wildmenu = {
         allows_duplicates = true,
         commalist = false,
@@ -5076,6 +5416,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     wildmode = {
         allows_duplicates = true,
         commalist = true,
@@ -5091,6 +5432,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     wildoptions = {
         allows_duplicates = false,
         commalist = true,
@@ -5106,6 +5448,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     winaltkeys = {
         allows_duplicates = true,
         commalist = false,
@@ -5121,6 +5464,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     winbar = {
         allows_duplicates = true,
         commalist = false,
@@ -5136,6 +5480,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     winblend = {
         allows_duplicates = true,
         commalist = false,
@@ -5151,6 +5496,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     window = {
         allows_duplicates = true,
         commalist = false,
@@ -5166,6 +5512,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     winfixheight = {
         allows_duplicates = true,
         commalist = false,
@@ -5181,6 +5528,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     winfixwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -5196,6 +5544,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     winheight = {
         allows_duplicates = true,
         commalist = false,
@@ -5211,6 +5560,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     winhighlight = {
         allows_duplicates = false,
         commalist = true,
@@ -5226,6 +5576,7 @@ local opts = {
         type = "string",
         was_set = false
     },
+
     winminheight = {
         allows_duplicates = true,
         commalist = false,
@@ -5241,6 +5592,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     winminwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -5256,6 +5608,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     winwidth = {
         allows_duplicates = true,
         commalist = false,
@@ -5271,6 +5624,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     wrap = {
         allows_duplicates = true,
         commalist = false,
@@ -5286,6 +5640,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     wrapmargin = {
         allows_duplicates = true,
         commalist = false,
@@ -5301,6 +5656,7 @@ local opts = {
         type = "number",
         was_set = false
     },
+
     wrapscan = {
         allows_duplicates = true,
         commalist = false,
@@ -5316,6 +5672,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     write = {
         allows_duplicates = true,
         commalist = false,
@@ -5331,6 +5688,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     writeany = {
         allows_duplicates = true,
         commalist = false,
@@ -5346,6 +5704,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     writebackup = {
         allows_duplicates = true,
         commalist = false,
@@ -5361,6 +5720,7 @@ local opts = {
         type = "boolean",
         was_set = false
     },
+
     writedelay = {
         allows_duplicates = true,
         commalist = false,
