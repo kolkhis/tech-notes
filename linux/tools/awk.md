@@ -23,21 +23,25 @@ If there's an example that doesn't start with `awk`, this applies.
 ## Table of Contents  
 
 * [Syntax](#syntax)  
-* [Field and Record Separators](#field-and-record-separators)  
-* [Simple Examples](#simple-examples)  
-    * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file)  
-    * [Searching for a Pattern in the Entire Line](#searching-for-a-pattern-in-the-entire-line)  
-    * [Modifying an Entire Line](#modifying-an-entire-line)  
-* [Built-in Variables in awk](#built-in-variables-in-awk)  
-* [Line Variables (Field Variables)](#line-variables-field-variables)  
+* [Field and Record Separators](#field-and-record-separators)
+* [Simple Examples](#simple-examples)
+    * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file)
+    * [Searching for a Pattern in the Entire Line](#searching-for-a-pattern-in-the-entire-line)
+    * [Modifying an Entire Line](#modifying-an-entire-line)
+* [Variables in Awk](#variables-in-awk)
+    * [Built-in Variables](#built-in-variables)
+    * [Line Variables (Field Variables)](#line-variables-field-variables)
+    * [Declaring Variables](#declaring-variables)
 * [Patterns and Actions](#patterns-and-actions)  
-* [Useful Builtin Functions](#useful-builtin-functions)  
-* [Control Structures (Conditionals) in awk](#control-structures-conditionals-in-awk)  
+* [Useful Builtin Functions](#useful-builtin-functions)
+    * [Example](#example)
+* [Control Structures](#control-structures-in-awk)
 * [Passing External Variables](#passing-external-variables)  
 * [Builtin Functions](#builtin-functions)  
     * [Awk String Functions](#awk-string-functions)  
     * [Awk Numeric Functions](#awk-numeric-functions)  
     * [Awk Time Functions](#awk-time-functions-gnu-awk)  
+
 
 
 ## Syntax  
@@ -149,7 +153,7 @@ Print the length of the second field:
 awk '{print length($2)}' file.txt  
 ```
 
-## Control Structures in awk  
+## Control Structures in Awk  
 
 `awk` supports common control structures like `if-else`, `while`, `for`, and `do-while`.  
 
