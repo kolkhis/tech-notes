@@ -104,10 +104,22 @@ This will add the "x" item and sort the new list.
 
 
 ## Local Argument List  
-Make a local copy of the global argument list.  
 
-| **Command**                | **Short Name**                | **Effect**                
-|----------------------------|------------------------|------------------------------
+There can be several argument lists, and they can be shared between windows.
+When a window is split, the new window inherits the arglist from the current window.
+ 
+The two windows then share this list, until one of them uses
+`:arglocal` or `:argglobal` to use another argument list.
+ 
+When they're shared, changing the argument list in one window
+will also change it in the other window.
+
+
+If you make a local copy of the global argument list, and
+that window will use the local list instead of the global list.
+
+| **Command** | **Short Name** | **Effect**                
+|-|-|-
 |  `:arglocal`  | `:argl` | Make a **local** copy of the **global** arglist. Doesn't start editing another file. 
 |  `:argglobal` | `:argg` | Use the **global** arglist for current window. Doesn't start editing another file. 
 |  `:arglocal[!] {list}` | `:argl[!] {list}` | Define a new **local** arglist, local to current window. 
