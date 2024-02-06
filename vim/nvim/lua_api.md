@@ -1,108 +1,105 @@
 
 # Neovim's Lua API  
-> ##### *:h api*  
-> ##### *:h lua-loop*  
-> ##### *:h lua-vim*  
-> ##### *:h Lua*  
-> ##### *:h luaref*  
+Always either `vim.print()` or `vim.inspect()` tables.  
 
-Always `vim.inspect()` tables.  
 
-## Getting the current line or a range of lines
-### Getting the current line
-To get the current line, use any of the following functions.
 
-#### Using the Nvim API
-The simplest method using the Nvim API:
+
+## Getting the current line or a range of lines  
+### Getting the current line  
+To get the current line, use any of the following functions.  
+
+#### Using the Nvim API  
+The simplest method using the Nvim API:  
 * `vim.api.nvim_get_current_line()`
-```lua
-local line = vim.api.nvim_get_current_line()
+```lua  
+local line = vim.api.nvim_get_current_line()  
 ```
   
-#### Using Vimscript functions
-The simplest method using a Vimscript function:
-* A Vimscript function, `vim.fn.getline()`:
-```lua
-local line = vim.fn.getline('.')
+#### Using Vimscript functions  
+The simplest method using a Vimscript function:  
+* A Vimscript function, `vim.fn.getline()`:  
+```lua  
+local line = vim.fn.getline('.')  
 ```
   
-Less simple Vimscript methods:
+Less simple Vimscript methods:  
 * To get only a single line, `vim.fn.getbufoneline(bufnr, linenr)`
-```lua
-local line = vim.fn.getbufoneline(vim.fn.bufnr('%'), linenr)
+```lua  
+local line = vim.fn.getbufoneline(vim.fn.bufnr('%'), linenr)  
 ```
 
 Both of those methods return the line the cursor is currently on.  
 
-### Getting a range of lines
-To get a range of lines, use:
-* `vim.api.nvim_buf_get_lines(buf, start, end, strict_indexing)`:
-    * This function uses zero-based indexing for line numbers.
+### Getting a range of lines  
+To get a range of lines, use:  
+* `vim.api.nvim_buf_get_lines(buf, start, end, strict_indexing)`:  
+    * This function uses zero-based indexing for line numbers.  
         * i.e., line number `0` is the first line.  
     * The `end` is non-inclusive.  
     * Pass `0` to `buf` to use the current buffer.  
 
-```lua
---- Get the first 10 lines of the current buffer
-local first_ten_lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
+```lua  
+--- Get the first 10 lines of the current buffer  
+local first_ten_lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)  
  
---- Get everything from line 10 to the end of the buffer
-local lines_from_10_to_end = vim.api.nvim_buf_get_lines(0, 10, -1, false)
+--- Get everything from line 10 to the end of the buffer  
+local lines_from_10_to_end = vim.api.nvim_buf_get_lines(0, 10, -1, false)  
  
--- Get the current line and the line after
-local line_no = vim.fn.line('.')
-local line = vim.api.nvim_buf_get_lines(0, line_no - 1, line_no + 1, true)
+-- Get the current line and the line after  
+local line_no = vim.fn.line('.')  
+local line = vim.api.nvim_buf_get_lines(0, line_no - 1, line_no + 1, true)  
 ```
 
-Alternatively, you can use a Vimscript function:
+Alternatively, you can use a Vimscript function:  
 * `vim.fn.getbufline(buf, start, end)`
-    * This is similar to `vim.api.nvim_buf_get_lines()`, but uses 1-based indexing
+    * This is similar to `vim.api.nvim_buf_get_lines()`, but uses 1-based indexing  
       for line numbers.  
-        * i.e., line number `1` is the first line.
-    * It returns a table of lines, based on the given line number, in
-      the given buffer (`%` for current buffer).
+        * i.e., line number `1` is the first line.  
+    * It returns a table of lines, based on the given line number, in  
+      the given buffer (`%` for current buffer).  
     * To get the current buffer number, use `vim.fn.bufnr('%')`
 
-```lua
--- Get the current line
-local line_no = vim.fn.line('.')
-local line = vim.fn.getbufline(vim.fn.bufnr('%'), line_no)[1]
--- or
-local line = vim.fn.getbufline('%', line_no)[1]
+```lua  
+-- Get the current line  
+local line_no = vim.fn.line('.')  
+local line = vim.fn.getbufline(vim.fn.bufnr('%'), line_no)[1]  
+-- or  
+local line = vim.fn.getbufline('%', line_no)[1]  
  
--- Get the current line and the line after
-local lines = vim.fn.getbufline('%', line_no, line_no + 1)
+-- Get the current line and the line after  
+local lines = vim.fn.getbufline('%', line_no, line_no + 1)  
  
--- Get the first 10 lines of the current buffer
-local first_ten_lines = vim.fn.getbufline(0, 0, 10)
+-- Get the first 10 lines of the current buffer  
+local first_ten_lines = vim.fn.getbufline(0, 0, 10)  
 ```
 
 
-### Getting lines of the visual selection
-First, get the line numbers of the visual selection:
-```lua
-local ln_start = unpack(vim.api.nvim_buf_get_mark(0, '<'))
-local ln_end = unpack(vim.api.nvim_buf_get_mark(0, '>'))
--- or
-local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")
+### Getting lines of the visual selection  
+First, get the line numbers of the visual selection:  
+```lua  
+local ln_start = unpack(vim.api.nvim_buf_get_mark(0, '<'))  
+local ln_end = unpack(vim.api.nvim_buf_get_mark(0, '>'))  
+-- or  
+local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")  
 ```
-Then, use `vim.api.nvim_buf_get_lines()` to get the lines:
-```lua
-local lines = vim.api.nvim_buf_get_lines(0, ln_start - 1, ln_end, false)
+Then, use `vim.api.nvim_buf_get_lines()` to get the lines:  
+```lua  
+local lines = vim.api.nvim_buf_get_lines(0, ln_start - 1, ln_end, false)  
 ```
 
-## Loop over lines of visual selection
-This function will loop over the lines of the visual selection, and
-save them into a table:
+## Loop over lines of visual selection  
+This function will loop over the lines of the visual selection, and  
+save them into a table:  
 
-```lua
-function M:loop_selection()
-    local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")
+```lua  
+function M:loop_selection()  
+    local ln_start, ln_end = vim.fn.line("'<"), vim.fn.line("'>")  
     S = {}
-    for i = ln_start, ln_end do
-        S[i] = vim.fn.getline(i)
-    end
-end
+    for i = ln_start, ln_end do  
+        S[i] = vim.fn.getline(i)  
+    end  
+end  
 ```
 
 ## Using a String as a Table Key 
@@ -142,24 +139,61 @@ vim.o.number = true
 vim.opt.number = true  
 ```
 
+---  
+
 The following methods of setting a map-style option are equivalent:  
-A map-style/dict-style option can be set in the following ways (each does same thing):  
-In Vimscript:  
+Vimscript:  
 ```vim  
 set listchars=space:_,tab:>~  
 ```
-In Lua:  
+Lua:  
 ```lua  
 vim.o.listchars = 'space:_,tab:>~'  
 -- or  
 vim.opt.listchars = { space = '_', tab = '>~' }
 ```
 
+---  
+
+### Lua Equivalents to Setting Options in Vimscript  
+To replicate the behavior of `:set+=`:  
+
+```bash  
+vim.opt.wildignore:append { `*.pyc`, `node_modules` }
+```
+
+To replicate the behavior of `:set^=`:  
+```lua  
+vim.opt.wildignore:prepend { "new_first_value" }
+```
+
+To replicate the behavior of `:set-=`:  
+```lua  
+vim.opt.wildignore:remove { "node_modules" }
+```
+
+The following methods of setting a map-style option are equivalent:  
+In Vimscript:  
+```vim  
+set listchars=space:_,tab:~  
+```
+
+In Lua using `vim.o`:  
+```lua  
+vim.o.listchars = 'space:_,tab:~'  
+```
+
+In Lua using `vim.opt`: lua  
+```lua  
+vim.opt.listchars = { space = '_', tab = '~' }
+```
+
+
 
 
 ## Option Objects  
-Note that `vim.opt` returns an `Option` object, not the value of the option,
-which is accessed through `vim.opt:get()`:  
+`vim.opt` returns an `Option` object, not the value of the option.  
+The values are accessed through `vim.opt:get()` (see [Option Object Methods](#option-object-methods)):  
 ```lua  
 vim.print(vim.opt.wildignore:get())  
 -- These are equivalent:  
@@ -183,6 +217,29 @@ To replicate the behavior of `:set-=`, use:
 ```lua  
 vim.opt.wildignore:remove({ "node_modules" })  
 ```
+
+### Option Object Methods  
+
+The `Option` object methods:  
+* `vim.opt.option_name:get()`
+    * Returns a lua representation (a table) of the object's values.  
+    * E.g., `:lua vim.print(vim.opt.listchars:get())` will print the values of `listchars`.  
+* `vim.opt.option_name:remove(value)`
+    * Removes (deletes) a value from the option (`:set-=`)  
+* `vim.opt.option_name:append(value)`
+    * Appends (inserts at the end) a value to the option (`:set+=`)  
+    * These are equivalent:  
+      ```lua  
+      vim.opt.formatoptions:append('j')  
+      vim.opt.formatoptions = vim.opt.formatoptions + 'j'  
+      ```
+* `vim.opt.option_name:prepend(value)`
+    * Prepends (inserts at the beginning) a value to the option (`:set^=`)  
+    * These are equivalent:  
+      ```lua  
+      vim.opt.wildignore:prepend('*.o')  
+      vim.opt.wildignore = vim.opt.wildignore ^ '*.o'  
+      ```
 
 
 
@@ -331,10 +388,16 @@ Get a list of all the global keymaps for a given mode:
 ```lua  
 local maps = nvim_get_keymap({'n'})  
 print(vim.inspect(vim.api.nvim_get_keymap('n')))  
+-- Or  
+vim.print(vim.api.nvim_get_keymap('n'))  
 ```
+
 Or, to get a list of *all* keymaps for all modes:  
+ 
 ```lua  
 print(vim.inspect(vim.api.nvim_get_keymap('')))  
+-- Or  
+vim.print(vim.api.nvim_get_keymap(''))  
 ```
 
 
@@ -556,53 +619,53 @@ Not supported yet:
 * `vim.tbl_isempty({t})`: Checks if a table is empty.  
 * `vim.trim({s})`: Trim whitespace (Lua pattern "%s") from both sides of a string.  
 
-Open buffers, tabs, windows, etc.:
-* `nvim_list_bufs()`: Gets the current list of buffer handles.
-* `nvim_list_tabpages()`: Gets the current list of tabpage handles.
-* `nvim_list_wins()`: Gets the current list of window handles.
-* `nvim_set_current_buf({buffer})`: Sets the current buffer.
-* `nvim_set_current_line({line})`: Sets the current line.
-* `nvim_set_current_tabpage({tabpage})`: Sets the current tabpage.
-* `nvim_set_current_win({window})`: Sets the current window.
-* `nvim_set_current_dir({dir})`: Changes the global working directory.
+Open buffers, tabs, windows, etc.:  
+* `nvim_list_bufs()`: Gets the current list of buffer handles.  
+* `nvim_list_tabpages()`: Gets the current list of tabpage handles.  
+* `nvim_list_wins()`: Gets the current list of window handles.  
+* `nvim_set_current_buf({buffer})`: Sets the current buffer.  
+* `nvim_set_current_line({line})`: Sets the current line.  
+* `nvim_set_current_tabpage({tabpage})`: Sets the current tabpage.  
+* `nvim_set_current_win({window})`: Sets the current window.  
+* `nvim_set_current_dir({dir})`: Changes the global working directory.  
 
-Variables
-* `nvim_set_var({name}, {value})`: Sets a global (g:) variable.
-* `nvim_set_vvar({name}, {value})`: Sets a v: variable, if it is not readonly.
+Variables  
+* `nvim_set_var({name}, {value})`: Sets a global (g:) variable.  
+* `nvim_set_vvar({name}, {value})`: Sets a v: variable, if it is not readonly.  
 
-Calculating what's on screen
-* `nvim_strwidth({text})`: Calculates the number of display cells occupied by `text`.
+Calculating what's on screen  
+* `nvim_strwidth({text})`: Calculates the number of display cells occupied by `text`.  
 
 
-### RPC Only:
-* `nvim_subscribe({event})`: Subscribes to event broadcasts.
-* `nvim_unsubscribe({event})`: Unsubscribes to event broadcasts.
-* `nvim_buf_detach({buffer})`: Deactivates buffer-update events on the channel.
-* `nvim_ui_attach({width}, {height}, {options})`: Activates UI events on the channel.
-* `nvim_ui_detach()`: Deactivates UI events on the channel.
-    * Not labelled RPC only, but related:
-    * `nvim_list_uis()`: Gets a list of dictionaries representing attached UIs.
-* `nvim_ui_term_event({event}, {value})`: Tells Nvim when a terminal event has occurred
-* `nvim_ui_set_focus({gained})`: Tells the nvim server if focus was gained or lost by the GUI.
+### RPC Only:  
+* `nvim_subscribe({event})`: Subscribes to event broadcasts.  
+* `nvim_unsubscribe({event})`: Unsubscribes to event broadcasts.  
+* `nvim_buf_detach({buffer})`: Deactivates buffer-update events on the channel.  
+* `nvim_ui_attach({width}, {height}, {options})`: Activates UI events on the channel.  
+* `nvim_ui_detach()`: Deactivates UI events on the channel.  
+    * Not labelled RPC only, but related:  
+    * `nvim_list_uis()`: Gets a list of dictionaries representing attached UIs.  
+* `nvim_ui_term_event({event}, {value})`: Tells Nvim when a terminal event has occurred  
+* `nvim_ui_set_focus({gained})`: Tells the nvim server if focus was gained or lost by the GUI.  
 * `nvim_set_client_info({name}, {version}, {type}, {methods}, {attributes})`
-    * Self-identifies the client.
+    * Self-identifies the client.  
 
 
 
-* `nvim_notify({msg}, {log_level}, {opts})`: Notify the user with a message.
+* `nvim_notify({msg}, {log_level}, {opts})`: Notify the user with a message.  
 
 
-* `nvim_put({lines}, {type}, {after}, {follow})`: Puts text at cursor, in any mode.
-    * Compare `:put` and `p` which are always linewise.
-* `nvim_paste({data}, {crlf}, {phase})`: Pastes at cursor, in any mode.
-    * Invokes the `vim.paste` handler, which handles each mode appropriately.
-    * Sets redo/undo. Faster than `nvim_input()`.
-* `nvim_open_term({buffer}, {*opts})`: Open a terminal instance in a buffer
-* `nvim_out_write({str})`: Writes a message to the Vim output buffer.
-* `nvim_load_context({dict})`: Sets the current editor state from the given |context| map.
+* `nvim_put({lines}, {type}, {after}, {follow})`: Puts text at cursor, in any mode.  
+    * Compare `:put` and `p` which are always linewise.  
+* `nvim_paste({data}, {crlf}, {phase})`: Pastes at cursor, in any mode.  
+    * Invokes the `vim.paste` handler, which handles each mode appropriately.  
+    * Sets redo/undo. Faster than `nvim_input()`.  
+* `nvim_open_term({buffer}, {*opts})`: Open a terminal instance in a buffer  
+* `nvim_out_write({str})`: Writes a message to the Vim output buffer.  
+* `nvim_load_context({dict})`: Sets the current editor state from the given |context| map.  
 
 
-For possible Python plugins:
+For possible Python plugins:  
 * `nvim_list_chans()`: Get information about all open channels. `:h channel`
 
 * `vim.validate({opt})`: Validates a parameter specification (types and values).  
@@ -613,20 +676,20 @@ For possible Python plugins:
             name={name, 'string'},
                 age={age, 'number'},
                 hobbies={hobbies, 'table'},
-        })
+        })  
     end  
     -- Checking values AND types  
-    vim.validate({arg1={{'foo'}, 'table'}, arg2={'foo', 'string'}})
+    vim.validate({arg1={{'foo'}, 'table'}, arg2={'foo', 'string'}})  
        --> NOP (success)  
-    vim.validate({arg1={1, 'table'}})
+    vim.validate({arg1={1, 'table'}})  
        --> error('arg1: expected table, got number')  
-    vim.validate({arg1={3, function(a) return (a % 2) == 0 end, 'even number'}})
+    vim.validate({arg1={3, function(a) return (a % 2) == 0 end, 'even number'}})  
        --> error('arg1: expected even number, got 3')  
 
     -- Multiple types can be given as a list. (Success if the type is in the list given)  
-        vim.validate({arg1={{'foo'}, {'table', 'string'}}, arg2={'foo', {'table', 'string'}}})
+        vim.validate({arg1={{'foo'}, {'table', 'string'}}, arg2={'foo', {'table', 'string'}}})  
         -- NOP (success)  
-        vim.validate({arg1={1, {'string', 'table'}}})
+        vim.validate({arg1={1, {'string', 'table'}}})  
         -- error('arg1: expected string|table, got number')  
     ```
 
@@ -634,26 +697,26 @@ For possible Python plugins:
 ## +cmd - Running Commands on Files when Opening 
 A lot of Ex commands accept `+cmd`, i.e., a command to be run on the file.  
 
-The `[+cmd]` argument can be used to position the cursor in the newly opened
-file, or execute any other command:
-| Command     |  What it Does
-|-------------|--------------
-| `+`         | Start at the last line.
-| `+{num}`    | Start at line `{num}`.
-| `+/{pat}`   | Start at first line containing `{pat}`.
-| `+{command}`| Execute `{command}` after opening the new file.
+The `[+cmd]` argument can be used to position the cursor in the newly opened  
+file, or execute any other command:  
+| Command     |  What it Does  
+|-------------|--------------  
+| `+`         | Start at the last line.  
+| `+{num}`    | Start at line `{num}`.  
+| `+/{pat}`   | Start at first line containing `{pat}`.  
+| `+{command}`| Execute `{command}` after opening the new file.  
 
-`{command}` is any Ex command.
+`{command}` is any Ex command.  
 
-To include a white space in the `{pat}` or `{command}`, precede it with a
+To include a white space in the `{pat}` or `{command}`, precede it with a  
 backslash.  Double the number of backslashes.  
-```vim
-:edit  +/The\ book           file
-:edit  +/dir\ dirname\\      file
-:edit  +set\ dir=c:\\\\temp  file
+```vim  
+:edit  +/The\ book           file  
+:edit  +/dir\ dirname\\      file  
+:edit  +set\ dir=c:\\\\temp  file  
 ```
-Note that in the last example the number of backslashes is halved twice: Once
-for the `+cmd` argument and once for the `:set` command.
+Note that in the last example the number of backslashes is halved twice: Once  
+for the `+cmd` argument and once for the `:set` command.  
 
 
 ## Terminal Codes and Key Codes  
