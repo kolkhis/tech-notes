@@ -2,7 +2,7 @@
 # Vim Regex and Pattern Matching  
 
 
-# Table of Contents  
+## Table of Contents  
 
 - [Very Magic](#very-magic)  
 - [Vim Regex and Perl Regex](#vim-regex-and-perl-regex)  
