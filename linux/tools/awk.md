@@ -41,7 +41,7 @@ If there's an example that doesn't start with `awk`, this applies.
     * [Awk String Functions](#awk-string-functions)  
     * [Awk Numeric Functions](#awk-numeric-functions)  
     * [Awk Time Functions](#awk-time-functions-gnu-awk)  
-
+    * [Function Examples](#function-examples)
 
 
 ## Syntax  
@@ -465,6 +465,27 @@ Anything in square brackets `[ ]` is optional.
     * Without arguments, formats the current time.  
 2. `systime()`: Returns the current time as a timestamp (number of seconds 
    since the "epoch", `1970-01-01 00:00:00 UTC`).  
+
+
+### Function Examples
+
+For example, to get only the numbers (IP, day, port number, etc.) from invalid SSH attempts:
+```bash
+journalctl -u ssh | grep invalid | awk 'BEGIN {FS=" "} { gsub("[^0-9 \.]", "", $0); print($0);}'
+```
+To get only the IP and port numbers from there:
+```bash
+journalctl -u ssh | 
+    grep invalid | 
+    awk '
+    BEGIN {FS=" "} 
+    { 
+        gsub("[^0-9 \.]", "", $0); 
+        printf("IP Address: %s - Port: %d\n", $4, $5); 
+    }'
+```
+
+
 
 
 ## Using Awk as an Interpreter
