@@ -1,19 +1,42 @@
-# Vim Argument List
+# Vim Argument List  
 
-The argument list and the marked files list are connected, but they
+The argument list and the marked files list are connected, but they  
 don't need to be.  
 The argument list has a lot of features to use on its own.  
 
----
-#### Note:
-For the commands that take an `{argument}`, these commands
+## Quick Example  
+Imagine:  
+* You have a variable called `x_cnt` and you want to change it to `x_counter`.  
+* This variable is used in several of your C files.  
+* You need to change it in all files.  
+
+You would do:  
+1. Put all the relevant files in the argument list:  
+```vim  
+:args *.c  
+```
+This finds all C files and edits the first one.  
+
+
+2. Now you can perform a substitution command on all these files: 
+```vim  
+:argdo %s/\<x_cnt\>/x_counter/ge | update  
+```
+
+The `:argdo` command takes an argument that is another command.  That command  
+will be executed on all files in the argument list.  
+
+---  
+
+#### Note:  
+For the commands that take an `{argument}`, these commands  
 allow `[++opt]` and `[+cmd]` (see help pages).  
 * Exceptions: `:argadd` & `:argdelete`
 
----
+---  
 
-## Commands for Manipulating the Argument List
-Commands ending with a bang (`!`) usually discard changes to the current buffer.
+## Commands for Manipulating the Argument List  
+Commands ending with a bang (`!`) usually discard changes to the current buffer.  
 | **Command**                | **Short Name**                | **Effect**                |
 |----------------------------|----------------------------|------------------------------|
 |  `:args`                   |  `:ar`              | Print the argument list.     |  
@@ -25,7 +48,7 @@ Commands ending with a bang (`!`) usually discard changes to the current buffer.
 |  `:[range]argd `           |  `:[range]argd `    | Delete `range` (or current) files from arglist. `.` for current entry. `%` for all files.|  
 |  `:argdedupe`              |  `:argded`          | Remove duplicate filenames from arglist.  |  
  
-## Commands for Using the Argument List to Edit Files
+## Commands for Using the Argument List to Edit Files  
 | **Command**                | **Short Name**                | **Effect**                |
 |----------------------------|----------------------------|------------------------------|
 |  `[ct]argument[!] [ct]`    |  `:argu [ct]`       | Edit file `ct` (or current entry).  |  
@@ -47,7 +70,7 @@ When writing to a different file (e.g., `:w ~/somedir/somesubdir`),
 the "++p" flag creates the parent directory of the file if it doesn't exist.  
 
 
-## Adding Arguments to Argument List
+## Adding Arguments to Argument List  
 
 The argument list is `a b c`, and `b` is the  
 current argument. Then, these commands result in:  
@@ -59,7 +82,7 @@ current argument. Then, these commands result in:
 |  `:1argadd x` |     `a x b c`         | adds at index 1              |  
 |  `:$argadd x` |     `a b c x`         | Adds to the end of the list  |  
 
-And after the last one:
+And after the last one:  
 |    Command      |  New Argument List | **Effect**                                      |
 |-----------------|--------------------|-------------------------------------------------|
 |  `:+2argadd y`  |  `a b c x y`       | Add **after** the current index (`b` / 1), + 2  |  
@@ -68,33 +91,27 @@ There's no default duplicate check.
 You can add a file to the argument list twice.  
 
 You can use ` | :argdedupe` to fix it afterwards: 
-```vim
-:argadd *.txt | argdedupe
+```vim  
+:argadd *.txt | argdedupe  
 ```
-The currently edited file is not changed.
+The currently edited file is not changed.  
 you can also use this method:  
-```vim
-:args ## x
+```vim  
+:args ## x  
 ```
-This will add the "x" item and sort the new list.
+This will add the "x" item and sort the new list.  
 
 
 
+## Local Argument List  
+Make a local copy of the global argument list.  
 
-
-
-
-
-
-## Local Argument List
-Make a local copy of the global argument list.
-
-| **Command**                | **Short Name**                | **Effect**                |
-|----------------------------|------------------------|------------------------------|
-|  `:arglocal`             |  `:argl`               | Make a **local** copy of the **global** arglist. Doesn't start editing another file. |  
-|  `:arglocal[!] {list}`   |  `:argl[!] {list}`     | Define a new **local** arglist, local to current window. |  
-|  `:argglobal`            |  `:argg`               | Use the **global** arglist for current window. Doesn't start editing another file. |  
-| `:argglobal[!] {list}`   |  `:argg[!] {list}`     | Use global arglist for current window. Define new global arglist (like `:args`). |  
+| **Command**                | **Short Name**                | **Effect**                
+|----------------------------|------------------------|------------------------------
+|  `:arglocal`  | `:argl` | Make a **local** copy of the **global** arglist. Doesn't start editing another file. 
+|  `:argglobal` | `:argg` | Use the **global** arglist for current window. Doesn't start editing another file. 
+|  `:arglocal[!] {list}` | `:argl[!] {list}` | Define a new **local** arglist, local to current window. 
+| `:argglobal[!] {list}` | `:argg[!] {list}` | Use global arglist for current window. Define new global arglist (like `:args`). 
 
 
 
