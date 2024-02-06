@@ -2,29 +2,31 @@
 # Vim Regex and Pattern Matching  
 
 
-# Table of Contents
+# Table of Contents  
 
-- [Very Magic](#very-magic)
-- [Vim Regex and Perl Regex](#vim-regex-and-perl-regex)
+- [Very Magic](#very-magic)  
+- [Vim Regex and Perl Regex](#vim-regex-and-perl-regex)  
 - [Unique to Vim](#unique-to-vim)  
-- [Unique to Perl](#unique-to-perl)
-- [Important Help Files](#important-help-files)
-- [Metacharacters (Escaped Characters) and Character Classes](#metacharacters-escaped-characters-and-character-classes)
-    * [Whitespace](#whitespace)
-    * [Digits](#digits)
-    * [Letters](#letters)
-    * [Special Characters](#special-characters)
-* [Substitution Special Characters](#substitution-special-characters)
-* [Tricks](#tricks)
-    * [Ignoring Case in a Pattern](#ignoring-case-in-a-pattern)
-    * [Including End-of-Line and Start-of-Line in a Pattern](#including-end-of-line-eol-and-start-of-line-sol-in-pattern-matches)
-* [Matching Start-of-Line *after* Another Atom](#matching-start-of-line-after-another-atom)
-* [Word Boundaries in Vim Regex](#word-boundaries-in-vim-regex)
-* [Overview of Multi Items](#overview-of-multi-items)
-    * [Greedy Multis](#greedy-multis)
-    * [Non-Greedy Multis](#non-greedy-multis)
-* [Capture groups](#capture-groups-and-backreferences-with-substitutions-and-other-pattern-commands)
-* [Good ones to remember](#good-ones-to-remember)
+- [Unique to Perl](#unique-to-perl)  
+- [Important Help Files](#important-help-files)  
+- [Metacharacters (Escaped Characters) and Character Classes](#metacharacters-escaped-characters-and-character-classes)  
+    * [Whitespace](#whitespace)  
+    * [Digits](#digits)  
+    * [Letters](#letters)  
+    * [Special Characters](#special-characters)  
+* [Substitution Special Characters](#substitution-special-characters)  
+* [Tricks](#tricks)  
+    * [Ignoring Case in a Pattern](#ignoring-case-in-a-pattern)  
+    * [Including End-of-Line and Start-of-Line in a Pattern](#including-end-of-line-eol-and-start-of-line-sol-in-pattern-matches)  
+* [Matching Start-of-Line *after* Another Atom](#matching-start-of-line-after-another-atom)  
+* [Word Boundaries in Vim Regex](#word-boundaries-in-vim-regex)  
+* [Overview of Multi Items](#overview-of-multi-items)  
+    * [Greedy Multis](#greedy-multis)  
+    * [Non-Greedy Multis](#non-greedy-multis)  
+* [Capture groups](#capture-groups-and-backreferences-with-substitutions-and-other-pattern-commands)  
+* [Collections and Sets (Optionally Match)](#collections-sets)  
+* [Matching Decimal, Octal, and Hexadecimal Number Systems](#matching-decimal-octal-and-hexadecimal-number-systems)
+* [Good ones to remember](#good-ones-to-remember)  
 
 
 ## Very Magic  
@@ -147,35 +149,35 @@ Using `\V` ("very nomagic") means that they ALL need to be escaped.
 | `\n`              | matches an `EOL` (end-of-line)|
 
 
-### Substitution Special Characters
-See `:h :s\=` (or `:h sub-replace-special`)
-Related: `:h s/\=` (or `:h sub-replace-expression`)
+### Substitution Special Characters  
+See `:h :s\=` (or `:h sub-replace-special`)  
+Related: `:h s/\=` (or `:h sub-replace-expression`)  
 
-| magic | nomagic |  action
-|-|-|-
-|  `&` | `\&` | Replaced with the whole matched pattern
+| magic | nomagic |  action  
+|-|-|-  
+|  `&` | `\&` | Replaced with the whole matched pattern  
 | `\&` |  `&` | Replaced with `&`
-|      | `\0` | Replaced with the whole matched pattern
+|      | `\0` | Replaced with the whole matched pattern  
 |      | `\1` | Replaced with the matched pattern in the first capture group `()`
 |      | `\2` | Replaced with the matched pattern in the second capture group `()`
-|      |`...` | ... (`\3`, `\4`,...)
+|      |`...` | ... (`\3`, `\4`,...)  
 |      | `\9` | Replaced with the matched pattern in the ninth capture group `()`
-|  `~` | `\~` | Replaced with the `{string}` of the previous substitute
+|  `~` | `\~` | Replaced with the `{string}` of the previous substitute  
 | `\~` |  `~` | Replaced with `~`
-|      | `\u` | Next character made uppercase
-|      | `\U` | Following characters made uppercase, until \E
-|      | `\l` | Next character made lowercase
-|      | `\L` | Following characters made lowercase, until \E
-|      | `\e` | End of \u, \U, \l and \L (NOTE: not `<Esc>`!)
-|      | `\E` | End of \u, \U, \l and \L
-|      |`<CR>`| Split line in two at this point  (Type the `<CR>` as CTRL-V `<Enter>`)
-|      | `\r` | Same as `<CR>`. Inserts a newline.
-|     |`\<CR>`| Insert a carriage-return (CTRL-M) (Type the `<CR>` as CTRL-V `<Enter>`)
-|      | `\n` | Insert a `<NL>` (`<NUL>` in the file)  (does NOT break the line)
+|      | `\u` | Next character made uppercase  
+|      | `\U` | Following characters made uppercase, until \E  
+|      | `\l` | Next character made lowercase  
+|      | `\L` | Following characters made lowercase, until \E  
+|      | `\e` | End of \u, \U, \l and \L (NOTE: not `<Esc>`!)  
+|      | `\E` | End of \u, \U, \l and \L  
+|      |`<CR>`| Split line in two at this point  (Type the `<CR>` as CTRL-V `<Enter>`)  
+|      | `\r` | Same as `<CR>`. Inserts a newline.  
+|     |`\<CR>`| Insert a carriage-return (CTRL-M) (Type the `<CR>` as CTRL-V `<Enter>`)  
+|      | `\n` | Insert a `<NL>` (`<NUL>` in the file)  (does NOT break the line)  
 |      | `\b` | Insert a `<BS>`
 |      | `\t` | Insert a `<Tab>`
-|      | `\\` | Insert a single backslash
-|      | `\x` | Where `x` is any character not mentioned above: Reserved for future expansion
+|      | `\\` | Insert a single backslash  
+|      | `\x` | Where `x` is any character not mentioned above: Reserved for future expansion  
 
 
 ## Tricks:  
@@ -742,10 +744,10 @@ everything BUT what is in the collection:
 The above will match a line that does NOT start with  
 a digit character.  
 
+
 ### Collection Limitations / Caveats  
-
-
 There can be no `\(\)`, `\%(\)` or `\z(\)` items inside the `[]`, and `\%[]` does not nest.  
+
 
 ### Collection Examples  
 ```regex  
