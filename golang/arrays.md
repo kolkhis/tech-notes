@@ -1,0 +1,94 @@
+
+# Arrays in Golang
+
+Unlike other languages like Python, arrays in Go have a fixed size that is determined at declaration time.
+Trying to assign more elements than the declared size will result in a runtime panic.
+
+To create a variable length collection, use slices instead.
+Slices provide a view of an underlying array and can grow and shrink dynamically.
+
+* Arrays are value types, not references.
+* Assigning an array to a new variable will copy all elements.
+* Arrays can be iterated over with the range keyword .
+```go
+arr := [3]int{1, 2, 3}
+
+for idx, val := range arr {
+  fmt.Println(i, v)
+}
+
+// You can also use oa C-style for-loop for this:
+for i := 0; i < len(arr); i++ {
+    fmt.Println(i, arr[i])
+}
+```
+
+
+## Basic Syntax
+### Declare an Array
+To declare an array in Go, use the following syntax:
+```go
+var array_name [length]type
+```
+If `length` is not specified, the size of the array will be inferred when defined.
+
+So, let's declare an array of ints:
+```go
+/* Declare an array of ints without a fixed size */
+var my_array []int
+/* Declare an array of ints with a fixed size of 3 */
+var my_array [3]int
+```
+Declaration and assignment can be done at the same time with 
+the walrus operator (`:=`).  
+
+
+### Defining an Array
+You can define an array in Go in the following ways:
+```go
+/* Define an array of ints with a fixed size of 3 */
+var my_array []int = []int{1, 2, 3}
+// or
+var my_array = [3]int{1, 2, 3}
+// or
+my_array := []int{1, 2, 3}
+```
+
+If you specify the size of the array as longer than the number of
+values you give it, the rest of the values will be 
+set to the zero value of the type.
+
+E.g.,:
+```go
+vals := [6]int{4, 2, 9, 3}
+ 
+fmt.Println("Examples of using the `iota` keyword.")
+for i := range vals {
+    fmt.Printf("%d\n", vals[i])
+}
+```
+
+This will output:
+```plaintext
+4
+2
+9
+3
+0
+0
+```
+
+
+Arrays in Go are value types, not references to a collection. This means when they are assigned to a new variable, the entire array is copied. Changes to one array will not be reflected in the other.
+
+For example:
+
+```go
+arr1 := [3]int{1, 2, 3}
+arr2 := arr1
+arr2[0] = 7
+
+fmt.Println(arr1) // [1 2 3] (not updated) 
+fmt.Println(arr2) // [7 2 3]
+```
+
