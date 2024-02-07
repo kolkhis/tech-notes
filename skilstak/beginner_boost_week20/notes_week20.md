@@ -58,12 +58,12 @@ The colons (` '[:lower:]' `) are NAMED SETS (classes of characters) in pattern m
 > Extended Globbing is not covered.
 
 * Pattern Matching Characters
-`*` - Zero or more characters
-`?` - One or more characters
-`[a-z]` - Match a range of characters.
-`'[:lower:]'` - Match a class of characters.
-`[^a-z]` - Negate a range
-`[Rr]` - Match one occurence of `r` or `R`
+    * `*` - Zero or more characters
+    * `?` - One or more characters
+    * `[a-z]` - Match a range of characters.
+    * `'[:lower:]'` - Match a class of characters.
+    * `[^a-z]` - Negate a range
+    * `[Rr]` - Match one occurence of `r` or `R`
 * This is the only way to do matching in certain types of shell.
 
 ### Not doing the comparison at all!
@@ -88,9 +88,9 @@ Letter, character, and rune
 
 * Character
     * Anything in the ascii charset (limited to 7 bits)
-    * Every letter, number, special character (#, {, _, etc) is a `character`
+    * Every letter, number, special character (`#`, `{`, `_`, etc) is a `character`
     * `char` has a very specific meaning in `C`
-    * [a-Z] is a set of characters, their numeric equivalent is what will be compared.
+    * `[a-z]` is a set of characters, their numeric equivalent is what will be compared.
 
 * rune = The short name for "Unicode Code Point"
 * A rune can be WAY longer than 7 bits long
@@ -129,3 +129,4 @@ fi
 `? regular expression case insensitive` - adding switches to regex
 `(?i:robin)`
 Write the whole thing in bash using `if`/`elif` using regex.
+
