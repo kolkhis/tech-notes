@@ -1,4 +1,8 @@
 
+Don't worry about the project as a whole.  
+Worry about one piece at a time.  
+You build a wall brick by brick.  
+
 # Learning Resources  
 
 * HTTP Requests 

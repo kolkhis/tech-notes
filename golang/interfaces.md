@@ -1,102 +1,31 @@
 
-
-# Interfaces in Golang  
-Interfaces are one of the key things to learn in Go.  
-
-https://github.com/rwxrob/awesome-go  
-
-## Go interfaces  
-What's an interface?  
-* An interface in Go is a type definition that specifies a set 
-  of method signatures (behavior).  
-    * It doesn’t provide the implementation of these methods (i.e., the functions themselves).  
-    * Also known as a trait in other languages  
-* Interfaces allow you to not "tightly couple" your code  
-* They allow you to pass / create structs on interfaces.  
-
-* Interfaces are used to achieve polymorphism in Go.  
-* They allow you to write functions that can operate on any type that 
-  implements a certain set of methods, without needing to know  
-  the specifics of that type.  
-
----  
-
-Inside an interface, you just define function signatures (a function name and  
-the type of value it returns)  
-
-```go  
-type Writer interface {
-    Write([]byte) (int, error)  
-    Close() error  
-    Flush() error  
-    WriteByte(byte) error  
-    WriteString(string) (int, error)  
-}
-```
-
----  
-
-You should see the interface as a "contract" that whatever  
-functions you use in the interface should AT LEAST have the  
-functions defined in the interface. 
-
-The interface contains "function signatures" which are basically 
-blueprints for functions that different Types can use  
-
-## How Interfaces are Implemented  
-
-An interface is implemented implicitly by a type.  
-That means there's no need to declare that a type implements an interface.  
-
-If the type has methods that match the interface's method set (both name and signature),
-then it implements the interface.  
-
-### Examples  
-
-
-
-* Standard Library Interfaces: `io.Reader`, `io.Writer`, `fmt.Stringer` are some  
-  commonly used standard library interfaces.  
-```go  
-type MyReader struct {
-    src string  
-    currentIndex int  
-}
-
-func (mr *MyReader) Read(p []byte) (n int, err error) {
-    // Implementation  
-}
-```
-
-
----  
-
-----------------------------------------------------------------------------  
-
 # Interfaces in Golang  
 
 In Go, an interface is a Type. 
 
-It defines a set of method *signatures*, but does not provide the
+It defines a set of [method signatures](./method_signatures.md), but does not provide the
 implementation of those methods.  
-
+ 
 Interfaces are used to specify a "contract" that a concrete type must adhere to.  
 
 They allow you to write polymorphic code by decoupling the code that
-uses an interface from the specific types that implement that interface.  
-
+uses an interface from the specific `type`s that implement that interface.  
+ 
+They also allow to share function names across different types.  
 
 ## Basics of Go Interfaces 
 
-* An interface in Go is a type that specifies a set of method signatures,
-  but does not define the methods themselves.  
+* An interface in Go is a Type definition that specifies a set 
+  of method signatures (behavior).  
+    * It doesn’t provide the implementation of these methods (i.e., the functions themselves).  
     * Instead, it defines a "contract" that any Type using the interface must fulfill.
     * The "contract" is fulfilled by implementing the methods described by the interface.  
-    * This means that any Type that uses the interface MUST have the 
-      methods defined by the interface.
 * Think of an interface as a promise.  
+    * A type that implements the interface promises to provide implementations of
+      the methods defined by the interface.
     * If a type implements all the methods an interface requires, it 
-      implicitly satisfies the interface.  
+      implicitly "satisfies" the interface.  
+
 
 
 ## Characteristics of Go Interfaces  
@@ -114,30 +43,80 @@ uses an interface from the specific types that implement that interface.
  
 ### Defining and Implementing Interfaces  
 Basics of how to use interfaces in Go:  
+
+
+* Implicit Implementations:
+    * An interface is implemented implicitly by a `type` when `type` has methods that match
+      the interface's method set.  
+    * That means there's no need to declare that a `type` implements an interface,
+      you only need to give that `type` the correct methods.  
+
+* You can explicitly declare that a type implements an interface once
+  it "satisfies" the interface (see [example of interface satisfaction](#example-of-interface-satisfaction)).
+    * Declare a new variable of the Type of the interface.
+    * Initialize it with the type that implements the interface.
+    * ```go
+      var speaker MyInterface = MyType{}
+      ```
+    * This is only possible if `MyType` already implicitly satisfies
+      `MyInterface` by implementing its methods.
+
+
+If the type has methods that match the interface's method set,
+then it implements the interface.  
+
 Define interfaces with `type Name interface { ... }`.
 ```go  
-package main  
+package main
  
-import "fmt"  
-
-// Define an interface  
-type Writer interface {
-    Write([]byte) (int, error)  
+import "fmt"
+ 
+// Define an interface
+type Greeter interface {
+	Greet() string
 }
  
-// Define a type that implements the interface  
-type ConsoleWriter struct{}
+// Define a type that implicitly implements the interface
+type EnglishSpeaker struct{}
+ 
+// Method that matches the Greeter interface signature
+func (EnglishSpeaker) Greet() string {
+	return "Hello!"
+}
 
-// Implement the interface method for ConsoleWriter  
-func (cw ConsoleWriter) Write(data []byte) (int, error) {
-    n, err := fmt.Println(string(data))  
-    return n, err  
+// A function that takes the Greeter interface
+func sayHello(g Greeter) {
+	fmt.Println(g.Greet())
 }
  
 func main() {
-    var w Writer = ConsoleWriter{}
-    w.Write([]byte("Hello, Interface!"))  
+	var speaker EnglishSpeaker
+	sayHello(speaker) // EnglishSpeaker implicitly implements Greeter
+ 
+    var speaker2 Greeter = EnglishSpeaker{} // Explicitly implements Greeter
+    sayHello(speaker2) // EnglishSpeaker implements Greeter
+	speaker.Speak()
 }
+```
+
+### Example of Interface Satisfaction:
+
+```go
+// Define an interface
+type Greeter interface {
+    Greet() string
+}
+ 
+// Define a type
+type EnglishSpeaker struct {}
+ 
+// Implement the Greeter interface implicitly
+func (EnglishSpeaker) Greet() string {
+    return "Hello!"
+}
+ 
+// Demonstrate that EnglishSpeaker satisfies Greeter
+var speaker Greeter = EnglishSpeaker{}
 ```
 
 ### Different Ways of Implementing Interfaces  
