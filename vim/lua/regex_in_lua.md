@@ -1,10 +1,12 @@
 
 # Regex in Lua
 
-Lua has its own support for regular expressions.
+Lua has its own support for regular expressions ().
 This gives another option aside from Vim's built-in regex support.
 
-## Usage
+
+## `string.match`  
+### Usage
 Using `string.match` is the easiest way to extract text from a string with regex.
  
 If the regex matches, `string.match` returns the captures from the pattern,
@@ -24,6 +26,7 @@ if line:match('^(#+)') then
 end
 ```
 
+
 ## Get Multiple Captures from One Regex
 
 Each capture group in the regex returns a string.
@@ -33,6 +36,7 @@ local line = vim.fn.getline('.')
 local capture1, capture2 = line:match('^(#+) (.+)')
 vim.print(("First capture: %s, Second capture: %s"):format(capture1, capture2))
 ```
+
 
 ## Using gsub
 See [lua patterns](./patterns.md).  
@@ -86,6 +90,7 @@ passed as a single argument.
 
 ---
 
+
 ## Another example using a function:
 ```lua
 x = string.gsub("4+5 = $return 4+5$", "%$(.-)%$", function (s)
@@ -93,56 +98,44 @@ x = string.gsub("4+5 = $return 4+5$", "%$(.-)%$", function (s)
 end)
 ```
 
-### Breaking It Down
+The pattern:
+```regex
+"%$(.-)%$"
+```
+* `%$` Matches literal dollar signs (`$`)  
+* `(.-)` is a non-greedy quantifier. This "lazy" matches as few characters as possible.  
 
-1. `string.gsub` Function:
-    * `string.gsub` is a function in Lua used for global substitution.  
-    * It searches for all occurrences of a pattern in a given string and
-      replaces them with a specified replacement.  
-    * The function returns the modified string and the number of substitutions made.
+This pattern matches and captures any substring that starts
+and ends with a `$` character.  
+ 
+The match is then passed to the replacement function, which takes the
+captured substring as an argument.
 
-2. The Target String:
-    * The target string here is `"4+5 = $return 4+5$"`.  
-    * The goal is to evaluate the expression enclosed by `$` signs and replace it with its result.
 
-3. The Pattern:
-    * The pattern `"%$(.-)%$"` is designed to match any substring that starts
-      and ends with a `$` character.  
-    * `%$` is used to escape the dollar sign, which is a special character
-      in Lua patterns, so the pattern matches the dollar sign literally.
-    * `(.-)` is a capture group that matches any character (`.`) as few
-      times as possible to make the match (`-`),
-        * This ensures it captures the shortest possible string that follows
-          the first `$` and precedes the next `$`.  
-        * This is known as a "lazy" match.
-
-4. The Replacement Function:
+* The Replacement Function:
     * Instead of a simple replacement string, a function is provided
       as the replacement argument.  
     * Lua calls this function for every match, passing the captured string
       as the argument `s`.
-    * In this case, `s` will receive the string `"return 4+5"` from
+    * In this case, `s` will receive the string `"return 4+5"` from 
       between the `$` signs.
 
-5. `loadstring` Function:
-    * `loadstring(s)` is a function that compiles a string containing Lua code
-     into a Lua function.  
-    * In this context, `s` is `"return 4+5"`.
-    * Note: In modern versions of Lua (5.2 and later), `loadstring` is
-     replaced by `load`.  However, the behavior is similar.
 
-6. Executing the Compiled Code:
+* `loadstring` Function:
+    * `loadstring(s)` is a function that compiles a string containing Lua code
+      into a Lua function.  
+    * In this context, `s` is `"return 4+5"`.
+    * Note: In Lua 5.2 and later, `loadstring` is replaced by `load`.
+      However, the behavior is similar.
+
+
+* Executing the Compiled Code:
     * The `()` immediately following `loadstring(s)` invokes the compiled function.  
     * Since `s` is `"return 4+5"`, this compiled function, when
       called, evaluates the expression and returns `9`.
 
-7. The Result:
-    * The function passed to `gsub` returns `9`, which is then used as
-      the replacement for the matched pattern.  
-    * So, the original string `"4+5 = $return 4+5$"` becomes `"4+5 = 9"`.
-    * The modified string is assigned to the variable `x`.
 
-8. Final Outcome:
+* Final Outcome:
    * The final value of `x` after executing this snippet 
      is `"4+5 = 9"`, and the embedded Lua code within `$...$` is
      evaluated and replaced in the output string.
