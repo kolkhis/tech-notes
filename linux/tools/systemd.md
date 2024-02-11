@@ -6,7 +6,7 @@ TODO: Write actual notes on this topic.
 ```bash
 systemctl list-units --state=failed
 ```
-
+`systemctl --failed` is good shorthand for this.  
 
 
 * `systemctl cat ssh`
