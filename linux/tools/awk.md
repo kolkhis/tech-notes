@@ -20,28 +20,45 @@ If there's an example that doesn't start with `awk`, this applies.
 
 
 
-## Table of Contents  
+## Table of Contents
+* [Syntax](#syntax) 
+* [Field and Record Separators](#field-and-record-separators) 
+* [Simple Examples](#simple-examples) 
+    * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file) 
+    * [Searching for a Pattern in the Entire Line](#searching-for-a-pattern-in-the-entire-line) 
+    * [Modifying an Entire Line](#modifying-an-entire-line) 
+* [Variables in Awk](#variables-in-awk) 
+    * [Built-in Variables](#built-in-variables) 
+    * [Line Variables (Field Variables)](#line-variables-(field-variables)) 
+    * [Declaring Variables](#declaring-variables) 
+* [Patterns and Actions](#patterns-and-actions) 
+* [Useful Builtin Functions](#useful-builtin-functions) 
+    * [Basic Usage Example](#basic-usage-example) 
+* [Control Structures in Awk](#control-structures-in-awk) 
+    * [Example: Loop over the fields of a line](#example-loop-over-the-fields-of-a-line) 
+* [Conditionals in Awk](#conditionals-in-awk) 
+    * [1. Relational Operators](#1.-relational-operators) 
+    * [Conditionals Examples](#conditionals-examples) 
+* [Logical Operators](#logical-operators) 
+    * [Logical Examples](#logical-examples) 
+* [Regular Expression Match](#regular-expression-match) 
+    * [Regex Examples](#regex-examples) 
+* [Conditional (Ternary) Operator](#conditional-(ternary)-operator) 
+    * [Ternary Examples](#ternary-examples) 
+* [The BEGIN Keyword](#the-begin-keyword) 
+* [The END Keyword](#the-end-keyword) 
+* [Examples Using `BEGIN` and `END`](#examples-using-begin-and-end) 
+    * [Output the Number of Headers in a Markdown File](#output-the-number-of-headers-in-a-markdown-file) 
+    * [Loop Over the Fields of a Line](#loop-over-the-fields-of-a-line) 
+    * [Loop over the fields of header lines in a markdown file](#loop-over-the-fields-of-header-lines-in-a-markdown-file) 
+* [Passing External Variables](#passing-external-variables) 
+* [Builtin Functions](#builtin-functions) 
+    * [Awk String Functions](#awk-string-functions) 
+    * [Awk Numeric Functions](#awk-numeric-functions) 
+    * [Awk Time Functions (GNU `awk`)](#awk-time-functions-(gnu-awk)) 
+    * [Function Examples](#function-examples) 
+* [Using Awk as an Interpreter](#using-awk-as-an-interpreter) 
 
-* [Syntax](#syntax)  
-* [Field and Record Separators](#field-and-record-separators)
-* [Simple Examples](#simple-examples)
-    * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file)
-    * [Searching for a Pattern in the Entire Line](#searching-for-a-pattern-in-the-entire-line)
-    * [Modifying an Entire Line](#modifying-an-entire-line)
-* [Variables in Awk](#variables-in-awk)
-    * [Built-in Variables](#built-in-variables)
-    * [Line Variables (Field Variables)](#line-variables-field-variables)
-    * [Declaring Variables](#declaring-variables)
-* [Patterns and Actions](#patterns-and-actions)  
-* [Useful Builtin Functions](#useful-builtin-functions)
-    * [Example](#example)
-* [Control Structures](#control-structures-in-awk)
-* [Passing External Variables](#passing-external-variables)  
-* [Builtin Functions](#builtin-functions)  
-    * [Awk String Functions](#awk-string-functions)  
-    * [Awk Numeric Functions](#awk-numeric-functions)  
-    * [Awk Time Functions](#awk-time-functions-gnu-awk)  
-    * [Function Examples](#function-examples)
 
 
 ## Syntax  
@@ -147,7 +164,7 @@ See [builtin functions](#builtin-functions)
 * `split()`: Splits a string into an array.  
 * `substr()`: Returns a substring of a string.  
 
-### Example  
+### Basic Usage Example  
 Print the length of the second field:  
 ```bash  
 awk '{print length($2)}' file.txt  
@@ -191,7 +208,7 @@ awk supports the following relational operators:
 * `!~` (regex not match)
 
 
-### Examples:
+### Conditionals Examples:
 
 * **Numeric Comparison**:
 ```bash
@@ -221,7 +238,7 @@ This prints lines that don't have exactly 5 fields.
 
 Logical operators are used to combine multiple conditions. `awk` supports logical AND (`&&`), OR (`||`), and NOT (`!`).
 
-### Examples:
+### Logical Examples:
 
 1. **Logical AND**:
 ```bash
@@ -245,7 +262,7 @@ Regex in awk is available: the `~` (match) and `!~` (not match)
 operators are used with regular expressions to test if a field or
 string matches or doesn't match a given pattern.
 
-### Examples:
+### Regex Examples:
     
 1. **Regular Expression Match**:
 ```bash
@@ -274,7 +291,7 @@ This prints lines where the third field contains one or more digits.
 The ternary operator `?:` is used to choose between two values based on a condition.  
 It is the only ternary operator in `awk`.  
 
-### Examples:
+### Ternary Examples:
 
 1. **Inline Conditions**:
 ```bash
