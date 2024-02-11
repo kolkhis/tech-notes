@@ -1,8 +1,7 @@
 
-# Change User Password
+# `passwd`
 
 ## Table of Contents
-* [Change User Password](#change-user-password) 
 * [Using `passwd`](#using-`passwd`) 
     * [Change a user's password:](#change-a-user's-password:) 
     * [Lock a user's password:](#lock-a-user's-password:) 
