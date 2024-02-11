@@ -1,6 +1,20 @@
 
 # Change User Password
 
+## Table of Contents
+* [Change User Password](#change-user-password) 
+* [Using `passwd`](#using-`passwd`) 
+    * [Change a user's password:](#change-a-user's-password:) 
+    * [Lock a user's password:](#lock-a-user's-password:) 
+    * [Unlock a user's password:](#unlock-a-user's-password:) 
+    * [Set passwords to expire:](#set-passwords-to-expire:) 
+    * [Set how often a user can change their password](#set-how-often-a-user-can-change-their-password) 
+    * [Display a warning that a password is going to expire](#display-a-warning-that-a-password-is-going-to-expire) 
+* [Options](#options) 
+    * [`-k, --keep-tokens`](#`-k,---keep-tokens`) 
+    * [`-r, --repository`](#`-r,---repository`) 
+    * [`-R, --root CHROOT_DIR`](#`-r,---root-chroot_dir`) 
+
 ## Using `passwd`
 Using passwd is the easiest way to change a user's password or 
 perform other actions around user passwords.
@@ -76,5 +90,34 @@ password every 30 days.
 | `-w, --warndays` | Sets days of warning before password expiration.
 | `-x, --maxdays`  | Sets the max number of days a password stays valid before requiring a change.
 
+
+### `-k, --keep-tokens`
+
+When you change a password in Linux using the `passwd` command, all authentication tokens associated with the user, such as passwords or possibly other forms of authentication, are typically reset. The `-k` option, however, modifies this behavior by ensuring that only expired authentication tokens are updated. Non-expired tokens, such as valid passwords or other credentials that haven't yet reached their expiration date, remain unchanged.
+
+Practical Use: This option is particularly useful in environments where multiple forms of authentication are used, and you want to enforce password changes for security reasons without affecting currently valid tokens. It helps in scenarios where, for example, forcing a password update due to a policy change without disrupting users who have recently updated their passwords.
+
+### `-r, --repository`
+* A `REPOSITORY`, in this context, refers to a place where user authentication data is stored.
+
+This specifies that the password change should be made in a specific 
+password `REPOSITORY` rather than the default system password file (typically
+`/etc/shadow` on most Linux systems).
+
+* Linux systems can be configured to use alternative authentication methods, such
+  as LDAP, NIS, or others, which might store their data in different repositories.
+
+---
+
+### `-R, --root CHROOT_DIR`
+
+The `-R` option specifies that the `passwd` command should operate in a `chroot` environment.  
+
+* `chroot` is a Unix operation that changes the root directory for the current running
+  process and its children, effectively isolating it from the rest of the system.
+
+This tells `passwd` to apply changes as if it were running inside
+the specified `CHROOT_DIR` directory, using configuration files from that
+directory instead of the system's root.
 
 <!-- ## Using `chage` -->
