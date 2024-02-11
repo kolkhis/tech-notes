@@ -1,5 +1,6 @@
 
 # Vim Regex and Pattern Matching  
+See *`:help vim.re`* for regex through Nvim's Lua API.  
 
 
 ## Table of Contents  
@@ -27,6 +28,8 @@
 * [Collections and Sets (Optionally Match)](#collections-sets)  
 * [Matching Decimal, Octal, and Hexadecimal Number Systems](#matching-decimal-octal-and-hexadecimal-number-systems)
 * [Good ones to remember](#good-ones-to-remember)  
+
+
 
 
 ## Very Magic  
