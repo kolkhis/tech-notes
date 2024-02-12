@@ -1,13 +1,16 @@
 
 # The Buffer List in Vim
 
+
 ## Table of Contents
 * [The Buffer List in Vim](#the-buffer-list-in-vim) 
 * [Buffer List](#buffer-list) 
 * [Alternate File in Vim](#alternate-file-in-vim) 
-        * [*:h alternate-file*](#*h-alternate-file*) 
+* [File Name Replacements on the Command Line](#file-name-replacements-on-the-command-line) 
 * [Buffer List Commands](#buffer-list-commands) 
     * [Buffer Types](#buffer-types) 
+
+
 
 ## Buffer List
 Use `:ls` (or `:files`, or `:buffers`) to see the buffer list.  
@@ -21,24 +24,20 @@ In vim's buffer list (`:ls`), there's a current file and alternate file.
 
 When there's more than one buffer loaded, you'll have an alternate file.
 
+The `CTRL-^` command toggles between the current and alternate file.
 
 It can be represented with `#` on the command line.
-The `CTRL-^` command toggles between the current and the alternate file.
+
+## File Name Replacements on the Command Line
+* `#n` (where n is a number) is replaced with the file name of buffer n.
+    * `#0` is the same as `#`.
+* `##`  Is replaced with all names in the argument list concatenated, separated by spaces.
+* `#<n` (where n is a number > 0) is replaced with old file name n.
+    * See `:oldfiles` or `v:oldfiles` to get the number.
 
 
-```help
-%	Is replaced with the current file name.		  *:_%* *c_%*
-#	Is replaced with the alternate file name.	  *:_#* *c_#*
-This is remembered for every window.
-#n	(where n is a number) is replaced with		  *:_#0* *:_#n*
-the file name of buffer n.  "#0" is the same as "#".     *c_#n*
-##	Is replaced with all names in the argument list	  *:_##* *c_##*
-concatenated, separated by spaces.  Each space in a name
-is preceded with a backslash.
-#<n	(where n is a number > 0) is replaced with old	  *:_#<* *c_#<*
-file name n.  See |:oldfiles| or |v:oldfiles| to get the
-number.							*E809*
-```
+
+
 ## Buffer List Commands
 
 * `:bad {fname}` / `:badd {fname}`:  Add a file to the buffer list without 
