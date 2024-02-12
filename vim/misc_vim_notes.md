@@ -10,6 +10,70 @@ List of all default vim keybindings/commands for each mode:
 * *:h insert-index* / *visual-index*  
 * *:h default-mappings*  
 
+## Table of Contents
+* [Misc Vim Notes](#misc-vim-notes) 
+* [Neovim Resources](#neovim-resources) 
+* [Easily Selecting Lines for an Ex Command](#easily-selecting-lines-for-an-ex-command) 
+* [Searching with :vimgrep or :vim](#searching-with-vimgrep-or-vim) 
+* [Normal Mode Commands on Visual Selection with `:'<,'>norm`](#normal-mode-commands-on-visual-selection-with-'<'>norm) 
+* [Encrypting Files with Vim (NOT RECOMMENDED)](#encrypting-files-with-vim-(not-recommended)) 
+* [History Tables](#history-tables) 
+* [Replace Tabs with Spaces](#replace-tabs-with-spaces) 
+    * [`:ret`](#ret) 
+* [Use an Ex Command on Lines Based on Range or Pattern](#use-an-ex-command-on-lines-based-on-range-or-pattern) 
+* [Registers](#registers) 
+    * [Getting help with registers: `:h quote_{reg}`/`:h quote{reg}`](#getting-help-with-registers-h-quote_reg/h-quotereg) 
+    * [Writing to a Register](#writing-to-a-register) 
+            * [`:h :let-@`](#h-let-@) 
+* [Command-line Window](#command-line-window) 
+* [Getting a List of Functions, or a Function's Arguments](#getting-a-list-of-functions-or-a-function's-arguments) 
+* [Debugging a Slow Vim](#debugging-a-slow-vim) 
+* [Regex with vim](#regex-with-vim) 
+    * [Pattern atom](#pattern-atom) 
+    * [  Pattern Qualifiers](#--pattern-qualifiers) 
+* [Helpful Functions for Plugin Dev](#helpful-functions-for-plugin-dev) 
+    * [Get the details of loaded packages](#get-the-details-of-loaded-packages) 
+    * [Refactoring tip](#refactoring-tip) 
+    * [Disable LSP for current buffer](#disable-lsp-for-current-buffer) 
+* [Undo Line](#undo-line) 
+* [Use `man` in Neovim](#use-man-in-neovim) 
+* [Perform Actions on Ranges Using Searches](#perform-actions-on-ranges-using-searches) 
+* [Use a Normal Mode Command from Insert Mode](#use-a-normal-mode-command-from-insert-mode) 
+* [Use a Visual Mode Command From Select Mode](#use-a-visual-mode-command-from-select-mode) 
+* [Vimscript Types](#vimscript-types) 
+    * [Installing Vim With Full Feature Support](#installing-vim-with-full-feature-support) 
+    * [Mapping Modes](#mapping-modes) 
+* [Select mode](#select-mode) 
+    * [Commands in Select mode](#commands-in-select-mode) 
+* [Jumping Around Files Based on Percentage](#jumping-around-files-based-on-percentage) 
+* [Recursive Macros](#recursive-macros) 
+* [Paste a Recorded Macro](#paste-a-recorded-macro) 
+    * [Making a Numbered List Using Macros](#making-a-numbered-list-using-macros) 
+    * [Special Characters (Diagraphs)](#special-characters-(diagraphs)) 
+    * [Debugging Vim](#debugging-vim) 
+    * [Omnicomplete](#omnicomplete) 
+    * [Netrw](#netrw) 
+    * [Tags](#tags) 
+    * [Command Mode Editing](#command-mode-editing) 
+    * [Command Line Ranges](#command-line-ranges) 
+        * [Search and Range Items](#search-and-range-items) 
+    * [Easy Searching](#easy-searching) 
+* [Browsing the List of Options](#browsing-the-list-of-options) 
+* [Various Options](#various-options) 
+    * [More Tab Options](#more-tab-options) 
+        * [Formatting Options For `gq`](#formatting-options-for-gq) 
+    * [Undo Options](#undo-options) 
+    * [Misc `:!{cmd}` Notes](#misc-!cmd-notes) 
+* [tl;dr: Recursive Macros](#tl;dr-recursive-macros) 
+    * [Using the `=` Register for Formulas (The Expression Register)](#using-the-=-register-for-formulas-(the-expression-register)) 
+    * [Function author for a quick search type thing](#function-author-for-a-quick-search-type-thing) 
+    * [Misc](#misc) 
+    * [Help Sections to Read Up On](#help-sections-to-read-up-on) 
+* [Random Stuff](#random-stuff) 
+* [Note Formatting Vim Regex Patterns](#note-formatting-vim-regex-patterns) 
+    * [Add Linebreaks for Easier Readability](#add-linebreaks-for-easier-readability) 
+* [Things to look into](#things-to-look-into) 
+
 
 ## Neovim Resources:  
 * Nightly repo for `apt-get`:  
@@ -45,6 +109,9 @@ The recursive searching goes up to 100 directories deep.
 * `:vimgrep` puts all matching files in the `quickfix list`/`error list`.  
     * Using `:lvimgrep` (or `:lvim`) will use the `location list` instead.  
 * Just like in substitutions, the `/` can be swapped for another char (i.e., `;`)  
+* `:vimgrep` follows the `'ignorecase'` option. 
+    * To overrule it put `\c` in the pattern to ignore case or `\C` to match case.
+
 To get the list of all files that were matched (the quickfix list):  
 ```vim  
 :cope  

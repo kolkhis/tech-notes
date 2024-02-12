@@ -1,5 +1,9 @@
 # Encryption with Vim
 
+## Table of Contents
+* [Encryption with Vim](#encryption-with-vim) 
+* [tl;dr](#tl;dr) 
+* [Help Page](#help-page) 
 
 ## tl;dr:
 Only available when compiled with the `+cryptv` feature.

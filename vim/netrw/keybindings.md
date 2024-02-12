@@ -1,6 +1,18 @@
 
 # Netrw Keybindings
 
+## Table of Contents
+* [Netrw Keybindings](#netrw-keybindings) 
+* [Default Keybindings](#default-keybindings) 
+    * [View / Opening Files](#view-/-opening-files) 
+    * [Browsing](#browsing) 
+    * [Modifying Files](#modifying-files) 
+    * [Bookmarks](#bookmarks) 
+    * [File Display / Information](#file-display-/-information) 
+* [User Specified Maps/Keybindings in netrw](#user-specified-maps/keybindings-in-netrw) 
+* [Related Topics / Variables](#related-topics-/-variables) 
+
+
 ## Default Keybindings
 
 ### View / Opening Files

@@ -1,5 +1,12 @@
 # Autocommands in Vim/Neovim
 
+## Table of Contents
+* [Autocommands in Vim/Neovim](#autocommands-in-vim/neovim) 
+* [Removing Autocommands](#removing-autocommands) 
+    * [Removing Autocommands for Certain `augroups`](#removing-autocommands-for-certain-augroups) 
+* [Autocommand Patterns](#autocommand-patterns) 
+    * [Using Expressions (like `<cword>`) in Autocommand Patterns](#using-expressions-(like-<cword>)-in-autocommand-patterns) 
+* [Autocommand Events and Event Data](#autocommand-events-and-event-data) 
 
 ## Removing Autocommands
 > *`:h autocmd!`* | *`autocmd-remove`*

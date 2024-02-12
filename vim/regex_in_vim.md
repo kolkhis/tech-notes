@@ -14,7 +14,7 @@ See *`:help vim.re`* for regex through Nvim's Lua API.
     * [Whitespace](#whitespace)  
     * [Digits](#digits)  
     * [Letters](#letters)  
-    * [Special Characters](#special-characters)  
+    * [Special Characters](#special-characters)
 * [Substitution Special Characters](#substitution-special-characters)  
 * [Tricks](#tricks)  
     * [Ignoring Case in a Pattern](#ignoring-case-in-a-pattern)  

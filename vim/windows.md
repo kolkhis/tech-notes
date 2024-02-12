@@ -7,6 +7,13 @@ Take notes on:
 1. Floating windows and popups in nvim/lua  
 1. All builtin window handling functions.  
 
+## Table of Contents
+* [Manipulating Windows in Vim](#manipulating-windows-in-vim) 
+* [Easy Formatting](#easy-formatting) 
+* [Using :wincmd or `<C-w>` to manipulate windows](#using-wincmd-or-<c-w>-to-manipulate-windows) 
+
+
+
 ## Easy Formatting  
 | Ex Command        | Effect            |
 |-------------------|-------------------|

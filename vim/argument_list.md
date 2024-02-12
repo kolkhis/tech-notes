@@ -4,6 +4,15 @@ The argument list and the marked files list are connected, but they
 don't need to be.  
 The argument list has a lot of features to use on its own.  
 
+## Table of Contents
+* [Quick Example](#quick-example) 
+    * [Note](#note) 
+* [Commands for Manipulating the Argument List](#commands-for-manipulating-the-argument-list) 
+* [Commands for Using the Argument List to Edit Files](#commands-for-using-the-argument-list-to-edit-files) 
+* [Adding Arguments to Argument List](#adding-arguments-to-argument-list) 
+* [Local Argument List](#local-argument-list) 
+
+
 ## Quick Example  
 Imagine:  
 * You have a variable called `x_cnt` and you want to change it to `x_counter`.  

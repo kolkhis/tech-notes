@@ -3,6 +3,10 @@
 # Tab Pages in Vim
 ##### *:h tabpage*  
 
+## Table of Contents
+* [Tab Pages in Vim](#tab-pages-in-vim) 
+* [Opening multiple files in tabs](#opening-multiple-files-in-tabs) 
+* [Closing a tab page](#closing-a-tab-page) 
 
 ## Opening multiple files in tabs
 

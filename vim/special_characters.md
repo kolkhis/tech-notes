@@ -1,6 +1,10 @@
 
 # Special Characters in Vim
 
+## Table of Contents
+* [Digraphs](#digraphs) 
+    * [List of Digraphs](#list-of-digraphs) 
+
 ## Digraphs  
 * `:h dig` | `digraphs`  
   

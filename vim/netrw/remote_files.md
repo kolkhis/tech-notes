@@ -1,6 +1,16 @@
 
 # Remote Files and Directories with Netrw
 
+## Table of Contents
+* [Paths to Remote Files](#paths-to-remote-files) 
+* [Editing Remote Files](#editing-remote-files) 
+* [Browsing Remote Directories](#browsing-remote-directories) 
+* [Setting up SSH Key-Based Authentication](#setting-up-ssh-key-based-authentication) 
+    * [Default netrw commands used for actions](#default-netrw-commands-used-for-actions) 
+* [Help Pages](#help-pages) 
+* [Remote Settings in netrw](#remote-settings-in-netrw) 
+
+
 ## Paths to Remote Files
 > *:h netrw-path*  
 

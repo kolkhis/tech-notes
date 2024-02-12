@@ -5,6 +5,42 @@ Pressing `!` and then doing a motion will select the lines that the motion
 would have traversed, and put them in the Ex command line.  
 E.g., `!}` at the top of a paragraph will put the whole paragraph selection  
 into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).  
+
+## Table of Contents
+* [Vim Keybindings, Hotkeys & Shortcuts](#vim-keybindings-hotkeys-&-shortcuts) 
+* [Making Custom Keybindings](#making-custom-keybindings) 
+    * [Mapping Modes](#mapping-modes) 
+    * [Special Mapping Arguments](#special-mapping-arguments) 
+    * [Clearing / Deleting Mappings](#clearing-/-deleting-mappings) 
+* [Normal Mode](#normal-mode) 
+    * [Insert text at the same position on the line below/above](#insert-text-at-the-same-position-on-the-line-below/above) 
+    * [Toggling Case](#toggling-case) 
+    * [Editing Motions](#editing-motions) 
+    * [Macros](#macros) 
+    * [Swapping Lines, Chars, and Words](#swapping-lines-chars-and-words) 
+    * [Windows](#windows) 
+* [Insert Mode](#insert-mode) 
+    * [Insert Mode Completion](#insert-mode-completion) 
+* [Visual Mode](#visual-mode) 
+    * [Basic Operations](#basic-operations) 
+    * [Highlingting Around (Inclusive)](#highlingting-around-(inclusive)) 
+    * [Highlingting Inside (Non-Inclusive)](#highlingting-inside-(non-inclusive)) 
+* [Select mode](#select-mode) 
+    * [Commands in Select mode](#commands-in-select-mode) 
+* [Ex Mode](#ex-mode) 
+    * [Not Used by Default](#not-used-by-default) 
+    * [Basic Keybindings](#basic-keybindings) 
+    * [Ex Mode Completion](#ex-mode-completion) 
+    * [Quick Insertion](#quick-insertion) 
+* [Netrw](#netrw) 
+    * [View / Opening Files](#view-/-opening-files) 
+    * [Browsing](#browsing) 
+    * [Modifying Files](#modifying-files) 
+    * [Bookmarks](#bookmarks) 
+    * [File Display / Information](#file-display-/-information) 
+
+
+
 ## Making Custom Keybindings  
 >###### *:h map-precedence*  
 >###### *:h map-arguments*  
@@ -137,7 +173,7 @@ Using `CTRL-O` does the same thing after performing an action.
     * If you didn't enter any text, it deletes the whole line.  
 * `CTRL-Y`: Insert the character **above** the cursor.  
 
-### Completion  
+### Insert Mode Completion  
 * `CTRL-X {mode}`: enter `CTRL-X` sub mode (omni-completion)  
     * `i_CTRL-X_index`
 
@@ -264,7 +300,7 @@ The main movement keys for Select Mode are the same as other editors:
 * `c_<S-Down>` (`<S-Down>`): recall next command-line from history  
 
 
-### Completion  
+### Ex Mode Completion  
 * `c_wildchar`: 'wildchar' Do completion on the pattern in front of the  
                            cursor (default:`<Tab>`)  
 * `c_<Tab>` (`<Tab>`):  if 'wildchar' is (`<Tab>`): Do completion on  

@@ -4,6 +4,13 @@
 Lua has its own support for regular expressions ().
 This gives another option aside from Vim's built-in regex support.
 
+## Table of Contents
+* [`string.match`](#string.match) 
+    * [Usage](#usage) 
+* [Get Multiple Captures from One Regex](#get-multiple-captures-from-one-regex) 
+* [Using gsub](#using-gsub) 
+    * [`gsub` Syntax](#gsub-syntax) 
+* [Another example using a function](#another-example-using-a-function) 
 
 ## `string.match`  
 ### Usage

@@ -1,16 +1,52 @@
 
 # Useful Ex Commands  
 
+## Table of Contents
+* [Buffer List](#buffer-list) 
+    * [Buffer Types](#buffer-types) 
+* [Quickfix List](#quickfix-list) 
+* [Location List](#location-list) 
+* [Searching with :vimgrep or :vim](#searching-with-vimgrep-or-vim) 
+* [++opt - Options/Flags for Ex Commands](#++opt---options/flags-for-ex-commands) 
+* [Browsing the List of Options](#browsing-the-list-of-options) 
+    * [`ex-flags`](#ex-flags) 
+* [Ex Commands for Inputting Text](#ex-commands-for-inputting-text) 
+* [Redirecting the Output of Ex Commands](#redirecting-the-output-of-ex-commands) 
+    * [Redirect Ex command output into a file](#redirect-ex-command-output-into-a-file) 
+    * [Redirect Ex command output into a register](#redirect-ex-command-output-into-a-register) 
+    * [Redirect Ex command output into system clipboard](#redirect-ex-command-output-into-system-clipboard) 
+    * [Redirect Ex command output into variables](#redirect-ex-command-output-into-variables) 
+* [Using the Filter Command](#using-the-filter-command) 
+* [Useful for Scripting](#useful-for-scripting) 
+    * [Insert Mode / Replace Mode](#insert-mode-/-replace-mode) 
+    * [Reading Files](#reading-files) 
+* [Pasting text](#pasting-text) 
+* [Ex special characters](#ex-special-characters) 
+* [Dynamically Generating Temporary Files](#dynamically-generating-temporary-files) 
+* [Ex Command Substitution](#ex-command-substitution) 
+            * [ ``` `= ```](#--=-) 
+    * [Using Expanded Variables](#using-expanded-variables) 
+    * [Using Literal Variable Names](#using-literal-variable-names) 
+* [Ex Mode Special Words](#ex-mode-special-words) 
+* [`filename-modifiers`](#filename-modifiers) 
+* [Examples](#examples) 
+* [Debugging with gdb](#debugging-with-gdb) 
+            * [*:h termdebug-stepping*/*:h :Run*](#*h-termdebug-stepping*/*h-run*) 
+    * [Inspecting variables](#inspecting-variables) 
+            * [*:h termdebug-variables*/*:h :Evaluate*](#*h-termdebug-variables*/*h-evaluate*) 
+    * [Navigating stack frames](#navigating-stack-frames) 
+            * [*:h termdebug-frames*/*:h :Frame*/*:h :Up*/*:h :Down*](#*h-termdebug-frames*/*h-frame*/*h-up*/*h-down*) 
+    * [Other commands](#other-commands) 
 
 ## Buffer List
 Use `:buffers` (or `:files`, or `:ls`) to see the buffer list.  
 
-* `:bad {fname}`: Add a file to the buffer list without 
-    loading it, if it wasn't listed yet.  
+* `:bad {fname}` / `:badd {fname}`:  Add a file to the buffer list without 
+  loading it, if it wasn't listed yet. (Pneumonic: Buffer Add)  
     * You can specify a line number to go to when it's first entered.
     * `:bad 16 file.txt` will go to line 16 of `file.txt` when you first enter it.
-* `:balt {fname}`: Same as `:badd`, but also set the alternate file for the current
-                    window to `{fname}`.
+* `:balt {fname}`: Same as `:badd`, but also set the `alternate file` for the current
+                   window to `{fname}`. (Pneumonic: Buffer Alternate)
 
 * `:b`: Edit buffer given by number, name, or partial name.
 * `:sb`: Like `:b` but edit in a split.
@@ -34,13 +70,16 @@ There are different buffer types, here are a few:
 * scratch
 * unlisted
 
+---
+
 ## Quickfix List
 The following commands create or modify the quickfix list:
-* `:vimgrep`
+* [`:vimgrep`](#searching-with-vimgrep-or-vim)
 * `:grep`
 * `:helpgrep`
 * `:make`
 * ... There are more
+
 
 ## Location List
 You can prepend `l` to a lot of the commands that manipulate the 
@@ -51,6 +90,35 @@ The following commands create or modify the location list:
 * `:lhelpgrep`
 * `:lmake`
 * ... There are more
+
+## Searching with :vimgrep or :vim  
+To use `:vimgrep` (`:vim`)  to search for patterns across files  
+in the current directory, use the syntax:  
+```vim  
+:vim /pattern/ *  
+```
+To search recursively:  
+* Note: You may need to enable the `globstar` in your shell for this to work.  
+```vim  
+:vim /pattern/ **/*  
+```
+This uses the `globstar` feature in bash.  
+The recursive searching goes up to 100 directories deep.  
+* `:vimgrep` puts all matching files in the `quickfix list`/`error list`.  
+    * Using `:lvimgrep` (or `:lvim`) will use the `location list` instead.  
+* Just like in substitutions, the `/` can be swapped for another char (i.e., `;`)  
+* `:vimgrep` follows the `'ignorecase'` option. 
+    * To overrule it put `\c` in the pattern to ignore case or `\C` to match case.
+
+To get the list of all files that were matched (the quickfix list):  
+```vim  
+:cope  
+```
+
+To search for a fixed string instead of a pattern, use the `f` flag:  
+```vim  
+:vimgrep /myString/f **/*  
+```
 
 
 
@@ -64,7 +132,7 @@ The form is: `++{optname}` or `++{optname}={value}`
 Where `{optname}` is one of: `++ff`, `++enc`, `++bin`, `++nobin`, `++edit`
 
 | `{optname}` |Long `{optname}`| Purpose  
-|-|-|-|
+|-|-|-
 |    `++ff`     |   `++fileformat` | overrides the `fileformat` option  
 |    `++enc`    |   `++encoding`   | overrides the `fileencoding` option  
 |    `++bin`    |   `++binary`     | sets the `binary` option  
@@ -244,10 +312,9 @@ buffer.  Useful when you are editing e-mail and want to include a binary file.
 
 ## Pasting text  
 
+* `:[range]p[rint] [flags]`: Print `[range]` lines (default is the current line).  
+    * This outputs to the command line, but does not insert anything into the buffer.
 
-                        *:p* *:pr* *:print* *E749*  
-:[range]p[rint] [flags]  
-            Print [range] lines (default current line).  
 
 
 

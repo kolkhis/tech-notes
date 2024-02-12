@@ -5,6 +5,11 @@
 1. The Nvim Lua "standard library" (stdlib) is the `vim` module.
     1. It's always loaded, so `require("vim")` is unnecessary.
 
+## Table of Contents
+* [Lua Standard Library](#lua-standard-library) 
+* [Setting a Timer](#setting-a-timer) 
+* [Detect File Changes](#detect-file-changes) 
+
 
 ## Setting a Timer
 Use the `vim.uv` module

@@ -7,13 +7,12 @@ However, Lua does come with a `table.sort` function.
 
 
 ## Table of Contents
-* [Using `table.sort`](#using-`table.sort`) 
-* [Making your own sorting rules](#making-your-own-sorting-rules) 
-* [Sorting tables in descending order](#sorting-tables-in-descending-order) 
-* [Sorting tables in ascending order](#sorting-tables-in-ascending-order) 
-* [Sorting Tables in Lua](#sorting-tables-in-lua) 
-* [Example Table](#example-table) 
+* [Using `table.sort`](#using-table.sort) 
     * [Syntax](#syntax) 
+* [Making your own sorting rules](#making-your-own-sorting-rules) 
+* [Example Table](#example-table) 
+* [Sorting tables in ascending order](#sorting-tables-in-ascending-order) 
+* [Sorting tables in descending order](#sorting-tables-in-descending-order) 
 
 
 ## Using `table.sort`

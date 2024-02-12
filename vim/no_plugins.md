@@ -1,7 +1,29 @@
 
 # Misc Vim Notes
 
-### Special Characters (Diagraphs)
+
+## Table of Contents
+* [Special Characters (Diagraphs)](#special-characters-(diagraphs)) 
+* [Omnicomplete](#omnicomplete) 
+* [Netrw](#netrw) 
+* [Tags](#tags) 
+* [Command Mode Editing](#command-mode-editing) 
+* [Command Line Ranges](#command-line-ranges) 
+    * [Search and Range Items](#search-and-range-items) 
+* [Easy Searching](#easy-searching) 
+* [Various Options](#various-options) 
+    * [More Tab Options](#more-tab-options) 
+        * [Formatting Options For `gq`](#formatting-options-for-gq) 
+    * [Undo Options](#undo-options) 
+* [Misc `:!{cmd}` Notes](#misc-!cmd-notes) 
+* [Recursive Macros](#recursive-macros) 
+* [Using the `=` Register for Formulas](#using-the-=-register-for-formulas) 
+* [Function author for a quick search type thing](#function-author-for-a-quick-search-type-thing) 
+* [Help Sections to Read Up On](#help-sections-to-read-up-on) 
+
+
+
+## Special Characters (Diagraphs)
 
 * `i_<C-k>` + 2 letters will output a special character.
 * `:h default-diagraphs`
@@ -11,7 +33,7 @@
 
 * `:h visual-search`
 
-### Omnicomplete
+## Omnicomplete
 Omnicompletion in vim:
 * The good stuff is documented in |ins-completion|
 * `^x^n`: Searches for completions in JUST this file
@@ -19,13 +41,13 @@ Omnicompletion in vim:
 * `^x^]`: Searches for completions in tags only
 * `^n`: for anything specified by the 'complete' option
 
-### Netrw
+## Netrw
 File browsing with netrw:
 * You can do a lot with netrw. Connect to remote filesystems with ssh, mark files, etc.
 * Open in split with `v`, `o`, or `p`
 * `:h netrw-browse-maps`
 
-### Tags:
+## Tags:
 This is basically a fzf.  
 Utilizing `ctags`, type `:find *.vim<Tab>` and it pulls up all .vim
 files in the current directory and, with `set path+=**` set, all subdirectories  
@@ -37,14 +59,14 @@ command! MakeTags !ctags -R .
 " <C-t> will jump back up the tag stack
 
 
-### Command Mode Editing
+## Command Mode Editing
 Or Ex mode editing.
 * `c_CTRL-z` will show all Ex commands in autocomplete.
 * `c_CTRL-u` will remove all the text between the cursor and the beginning of the command (to the `:`)
 * `c_CTRL-p`/`c_CTRL-n` will insert the last command executed / cycle through command history.
 * `c_CTRL-a` (double tap in tmux) will dump all commands?
 
-### Command Line Ranges
+## Command Line Ranges
 > `:h cmdline-ranges`  
 > `:h E1247`: Special characters for ranges
 > `:h :;`: Using semicolons vs commas
@@ -64,7 +86,7 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 * `:.;.6s/` - Start a substitution from the current line to the next 6 lines  
 * `:.1;.6s/` - Start a substitution from the line below the current line, to the next 6 lines  
 
-#### Search and Range Items
+### Search and Range Items
 * `/pattern/`: 	next line where pattern matches
 * `?pattern?`: 	previous line where pattern matches
 * `\/`:         next line where the previously used search pattern matches
@@ -75,13 +97,13 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 
 
 
-### Easy Searching
+## Easy Searching
 > Most of these only work when `incsearch` is set.
 * `/_CTRL-L` will select one character to the right in search mode, adding it to the search
 * `/_CTRL-G` & `/_CTRL-T` will cycle through the matches for the current search pattern
 
 
-### Various Options
+## Various Options
 `:h options `
 
 `:h emoji`  
@@ -105,7 +127,7 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
  	set cot=menuone,noselect,  
 
 
-#### More Tab Options
+### More Tab Options
 `vartabstop`	list of number of spaces a tab counts for  
 	(local to buffer)  
  	set vts=  
@@ -113,12 +135,12 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 	(local to buffer)  
  	set vsts=  
 
-##### Formatting Options For `gq`
+#### Formatting Options For `gq`
 `formatexpr`	expression used for "gq" to format lines  
 	(local to buffer)  
  	set fex=v:lua.vim.lsp.formatexpr()  
 
-#### Undo Options
+### Undo Options
 `undolevels`	maximum number of changes that can be undone  
 	(global or local to buffer)  
  	set ul=1000  
@@ -129,7 +151,7 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 `undoreload`	maximum number lines to save for undo on a buffer reload  
  	set ur=10000  
 
-### Misc `:!{cmd}` Notes
+## Misc `:!{cmd}` Notes
 Any "%" in {cmd} is expanded to the current file name.  
 Any "#" in {cmd} is expanded to the alternate file name.  
 Special characters are not escaped, use quotes or  
@@ -143,7 +165,7 @@ To avoid the hit-enter prompt use: >
 Repeat last ":!{cmd}".  
     :!!  
 
-### Recursive Macros
+## Recursive Macros
 * <Position my cursor where I want to make the first change>  
 * `qa` - start recording into register 'a'
 * <Make all my changes, doing it in a way that should apply cleanly to all locations>
@@ -155,7 +177,7 @@ Repeat last ":!{cmd}".
 * `@a`
 * `q`
 
-##### More from the author of the Recursive macro tip
+#### More from the author of the Recursive macro tip
 Now, if I call it again, register 'a' contains a macro that does my change, moves to the next spot, and then calls itself again.  
 It will run repeatedly until it encounters an error.  
 This could be trying to move past the end of the buffer, finding no matches for a search, search hitting the end of buffer if 'nowrapscan' is set, or any other command failure indicating all the changes are complete.  
@@ -169,7 +191,7 @@ Note these also combine really well with macro techniques mentioned above, as we
 
 
 
-### Using the `=` Register for Formulas
+## Using the `=` Register for Formulas
 Using the = register to calculate numeric inputs for motions.  
 
 For example @=237*8<cr><c-a> to increment a value by 237*8.  
@@ -194,7 +216,7 @@ But I don’t know, maybe everyone else uses these regularly, I guess it depends
 
 
 
-### Function author for a quick search type thing
+## Function author for a quick search type thing
 I wrote an operator mapping I activate by <leader>/ that takes the result of the motion and sets the search register to it.  
 For example, hitting <leader>/i( will search for the string currently in the parentheses where the cursor is.  
 
@@ -232,7 +254,7 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 
 
 
-### Help Sections to Read Up On
+## Help Sections to Read Up On
 * `:h various.txt`:  
 * `:h filter`:  
 * `:h redir`:  

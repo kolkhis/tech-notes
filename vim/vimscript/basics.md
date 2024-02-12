@@ -1,6 +1,41 @@
 
 # Vim Script Basics  
 
+## Table of Contents
+* [Type Conversion](#type-conversion) 
+* [Types](#types) 
+* [Type Checking](#type-checking) 
+* [Variable Namespaces](#variable-namespaces) 
+* [Strings](#strings) 
+    * [String Length](#string-length) 
+    * [String Concatenation](#string-concatenation) 
+    * [String Comparison](#string-comparison) 
+    * [String Slicing](#string-slicing) 
+    * [Counting Occurrences of a Substring](#counting-occurrences-of-a-substring) 
+    * [Find Position of a Substring](#find-position-of-a-substring) 
+    * [Check if a String Starts With or Ends With a Substring](#check-if-a-string-starts-with-or-ends-with-a-substring) 
+    * [Join Strings in a List with a Separator](#join-strings-in-a-list-with-a-separator) 
+    * [Replace a Substring](#replace-a-substring) 
+    * [Split a String](#split-a-string) 
+    * [Trimming/Stripping Strings of Whitespace](#trimming/stripping-strings-of-whitespace) 
+    * [Fuzzy Matching Strings](#fuzzy-matching-strings) 
+    * [String Methods](#string-methods) 
+* [Appending to a List](#appending-to-a-list) 
+* [Join Two Lists / Extend a List](#join-two-lists-/-extend-a-list) 
+* [Insert an Item Into a List](#insert-an-item-into-a-list) 
+* [Remove an Item from a List](#remove-an-item-from-a-list) 
+* [Remove the Last Item from a List](#remove-the-last-item-from-a-list) 
+* [Find the Index of an Item in a List](#find-the-index-of-an-item-in-a-list) 
+* [Find the index of an item in a List of Dictionaries by the item value](#find-the-index-of-an-item-in-a-list-of-dictionaries-by-the-item-value) 
+* [List Slicing](#list-slicing) 
+* [Adding multiple items to a list using repetition](#adding-multiple-items-to-a-list-using-repetition) 
+* [Count number of occurrences of an item in a list](#count-number-of-occurrences-of-an-item-in-a-list) 
+* [Get the length of a list](#get-the-length-of-a-list) 
+* [Dictionaries](#dictionaries) 
+* [The -> syntax](#the-->-syntax) 
+* [Heredoc](#heredoc) 
+* [Resources](#resources) 
+
 
 ## Type Conversion  
 

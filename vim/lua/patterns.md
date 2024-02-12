@@ -8,6 +8,12 @@ The default character used for character classes and escaping is the `%` sign.
 This differs from regex, which uses a backslash (`\`) for 
 character classes and escaping.  
 
+## Table of Contents
+* [Character Classes](#character-classes) 
+* [Sets](#sets) 
+* [Capture Groups](#capture-groups) 
+    * [Empty Captures](#empty-captures) 
+    * [Accessing Captures](#accessing-captures) 
 
 ## Character Classes  
 Lua character classes are similar to regex character classes.  
