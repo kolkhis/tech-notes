@@ -2,7 +2,144 @@
 
 # Linux Command Cheatsheet  
 
-[Table of Contents](#Table-of-Contents)  
+
+## Table of Contents
+* [CLI Tools to Become Familiar With](#cli-tools-to-become-familiar-with) 
+* [Tools to Check Out for Networking/Admin](#tools-to-check-out-for-networking/admin) 
+* [CDPATH](#cdpath) 
+* [Miscellaneous Useful Commands](#miscellaneous-useful-commands) 
+* [Check which version of linux is running](#check-which-version-of-linux-is-running) 
+* [Check linux version](#check-linux-version) 
+* [Check kernel version](#check-kernel-version) 
+* [Duplicating File Descriptors](#duplicating-file-descriptors) 
+    * [Redirect Stderr to Stdout](#redirect-stderr-to-stdout) 
+* [Check how much memory is being used](#check-how-much-memory-is-being-used) 
+* [Or, simply](#or-simply) 
+* [Check CPU usage](#check-cpu-usage) 
+* [Checking CPU usage](#checking-cpu-usage) 
+* [Check which processes are executing on the processor](#check-which-processes-are-executing-on-the-processor) 
+* [Check process cpu usage](#check-process-cpu-usage) 
+* [Check network usage and load of the system](#check-network-usage-and-load-of-the-system) 
+* [Check Running Processes](#check-running-processes) 
+* [Give a user full sudo access](#give-a-user-full-sudo-access) 
+    * [Rule of Least Privilege](#rule-of-least-privilege) 
+* [Expansion via Indirection](#expansion-via-indirection) 
+* [outputs: world](#outputs-world) 
+    * [Using Indirection with Arrays (Lists) and Associative Arrays (Dictionaries)](#using-indirection-with-arrays-(lists)-and-associative-arrays-(dictionaries)) 
+* [Using Grep](#using-grep) 
+    * [Alternation (matching any one of multiple expressions)](#alternation-(matching-any-one-of-multiple-expressions)) 
+* [Using tput](#using-tput) 
+    * [`tput` Examples](#tput-examples) 
+* [Control Sequences](#control-sequences) 
+* [Heredocs in Linux](#heredocs-in-linux) 
+    * [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
+    * [Example](#example) 
+* [Check which sudo commands a user has access to](#check-which-sudo-commands-a-user-has-access-to) 
+* [Replacing All Occurrences of a String in Multiple Files](#replacing-all-occurrences-of-a-string-in-multiple-files) 
+* [Finding Files](#finding-files) 
+    * [The `find` Command](#the-find-command) 
+    * [Testing Files with `find`](#testing-files-with-find) 
+    * [Testing Timestamps of Files with `find`](#testing-timestamps-of-files-with-find) 
+* [The Three Timestamps Explained](#the-three-timestamps-explained) 
+    * [`find` Options](#find-options) 
+    * [Global Options](#global-options) 
+* [Run a Script when Any User Logs Into the System](#run-a-script-when-any-user-logs-into-the-system) 
+* [/etc/profile: system-wide .profile file for the Bourne shell (sh(1))](#/etc/profile-system-wide-.profile-file-for-the-bourne-shell-(sh(1))) 
+* [Add anything here to be run at](#add-anything-here-to-be-run-at) 
+* [This will timestamp the current user in userlogs.log](#this-will-timestamp-the-current-user-in-userlogs.log) 
+* [Important Linux Commands](#important-linux-commands) 
+    * [User and Group Management](#user-and-group-management) 
+    * [Network Configuration and Monitoring](#network-configuration-and-monitoring) 
+    * [Process Management](#process-management) 
+    * [Package Management](#package-management) 
+    * [System Information](#system-information) 
+        * ["others"](#"others") 
+* [Get or Increase the Limit of Open Files](#get-or-increase-the-limit-of-open-files) 
+* [Recursively Get or Search Files](#recursively-get-or-search-files) 
+* [Using Netcat](#using-netcat) 
+    * [Listening on Ports](#listening-on-ports) 
+    * [Transferring Files](#transferring-files) 
+    * [Timezone change](#timezone-change) 
+* [Colored output for `less`](#colored-output-for-less) 
+* [Using `xargs` to Transform Input into Arguments](#using-xargs-to-transform-input-into-arguments) 
+* [Numeric Calculations & Random Numbers](#numeric-calculations-&-random-numbers) 
+* [Get the Directory of a Script](#get-the-directory-of-a-script) 
+* [Search Terms for Bash Man Page](#search-terms-for-bash-man-page) 
+* [Definitions](#definitions) 
+* [Terminal Colors](#terminal-colors) 
+    * [256-colors](#256-colors) 
+* [or, if used in your prompt customization](#or-if-used-in-your-prompt-customization) 
+* [SSH Logs and Processes](#ssh-logs-and-processes) 
+* [Cron, Cronjobs & Crontabs](#cron-cronjobs-&-crontabs) 
+* [File and Directory Permissions](#file-and-directory-permissions) 
+* [Disable Shellcheck From Within Shell Scripts](#disable-shellcheck-from-within-shell-scripts) 
+* [shellcheck disable=SC2059](#shellcheck-disable=sc2059) 
+* [Check if an argument is empty](#check-if-an-argument-is-empty) 
+* [Check if a File Exists or is Larger Than 0 Bytes](#check-if-a-file-exists-or-is-larger-than-0-bytes) 
+* [Check if file exists and source it](#check-if-file-exists-and-source-it) 
+* [Get Command Locations, Binaries, and Aliases](#get-command-locations-binaries-and-aliases) 
+* [Using `find`](#using-find) 
+    * [Exclude files using `find`](#exclude-files-using-find) 
+* [Exclude '.git' from find](#exclude-'.git'-from-find) 
+* [Getting Help With Commands](#getting-help-with-commands) 
+* [Trapping Errors](#trapping-errors) 
+* [or](#or) 
+* [Source Relative Files](#source-relative-files) 
+* [Changing the system's hostname](#changing-the-system's-hostname) 
+* [Stream Manipulation w/ `awk`, `grep`, and `sed`](#stream-manipulation-w/-awk-grep-and-sed) 
+* [Compare Files](#compare-files) 
+* [Loops](#loops) 
+* [Basic for loop](#basic-for-loop) 
+* [C-like for loop](#c-like-for-loop) 
+* [Ranges](#ranges) 
+* [With step size](#with-step-size) 
+* [Loop over lines from a file in bash](#loop-over-lines-from-a-file-in-bash) 
+* [Loop over lines from a command](#loop-over-lines-from-a-command) 
+* [Forever (Infinite Loop)](#forever-(infinite-loop)) 
+* [Getting Options and Arguments](#getting-options-and-arguments) 
+* [Options](#options) 
+* [Glob Options](#glob-options) 
+* [Functions & Scripts](#functions-&-scripts) 
+* [Returning Values](#returning-values) 
+* [Raising Errors](#raising-errors) 
+* [Special Arguments/Parameters](#special-arguments/parameters) 
+* [Arrays in Bash](#arrays-in-bash) 
+* [List-like Arrays & String Manipulation/Slicing](#list-like-arrays-&-string-manipulation/slicing) 
+* [Dictionaries (Associative Arrays)](#dictionaries-(associative-arrays)) 
+* [Declares sound as a Dictionary object (aka associative array).](#declares-sound-as-a-dictionary-object-(aka-associative-array).) 
+* [Working with dictionaries](#working-with-dictionaries) 
+* [Iterate over values of a dictionary](#iterate-over-values-of-a-dictionary) 
+* [Iterate over keys of a dictionary](#iterate-over-keys-of-a-dictionary) 
+* [Process Substitution in Bash](#process-substitution-in-bash) 
+    * [Overview](#overview) 
+    * [Syntax](#syntax) 
+    * [How It Works](#how-it-works) 
+    * [Examples](#examples) 
+* [Process Substitution](#process-substitution) 
+* [Transforming Strings with `tr`](#transforming-strings-with-tr) 
+    * [Arguments](#arguments) 
+    * [Character Classes](#character-classes) 
+* [All Bash Conditional Flags](#all-bash-conditional-flags) 
+        * [Arithmetic Operators](#arithmetic-operators) 
+* [Interpreter Order of Operations](#interpreter-order-of-operations) 
+* [Parameter Expansion (Slicing/Substitution)](#parameter-expansion-(slicing/substitution)) 
+    * [Slicing](#slicing) 
+* [Cutting out the suffix](#cutting-out-the-suffix) 
+* [Cutting out the prefix](#cutting-out-the-prefix) 
+* [Cutting out the path, leaving the filename](#cutting-out-the-path-leaving-the-filename) 
+    * [Substitution](#substitution) 
+    * [Substrings](#substrings) 
+    * [Getting the Length of a String/Variable](#getting-the-length-of-a-string/variable) 
+* [PS1, PS2, PS3, and PS4 Special Environment Variables](#ps1-ps2-ps3-and-ps4-special-environment-variables) 
+    * [PS1](#ps1) 
+    * [PS2: Secondary Prompt String](#ps2-secondary-prompt-string) 
+    * [PS3: Prompt String for select](#ps3-prompt-string-for-select) 
+    * [PS4: Debug Prompt String](#ps4-debug-prompt-string) 
+* [Get bits: Zero, random or random 0/1](#get-bits-zero-random-or-random-0/1) 
+* [SysAdmin Relevant - Firewall and Network commands](#sysadmin-relevant---firewall-and-network-commands) 
+* [Redirecting Standard Output AND Standard Error](#redirecting-standard-output-and-standard-error) 
+* [GOOD](#good) 
+* [BAD](#bad) 
 
 
 ## CLI Tools to Become Familiar With  
@@ -32,9 +169,10 @@
 
 The search path for the cd command.  This is a colon-separated list of  directories  in  
 which  the shell looks for destination directories specified by the cd command.  
-A sample value is `.:~:/usr`.  
+Sample value: `.:~:/usr`.  
 
-* Once the CDPATH is set, the cd command will search only in the directories present in the CDPATH variable only.  
+* Once the `CDPATH` is set, the cd command will search only in the directories
+  present in the `CDPATH` variable only.  
 * More details at [The Unix School](https://www.theunixschool.com/2012/04/what-is-cdpath.html)  
 
 
@@ -68,6 +206,47 @@ uname -r
 
 ---  
 
+## Duplicating File Descriptors  
+You can redirect file descritors to other file descriptors.  
+This effectively combines two file descriptors into one.  
+
+* The redirection operator  
+  ```bash  
+  [n]<&word  
+  ```
+  is used to duplicate input file descriptors.  
+    * If `word` expands to one or more digits, the file descriptor denoted by `n`
+      is made to be a copy of that file descriptor.  
+    * If the digits in word do not specify a file descriptor open for 
+      input, a redirection error occurs.  
+    * If word evaluates to `-`, file descriptor `n` is closed.  
+    * If `n` is not specified, the standard input (file descriptor `0`) is used.  
+
+* The operator  
+  ```bash  
+  [n]>&word  
+  ```
+  is used similarly to duplicate output file descriptors.  
+    * This effectively "attaches" file descriptor `n` to the file or device 
+      specified by `word`.  
+    * If `n` is not specified, the standard output (file descriptor `1`) is used.  
+    * If the digits in `word` do not specify a file descriptor open for  
+      output, a redirection error occurs.  
+    * If word evaluates to `-`, file descriptor `n` is closed.  
+    * As a special case, if `n` is omitted, and word does not expand to one or more 
+      digits or `-`, the standard output and standard error are redirected  
+      as described previously.  
+
+### Redirect Stderr to Stdout  
+```bash  
+cat file 2>&1  
+```
+This command redirects the standard error (`stderr`) to the standard output (`stdout`).  
+
+
+---  
+
+
 ## Check how much memory is being used  
 To check RAM usage:  
 ```bash  
@@ -82,6 +261,7 @@ free -h | grep Swap | awk '{print $3}'  # How much swap is being used
 
 
 ---  
+
 
 ## Check CPU usage  
 To check how much CPU power is being used:  
@@ -148,9 +328,8 @@ The lines need to have two `##` in order to be comments
     * Also called the "principle of least privilege."  
 
 ```bash  
-cat /etc/sudoers
+cat /etc/sudoers  
 ```
-
 
 ---  
 
@@ -185,7 +364,6 @@ access the keys or values of all elements:
       element in the dictionary.  
     * ```bash  
       declare -A sounds  
- 
       sounds[dog]="bark"  
       sounds[cow]="moo"  
       sounds[bird]="tweet"  
@@ -195,6 +373,7 @@ access the keys or values of all elements:
       ```
 
 ---  
+ 
 
 ## Using Grep  
 See [grep](../tools/grep.md).  
@@ -245,6 +424,7 @@ i.e., `tput` can get or set various terminal capabilities.
       ```
     * `smso` - set mode stand-out (bold)  
     * `rmso` - remove mode stand-out (bold)  
+
 
 ---  
 
@@ -347,9 +527,9 @@ There are a ton of tests available to `find`.
 ```bash  
 find -name "*.md" -not -path "./directory/*"    # Find .md files not in `directory`
 find -name "*.md" \! -path "./directory/*"      # Same as above  
-
+ 
 find . -type d -o -name '*.txt'                 # Find any .txt files or directories  
-
+ 
 find . -type f -a -name '*.py'                  # Find files ending with .py  
 find . -type f -name '*.py'                     # Same as above (-a is optional)  
 ```
@@ -617,7 +797,6 @@ The following definitions are used throughout the `bash` man page.
 ## Terminal Colors  
 
 ### 256-colors  
-
 38; indicates "foreground"  
 5; indicates "256-color"  
 ```bash  
