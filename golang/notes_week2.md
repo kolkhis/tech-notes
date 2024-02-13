@@ -110,10 +110,9 @@ Once the example test is ready:
 `go test ./...` Can recursively search for tests and run them.
 
 1:40 for the `entr` auto-testing
-`entr bash -c "clear; go test -v ./..." < <(find . -name '*.go')`
+* `entr bash -c "clear; go test -v ./..." < <(find . -name '*.go')`
 
-Rob used:
-`entr bash -c "clear; go test -v ./..." < <(ls **/*.go)` - This gave me an error
+* `entr bash -c "clear; go test -v ./..." < <(ls **/*.go)` - Requires `globstar` shell option to be set. 
 
 
 
