@@ -21,7 +21,10 @@ If there's an example that doesn't start with `awk`, this applies.
 
 
 ## Table of Contents
+* [Awk (Advanced Worlking)](#awk-(advanced-worlking)) 
 * [Syntax](#syntax) 
+    * [Basic Syntax of an Awk on the Command Line](#basic-syntax-of-an-awk-on-the-command-line) 
+    * [Basic Syntax of an Awk Script](#basic-syntax-of-an-awk-script) 
 * [Field and Record Separators](#field-and-record-separators) 
 * [Simple Examples](#simple-examples) 
     * [Print the First Column of a Text File](#print-the-first-column-of-a-text-file) 
@@ -60,16 +63,29 @@ If there's an example that doesn't start with `awk`, this applies.
 * [Using Awk as an Interpreter](#using-awk-as-an-interpreter) 
 
 
-
 ## Syntax  
-The basic syntax of using `awk`:  
+### Basic Syntax of an Awk on the Command Line
+The basic syntax of using `awk` on the command line:  
 ```bash  
 awk [options] 'program' input-file(s)  
 ```
+* `options`: Command-line options (e.g., `-f` to specify a file containing an `awk` script).  
+* `program`: Instructions for `awk` to execute, typically enclosed in single quotes.  
+* `input-file(s)`: The file(s) `awk` will process. 
+    * If no files are given, `awk` reads from the standard input.  
 
-* `options`: Command-line options, such as `-f` to specify a file containing an `awk` script.  
-* `program`: A set of instructions for `awk` to execute, typically enclosed in single quotes.  
-* `input-file(s)`: The file(s) `awk` will process. If omitted, `awk` reads from the standard input.  
+
+### Basic Syntax of an Awk Script
+The structure of an Awk script:
+```awk
+BEGIN { print "START" }
+      { print         }
+END   { print "STOP"  }
+```
+* The `BEGIN` and `END` blocks are optional.  
+1. `BEGIN { ... }`: Executed before processing the first line of input.  
+2. `      { ... }`: The **pattern** and **action** blocks to execute for each line of input.  
+3. `END   { ... }`: Executed after processing the last line of input.  
 
 
 ## Field and Record Separators  
