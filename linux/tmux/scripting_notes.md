@@ -8,16 +8,64 @@ or quoted semicolon (`\;`/`';'`).
 Commands don't need to be quoted or escaped when run from  
 the tmux command prompt (`:`).  
 
+## Table of Contents
+* [Default Keybindings (not exhaustive)](#default-keybindings-(not-exhaustive)) 
+* [The Marked Pane](#the-marked-pane) 
+* [How to Run Commands](#how-to-run-commands) 
+* [Arguments](#arguments) 
+    * [Variable Expansion](#variable-expansion) 
+* [Braces](#braces) 
+* [Conditionals and Format Variables](#conditionals-and-format-variables) 
+* [Format Variables](#format-variables) 
+* [Conditional Formats](#conditional-formats) 
+    * [Basic Syntax of Format Conditionals](#basic-syntax-of-format-conditionals) 
+    * [More Complicated Conditionals](#more-complicated-conditionals) 
+* [String Comparisons](#string-comparisons) 
+* [Regular Expression Comparisons and Globbing](#regular-expression-comparisons-and-globbing) 
+    * [Searching the Current Pane with Pattern Matching or Regex](#searching-the-current-pane-with-pattern-matching-or-regex) 
+* [Numeric Expressions](#numeric-expressions) 
+    * [Numeric Expression Examples](#numeric-expression-examples) 
+    * [Numbers to ASCII](#numbers-to-ascii) 
+* [Limiting and Slicing Strings and Formats](#limiting-and-slicing-strings-and-formats) 
+* [Time Variables](#time-variables) 
+* [Variable Substitutions](#variable-substitutions) 
+    * [Filenames and Directory Names](#filenames-and-directory-names) 
+    * [Escaping Special Characters](#escaping-special-characters) 
+    * [Iterators](#iterators) 
+    * [Check for Window or Session Names](#check-for-window-or-session-names) 
+* [Conditionals Using Shell Commands](#conditionals-using-shell-commands) 
+* [Setting Environment Variables](#setting-environment-variables) 
+* [Tmux Variables](#tmux-variables) 
+    * [Variables with Aliases for Easy Reference](#variables-with-aliases-for-easy-reference) 
+    * [Quick Reference](#quick-reference) 
+    * [All Variables](#all-variables) 
+    * [Cursor and Command Variables](#cursor-and-command-variables) 
+    * [Hook Variables](#hook-variables) 
+    * [Mouse Variables](#mouse-variables) 
+    * [Pane Variables](#pane-variables) 
+        * [Pane Flag Variables](#pane-flag-variables) 
+    * [History, Buffer, and Copy Mode Variables](#history-buffer-and-copy-mode-variables) 
+    * [Session Variables](#session-variables) 
+    * [Window Variables](#window-variables) 
+* [Names and Titles](#names-and-titles) 
+    * [Names](#names) 
+    * [Titles](#titles) 
+* [Status Line Commands](#status-line-commands) 
+* [Misc Commands](#misc-commands) 
+* [Window Flags](#window-flags) 
+* [Session Option for Monitoring Activity in a Window](#session-option-for-monitoring-activity-in-a-window) 
+* [Hook Commands](#hook-commands) 
+
 
 ## Default Keybindings (not exhaustive)  
 To see a full list: `man tmux` -> `/DEFAULT KEY BINDINGS`
-```
+```plaintext
 m           Mark the current pane (see select-pane -m).  
 M           Clear the marked pane.  
 r           Force redraw of the attached client.  
 z           Toggle zoom state of the current pane.  
 
-############# Showing Information #############  
+------------- Showing Information -------------  
 #           List all paste buffers.  
 q           Briefly display pane indexes.  
 ?           List all key bindings.  
@@ -25,25 +73,25 @@ i           Display some information about the current window.
 t           Show the time.  
 ~           Show previous messages from tmux, if any.  
 
-############# Making and Killing Windows and Panes #############  
+------------- Making and Killing Windows and Panes -------------  
 &           Kill the current window.  
 x           Kill the current pane.  
 %           Split the current pane vertically, left and right.  
 "           Split the current pane horizontally, top and bottom.  
 
-############# Moving Panes #############  
+------------- Moving Panes -------------  
 {           Swap the current pane with the previous pane.  
 }           Swap the current pane with the next pane.  
 
 
-############# Resizing Panes #############  
+------------- Resizing Panes -------------  
 C-{CursorKey}
            Resize the current pane in steps of one cell.  
 M-{CursorKey}
            Resize the current pane in steps of five cells.  
 
 
-############# Preset Layouts #############  
+------------- Preset Layouts -------------  
 Space       Arrange the current window in the next preset layout.  
 M-1 to M-5  Arrange panes in one of the five preset layouts: 
                 even-horizontal,
@@ -52,7 +100,7 @@ M-1 to M-5  Arrange panes in one of the five preset layouts:
                 main-vertical  
                 tiled  
 
-############# Navigation #############  
+------------- Navigation -------------  
 f           Prompt to search for text in open windows.  
 0 to 9      Select windows 0 to 9.  
 n           Change to the next window.  
@@ -126,7 +174,11 @@ They are designed to avoid the need for additional escaping when
 passing a group of tmux commands as an argument (like to `if-shell`).  
 
 ## Conditionals and Format Variables  
+Personally, I haven't had any luck using the `%if` format.
+Prefer using [format conditionals](#conditional-formats) instead.
+
 Conditionals with tmux work with `formats`. (see `FORMATS` in `man tmux`)  
+
 Commands can be parsed conditionally by surrounding them with:  
 * `%if`
 * `%elif`
@@ -137,6 +189,7 @@ Certain commands also accept the `-F` flag with a format argument.
 The argument to `%if` and `%elif` is expanded as a format  and if it  
 evaluates to false, everything is ignored until the closing `%elif`,
 `%else` or `%endif`.  
+
 
 ## Format Variables  
 Format variables are enclosed in `#{` and `}`, e.g., `#{session_name}`.  
@@ -149,6 +202,45 @@ If an expression evaluates to zero or empty, it's false.
 ---  
 
 ## Conditional Formats  
+Note: Formats do **not** need to be in quotes.  
+
+### Basic Syntax of Format Conditionals 
+The basic conditional format follow the ternary syntax:
+```
+#{?conditional,if_true,if_false}
+```
+* `conditional`: The variable to check.
+* `if_true`: The value to return if `conditional` is true.  
+* `if_false`: The value to return if `conditional` is false.  
+
+
+Example:
+```.tmux.conf
+bind G setw synchronize-panes #{?pane_synchronized,off,on}
+```
+* Here the conditional is `#{?pane_synchronized,off,on}`
+    * If the `pane_synchronized` variable is `true` (`1`), returns `off`
+    * If the `pane_synchronized` variable is `false` (`0`), returns `on`
+* This will bind `<prefix> G` to set the window's `synchronize-panes` option
+  to `off` if the `pane_synchronized` variable is `true` (`1`), and
+  `on`, if it's false (`0`).
+
+### More Complicated Conditionals
+The example above can also be done by using a nested conditional statement.
+checking the value of `pane_synchronized` directly:
+```.tmux.conf
+bind G setw synchronize-panes #{?#{==:pane_synchronized,1},off,on}
+```
+This is a nested conditional format statement:
+* The `#{==:pane_synchronized,1}` expression is evaluated first.
+    * Here, we're comparing the value of `pane_synchronized` to `1`.
+    * This will return `1` or `0` (true or false).
+* The output of the expression is then passed to the outer conditional.
+    * If the value is `1`, `off` is returned.  
+    * If the value is `0`, `on` is returned.
+
+--- 
+
 Conditionals are available by prefixing with `?` and separating two  
 alternatives with a comma.  
 
@@ -156,25 +248,29 @@ If the specified variable exists and is not zero, the first
 alternative is chosen, otherwise the second is used.  
 
 * `#{?session_attached,attached,not attached}` 
-    * Will include the string `attached` if the session is attached,
+    * Will return the string `attached` if the session is attached,
       and the string `not attached` if it is unattached  
 
 * `#{?automatic-rename,yes,no}` 
-    * Will include `yes` if automatic-rename is enabled, or `no` if not.  
+    * Will return `yes` if automatic-rename is enabled, or `no` if not.  
 
 Inside a conditional, `,` and `}` need to be escaped with a hash 
 symbol (e.g., `#,` and `#}`), unless they are part of `#{...}`:  
 * `#{?pane_in_mode,#[fg=white#,bg=red],#[fg=red#,bg=white]}#W .`
 
+
+---
+
 ## String Comparisons  
 String comparisons may be expressed by prefixing two 
 comma-separated alternatives by:  
-* `==:`
-* `!=:`
-* `<:`
-* `>:`
-* `<=:`
-* `>=:` 
+* `==:`: Equality.
+* `!=:`: Inequality.
+* `<:`: Less than.
+* `>:`: Greater than.
+* `<=:`: Less than or equal to.
+* `>=:`: Greater than or equal to.
+
 Basically, your standard operators followed by a colon (`:`).  
 
 For example `#{==:#{host},myhost}` will be replaced by `1` if  
@@ -421,7 +517,6 @@ These are the variables that have aliases available:
 Quickref for useful variables  
 | Variable Name            | Alias | Replaced with                      |
 |--------------------------|-------|------------------------------------|
-| `pane_synchronized`           |  | 1 if pane is synchronized 
 | `current_file`                |  | Current configuration file 
 | `config_files`                |  | List of configuration files loaded 
 | `client_prefix`               |  | 1 if prefix key has been pressed 
@@ -438,9 +533,9 @@ Quickref for useful variables
 | `pane_marked`                 |  | 1 if this is the marked pane 
 | `pane_marked_set`             |  | 1 if a marked pane is set 
 
----  
 
 ---  
+
 
 ### All Variables  
 The following variables are available, where appropriate:  
@@ -810,3 +905,4 @@ Example:
 ```tmux  
 set-hook -g alert-activity 'display "Activity detected."'  
 ```
+
