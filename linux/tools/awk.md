@@ -4,10 +4,7 @@
 
 Awk is a programming language for text processing and data wrangling 
 (sometimes called data munging).  
-
-
 A great resource: [Learn X in Y Minutes](https://learnxinyminutes.com/docs/awk/) where `X = awk`
-
 
 * A note on examples:  
 Some of the examples in these notes will assume that awk is being run from the command line.  
@@ -76,12 +73,24 @@ awk [options] 'program' input-file(s)
 
 
 ### Basic Syntax of an Awk Script
+Awk is also an **interpreter** for a programming language.  
+That means it can be used in the shebang line of a script.  
+
 The structure of an Awk script:
 ```awk
+#!/bin/awk -f
+ 
+# This is a comment
+ 
 BEGIN { print "START" }
       { print         }
 END   { print "STOP"  }
 ```
+
+* Notice the `-f` option following `#!/bin/awk`. 
+    * The `-f` option specifies the Awk file containing the instructions.
+    * This is used in the command line when you use Awk to execute a file 
+      directly (`awk -f filename`).  
 * The `BEGIN` and `END` blocks are optional.  
 1. `BEGIN { ... }`: Executed before processing the first line of input.  
 2. `      { ... }`: The **pattern** and **action** blocks to execute for each line of input.  
