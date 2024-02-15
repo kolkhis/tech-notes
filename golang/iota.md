@@ -1,15 +1,21 @@
 
 # The `iota` Keyword in Go
-
 Iota is used to create a sequence of values.
 
+## Table of Contents
+* [Basics of IOTA Incrementation](#basics-of-iota-incrementation) 
+    * [Skipping Incrementations](#skipping-incrementations) 
+    * [Starting from a Specific Value](#starting-from-a-specific-value) 
+    * [IOTA Usage Example](#iota-usage-example) 
+* [Enum in Golang](#enum-in-golang) 
+    * [Enums Without IOTA](#enums-without-iota) 
 
-## Basics
 
+## Basics of IOTA Incrementation
 When the `iota` keyword is used in a constant declaration, it will
 increment by 1 for each following identifier (variable).
 
-By default, `iota` starts at 0 (zero).
+By default, `iota` starts at `0` (zero).
 
 E.g.,
 ```go
@@ -21,6 +27,8 @@ const (
 ```
 This will assign `a := 0`, `b := 1`, and `c := 2`.
 
+
+### Skipping Incrementations
 
 Iota's incrementations can be skipped using a blank identifier (an underscore `_`).
 
@@ -41,7 +49,25 @@ This will output:
 The underscore (`_`) will make iota increment, but it will not be saved into any value.
 
 
+### Starting from a Specific Value
+You can start `iota` at a specific value.
+Do this by adding a value after the `iota` keyword:
+```go
+const (
+    a = iota + 10
+    b
+    c
+)
+```
+This will output:
+```go
+10
+11
+12
+```
 
+
+### IOTA Usage Example
 
 For example, this program:
 ```go

@@ -4,6 +4,7 @@
 See [arrays](./arrays.md).
 
 ## Table of Contents
+* [Slices in Go](#slices-in-go) 
 * [Slices vs. Arrays](#slices-vs.-arrays) 
     * [Arrays](#arrays) 
     * [Slices](#slices) 
@@ -13,6 +14,15 @@ See [arrays](./arrays.md).
 * [Appending an Element to a Slice](#appending-an-element-to-a-slice) 
 * [Slices are Reference Types](#slices-are-reference-types) 
     * [Example Highlighting a Slice's Reference Type](#example-highlighting-a-slice's-reference-type) 
+* [The make() Builtin Function](#the-make()-builtin-function) 
+    * [Syntax for `make()`](#syntax-for-make()) 
+    * [Basic Usage of `make()` with Slices](#basic-usage-of-make()-with-slices) 
+    * [Defining a Slice with a High Capacity](#defining-a-slice-with-a-high-capacity) 
+* [The cap() Builtin Function](#the-cap()-builtin-function) 
+    * [Syntax for `cap()`](#syntax-for-cap()) 
+    * [Return Value](#return-value) 
+    * [Example 1](#example-1) 
+
 
 ## Slices vs. Arrays
 Slices and Arrays are both used to store sequences of elements, but
@@ -102,7 +112,8 @@ Changes made through one slice are visible through another slice
 that references the same array.
 
 ### Example Highlighting a Slice's Reference Type
-
+Here's an example that demonstrates the fact that 
+slices are reference types, rather than value types:
 ```go
 package main
  
@@ -122,7 +133,7 @@ func main() {
     fmt.Println("originalSlice:", originalSlice) 
  
     fmt.Println("newSlice:", newSlice)           // Output: [999 3 4]
-
+ 
     // Append to newSlice; this may or may not affect originalSlice depending on capacity.
     newSlice = append(newSlice, 6)
  
@@ -136,7 +147,7 @@ func main() {
     modifySlice(newSlice)
     fmt.Println("newSlice after modifySlice call:", newSlice) // newSlice modified by the function
 }
-
+ 
 // modifySlice takes a slice and modifies its first element
 func modifySlice(s []int) {
     if len(s) > 0 {
@@ -146,6 +157,174 @@ func modifySlice(s []int) {
 ```
 
 
+
+## The make() Builtin Function
+The `make()` function can be used to create slices, maps, or channels.  
+
+### Syntax for `make()`
+
+```go
+func make(t Type, size ...IntegerType) Type
+```
+* `t`: The type.
+* `size…`: The size and capacity.
+
+`make()` is a built-in function that is used to allocate and initialize an
+object of type `slice`, `map`, or `chan` (only these three types).  
+
+It accepts two or more arguments (`t Type, size ...IntegerType`) and
+returns the same type as `t`.
+
+
+### Return Value of `make()`
+
+The return value depends on the first argument, `t Type`.  
+
+* Slice (`[]any`)
+    * The `size` argument specifies the length.  
+    * The capacity of the slice is equal to its length.  
+    * A second integer argument may be provided to specify a different capacity.
+        * It must be no smaller than the length.
+    * For example, `make([]int, 0, 10)` allocates an underlying array of size `10` and
+      returns a `slice` of length `0` and capacity `10` that is backed
+      by this underlying array.
+ 
+* Map (`map[string]any`)
+    * An empty map is allocated with enough space to hold the specified number of elements.  
+    * The size may be omitted, in which case a small starting size is allocated.
+ 
+* Channel (`chan int`)
+    * The channel's buffer is initialized with the specified buffer capacity.  
+    * If zero, or the size is omitted, the channel is unbuffered.
+
+ 
+### Basic Usage of `make()` with Slices
+```go
+/* Declaring a slice */
+var slice1 []int
+
+/* Initializing the slice with a 
+   max capacity of 5 elements */
+slice1 = make([]int, 5)
+
+/* This can be done in a single line */
+var slice2 []int = make([]int, 5)
+
+/* or simply: */
+slice3 := make([]int, 5)
+```
+* This creates a slice with length `5` and capacity `5`.  
+* The capacity of the slice is equal to its length.  
+* A second integer argument can be given to specify a different capacity.
+    * It must be no smaller than the length.
+
+
+### Defining a Slice with a High Capacity
+To define a slice with a length of 0, and a capacity of 10 elements:
+```go
+empty_slice := make([]any, 0, 10)
+```
+This will create a slice with a length of `0`, and a capacity of `10`.  
+* There will be no elements in the slice by default.
+* The slice will be able to store 10 elements. Add elements by using `append`.  
+
+### `make()` with Slices Example: 
+
+Go program to demonstrate using `make()` with slices:
+```go
+package main
+  
+import ("fmt")
+ 
+func main() {
+a := make([]int, 5)
+    fmt.Printf("a: Type: %T, Length: %d, Capacity: %d\n",
+            a, len(a), cap(a))
+    fmt.Println("value of a:", a)
+ 
+    b := make([]int, 10, 20)
+    fmt.Printf("b: Type: %T, Length: %d, Capacity: %d\n",
+            b, len(b), cap(b))
+    fmt.Println("value of b:", b)
+
+    c := make([]int, 0, 5)
+    fmt.Printf("c: Type: %T, Length: %d, Capacity: %d\n",
+            c, len(c), cap(c))
+    fmt.Println("value of c:", c)
+}
+```
+
+Output:
+```plaintext
+a: Type: []int, Length: 5, Capacity: 5
+value of a: [0 0 0 0 0]
+b: Type: []int, Length: 10, Capacity: 20
+value of b: [0 0 0 0 0 0 0 0 0 0]
+c: Type: []int, Length: 0, Capacity: 5
+value of c: []
+```
+
+### `make()` with Maps Example
+Go program to demonstrate using `make()` with maps:
+```go
+package main
+import (
+    "fmt"
+)
+ 
+func main() {
+    // Creating a map using make()
+    var student = make(map[string]int)
+ 
+    // Assigning
+    student["Alvin"] = 21
+    student["Alex"] = 47
+    student["Mark"] = 27
+
+    // Printing the map, its type and lenght
+    fmt.Println(student)
+    fmt.Printf("Type: %T, Length: %d\n",
+        student, len(student))
+}
+```
+
+Output:
+```plaintext
+map[Alex:47 Alvin:21 Mark:27]
+Type: map[string]int, Length: 3
+```
+
+
+## The cap() Builtin Function
+Get the maximum `cap`acity of a slice, array, or channel.  
+
+### Syntax for `cap()`
+
+```go
+cap(v Type) int
+```
+* `v` can be a `slice`, `array`, `*array`, or `chan`.
+    * If `v` is `nil`, `cap(v)` is zero.
+    * `v` is a `slice`:
+        * Returns the maximum length the slice can reach when resliced.  
+    * `v` is an `array` or `*array`:
+        * Does the same as using `len(v)` (returns the number of elements in `v`).
+    * `v` is a `chan`: 
+        * Returns the channel buffer capacity, in units of elements.
+
+
+```go
+empty_slice := make([]any, 0, 10)
+fmt.Println(cap(empty_slice)) // 10
+```
+* `cap(empty_slice)` returns the maximum capacity of `empty_slice`.  
+
+```go
+empty_slice = empty_slice[:cap(empty_slice)]
+```
+
+
+---
 
 
 
