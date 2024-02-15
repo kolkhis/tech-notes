@@ -1,5 +1,22 @@
 # Multiple Windows/Terminal Sessions With Tmux
 
+## Table of Contents
+* [Multiple Windows/Terminal Sessions With Tmux](#multiple-windows/terminal-sessions-with-tmux) 
+* [Terminal Multiplexer](#terminal-multiplexer) 
+* [Tmux/Screen](#tmux/screen) 
+* [GNU Screen](#gnu-screen) 
+    * [Screen's Default Keybindings](#screen's-default-keybindings) 
+    * [Don't do this at work](#don't-do-this-at-work) 
+    * [Copy mode](#copy-mode) 
+    * [Screen Sharing](#screen-sharing) 
+* [Tmux](#tmux) 
+    * [Default Tmux Keybindings](#default-tmux-keybindings) 
+    * [Default Binidings that Tmux shares with Screen](#default-binidings-that-tmux-shares-with-screen) 
+    * [Default Bindings (Tmux Specific)](#default-bindings-(tmux-specific)) 
+    * [Panes](#panes) 
+
+
+
 ## Terminal Multiplexer
 Multiplexer means "Multiple Displays" or "Multiple Screens".
 
@@ -31,112 +48,110 @@ Deck VT100
 VT100-extended (color support)
 
 ## GNU Screen
-### Rob recommends learning Screen before Tmux.
-* This is because any system that doesn't have tmux will almost always have screen.
+Any system that doesn't have tmux will almost always have screen.
 
 Useful `screen` commands:
 
-`$ screen -ls`
-- This shows whether or not there is an existing screen session
-    - Tmux has the same thing (as `$ tmux ls`)
+* `screen -ls`
+    * This shows whether or not there is an existing screen session
+    * Tmux has the same thing (as `tmux ls`)
 
-`$ screen -r [processid]`
-- This reattaches to the given process.
+* `screen -r [processid]`
+    * This reattaches to the given process.
 
-`$ screen -d [processid]`
-- This detaches from the given process.
+* `screen -d [processid]`
+    * This detaches from the given process.
 
-#### Key Combinations
+### Screen's Default Keybindings
 
-Default `screen` <leader> is <Ctrl-a>
+Default `screen` `<leader>` is `<Ctrl-a>`
 
-
-* <C-a>w (or <leader>w) will show which window is active
-* <leader>0 - will take you to screen 0
-* <leader>: - will take you to screen command line
-* <leader>:help<CR> - shows help
-* <leader>c - Create a new window.
-* <leader>aa - Hop between screen windows
-* <leader>d - detaches from current window
-    * screen -r to reattach
-
-
-## Don't do this at work
-* <leader>\ - Kill all windows and terminate screen
+* `<C-a>w` (or `<leader>w`) will show which window is active
+* `<leader>0`: will take you to screen 0
+* `<leader>:`: will take you to screen command line
+* `<leader>:help<CR>`: shows help
+* `<leader>c`: Create a new window.
+* `<leader>aa`: Hop between screen windows
+* `<leader>d`: detaches from current window
+    * `screen -r` to reattach
 
 
-#### Copy mode
+### Don't do this at work
+* `<leader>\`: Kill all windows and terminate screen
+* `<leader>|`: Split window vertically. (i.e., `<Shift>\`) 
 
-* <leader>[ - Enter copy mode
 
-Select text with <enter(or space)> motion <enter>
+### Copy mode
 
-* <leader>] - Paste from screen buffer
+* `<leader>[`: Enter copy mode
+    * Select text with `<enter(or space)> motion <enter>`
+* `<leader>]`: Paste from screen buffer
 
 To paste into vim/nvim:
-* :set paste
-* i
-* <leader>]
+* `:set paste`
+* `i`
+* `<leader>]`
 
-#### Screen Sharing
+### Screen Sharing
 
 To share screen session with another user:
 
-* <leader>a:multiuser on
-    * `<leader>a` and then `:` to enter command mode
+* `<leader>:multiuser` on
+    * `<leader>` and then `:` to enter command mode
     * `:multiuser on` to enable multi-user support
 
-Get the screen session with <leader>ad (detach) and `$ screen -ls`
+Get the screen session with* `<leader>ad (detach) and `screen`:ls`
 
-Then other user will connect, `$ screen -S [session_name]`
+Then other user will connect, `screen -S [session_name]`
 
 
 ## Tmux
-### Tmux is "more robust" by default
+Tmux is "more robust" than GNU Screen by default.  
 
-`$ tmux ls` to list active tmux clients/sessions
+* `tmux ls` to list active tmux clients/sessions
 
-#### Hotkeys
+### Default Tmux Keybindings
 
-Tmux <leader> key is <C-b> by default.
+Tmux `<leader>` key is `<C-b>` by default.
 
-* <leader>? - List keybindings
-* <leader>:list-keys - Get a better list of keybindings
+* `<leader>?`: List keybindings
+* `<leader>:list-keys`: Get a better list of keybindings
 
-##### Default Binidings that Tmux shares with Screen
-* <leader>c - will create a new window. Same as Screen
-* <leader>: - Enter command mode.
-* <leader>[ - Enter copy mode
-* <leader>] - Paste most recently copied tmux buffer
-* <leader>w - Show all windows, with current one highlighted.
-* <leader>0-9 - Switch between windows 0-9
-
-
-##### Default Bindings Tmux Specific 
-
-* <leader>l - "Move to the previously selected window" - Toggle between 2 windows a session
-* <leader>t - Show current time (UTC by default)
+### Default Binidings that Tmux shares with Screen
+* `<leader>c`: will create a new window. Same as Screen
+* `<leader>:`: Enter command mode.
+* `<leader>[`: Enter copy mode
+* `<leader>]`: Paste most recently copied tmux buffer
+* `<leader>w`: Show all windows, with current one highlighted.
+* `<leader>0-9`: Switch between windows 0-9
+* `<leader>t`: Show current time (UTC by default)
+    * When done on Screen, it only shows in the status bar.
+    * In Tmux it shows in the current pane until exited.  
 
 
-##### Panes
+### Default Bindings (Tmux Specific) 
 
-* <leader>% - VSplit current window (new pane)
-* <leader>; - Move to the previously active pane (like <leader>l, but for panes.)
-* <leader>z - Zoom/unzoom the active pane
-* <leader>x - kill the active pane
-* <leader>o - select next pane
-* <leader>q - show pane numbers
-* <leader><C-o> - Rotate panes
-* <leader>! - Break Pane into new window
-* <leader>" - Split window vertically
-* <leader>E - Spread out panes evenly
-* <leader>M - Clear the marked pane
+* `<leader>l`: Move to the previously selected window - Toggle between 2 windows a session
+
+### Panes
+
+* `<leader>%`: VSplit current window (new pane)
+* `<leader>;`: Move to the previously active pane (like `<leader>l`, but for panes.)
+* `<leader>z`: Zoom/unzoom the active pane
+* `<leader>x`: kill the active pane
+* `<leader>o`: select next pane
+* `<leader>q`: show pane numbers
+* `<leader><C-o>`: Rotate panes
+* `<leader>!`: Break Pane into new window
+* `<leader>"`: Split window vertically
+* `<leader>E`: Spread out panes evenly
+* `<leader>M`: Clear the marked pane
 
 
 ##### Paste 
 
-* <leader>[ - Copy mode
-* <leader>] - paste
-* <leader># - List all paste buffers
+* `<leader>[`: Copy mode
+* `<leader>]`: paste
+* `<leader>#`: List all paste buffers
 
 
