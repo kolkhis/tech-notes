@@ -2,6 +2,7 @@
 # Vagrant
 
 * [Install Vagrant](https://developer.hashicorp.com/vagrant/docs/installation)
+* [Getting Started with Vagrant](https://developer.hashicorp.com/vagrant/tutorials/getting-started)
 
 Vagrant is a tool for building and managing virtual machine environments in a single workflow.  
 
@@ -11,7 +12,13 @@ of virtualization providers (VirtualBox, VMware, Docker, and others).
 The goal of Vagrant is to make it simple to create and configure
 lightweight, reproducible, and portable development environments.
 
-### What Vagrant is Used For:
+## Table of Contents
+* [Vagrant](#vagrant) 
+* [What Vagrant is Used For](#what-vagrant-is-used-for) 
+* [Use Cases](#use-cases) 
+* [Getting Started with Vagrant](#getting-started-with-vagrant) 
+
+## What Vagrant is Used For:
 
 * Consistent Development Environments
     * It ensures that all team members are
@@ -41,7 +48,7 @@ lightweight, reproducible, and portable development environments.
       management tools like Chef, Puppet, Ansible, and Salt, allowing you to automate
       the provisioning of virtual machines.
 
-### Use Cases:
+## Use Cases:
 
 * Learning and Experimentation: Use Vagrant to create isolated environments
   to learn new software, experiment with different infrastructure setups, or test
@@ -61,7 +68,8 @@ lightweight, reproducible, and portable development environments.
 * **Cross-platform Compatibility Testing**: Easily test applications on different
   operating systems or distributions without needing physical hardware for each.
 
-### Getting Started with Vagrant:
+## Getting Started with Vagrant:
+See [getting started with vagrant](https://developer.hashicorp.com/vagrant/tutorials/getting-started) in the documentation.  
 
 * Installation: Begin by installing Vagrant and a virtual machine provider such as VirtualBox.
 * Vagrantfile: Learn how to create and configure a `Vagrantfile`.  
