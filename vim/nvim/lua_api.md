@@ -3,22 +3,22 @@
 Always either `vim.print()` or `vim.inspect()` tables.  
 
 ## Table of Contents
+* [Neovim's Lua API](#neovim's-lua-api) 
 * [Getting the current line or a range of lines](#getting-the-current-line-or-a-range-of-lines) 
     * [Getting the current line](#getting-the-current-line) 
-        * [Using the Nvim API](#using-the-nvim-api) 
-        * [Using Vimscript functions](#using-vimscript-functions) 
+    * [Using the Nvim API](#using-the-nvim-api) 
+    * [Using Vimscript functions](#using-vimscript-functions) 
     * [Getting a range of lines](#getting-a-range-of-lines) 
     * [Getting lines of the visual selection](#getting-lines-of-the-visual-selection) 
-* [Loop over lines of visual selection](#loop-over-lines-of-visual-selection) 
+    * [Loop over lines of visual selection](#loop-over-lines-of-visual-selection) 
 * [Using a String as a Table Key](#using-a-string-as-a-table-key) 
 * [Running Lua From Vimscript](#running-lua-from-vimscript) 
-                * [*:h v:lua-call*](#*h-vlua-call*) 
 * [Setting Vim Options from Lua](#setting-vim-options-from-lua) 
-            * [*:h vim.o* | *vim.opt*](#*h-vim.o*-|-*vim.opt*) 
-    * [Lua Equivalents to Setting Options in Vimscript](#lua-equivalents-to-setting-options-in-vimscript) 
-* [Option Objects](#option-objects) 
+* [Lua Equivalents to Setting Options in Vimscript](#lua-equivalents-to-setting-options-in-vimscript) 
+    * [Option Objects](#option-objects) 
     * [Option Object Methods](#option-object-methods) 
 * [Tab Completion Keymap](#tab-completion-keymap) 
+* [Spawning External Processes with `vim.uv`](#spawning-external-processes-with-vim.uv) 
 * [Modes](#modes) 
     * [Getting Current Mode](#getting-current-mode) 
 * [Getting the Mode Using Vimscript](#getting-the-mode-using-vimscript) 
@@ -60,19 +60,18 @@ Always either `vim.print()` or `vim.inspect()` tables.
     * [Testing Syntax Time When Syntax is Slow](#testing-syntax-time-when-syntax-is-slow) 
     * [Highlighting Naming Conventions & Default Highlight Groups](#highlighting-naming-conventions-&-default-highlight-groups) 
 
-
 ## Getting the current line or a range of lines  
 ### Getting the current line  
 To get the current line, use any of the following functions.  
 
-#### Using the Nvim API  
+### Using the Nvim API  
 The simplest method using the Nvim API:  
 * `vim.api.nvim_get_current_line()`
 ```lua  
 local line = vim.api.nvim_get_current_line()  
 ```
   
-#### Using Vimscript functions  
+### Using Vimscript functions  
 The simplest method using a Vimscript function:  
 * A Vimscript function, `vim.fn.getline()`:  
 ```lua  
@@ -144,7 +143,7 @@ Then, use `vim.api.nvim_buf_get_lines()` to get the lines:
 local lines = vim.api.nvim_buf_get_lines(0, ln_start - 1, ln_end, false)  
 ```
 
-## Loop over lines of visual selection  
+### Loop over lines of visual selection  
 This function will loop over the lines of the visual selection, and  
 save them into a table:  
 
@@ -157,6 +156,7 @@ function M:loop_selection()
     end  
 end  
 ```
+
 
 ## Using a String as a Table Key 
 Table keys will automatically be accessible as strings.  
@@ -187,7 +187,7 @@ E.g.,
 
 
 ## Setting Vim Options from Lua  
-##### *:h vim.o* | *vim.opt*  
+###### *:h vim.o* | *vim.opt*  
 Generally you'll use `vim.o.*` or `vim.opt.*` to access vim options.  
 ```lua  
 vim.o.number = true  
@@ -211,7 +211,7 @@ vim.opt.listchars = { space = '_', tab = '>~' }
 
 ---  
 
-### Lua Equivalents to Setting Options in Vimscript  
+## Lua Equivalents to Setting Options in Vimscript  
 To replicate the behavior of `:set+=`:  
 
 ```bash  
@@ -247,7 +247,7 @@ vim.opt.listchars = { space = '_', tab = '~' }
 
 
 
-## Option Objects  
+### Option Objects  
 `vim.opt` returns an `Option` object, not the value of the option.  
 The values are accessed through `vim.opt:get()` (see [Option Object Methods](#option-object-methods)):  
 ```lua  
@@ -308,6 +308,57 @@ vim.keymap.set('i', '<Tab>', function()
 end, { expr = true })  
 ```
 
+## Spawning External Processes with `vim.uv`
+See [external processes](./external_processes.md) for a breakdown of this example:
+
+```lua
+local stdin = vim.uv.new_pipe()
+local stdout = vim.uv.new_pipe()
+local stderr = vim.uv.new_pipe()
+
+print('stdin', stdin)
+print('stdout', stdout)
+print('stderr', stderr)
+
+local handle, pid = vim.uv.spawn('cat', {
+    stdio = { stdin, stdout, stderr },
+}, function(code, signal) -- on exit
+    print('exit code', code)
+    print('exit signal', signal)
+end)
+
+print('process opened', handle, pid)
+
+vim.uv.read_start(stdout, function(err, data)
+    assert(not err, err)
+    if data then
+        print('stdout chunk', stdout, data)
+    else
+        print('stdout end', stdout)
+    end
+end)
+
+vim.uv.read_start(stderr, function(err, data)
+    assert(not err, err)
+    if data then
+        print('stderr chunk', stderr, data)
+    else
+        print('stderr end', stderr)
+    end
+end)
+
+vim.uv.write(stdin, 'Hello World')
+
+vim.uv.shutdown(stdin, function()
+    print('stdin shutdown', stdin)
+    if handle then
+        vim.uv.close(handle, function()
+            print('process closed', handle, pid)
+        end)
+    end
+end)
+
+```
 
 
 ## Modes  
@@ -322,46 +373,27 @@ vim.api.nvim_get_mode().mode
 -- or 
 vim.api.nvim_get_mode()['mode']  
 ```
-It returns:  
-* `'i'` for Insert mode  
-* `'n'` for Normal mode  
-* `'v'` for Visual mode  
-* `'V'` for Visual Line mode 
-* `'<C-V>'` for visual block mode  
-* `'t'` for terminal mode  
-* `'s'` for Select mode  
-* `'S'` for Select Line mode  
-* `'ic'` for Insert mode completion  
-* `'R'` for Replace mode  
-* `'Rv'` for Virtual Replace mode  
-* `'c'` for Command-line mode  
-* `'cv'` for Vim Ex mode  
-* `'ce'` for Normal Ex mode  
-* `'r'` for Prompt mode  
-* `'rm'` for More prompt mode  
-* `'r?'` for Confirm prompt mode  
 
-
-`vim.api.nvim_get_mode().mode` return values in a table:  
-| Mode | Return Value |
-|-|-|  
-| Insert mode | `'i'` |
-| Normal mode | `'n'` |
-| Visual mode | `'v'` |
-| Visual Line mode | `'V'` |
-| Visual Block mode | `['<C-V>']` |
-| Terminal mode | `'t'` |
-| Select mode | `'s'` |
-| Select Line mode | `'S'` |
-| Insert mode completion | `'ic'` |
-| Replace mode | `'R'` |
-| Virtual Replace mode | `'Rv'` |
-| Command-line mode | `'c'` |
-| Vim Ex mode | `'cv'` |
-| Normal Ex mode | `'ce'` |
-| Prompt mode | `'r'` |
-| More prompt mode | `'rm'` |
-| Confirm prompt mode | `['r?']` |
+Return values from `vim.api.nvim_get_mode().mode`:  
+| Return Value | Mode 
+|-|-  
+| `'i'` | Insert mode 
+| `'n'` | Normal mode 
+| `'v'` | Visual mode 
+| `'V'` | Visual Line mode 
+| `['<C-V>']` | Visual Block mode 
+| `'t'` | Terminal mode 
+| `'s'` | Select mode 
+| `'S'` | Select Line mode 
+| `'ic'` | Insert mode completion 
+| `'R'` | Replace mode 
+| `'Rv'` | Virtual Replace mode 
+| `'c'` | Command-line mode 
+| `'cv'` | Vim Ex mode 
+| `'ce'` | Normal Ex mode 
+| `'r'` | Prompt mode 
+| `'rm'` | More prompt mode 
+| `['r?']` | Confirm prompt mode 
 
 
 Here's some lua that will get the current mode:  
@@ -826,6 +858,8 @@ vim.keycode({str})
 Plugin to check out: [colorbuddy.nvim](https://github.com/tjdevries/colorbuddy.nvim)  
 Colorbuddy is only for Neovim.  
 
+See `vim.treesitter.inspect_tree()` or `:InspectTree` to show nodes in the language tree.  
+
 ### Highlights  
 > *:h :hi-normal* | *:highlight-normal*  
 > *:h :highlight* | *:hi*  
@@ -838,7 +872,7 @@ Get or create a namespace used for buffer highlights and
 virtual text with `nvim_create_namespace()`.   
 * Returns a Namespace ID  
 
-To get existing, non-anonymous namespaces `nvim_get_namespaces()`  
+To get existing, non-anonymous namespaces: `nvim_get_namespaces()`  
 * Returns a Dictionary that maps from Names to Namespace IDs.  
 
 This namespace can then be used to add highlights or `extmarks`.  
@@ -856,6 +890,17 @@ Related to namespace highlighting:
 
 ### Highlighting Tags  
 > *:h tag-highlight*  
+
+If you want to highlight all the tags in your file, you can use the following
+mappings.
+
+`<F11>` -- Generate tags.vim file, and highlight tags.
+`<F12>` -- Just highlight tags based on existing tags.vim file.
+
+```vim
+:map <F11>  :sp tags<CR>:%s/^\([^ :]*:\)\=\([^    ]*\).*/syntax keyword Tag \2/<CR>:wq! tags.vim<CR>/^<CR><F12>
+:map <F12>  :so tags.vim<CR>
+```
 
 ### Syntax  
 > *:h syntax-functions*  
@@ -909,16 +954,17 @@ Related to namespace highlighting:
 
 * `Special`: any special symbol  
 * `SpecialChar`: special character in a constant  
-* `Tag`: you can use CTRL-] on this  
+* `Tag`: you can use `CTRL-]` on this  
 * `Delimiter`: character that needs attention  
 * `SpecialComment`: special things inside a comment  
 * `Debug`: debugging statements  
 
 * `Underlined`: text that stands out, HTML links  
 
-* `Ignore`: left blank, hidden  |hl-Ignore|
+* `Ignore`: left blank, hidden (`hl-Ignore`)
 * `Error`: any erroneous construct  
-* `Todo`: anything that needs extra attention; mostly the  keywords TODO FIXME and XXX  
+* `Todo`: anything that needs extra attention. 
+    * mostly the keywords `TODO` `FIXME` and `XXX`  
 
 
 
