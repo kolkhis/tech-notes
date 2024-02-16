@@ -1,11 +1,32 @@
 
 
 # GNU Screen  
+Any system that doesn't have tmux will almost always have screen.  
 
 ## Basics  
-`screen` starts a new screen session.  
-`screen -ls` lists all screen sessions.  
-`screen -r` reattaches to a running screen session.  
+
+* `screen`
+    * Starts a new screen session.  
+
+* `screen -ls`
+    * This lists all screen sessions. 
+    * Tmux has the same thing (as `tmux ls`)  
+
+* `screen -r [processid]`
+    * This reattaches to the given process.  
+    * If there's no `[processid]`, it will reattach to the last screen session.  
+
+* `screen -S [name]`
+    * This starts a new screen session with the given name.  
+
+* `screen -R [name]`
+    * This reattaches to a running screen session with the given name.  
+    * If the session doesn't exist, it will be created.  
+
+* `screen -d [processid]`
+    * This detaches from the given process.  
+    * `<C-a>d` is the shortcut for this.  
+
 
 ## Default Keybindings:  
 
@@ -21,11 +42,9 @@ Since this can be changed, I'll use `<leader>` to refer to it.
 * `<leader>aa`: Hop between screen windows  
 * `<leader>d`: detaches from current window  
     * `screen -r` to reattach  
-
-
-### Don't do this at work  
-* `<leader>\`: Kill all windows and terminate screen  
 * `<leader>|`: Split window vertically. (i.e., `<Shift>\`) 
+* `<leader>\`: Kill all windows and terminate screen  
+    * Don't use this unless know you definitely want to.  
 
 
 ### Copy mode  
@@ -52,30 +71,6 @@ i.e., You can use a region to access window 2 while working in window 1.
 * `C-a C-i` switches between regions (panes).  
 * `C-a C-tab` also switches between regions (panes).  
 * `C-a Q` Kills all regions except the current one. 
-
-
-# GNU Screen  
-Any system that doesn't have tmux will almost always have screen.  
-
-## Useful `screen` commands:  
-
-* `screen -ls`
-    * This shows whether or not there is an existing screen session  
-    * Tmux has the same thing (as `tmux ls`)  
-
-* `screen -S [name]`
-    * This starts a new screen session with the given name.  
-
-* `screen -R [name]`
-    * This reattaches to a running screen session with the given name.  
-    * If the session doesn't exist, it will be created.  
-
-* `screen -r [processid]`
-    * This reattaches to the given process.  
-
-* `screen -d [processid]`
-    * This detaches from the given process.  
-    * `<C-a>d` is the shortcut for this.  
 
 
 
