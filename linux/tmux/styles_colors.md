@@ -1,16 +1,32 @@
 
 # Tmux Styling and Colors  
 
-> tmux offers various options to specify the colour and attributes of aspects of the interface,
-> for example `status-style` for the status line.  
->  
-> Embedded styles may be specified in format options,
-> such as `status-left`, by enclosing them in `#[` and `]`.  
->  
-> - *`man tmux`*  
+Tmux offers various options to specify the colour and attributes of aspects of
+the interface, e.g., `status-style` for the status line.  
+ 
+ 
+*`man://tmux 2407`*
+## Table of Contents
+* [Embedded Styles](#embedded-styles) 
+* [Attributes](#attributes) 
+* [Alignment](#alignment) 
+    * [Mouse Stuff](#mouse-stuff) 
+* [Examples](#examples) 
+* [Status Line](#status-line) 
+    * [Window List in the Status Line](#window-list) 
+    * [Window Flags in the Status Line](#window-flags) 
+    * [Automatic Refreshing](#automatic-refreshing) 
+    * [Status Line Commands](#status-line-commands) 
+* [Session Option for Monitoring Activity](#session-option-for-monitoring-activity) 
+* [Hook Commands](#hook-commands) 
+* [Menus](#menus) 
+
 
 ## Embedded Styles  
+`gF` (`<C-w>gF` for a new tab) -> `man://tmux 2407`
 
+Embedded styles may be specified in format options,
+such as `status-left`, by enclosing them in `#[` and `]`.  
 
 * `fg=colour`: Set the foreground colour.  
 * `bg=colour`: Set the background colour.  
@@ -106,7 +122,7 @@ and `window-status-current-format` options.
 The flag is one of the following symbols appended to the window name:  
 |Flag |  Meaning 
 |-|-  
-| `*` | Denotes the current window.  
+| `*` | Denotes the current window (can be changed in `window-status-current-format`).  
 | `-` | Marks the last window (previously selected).  
 | `#` | Window activity is monitored and activity has been detected. (`monitor-activity` window option)  
 | `!` | Window bells are monitored and a bell has occurred in the window.  
@@ -177,7 +193,7 @@ set-hook -g alert-activity 'display "Activity detected."'
 * `set-hook [-agpRuw] [-t target-pane] hook-name command`
     * Sets hook `hook-name` to `command`. (or unsets with `-u`)  
     * The flags are the same as for `set-option`.  
-    * With `-R`, run `hook-name` immediately.  
+    * With `-R`, runs `hook-name` immediately.  
 
 * `show-hooks [-gpw] [-t target-pane]`
     * Shows hooks.  
