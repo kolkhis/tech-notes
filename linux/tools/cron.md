@@ -2,12 +2,35 @@
 
 # Automation on Linux Using Cron
 
+## Table of Contents
+* [Quickref](#quickref) 
+* [What is Cron?](#what-is-cron?) 
+    * [Basic Concepts](#basic-concepts) 
+* [How to Use Cron](#how-to-use-cron) 
+* [Basic Commands](#basic-commands) 
+* [Tips and Tricks](#tips-and-tricks) 
+* [/etc/crontab](#/etc/crontab) 
 
+
+## Quickref
+
+Examples
+```bash
+0 * * * * 	    # every hour
+*/15 * * * * 	# every 15 mins
+0 */2 * * * 	# every 2 hours
+0 18 * * 0-6 	# every week Mon-Sat at 6pm
+10 2 * * 6,7 	# every Sat and Sun on 2:10am
+0 0 * * 0 	    # every Sunday midnight
+@reboot 	    # every reboot
+
+```
 ## What is Cron?
 
 Cron is a time-based job scheduler in Unix-like operating systems, including Linux.
 It allows you to run scripts, commands, and other software at scheduled times and intervals.
 The term "cron" comes from the Greek word "chronos," meaning "time."
+
 
 
 ### Basic Concepts
