@@ -1,6 +1,21 @@
 
 # Using External Processes in Neovim  
 
+## Table of Contents
+* [Spawning External Processes with `vim.system()`](#spawning-external-processes-with-vim.system()) 
+    * [`vim.system()` Examples](#vim.system()-examples) 
+* [Spawning External Processes with `vim.uv`](#spawning-external-processes-with-vim.uv) 
+    * [Creating Pipes](#creating-pipes) 
+    * [Debugging Prints](#debugging-prints) 
+    * [Spawning the External Process](#spawning-the-external-process) 
+    * [Monitoring Process Output](#monitoring-process-output) 
+    * [Writing to the Process's Standard Input](#writing-to-the-process's-standard-input) 
+    * [Closing the Standard Input](#closing-the-standard-input) 
+    * [Closing the Process](#closing-the-process) 
+* [`uv.spawn()` Parameters](#uv.spawn()-parameters) 
+    * [`uv.spawn()`'s `options` parameter](#uv.spawn()'s-options-parameter) 
+    * [`options.stdio`](#options.stdio) 
+* [Full Example Script](#full-example-script) 
 
 ## Spawning External Processes with `vim.system()`
 
