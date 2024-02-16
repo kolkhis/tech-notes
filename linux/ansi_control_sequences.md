@@ -8,6 +8,17 @@ Each number in the control sequence represents a way to customize the
 foreground (text) or background.  
 
 
+## Table of Contents
+* [ANSI Color Control Sequences](#ansi-color-control-sequences) 
+* [Basic Syntax](#basic-syntax) 
+* [Quickref](#quickref) 
+* [Common Style Codes](#common-style-codes) 
+* [Standard Colors (8 color)](#standard-colors-(8-color)) 
+* [Formatting the Style Code](#formatting-the-style-code) 
+    * [Examples](#examples) 
+    * [256-colors](#256-colors) 
+
+
 ## Basic Syntax  
  
 The basic syntax for an ANSI color control sequence is:  
@@ -18,6 +29,44 @@ printf "\e[<STYLE_CODE>m"
 * `\e` represents the escape character, which begins the sequence.  
 * `<STYLE_CODE>` is a number (or series of numbers separated by semicolons) that specifies the color or style.  
 * `m` indicates the end of the sequence.  
+
+## Quickref
+
+Colors:
+| Number| Color
+|-|-
+|  `0`  |   black
+|  `1`  |   red
+|  `2`  |   green
+|  `3`  |   yellow
+|  `4`  |   blue
+|  `5`  |   magenta
+|  `6`  |   cyan
+|  `7`  |   white
+
+
+ANSI codes:
+| Number | Description
+|-|-
+| 0      |  clear
+| 1      |  bold
+| 4      |  underline
+| 5      |  blink
+| 30-37  |  fg color
+| 40-47  |  bg color
+| 1K     |  clear line (to beginning of line)
+| 2K     |  clear line (entire line)
+| 2J     |  clear screen
+| 0;0H   |  move cursor to 0;0
+| 1A     |  move up 1 line
+
+Bash Utilities:
+```bash
+hide_cursor() { printf "\e[?25l"; }
+show_cursor() { printf "\e[?25h"; }
+```
+
+
 
 ## Common Style Codes  
 
