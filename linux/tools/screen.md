@@ -3,26 +3,58 @@
 # GNU Screen  
 Any system that doesn't have tmux will almost always have screen.  
 
+
+## Table of Contents
+* [Building from Source](#building-from-source) 
+* [Basics](#basics) 
+* [Default Keybindings](#default-keybindings) 
+    * [Copy mode](#copy-mode) 
+* [Regions](#regions) 
+    * [Working with regions (called panes in tmux)](#working-with-regions-(called-panes-in-tmux)) 
+* [Screen Sharing with Multiuser Sessions](#screen-sharing-with-multiuser-sessions) 
+    * [Useful Commands for Multiuser Sessions](#useful-commands-for-multiuser-sessions) 
+
+
+## Building from Source
+Build from source to enable 256color support.  
+```bash
+curl -O https://ftp.gnu.org/gnu/screen/screen-4.9.1.tar.gz
+tar -zxvf screen-4.9.1.tar.gz
+ 
+sh autogen.sh                                 &&
+./configure --prefix=/usr                     \
+            --enable-colors256                \
+            --infodir=/usr/share/info         \
+            --mandir=/usr/share/man           \
+            --with-socket-dir=/run/screen     \
+            --with-pty-group=5                \
+            --with-sys-screenrc=/etc/screenrc &&
+ 
+sed -i -e "s%/usr/local/etc/screenrc%/etc/screenrc%" {etc,doc}/* &&
+make
+```
+
+
 ## Basics  
 
 * `screen`
     * Starts a new screen session.  
-
+ 
 * `screen -ls`
     * This lists all screen sessions. 
     * Tmux has the same thing (as `tmux ls`)  
-
+ 
 * `screen -r [processid]`
     * This reattaches to the given process.  
     * If there's no `[processid]`, it will reattach to the last screen session.  
 
 * `screen -S [name]`
     * This starts a new screen session with the given name.  
-
+ 
 * `screen -R [name]`
     * This reattaches to a running screen session with the given name.  
     * If the session doesn't exist, it will be created.  
-
+ 
 * `screen -d [processid]`
     * This detaches from the given process.  
     * `<C-a>d` is the shortcut for this.  
