@@ -111,6 +111,23 @@ The default is made of three parts:
         * see the `status-left`, `status-left-length`, `status-right`, and `status-right-length`
 * A central window list.  
 
+
+### Variable to Customize the Status Line
+See [scripting notes](./scripting_notes.md#variables-with-aliases-for-easy-reference)  
+These are the variables that have aliases available:  
+| Variable Name            | Alias | Replaced with                      |
+|--------------------------|-------|------------------------------------|
+| `host`                        |`#H`| Hostname of local host 
+| `host_short`                  |`#h`| Hostname of local host (no domain name) 
+| `pane_id`                     |`#D`| Unique pane ID 
+| `pane_index`                  |`#P`| Index of pane 
+| `pane_title`                  |`#T`| Title of pane (can be set by application) 
+| `session_name`                |`#S`| Name of session 
+| `window_flags`                |`#F`| Window flags with # escaped as ## 
+| `window_index`                |`#I`| Index of window 
+| `window_name`                 |`#W`| Name of window 
+
+
 ### Window List  
 By default, the window list shows the index, name and (if any) flag of  
 the windows in the current session, sorted by number.  
