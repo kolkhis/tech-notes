@@ -1246,6 +1246,7 @@ for commands that only accept files.
 
 ## Process Substitution  
 `man bash; /Process Substitution`
+* **Note**: Process substitution is not POSIX-compliant.  
 Process substitution allows a process's input or output to  
 be referred to using a filename.  
  
@@ -1262,8 +1263,8 @@ provide input for `list`.
 If the `<(list)` form is used, the file passed as an argument  
 should be read to obtain the output of `list`.  
  
-Process substitution is supported on systems that support  
-named pipes (FIFOs) or the /dev/fd method of naming open files.  
+* Process substitution is supported on systems that support  
+  named pipes (FIFOs) or the `/dev/fd` method of naming open files.  
  
 
 
@@ -1520,60 +1521,62 @@ from the standard output before the standard output was redirected to `dirlist`.
     * Then you have `ls > /dev/null 2>&1`
 
 
+## Getting IP and Network Information
+### Show routing information
+```bash
+ip route
+# Can be shortened down to:
+ip r  # Show routing table 
+```
+The output should look like this:
+```plaintext
+default via 192.168.0.1 dev enp0s31f6 proto dhcp src 192.168.0.11 metric 100 
+192.168.0.0/24 dev enp0s31f6 proto kernel scope link src 192.168.0.11 metric 100 
+192.168.0.1 dev enp0s31f6 proto dhcp scope link src 192.168.0.11 metric 100 
+```
 
-# Table of Contents  
-* [Check which sudo commands a user has access to](#Check-which-sudo-commands-a-user-has-access-to)  
-* [Replacing All Occurrences of a String in Multiple Files](#Replacing-All-Occurrences-of-a-String-in-Multiple-Files)  
-* [The Three Timestamps Explained](#The-Three-Timestamps-Explained)  
-* [Finding Files](#Finding-Files)  
-    * [The `find` Command](#The-`find`-Command)  
-        * [Testing Files with `find`](Testing-Files-with-`find`)  
-        * [Testing Timestamps of Files with `find`](#Testing-Timestamps-of-Files-with-`find`)  
-* [Recursively Get or Search Files](#Recursively-Get-or-Search-Files)  
-* [Important Linux Commands](#Important-Linux-Commands)  
-* [Run a Script when Any User Logs Into the System](#Run-a-Script-when-Any-User-Logs-Into-the-System)  
-* [Miscellaneous Useful Commands](#Miscellaneous-Useful-Commands)  
-* [Redirecting Standard Output AND Standard Error](#Redirecting-Standard-Output-AND-Standard-Error)  
-* [CLI Tools to Become Familiar With](#CLI-Tools-to-Become-Familiar-With)  
-* [SysAdmin Relevant - Firewall and Network commands](#SysAdmin-Relevant---Firewall-and-Network-commands)  
-* [Get bits: Zero, random or random 0/1](#Get-bits:-Zero,-random-or-random-0/1)  
-* [PS1, PS2, PS3, and PS4 Special Environment Variables](#PS1,-PS2,-PS3,-and-PS4-Special-Environment-Variables)  
-* [Parameter Expansion (Slicing/Substitution)](#Parameter-Expansion-(Slicing/Substitution))  
-* [Interpreter Order of Operations](#Interpreter-Order-of-Operations)  
-* [All Bash Conditional Flags](#All-Bash-Conditional-Flags)  
-* [Transforming Strings with `tr`](#Transforming-Strings-with-`tr`)  
-* [Process Substitution](#Process-Substitution)  
-* [Dictionaries (Associative Arrays)](#Dictionaries-(Associative-Arrays))  
-* [List-like Arrays & String Manipulation/Slicing](#List-like-Arrays-&-String-Manipulation/Slicing)  
-* [Arrays in Bash](#Arrays-in-Bash)  
-* [Special Arguments/Parameters](#Special-Arguments/Parameters)  
-* [Raising Errors](#Raising-Errors)  
-* [Returning Values](#Returning-Values)  
-* [Functions & Scripts](#Functions-&-Scripts)  
-* [Glob Options](#Glob-Options)  
-* [Options](#Options)  
-* [Getting Options and Arguments](#Getting-Options-and-Arguments)  
-* [Loops](#Loops)  
-* [Compare Files](#Compare-Files)  
-* [Stream Manipulation w/ `awk`, `grep`, and `sed`](#Stream-Manipulation-w/-`awk`,-`grep`,-and-`sed`)  
-* [Changing the system's hostname](#Changing-the-system's-hostname)  
-* [Source Relative Files](#Source-Relative-Files)  
-* [Trapping Errors](#Trapping-Errors)  
-* [Getting Help With Commands](#Getting-Help-With-Commands)  
-* [Using `find` ](#Using-`find`-)  
-* [Get Command Locations, Binaries, and Aliases](#Get-Command-Locations,-Binaries,-and-Aliases)  
-* [Check if a File Exists or is Larger Than 0 Bytes](#Check-if-a-File-Exists-or-is-Larger-Than-0-Bytes)  
-* [Check if an argument is empty](#Check-if-an-argument-is-empty)  
-* [Disable Shellcheck From Within Shell Scripts](#Disable-Shellcheck-From-Within-Shell-Scripts)  
-* [File and Directory Permissions](#File-and-Directory-Permissions)  
-* [Cron, Cronjobs & Crontabs](#Cron,-Cronjobs-&-Crontabs)  
-* [SSH Logs and Processes](#SSH-Logs-and-Processes)  
-* [Terminal Colors](#Terminal-Colors)  
-* [Definitions](#Definitions)  
-* [Search Terms for Bash Man Page](#Search-Terms-for-Bash-Man-Page)  
-* [Get the Directory of a Script](#Get-the-Directory-of-a-Script)  
-* [Numeric Calculations & Random Numbers](#Numeric-Calculations-&-Random-Numbers)  
-* [Using `xargs` to Transform Input into Arguments](#Using-`xargs`-to-Transform-Input-into-Arguments)  
-* [Colored output for `less`](#Colored-output-for-`less`)  
-* [Using Netcat](#Using-Netcat)  
-* [Heredocs in Linux](#Heredocs-in-Linux)  
+### Show network interfaces
+```bash
+ip address
+# Can be shortened:
+ip addr
+ip a  # Show all network interfaces and their IP addresses
+```
+The output should look like this:
+```plaintext
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s31f6: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether d8:9e:f3:75:55:ce brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.11/24 metric 100 brd 192.168.0.255 scope global dynamic enp0s31f6
+       valid_lft 555740sec preferred_lft 555740sec
+    inet6 2606:9400:93a0:a4b0::4/128 scope global dynamic noprefixroute 
+       valid_lft 15653948sec preferred_lft 533948sec
+    inet6 fd00:6477:7da1:5da2:da9e:f3ff:fe75:55ce/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 535426sec preferred_lft 401569sec
+    inet6 2606:9400:93a0:a4b0:da9e:f3ff:fe75:55ce/64 scope global dynamic mngtmpaddr noprefixroute 
+       valid_lft 15724789sec preferred_lft 604789sec
+    inet6 fe80::da9e:f3ff:fe75:55ce/64 scope link 
+       valid_lft forever preferred_lft forever
+```
+Here the network interfaces are listed in the order they were created.  
+The network interfaces here are `lo` and `enp0s31f6`.  
+
+### Show IP Address of the current machine
+```bash
+hostname -I  # Show IP address
+```
+The output should look like this:
+```bash
+192.168.0.11 2606:9400:93a0:a4b0::4 fd00:6477:7da1:5da2:da9e:f3ff:fe75:55ce 2606:9400:93a0:a4b0:da9e:f3ff:fe75:55ce 
+```
+The first address is the IPv4 address of the current machine on the local network.  
+The second address is the IPv6 address of the current machine on the local network.  
+
+
+
+
