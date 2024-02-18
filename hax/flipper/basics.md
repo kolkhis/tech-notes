@@ -23,10 +23,8 @@ Notes from the F0 [documentation](https://docs.flipper.net/basics/first-start).
 Power on the device by holding the `BACK` button for 3 seconds.  
 
 
-
 ### Rebooting
 Reboot the device by holding `BACK` and `LEFT` for 5 seconds.
-
 
 
 ### Installing microSD Card
@@ -58,7 +56,39 @@ Update the firmware via the [Flipper Mobile App](https://docs.flipperzero.one/mo
 
 
 
-### Connecting to the Flipper Zero
+## qFlipper
+### Updating the Firmware via the qFlipper Desktop App
+##### Official guide [here](https://docs.flipper.net/qflipper#ORL5Q)
+To update your Flipper Zero via the qFlipper application:
+ 
+1. Connect your Flipper Zero to your computer via a USB cable.
+2. On your computer, run the **qFlipper** application.
+3. In the qFlipper application, go to the **Advanced controls** tab.
+4. Click **Update Channel** and select a firmware version from the drop-down list 
+    * Release is recommended.
+5. Click **Update** to start the update process.
+
+
+
+## Controlling the Flipper Zero via qFlipper
+##### Official [docs](https://docs.flipper.net/qflipper#Yag86)
+ 
+You can also control your Flipper Zero remotely via the qFlipper application:
+1. In the Device information tab, click the Flipper Zero image.
+2. Click the buttons on the screen
+    * Or use your keyboard to control your Flipper Zero remotely.
+    * Click ℹ️ to learn more about keyboard controls.
+        * `WASD` for navigation
+        * `space` or `enter` for `OK`
+        * `backspace` for `BACK`
+ 
+You can take screenshots from your Flipper Zero device and save them
+directly to your computer by clicking the **SAVE SCREENSHOT** button.
+
+
+
+## Flipper Mobile App
+### Connecting to the Flipper Zero with the Flipper Mobile App
 Connecting to Flipper Zero is done via the [Flipper Mobile App](https://docs.flipperzero.one/mobile-app) 
 1. Activate Bluetooth on your Flipper Zero by following these steps:
     1. Go to Main **Menu -> Settings -> Bluetooth**.
@@ -71,7 +101,7 @@ Connecting to Flipper Zero is done via the [Flipper Mobile App](https://docs.fli
 
 
 ### Updating Flipper Zero via the Flipper Mobile App
-To update the firmware on the Flipper Zero via the Flipper Mobile App, do the following:
+To update the firmware on the Flipper Zero via the Flipper Mobile App:
 1. In the Main Menu tab, tap the Update button.
 2. Tap the Update button to confirm the action.
 * The update process via the Flipper Mobile App usually takes 2-3 minutes.
@@ -86,6 +116,25 @@ Once the firmware is updated, you can modify the system settings.
 E.g., left-handed mode, preferred units for measurements, time and date formats...
   
 Do this by going to **Main Menu -> Settings -> System**.
+
+
+## Getting Logs
+
+### Current Session Logs
+To get qFlipper logs for the current session:
+1. In the qFlipper application, click **LOGS**.
+2. Click **OPEN FULL LOG** and save the opened file to your 
+   computer in the `.txt` format.
+
+### Previous Session Logs
+qFlipper saves logs for 100 last sessions on your computer, ensuring
+easy access to past issue records.
+To retrieve the qFlipper logs for the previous session:
+1. In the qFlipper application, click **LOGS**.
+2. Right-click the area where the current session logs are shown.
+3. In the opened context menu, click **Browse all logs**.
+4. In the opened folder, select the log file you need, paying close
+   attention to the timestamp indicated in its name.
 
 
 
