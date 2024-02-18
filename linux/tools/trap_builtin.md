@@ -2,12 +2,31 @@
 
 # Using `trap` for Error Handling, Debugging, & Other Behavior  
 
-Syntax:  
-```bash  
-trap [action] [signal(s)]  
-```
 
+## Syntax and Basic Usage
 You'll want to set your traps at the top of the script.  
+
+### Syntax  
+```bash  
+trap [-lp] [[action] signal_spec(s)]  
+```
+You can optionally specify an action to take when the signal is triggered.  
+
+Options:
+* `-l`: Prints a list of signal names and their corresponding numbers.  
+* `-p`: Displays the trap commands associated with each `SIGNAL_SPEC`
+ 
+The return value (exit status) of the `trap` command is `0` unless
+a `SIGSPEC` is invalid or an invalid option is given.  
+
+
+### Usage
+Anything inside the quotes will be executed when the signal is triggered.  
+```bash
+trap "rm -f ./tmpfile && printf \"Trap triggered!\" " SIGINT SIGTERM EXIT ERR
+```
+This will remove the file `./tmpfile` when the user presses Ctrl+C, Ctrl+D, or exits the script.  
+ 
 
 
 ## Linux Signals Used with `trap`
