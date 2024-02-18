@@ -1,7 +1,19 @@
 
 # Arrays in Bash  
 
-
+## Table of Contents
+* [Declaring an Array in Bash](#declaring-an-array-in-bash) 
+* [Defining an Array in Bash](#defining-an-array-in-bash) 
+* [Adding Elements to an Array](#adding-elements-to-an-array) 
+* [Reassigning a Value in an Array](#reassigning-a-value-in-an-array) 
+* [Retrieving Elements from an Array](#retrieving-elements-from-an-array) 
+    * [Retrieving a Single Element in an Array](#retrieving-a-single-element-in-an-array) 
+    * [Retrieving a Range of Elements from an Array](#retrieving-a-range-of-elements-from-an-array) 
+    * [Retrieving all Elements in an Array](#retrieving-all-elements-in-an-array) 
+* [Get the Index of an Element in an Array](#get-the-index-of-an-element-in-an-array) 
+* [Looping over an Array in Bash](#looping-over-an-array-in-bash) 
+* [Quickref](#quickref) 
+    * [List-like Arrays & String Manipulation/Slicing](#list-like-arrays-&-string-manipulation/slicing) 
 
 ## Declaring an Array in Bash  
 
@@ -68,6 +80,8 @@ printf "%s\n" "${MY_ARRAY[@]:0:3}"
 
 
 ### Retrieving all Elements in an Array
+See `man://tmux 1200`
+
 Use the `@` operator to retrieve all of the elements in an array: 
 ```bash
 printf "This will print all the elements of the array:\n"
@@ -100,6 +114,7 @@ the string `'1 2 3 4 5 Six Seven'`.
 
 
 ## Get the Index of an Element in an Array 
+See `man://tmux 1220`
 To get the index of an element in an array, use the `!` operator:
 ```bash
 declare -a IDX
@@ -141,22 +156,29 @@ Fruits[2]="Orange"
 echo "${Fruits[0]}"           # Element #0  
 echo "${Fruits[-1]}"          # Last element  
 echo "${Fruits[@]}"           # All elements, space-separated  
+echo "${Fruits[*]}"           # All elements in one string, space-separated  
 echo "${#Fruits[@]}"          # Number of elements  
 echo "${#Fruits}"             # String length of the 1st element  
 echo "${#Fruits[3]}"          # String length of the Nth element  
 echo "${Fruits[@]:3:2}"       # Range (from position 3, length 2)  
 echo "${!Fruits[@]}"          # Keys of all elements, space-separated  
 
-Fruits=("${Fruits[@]}" "Watermelon")    # Push  
-Fruits+=('Watermelon')                  # Also Push  
+Fruits=("${Fruits[@]}" "Watermelon")    # Push      (Append)
+Fruits+=('Watermelon')                  # Also Push (Append) 
 Fruits=( "${Fruits[@]/Ap*/}" )          # Remove by regex (pattern?) match  
 unset Fruits[2]                         # Remove one item  
 Fruits=("${Fruits[@]}")                 # Duplicate  
 Fruits=("${Fruits[@]}" "${Veggies[@]}") # Concatenate  
 lines=(`cat "logfile"`)                 # Read from file  
+lines=("$(cat "logfile")")              # Read from file  
+read -r -d '' -a lines < "logfile"      # Read from file
 
-for i in "${arrayName[@]}"; do          # Iterating over an array  
-  echo "$i"  
+for val in "${arrayName[@]}"; do        # Iterating over an array (values)
+  echo "$val"  
+done  
+
+for idx in "${!arrayName[@]}"; do       # Iterating over an array (indexes/keys)
+  echo "$idx" "${arrayName[$idx]}" 
 done  
 ```
 
