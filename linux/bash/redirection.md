@@ -9,7 +9,6 @@
     * [Redirection Operators](#redirection-operators) 
         * [Duplicating Input File Descriptors](#duplicating-input-file-descriptors) 
         * [Duplicating Output File Descriptors](#duplicating-output-file-descriptors) 
-    * [Visual Aid for FD Redirection](#visual-aid-for-fd-redirection) 
     * [Examples of File Descriptor Redirection](#examples-of-file-descriptor-redirection) 
         * [Redirecting stderr to stdout](#redirecting-stderr-to-stdout) 
         * [Saving stdout and stderr to separate files](#saving-stdout-and-stderr-to-separate-files) 
@@ -17,7 +16,7 @@
         * [Closing File Descriptors](#closing-file-descriptors) 
         * [Redirecting Input from a File](#redirecting-input-from-a-file) 
         * [Redirecting Output to a File](#redirecting-output-to-a-file) 
-
+    * [Visual Aid for FD Redirection](#visual-aid-for-fd-redirection) 
 
 
 ## File Descriptor Redirection in Bash  
@@ -61,36 +60,6 @@ Useful for logging, error handling, and data processing tasks.
 
 ---  
 
-### Visual Aid for FD Redirection  
-The syntax is somewhat confusing.  
-You would think that the arrow would point in the direction of the 
-copy, but it's reversed.  
-So it's effectively `target>&source`.  
-
-If you have two file descriptors `s` and `t` like:  
-```plaintext  
-                  ---       +-----------------------+  
- a descriptor    ( s ) ---->| /some/file            |
-                  ---       +-----------------------+  
-                  ---       +-----------------------+  
- a descriptor    ( t ) ---->| /another/file         |
-                  ---       +-----------------------+  
-```
-
-Using a `t>&s` (where `t` and `s` are numbers) it means:  
-> Copy whatever file descriptor `s` contains into file descriptor `t`
-
-So you got a copy of this descriptor:  
-```plaintext  
-                  ---       +-----------------------+  
- a descriptor    ( s ) ---->| /some/file            |
-                  ---       +-----------------------+  
-                  ---       +-----------------------+  
- a descriptor    ( t ) ---->| /some/file            |
-                  ---       +-----------------------+  
-```
-
----  
 
 ### Examples of File Descriptor Redirection  
 #### Redirecting stderr to stdout  
@@ -128,6 +97,35 @@ This redirects stdin to read from `inputfile`.
 exec 1> outputfile  
 ```
 Redirects stdout to `outputfile`, useful for logging or output capture.  
+
+### Visual Aid for FD Redirection  
+The syntax is somewhat confusing.  
+You would think that the arrow would point in the direction of the 
+copy, but it's reversed.  
+So it's effectively `target>&source`.  
+
+If you have two file descriptors `s` and `t` like:  
+```plaintext  
+                  ---       +-----------------------+  
+ a descriptor    ( s ) ---->| /some/file            |
+                  ---       +-----------------------+  
+                  ---       +-----------------------+  
+ a descriptor    ( t ) ---->| /another/file         |
+                  ---       +-----------------------+  
+```
+
+Using a `t>&s` (where `t` and `s` are numbers) it means:  
+> Copy whatever file descriptor `s` contains into file descriptor `t`
+
+So you got a copy of this descriptor:  
+```plaintext  
+                  ---       +-----------------------+  
+ a descriptor    ( s ) ---->| /some/file            |
+                  ---       +-----------------------+  
+                  ---       +-----------------------+  
+ a descriptor    ( t ) ---->| /some/file            |
+                  ---       +-----------------------+  
+```
 
 
 -----------------------------  
