@@ -1,6 +1,61 @@
 # Heredocs / Here Documents  
 
+
+
+
 ## Heredocs in Linux  
+
+
+## Quickref
+
+* Use a Heredoc as a multi-line string literal.
+```bash
+cat >> my_script.sh << 'EOF'
+    #!/bin/bash
+    # my_script.sh
+    printf "This is a multi-line string.\n"
+    printf "This code will end up in my_script.sh.\n"
+    printf "Since heredocs are mult-line, I can write scripts like this.\n"
+
+    # This won't be evaluated.  
+    export SOMEVAR="$(head -1 "$XDG_CONFIG_HOME/secret_key")"
+
+EOF
+```
+This will make (or append to) the file `my_script.sh`, and will contain
+the code in the heredoc:
+```bash
+#!/bin/bash
+# my_script.sh
+printf "This is a multi-line string.\n"
+printf "This code will end up in my_script.sh.\n"
+printf "Since heredocs are mult-line, I can write scripts like this.\n"
+
+# This won't be evaluated.  
+export SOMEVAR="$(head -1 "$XDG_CONFIG_HOME/secret_key")"
+```
+
+---
+
+
+* Wrap the first heredoc limit string in single quotes to disable expansion.
+    * That means any bash code in the heredoc won't be evaluated.
+    * It will be interpreted as a raw string literal.
+```bash
+cat << 'EOF'
+    NOT_A_VAR="$(printf "This won't be expanded.")"
+EOF
+```
+
+
+* Append a `-` minus sign to the heredoc operator to leave out space indentation.
+```bash
+cat <<- 'EOF'
+    This won't be indented.
+EOF
+```
+
+
 
 
 ### Basic Principles of Here Documents  
