@@ -2,12 +2,10 @@
 # C Language Notes
 
 Other C notes:
-* [Types](./types.md)
-* [memory management](memory_management.md)
-* [pointers](pointers.md)
-* [primary data types](primary_data_types.md)
+* [Memory Management](memory_management.md)
+* [Pointers](pointers.md)
+* [Primary Data Types](primary_data_types.md)
 * [stdint.h types](stdint.h_types.md)
-* [types](types.md)
 
 
 ## Table of Contents
