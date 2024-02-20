@@ -17,6 +17,9 @@
         * [Redirecting Input from a File](#redirecting-input-from-a-file) 
         * [Redirecting Output to a File](#redirecting-output-to-a-file) 
     * [Visual Aid for FD Redirection](#visual-aid-for-fd-redirection) 
+    * [Order Of Redirection, i.e., "> file 2>&1" vs. "2>&1 >file"](#order-of-redirection-i.e.-">-file-2>&1"-vs.-"2>&1->file") 
+    * [exec](#exec) 
+* [Why `sed 's/foo/bar/' file >file` Doesn't Work](#why-sed-'s/foo/bar/'-file->file-doesn't-work) 
 
 
 ## File Descriptor Redirection in Bash  
