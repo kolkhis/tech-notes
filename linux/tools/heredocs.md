@@ -8,7 +8,8 @@
 
 ## Quickref
 
-* Use a Heredoc as a multi-line string literal.
+
+* Use a Heredoc as a multi-line string literal. (see [this page](https://ioflood.com/blog/bash-multiline-string/))
 ```bash
 cat >> my_script.sh << 'EOF'
     #!/bin/bash
