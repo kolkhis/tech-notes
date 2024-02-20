@@ -4,25 +4,25 @@
 See [arrays](./arrays.md).
 
 ## Table of Contents
-* [Slices in Go](#slices-in-go) 
 * [Slices vs. Arrays](#slices-vs.-arrays) 
     * [Arrays](#arrays) 
     * [Slices](#slices) 
     * [When to Use Arrays](#when-to-use-arrays) 
     * [When to Use Slices](#when-to-use-slices) 
     * [Key Differences](#key-differences) 
+* [Comparing Two Slices](#comparing-two-slices) 
 * [Appending an Element to a Slice](#appending-an-element-to-a-slice) 
 * [Slices are Reference Types](#slices-are-reference-types) 
     * [Example Highlighting a Slice's Reference Type](#example-highlighting-a-slice's-reference-type) 
 * [The make() Builtin Function](#the-make()-builtin-function) 
     * [Syntax for `make()`](#syntax-for-make()) 
+    * [Return Value of `make()`](#return-value-of-make()) 
     * [Basic Usage of `make()` with Slices](#basic-usage-of-make()-with-slices) 
     * [Defining a Slice with a High Capacity](#defining-a-slice-with-a-high-capacity) 
+    * [`make()` with Slices Example](#make()-with-slices-example) 
+    * [`make()` with Maps Example](#make()-with-maps-example) 
 * [The cap() Builtin Function](#the-cap()-builtin-function) 
     * [Syntax for `cap()`](#syntax-for-cap()) 
-    * [Return Value](#return-value) 
-    * [Example 1](#example-1) 
-
 
 ## Slices vs. Arrays
 Slices and Arrays are both used to store sequences of elements, but
