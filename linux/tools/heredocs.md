@@ -1,12 +1,24 @@
+
 # Heredocs / Here Documents  
 
 
+## Table of Contents
+* [Heredocs in Linux](#heredocs-in-linux) 
+    * [Quickref](#quickref) 
+    * [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
+* [Examples](#examples) 
+    * [Basic Heredoc](#basic-heredoc) 
+    * [Printing Literals](#printing-literals) 
+    * [Handling Tab Characters](#handling-tab-characters) 
+    * [Redirecting to a File](#redirecting-to-a-file) 
+    * [Piping the output to another command](#piping-the-output-to-another-command) 
+    * [Passing Parameters to a Function](#passing-parameters-to-a-function) 
+    * [Creating and Sending an Email](#creating-and-sending-an-email) 
+* [Using Heredocs with SSH](#using-heredocs-with-ssh) 
 
 
 ## Heredocs in Linux  
-
-
-## Quickref
+### Quickref
 
 
 * Use a Heredoc as a multi-line string literal. (see [this page](https://ioflood.com/blog/bash-multiline-string/))
