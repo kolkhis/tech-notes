@@ -206,6 +206,32 @@ uname -r
 
 ---
 
+## Hiding Text While Getting User Input
+Hide user input while they're typing:
+```bash
+read -r -s -p "Enter your password: " PASSWORD
+```
+This will act like sudo password input.
+No text will be output to the terminal while the user is typing.
+
+To output a `*` for each character the user types:
+```bash
+unset password;
+while IFS= read -r -s -n1 pass; do
+  if [[ -z $pass ]]; then
+     echo
+     break
+  else
+     echo -n '*'
+     password+=$pass
+  fi
+done
+```
+
+
+
+---
+
 ## SCP
 Usage: `scp <options> source_path destination_path`  
 
