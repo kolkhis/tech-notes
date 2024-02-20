@@ -93,6 +93,19 @@ that expect slice parameters.
 
 ## Comparing Two Slices
 As of Go 1.21, you can just use `slices.Equal` to compare two slices.
+There's also a `reflect.DeepEqual` functions that compares to slices.
+```go
+import (
+	"fmt"
+	"reflect"
+)
+func main() {
+	slice1 := []int{1, 2, 3}
+	slice2 := []int{1, 2, 3}
+	fmt.Println(reflect.DeepEqual(slice1, slice2))  // true
+	fmt.Println(slices.Equal(slice1, slice2))       // true
+}
+```
 
 
 ## Appending an Element to a Slice
@@ -112,8 +125,10 @@ fmt.Println(mySlice) // [1 2 3 4 5 6]
 
 Slices in Go are reference types, meaning they point to the same underlying array.
 
+```
 Changes made through one slice are visible through another slice
 that references the same array.
+```
 
 ### Example Highlighting a Slice's Reference Type
 Here's an example that demonstrates the fact that 
