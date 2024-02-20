@@ -129,3 +129,58 @@ So you got a copy of this descriptor:
 
 
 -----------------------------  
+### Order Of Redirection, i.e., "> file 2>&1" vs. "2>&1 >file"
+See the [bash hacker's wiki](https://web.archive.org/web/20230315225157/https://wiki.bash-hackers.org/howto/redirection_tutorial#order_of_redirection_ie_file_2_1_vs_2_1_file)
+
+While it doesn't matter where the redirections appears on the command line, their
+order does matter.  
+They are set up from left to right.
+
+CORRECT:
+```bash
+>file 2>&1
+```
+* A common error, is to do command `2>&1 > file` to redirect both stderr and stdout to file.
+
+INCORRECT:
+```bash
+2>&1 >file
+```
+After that command, Bash sees `2>&1` so it duplicates `1`.
+
+
+### exec
+
+In Bash the exec built-in replaces the shell with the specified program.  
+`exec` also allow us to manipulate the file descriptors.  
+ 
+If you don't specify a program, the redirection after exec modifies the 
+standard file descriptors of the current shell.
+
+For example:
+```bash
+exec 2>file
+```
+All the the errors sent to stderr by the commands after the `exec 2>file` will 
+go to the `file`, just as if you had the command in a script
+and ran `myscript 2>file`.
+
+`exec` can be used if you want to log the errors the commands in your script
+produce, just add `exec 2>myscript.errors` at the beginning of your script.
+
+
+## Why `sed 's/foo/bar/' file >file` Doesn't Work
+
+This is a common error, we want to modify a file using something that reads from
+a file and writes the result to stdout.  
+To do this, we redirect stdout to the file we want to modify.  
+ 
+The problem here is that, as we have seen, the redirections are setup before the
+command is actually executed.
+ 
+So BEFORE `sed` starts, standard output has already been redirected, with the
+additional side effect that, because we used `>`, `"file"` gets truncated.  
+When `sed` starts to read the file, it contains nothing.
+
+
+
