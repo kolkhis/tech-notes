@@ -91,6 +91,10 @@ that expect slice parameters.
 | Usage | Suitable for static, fixed-length collections | Suitable for dynamic collections or when size might change 
 
 
+## Comparing Two Slices
+As of Go 1.21, you can just use `slices.Equal` to compare two slices.
+
+
 ## Appending an Element to a Slice
 To append an element to a slice, use the built-in `append` function.
 
