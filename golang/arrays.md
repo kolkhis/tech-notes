@@ -22,6 +22,8 @@ Trying to assign more elements than the declared size will result in a runtime p
  
 To create a collection that can vary in length, use [slices](./slices.md) instead.  
 Slices provide a view of an underlying array and can grow and shrink dynamically.  
+Unlike arrays, slices are reference types.  
+
 
 * Arrays are value types, not references.  
 * Assigning an array to a new variable will copy all elements.  
