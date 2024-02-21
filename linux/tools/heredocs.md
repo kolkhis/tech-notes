@@ -61,10 +61,11 @@ EOF
 ```
 
 
-* Append a `-` minus sign to the heredoc operator to leave out space indentation.
+* Append a `-` minus sign to the heredoc operator to strip leading tabs
+    * This will **not** strip spaces.
 ```bash
 cat <<- 'EOF'
-    This won't be indented.
+	This won't be indented.
 EOF
 ```
 
