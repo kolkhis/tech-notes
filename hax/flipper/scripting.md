@@ -12,13 +12,12 @@ also known as DuckyScript.
  
 This set of commands is also called a payload.
 
-
 ## Table of Contents
 * [Flipper Zero Scripting](#flipper-zero-scripting) 
 * [DuckyScript](#duckyscript) 
 * [DuckyScript Basics](#duckyscript-basics) 
-    * [Keywords](#keywords) 
 * [Keystroke Injection](#keystroke-injection) 
+    * [Keywords](#keywords) 
     * [`STRING`](#string) 
     * [`REM`](#rem) 
     * [`DELAY`](#delay) 
@@ -31,8 +30,8 @@ This set of commands is also called a payload.
 * [BadUSB](#badusb) 
 * [Using the Flipper Zero as a BadUSB Device](#using-the-flipper-zero-as-a-badusb-device) 
 * [Uploading New Payloads to your Flipper Zero](#uploading-new-payloads-to-your-flipper-zero) 
-* [Rubber Ducky Terminology](#rubber-ducky-terminology) 
-    * [Key Terms](#key-terms) 
+* [Additional Info](#additional-info) 
+    * [Rubber Ducky Terminology](#rubber-ducky-terminology) 
 
 
 ## DuckyScript 
@@ -104,12 +103,12 @@ ALT F4
 ```
 
 ## DuckyScript Examples
-Open Task Manager on Windows:
+* Open Task Manager on Windows:
 ```duckyscript
 CONTROL SHIFT ESC
 ```
 
-Open a webpage on Windows:
+* Open a webpage on Windows:
 ```duckyscript
 WINDOWS r
 DELAY 400
@@ -117,7 +116,7 @@ STRING https://www.youtube.com/watch?v=dQw4w9WgXcQ
 ENTER
 ```
 
-Save a webpage and then close it:
+* Save a webpage and then close it:
 ```duckyscript
 CONTROL s
 DELAY 600
@@ -166,8 +165,6 @@ On Linux, you can execute commands using the
 ##### BadUSB application [source code](https://github.com/flipperdevices/flipperzero-firmware/tree/dev/applications/main/bad_usb)
  
 
-
-
 ## Using the Flipper Zero as a BadUSB Device
  
 To use your Flipper Zero as a BadUSB device, do the following:
@@ -196,8 +193,8 @@ The new payloads will be available in the Bad USB application.
 
 
 
-## Rubber Ducky Terminology
-### Key Terms
+## Additional Info
+### Rubber Ducky Terminology
 
 * Keystroke Injection — a type of hotplug attack which mimics keystrokes entered by a human.
 * Hotplug Attack — an attack or automated task that takes advantage of plug-and-play.
