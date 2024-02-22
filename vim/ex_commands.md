@@ -38,6 +38,19 @@
             * [*:h termdebug-frames*/*:h :Frame*/*:h :Up*/*:h :Down*](#*h-termdebug-frames*/*h-frame*/*h-up*/*h-down*) 
     * [Other commands](#other-commands) 
 
+---
+
+Quickref:
+
+* `:t`: Copy a line
+```vim
+" copy line 10 and paste it below the current line
+:10t.
+" copy the current line and paste it below line 10
+:t10.
+```
+
+
 ## Buffer List
 Use `:buffers` (or `:files`, or `:ls`) to see the buffer list.  
 
