@@ -41,6 +41,17 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
 
 
 
+## Quickref
+* `gf`: Go to file under cursor
+* `gF`: Go to file under cursor and, if there's a number after the file name, 
+        the cursor is positioned on that line in the file.
+* `<C-w>gF`: Same as `gF`, but the file is opened in a new tab.  
+
+* `gx`: Go to the filepath or URL under the cursor.
+    * Uses the system default handler, by calling `vim.ui.open()`.
+    * Returns (doesn't show) an error message on failure.
+
+
 ## Making Custom Keybindings  
 >###### *:h map-precedence*  
 >###### *:h map-arguments*  

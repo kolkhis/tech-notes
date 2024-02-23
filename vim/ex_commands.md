@@ -50,6 +50,11 @@ Quickref:
 :t10.
 ```
 
+* `:tab <cmd>`: Open the result of `<cmd>` in a new tab. 
+```vim
+:tab Man tmux
+```
+
 
 ## Buffer List
 Use `:buffers` (or `:files`, or `:ls`) to see the buffer list.  
