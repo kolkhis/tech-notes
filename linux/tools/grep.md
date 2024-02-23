@@ -68,6 +68,53 @@ rgrep
     * Uses shell globbing.
 
 
+## Character Classes and Bracket Expressions
+##### See `man://grep 304`
+A bracket expression is a `set` of characters inside square
+brackets `[ ]`, which is used to match a single character.
+
+### What can go inside the brackets
+* Sets accept a single character, a range of characters, a set of characters, or a 
+  combination of those.
+    * E.g.: `[a]`, `[abc]`, `[a-z]`, `[A-Z]`, or `[0-9]`
+    * As a combo: `[A-Z_-]` will match `A-Z` and the `-` and `_` characters.
+
+### Character Classes and Their Matches
+Character classes can also be used to specify a set of characters, using
+the syntax `[:class:]`.
+
+* `[:alnum:]`: Matches any alphanumeric character.  Same as `[a-zA-Z0-9]`.
+* `[:alpha:]`: Matches any alphabetic character.  Same as `[a-zA-Z]`.
+* `[:blank:]`: Matches any horizontal whitespace character, including space and tab.
+* `[:cntrl:]`: Matches any control character.  
+    * Control characters are non-printing characters that control how text
+      is processed, like newline (`\n`), carriage return (`\r`), tab (`\t`), etc.
+* `[:digit:]`: Matches any digit.  Same as `[0-9]`.
+* `[:graph:]`: Matches any printable character excluding space.  
+    * It includes characters that are visible and can be printed, excluding whitespace.
+* `[:lower:]`: Matches any lowercase alphabetic character.  Same as `[a-z]`.
+* `[:print:]`: Matches any printable character including space.  
+    * It's similar to `[:graph:]` but also includes the space character.
+* `[:punct:]`: Matches any punctuation character.  
+    * It includes characters like `.`, `,`, `!`, `?`, `;`, `:`, and other symbols
+      that are not alphanumeric.
+* `[:space:]`: Matches any whitespace character. 
+    * Includes spaces, tabs, newlines (`\n`), carriage returns (`\r`),
+      form feeds (`\f`), and vertical tabs (`\v`).
+* `[:upper:]`: Matches any uppercase alphabetic character.  Same as `[A-Z]`.
+* `[:xdigit:]`: Matches any hexadecimal digit.  Same as `[0-9a-fA-F]`.
+
+### Inverting the Matches (Match Non-Matching)
+If the first character of the `set` is the caret `^`, then it matches any
+character **not** in the list.  
+E.g., `[^abc]` will match everything except one of `abc`.  
+* Note: Using the `-v` option also has this effect: It matches everything that does not match
+  the pattern.
+    * This applies to the entire pattern passed to `grep`. 
+    * Using the caret `^` in a `set` only inverts the matches within the `set`.  
+    * Using the caret `^` with the `-v` option will have the opposite effect.  
+
+
 
 
 ## Exmaples  
