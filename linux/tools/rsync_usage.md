@@ -25,6 +25,22 @@ This will transfer all files matching a pattern (`*.c`) from the current
 directory to the remote directory (`foo:src/`) via SSH.  
 
 
+## Using `--delete` to Delete Files on the Remote Host
+The `--delete` option will delete files on the remote host that aren't
+on the local host.
+ 
+You don't need to specify which files to delete.
+If the file or directory doesn't exist on the local host, `rsync` will
+automatically delete it on the remote host with `--delete`.
+ 
+E.g.,:
+Remote host has the new file called `test.txt`. 
+Local host does not have the file `test.txt`.
+The `--delete` option will the file `test.txt` on the remote host.
+
+
+
+
 
 ## Using rsync to Transfer Files and Changes via SSH  
 Synchronize all files from a local directory to a remote directory via SSH.  
