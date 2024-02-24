@@ -1,0 +1,9 @@
+REM A test script for the Flipper Zero's BadUSB functionality
+DELAY 1000
+GUI r
+STRINGLN pwsh
+DELAY 500
+ENTER
+STRINGLN Write-Output "Hello, world!"
+
+
