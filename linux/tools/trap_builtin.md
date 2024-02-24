@@ -1,7 +1,7 @@
 
 
 # Using `trap` for Error Handling, Debugging, & Other Behavior  
-
+See the [kill builtin](./kill.md) for more info on signal specs (`SIGSPEC`).
 
 ## Syntax and Basic Usage
 You'll want to set your traps at the top of the script.  
@@ -144,17 +144,18 @@ time a command is executed in the script.
 trap 'echo "Command executed on line $LINENO"' DEBUG  
 ```
 
-## Check if a trap i9s set on a signal  
+## Check if a trap is set on a signal  
 To see if a trap is set on a signal, use the `-p` (print trap) option.  
 ```bash  
 trap -p SIGINT  
+# or simply
+trap
 ```
 Using trap with no options does the same thing.  
 
-To reset the signal to its untrapped,
-normal state, use a hyphen "-" and the  
-name of the trapped signal.  
 
+To reset the signal to its untrapped, normal state, use
+a hyphen `-` and the name of the trapped signal:  
 ```bash  
 trap - SIGINT  
 trap -p SIGINT  # Should not print anything  
@@ -164,16 +165,16 @@ trap -p SIGINT  # Should not print anything
 The `action` can be a bash/shell function, to be used as a callback for a trapped signal.  
 ```bash  
 #!/bin/bash  
-
+ 
 # Set callback for multiple signals  
 trap graceful_shutdown SIGINT SIGQUIT SIGTERM  
-
+ 
 graceful_shutdown() {
   echo -e "\nRemoving temporary file:" $temp_file  
   rm -rf "$temp_file"  
   exit  
 }
-
+ 
 temp_file=$(mktemp -p /tmp tmp.XXXXXXXXXX)  
 echo "Created temp file:" $temp_file  
 counter=0  
