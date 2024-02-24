@@ -138,8 +138,3 @@ To retrieve the qFlipper logs for the previous session:
 
 
 
-
-
-
-
-
