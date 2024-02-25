@@ -1,4 +1,7 @@
 
+
+
+
 # Notes On Git  
 Getting help on a git command: 
 ```bash  
@@ -10,10 +13,39 @@ man gittutorial
 man giteveryday
 ```
 
+
+## Table of Contents
+* [Basic Git Commands](#basic-git-commands) 
+* [Git Init](#git-init) 
+* [Git Status](#git-status) 
+* [Git Diff](#git-diff) 
+    * [See changes from the current commit and the previous commit](#see-changes-from-the-current-commit-and-the-previous-commit) 
+* [Git Add](#git-add) 
+* [Git Commit](#git-commit) 
+* [Git Log](#git-log) 
+    * [See log history for a specific file or branch](#see-log-history-for-a-specific-file-or-branch) 
+    * [See log history for a specific range of commits](#see-log-history-for-a-specific-range-of-commits) 
+    * [See log history for a forked repository](#see-log-history-for-a-forked-repository) 
+* [Git Branch](#git-branch) 
+* [Git Checkout](#git-checkout) 
+* [Git Merge](#git-merge) 
+* [Git Stash](#git-stash) 
+* [Git Fetch](#git-fetch) 
+* [Git Pull](#git-pull) 
+* [Git Blame](#git-blame) 
+* [Git Reset](#git-reset) 
+    * [Rolling back to a previous commit](#rolling-back-to-a-previous-commit) 
+* [Branches](#branches) 
+* [Creating a New Branch](#creating-a-new-branch) 
+    * [Git Checkout / Git Switch / Git Branch](#git-checkout-/-git-switch-/-git-branch) 
+* [Renaming a Branch](#renaming-a-branch) 
+* [List Branches](#list-branches) 
+
+
 ## Basic Git Commands  
 The options lists for these aren't exhaustive.  
 They're just examples.  
-
+ 
 ## Git Init
 Initializes a new git repository in the current directory.
 ```bash
@@ -27,22 +59,47 @@ It's a quick way to see what changes are pending.
 ```bash  
 git status  
 ```
-* Options:  
-    * `--short` or `-s`: Gives a shorter, more succinct output.  
-    * `--branch` or `-b`: Shows the branch and tracking information.  
+Options:  
+* `--short` or `-s`: Gives a shorter, more succinct output.  
+* `--branch` or `-b`: Shows the branch and tracking information.  
 
+* `--show-stash`: Show the number of entries currently stashed away.
+* `--long`: Give the output in the long-format. This is the default.
+* `-v, --verbose`:
+    * Show the names of file *and* the changes that are staged to be committed 
+     (like `git diff --cached`).
+    * If `-vv` is specified, also show the changes in the working
+     tree that have not yet been staged (like `git diff`).
+* `-u[<mode>], --untracked-files[=<mode>]`:
+    * Show untracked files.
+    * The `mode` is optional. The possible `mode`s are:
+        * `no` - Show no untracked files.
+        * `normal` - Shows untracked files and directories.
+        * `all` - Also shows individual files in untracked directories.
+    * if this is specified, the mode needs to be "stuck" to the option.
+        * E.g., `git status -uall` will work, `git status -u all` will not.  
+
+
+---
 
 ## Git Diff  
-By default, shows the changes to unstaged git files (already part of the repository).  
+By default, show the changes to unstaged **git** files (already part of the repository).
+  
+Shows changes between commits, commit and working tree, etc.  
 ```bash
 git diff  
 ```
+Options:  
+* `--[cached | staged]`: Shows changes in the staging area.  
+* `[commit1] [commit2]`: Compares two commits.  
 
 * Show changes for cached / staged files  
   ```bash  
   git diff --cached  
   ```
 
+
+---  
 
 ### See changes from the current commit and the previous commit  
 ```bash
@@ -215,28 +272,6 @@ git pull
 
 ---  
 
-## Git Reset  
-Resets current HEAD to a specified state.  
-```bash  
-git reset  
-```
-* Options:  
-    * `--hard`: Resets the index and working tree. Any changes to tracked files are discarded.  
-    * `--soft`: Does not touch the index file or the working tree.  
-    * `[commit]`: Resets to a specific commit.  
-
----  
-
-## Git Diff  
-Shows changes between commits, commit and working tree, etc.  
-```bash  
-git diff  
-```
-* Options:  
-    * `--[cached | staged]`: Shows changes in the staging area.  
-    * `[commit1] [commit2]`: Compares two commits.  
-
----  
 
 ## Git Blame  
 Shows what revision and author last modified each line of a file.  
@@ -245,6 +280,33 @@ git blame [filename]
 ```
 * Options:  
     * `-L`: Restricts the annotation to a specified line range.  
+
+---
+
+## Git Reset  
+Resets current HEAD to a specified state.  
+```bash  
+git reset  
+```
+Options:  
+* `--hard`: Resets the index and working tree. Any changes to tracked files are discarded.  
+* `--soft`: Does not touch the index file or the working tree.  
+* `[commit]`: Resets to a specific commit.  
+
+
+### Rolling back to a previous commit
+To roll back a git commit, use `git reset` with the either the `--soft` or `--hard` flag.
+* `--soft`: Does not discard the changes made, leaves them in the staging area.
+* `--hard`: Discards the changes made and removes them from the staging area.
+    * **NOTE**: This permanently deletes your changes. Make sure you have a backup of your work before using this flag.
+
+```bash
+git reset --soft HEAD~1  # Rolls back to the previous commit, leaves changes in the staging area
+```
+* Before doing a reset, especially a hard reset, it's a good idea to ensure that you don't have any uncommitted changes that you want to keep.
+    * You can check this with `git status`.
+* If you've already pushed the commit to a remote repository and you perform a reset, you'll have to force push (`git push --force`) to update the remote repository.
+    * Be cautious with this, as it can overwrite history on the remote and can impact others who have pulled the changes.
 
 
 ---  
@@ -296,20 +358,5 @@ Combine other options with `-l` to match optional pattern(s):
 * `-r`, `--remotes`: Shows the remote branch name.
     * Combine with `-d` to delete remote branches.
 
-
-## Git Reset
-### Rolling back to a previous commit
-To roll back a git commit, use `git reset` with the either the `--soft` or `--hard` flag.
-* `--soft`: Does not discard the changes made, leaves them in the staging area.
-* `--hard`: Discards the changes made and removes them from the staging area.
-    * **NOTE**: This permanently deletes your changes. Make sure you have a backup of your work before using this flag.
-
-```bash
-git reset --soft HEAD~1  # Rolls back to the previous commit, leaves changes in the staging area
-```
-* Before doing a reset, especially a hard reset, it's a good idea to ensure that you don't have any uncommitted changes that you want to keep.
-    * You can check this with `git status`.
-* If you've already pushed the commit to a remote repository and you perform a reset, you'll have to force push (`git push --force`) to update the remote repository.
-    * Be cautious with this, as it can overwrite history on the remote and can impact others who have pulled the changes.
 
 
