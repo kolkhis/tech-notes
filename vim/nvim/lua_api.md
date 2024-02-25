@@ -2,6 +2,7 @@
 # Neovim's Lua API  
 Always either `vim.print()` or `vim.inspect()` tables.  
 
+
 ## Table of Contents
 * [Neovim's Lua API](#neovim's-lua-api) 
 * [Getting the current line or a range of lines](#getting-the-current-line-or-a-range-of-lines) 
@@ -18,7 +19,7 @@ Always either `vim.print()` or `vim.inspect()` tables.
     * [Option Objects](#option-objects) 
     * [Option Object Methods](#option-object-methods) 
 * [Tab Completion Keymap](#tab-completion-keymap) 
-* [Spawning External Processes with `vim.uv`](#spawning-external-processes-with-vim.uv) 
+* [Spawning External Processes with `vim.uv`](#spawning-external-processes-with-vimuv) 
 * [Modes](#modes) 
     * [Getting Current Mode](#getting-current-mode) 
 * [Getting the Mode Using Vimscript](#getting-the-mode-using-vimscript) 
@@ -28,8 +29,8 @@ Always either `vim.print()` or `vim.inspect()` tables.
 * [Ringbuffer: Self-Updating Fixed Size List](#ringbuffer-self-updating-fixed-size-list) 
     * [Ringbuffer Methods](#ringbuffer-methods) 
 * [Getting Iterators for Loops](#getting-iterators-for-loops) 
-    * [Iterators from Tables (Lists or Dicts)](#iterators-from-tables-(lists-or-dicts)) 
-    * [Using `vim.spairs({table})`](#using-vim.spairs(table)) 
+    * [Iterators from Tables (Lists or Dicts)](#iterators-from-tables-lists-or-dicts) 
+    * [Using `vim.spairs({table})`](#using-vimspairstable) 
     * [Using Lua](#using-lua) 
     * [Creating an `Iter` Object](#creating-an-iter-object) 
     * [Useful Iter Methods](#useful-iter-methods) 
@@ -49,7 +50,7 @@ Always either `vim.print()` or `vim.inspect()` tables.
     * [Translating Keycodes](#translating-keycodes) 
 * [RPC / Remote Plugins](#rpc-/-remote-plugins) 
     * [Important Functions](#important-functions) 
-* [API for Buffers and Windows (UI)](#api-for-buffers-and-windows-(ui)) 
+* [API for Buffers and Windows (UI)](#api-for-buffers-and-windows-ui) 
 * [Terminal Instances from nvim](#terminal-instances-from-nvim) 
 * [Vim Highlighting and Syntax](#vim-highlighting-and-syntax) 
     * [Highlights](#highlights) 
@@ -59,6 +60,12 @@ Always either `vim.print()` or `vim.inspect()` tables.
         * [Adding your own syntax](#adding-your-own-syntax) 
     * [Testing Syntax Time When Syntax is Slow](#testing-syntax-time-when-syntax-is-slow) 
     * [Highlighting Naming Conventions & Default Highlight Groups](#highlighting-naming-conventions-&-default-highlight-groups) 
+* [Floating Windows](#floating-windows) 
+    * [With `vim.lsp.util`](#with-vimlsputil) 
+    * [With Telescope](#with-telescope) 
+
+
+
 
 ## Getting the current line or a range of lines  
 ### Getting the current line  
@@ -965,6 +972,49 @@ mappings.
 * `Error`: any erroneous construct  
 * `Todo`: anything that needs extra attention. 
     * mostly the keywords `TODO` `FIXME` and `XXX`  
+
+
+## Floating Windows
+
+### With `vim.lsp.util`
+
+```lua
+open_floating_preview({contents}, {syntax}, {opts})
+```
+
+* `{contents}`  (`table`) of lines to show in window
+* `{syntax}`    (`string`) of syntax to set for opened buffer
+* `{opts}`      (`table`) with optional fields.
+    * Additional keys are filtered with `vim.lsp.util.make_floating_popup_options()`
+      before they are passed on to `nvim_open_win()`
+        * `height`: (integer) height of floating window
+        * `width`: (integer) width of floating window
+        * `wrap`: (boolean, default true) wrap long lines
+        * `wrap_at`: (integer) character to wrap at for computing
+          height when wrap is enabled
+        * `max_width`: (integer) maximal width of floating window
+        * `max_height`: (integer) maximal height of floating window
+        * `focus_id`: (string) if a popup with this id is opened,
+          then focus it
+        * `close_events`: (table) list of events that closes the
+          floating window
+        * `focusable`: (boolean, default true) Make float focusable
+        * `focus`: (boolean, default true) If `true`, and if
+          {focusable} is also `true`, focus an existing floating
+          window with the same {`focus_id`}
+
+
+### With Telescope
+Previewers are available with `telescope.previewers`.
+
+`previewers.Previewer()`:
+
+* `previewers.new()`
+    * A shorthand for creating a new Previewer.
+    * The provided table will be forwarded to `Previewer:new(...)`
+
+* `previewers.cat()`
+    * Provides a `termopen_previewer` which has the ability to display files.
 
 
 
