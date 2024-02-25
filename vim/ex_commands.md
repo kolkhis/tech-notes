@@ -2,6 +2,10 @@
 # Useful Ex Commands  
 
 ## Table of Contents
+* [Line Numbers in the Command Line](#line-numbers-in-the-command-line) 
+* [Filter](#filter) 
+    * [Filtering Example](#filtering-example) 
+* [How Bangs `!` in the Command Line are Expanded](#how-bangs-!-in-the-command-line-are-expanded) 
 * [Buffer List](#buffer-list) 
     * [Buffer Types](#buffer-types) 
 * [Quickfix List](#quickfix-list) 
@@ -24,19 +28,10 @@
 * [Ex special characters](#ex-special-characters) 
 * [Dynamically Generating Temporary Files](#dynamically-generating-temporary-files) 
 * [Ex Command Substitution](#ex-command-substitution) 
-            * [ ``` `= ```](#--=-) 
     * [Using Expanded Variables](#using-expanded-variables) 
     * [Using Literal Variable Names](#using-literal-variable-names) 
 * [Ex Mode Special Words](#ex-mode-special-words) 
-* [`filename-modifiers`](#filename-modifiers) 
-* [Examples](#examples) 
-* [Debugging with gdb](#debugging-with-gdb) 
-            * [*:h termdebug-stepping*/*:h :Run*](#*h-termdebug-stepping*/*h-run*) 
-    * [Inspecting variables](#inspecting-variables) 
-            * [*:h termdebug-variables*/*:h :Evaluate*](#*h-termdebug-variables*/*h-evaluate*) 
-    * [Navigating stack frames](#navigating-stack-frames) 
-            * [*:h termdebug-frames*/*:h :Frame*/*:h :Up*/*:h :Down*](#*h-termdebug-frames*/*h-frame*/*h-up*/*h-down*) 
-    * [Other commands](#other-commands) 
+
 
 ---
 
@@ -54,6 +49,73 @@ Quickref:
 ```vim
 :tab Man tmux
 ```
+
+
+## Line Numbers in the Command Line
+
+Line numbers may be specified with special characters:
+| Character | Description
+|-|-
+| `{number}` | an absolute line number  
+| `.` | the current line			  
+| `$` | the last line in the file		  
+| `%` | equal to 1,$ (the entire file)		  
+| `'t` | position of mark t (lowercase)		  
+| `'T` | position of mark T (uppercase); when the mark is in another file it cannot be used in a range
+| `/{pattern}[/]` | the next line where `{pattern}` matches
+| `?{pattern}[?]` | the previous line where `{pattern}` matches
+| `\/` | the next line where the previously used search pattern matches
+| `\?` | the previous line where the previously used search pattern matches
+| `\&` | the next line where the previously used substitute pattern matches
+
+
+## Filter
+Vim filters are used to filter a line or range of lines
+through an external program.
+
+```vim
+:{range}![!]{filter} [!][arg]
+```
+Filter `{range}` lines through the external program `{filter}`.
+
+```vim
+:.!python3
+```
+* This takes the current line and "filters" it using `python3`.
+* The line is replaced with the output of the `filter` program.
+
+### Filtering Example
+You have these three lines in your buffer:
+```python
+print(12 * 33)
+print(12 ** 4 )
+print(220 / 12)
+```
+
+If you visually select those three lines and then use a filter:
+```vim
+'<'>!python3
+```
+Those lines will then be replaced with the output:
+```plaintext
+396
+20736
+18.333333333333332
+```
+
+## How Bangs `!` in the Command Line are Expanded
+
+Vim replaces the optional bangs `!` with the
+latest given command and appends the optional `[arg]`.
+```vim
+:!echo "Hello, "
+" Output: Hello
+:!! "World!"
+" Expands to: `echo "Hello, " "World!"`
+" Output: Hello World
+```
+* `:!echo "Hello "` just outputs `Hello ` 
+* `:!! "World"`: The 2nd bang `!` is expanded to `echo "Hello "`
 
 
 ## Buffer List
