@@ -1,6 +1,3 @@
-39:26 - Start a Go project  
-58:59 - Continuation  
-
 # Learn Go - Week 1  
 
 > Go is the industry standard for writing code in Kubernetes and Cloud Native.  
@@ -8,26 +5,44 @@
 
 
 ## Table of Contents
+* [Learn Go - Week 1](#learn-go---week-1) 
+* [Possible Editors for Go](#possible-editors-for-go) 
+* [Go and Git](#go-and-git) 
+* [Downloading the Go Source Code](#downloading-the-go-source-code) 
+* [Starting a Go Project](#starting-a-go-project) 
+    * [Command Projects](#command-projects) 
+    * [Modules](#modules) 
+    * [Package Projects](#package-projects) 
+* [Writing a Package](#writing-a-package) 
+* [Internal Packages](#internal-packages) 
+    * [How to export for certain files only (making it "internal" to a module)](#how-to-export-for-certain-files-only-making-it-"internal"-to-a-module) 
+    * [Running a Package](#running-a-package) 
+* [Vendor Code Instead of Using External Dependencies](#vendor-code-instead-of-using-external-dependencies) 
+* [Building Executables for Other Operating Systems](#building-executables-for-other-operating-systems) 
+* [Generator Line](#generator-line) 
+* [Backticks vs Double Quotes](#backticks-vs-double-quotes) 
+    * [Backticks](#backticks) 
+    * [Double Quotes](#double-quotes) 
+* [Single Quotes](#single-quotes) 
+* [Running Go Code](#running-go-code) 
+    * [Using `go run`](#using-go-run) 
+    * [Using `go build`](#using-go-build) 
+    * [Using `go generate`](#using-go-generate) 
+    * [`go install` vs `exec go install`](#go-install-vs-exec-go-install) 
+    * [Key Differences](#key-differences) 
+* [Environment Variables](#environment-variables) 
+* [Related](#related) 
+* [Automatic Running](#automatic-running) 
+    * [Interpret (`go run`)](#interpret-go-run) 
+    * [Compile (`go build`)](#compile-go-build) 
+        * [Compiling](#compiling) 
+* [Resources](#resources) 
+    * [main.go notes from writing a command.](#maingo-notes-from-writing-a-command) 
 
-- [Quickref](#quickref)
-- [Possible Editors for Go](#possible-editors-for-go)
-- [Go and Git](#go-and-git)
-- [Recommended](#recommended)
-- [Starting a Project](#starting-a-project)
-- [Writing a Package](#writing-a-package)
-    * [Running the Package](#Running-the-Package)  
-- [Internal Packages](#internal-packages)
-* [Building Executables for Other Operating Systems](#Building-Executables-for-Other-Operating-Systems)  
+
 
 
 Reading the Go documentation and the Go stdlib is the best way to learn Go.  
-
-## Quickref
-* [Running Go Code](#Running-Go-Code)  
-* [Starting a Project](#Starting-a-Project)  
-* [Writing a Package](#Writing-a-Package)  
-* [Internal Packages](#Internal-Packages)- 
-
 
 
 ## Possible Editors for Go  
@@ -39,11 +54,10 @@ Reading the Go documentation and the Go stdlib is the best way to learn Go.
 
 
 ## Go and Git  
-Go is integrated with Git.  
+Go is integrated with Git, in that it uses Git and GitHub as a package manager.  
 The developers of Go said "Let's just use Git" for Package Manager.  
-Go uses Git for package management.  
 
-## Recommended  
+## Downloading the Go Source Code
 Download the Go source code and read it.  
 ```bash  
 get_go_source_code(){
@@ -55,7 +69,7 @@ get_go_source_code(){
 
 
 
-## Starting a Project  
+## Starting a Go Project  
 Every single project starts with:
 ```bash
 go mod init github.com/Kolkhis/go-week1  
@@ -65,7 +79,7 @@ The last argument will be the GitHub repo of your new project.
 Once the mod is created, you need to answer the following question:  
 * Am I writing a package, or am I writing a command?  
 
-### Command:  
+### Command Projects:  
 Specifically means you have a `main()` function.  
 * Some people use the naming convention `main.go` if they're writing a command.  
 
@@ -76,17 +90,18 @@ Specifically means you have a `main()` function.
     * Having a `go.mod` file dictates that it is a module.
     * Will primarily be in a repo managed by git.
 
-### Packages
-
+### Package Projects:
 Packages (seaparate from Modules) are used as external libraries.  
+
 * Some people use the naming convention of `lib.go` if 
-they're writing a package/module.  
+  they're writing a package/module.  
 * These projects usually *won't* have a `main()` function in its main file.  
 
 * You can make your package run like a command with a `./cmd/package_name/main.go` file.  
     * This will essentially be its own command "project" that uses the package you're writing.
 
 * Most of the Go code you'll write will be packages.  
+
 
 ## Writing a Package  
 * Naming a package `util` is a **big anti-pattern** in the Go world.  
@@ -112,8 +127,8 @@ func Greet(){
 }
 ```
 This exports the function.  
-
 Rob's personal opinion: Every single function should be exported (internally)  
+
 
 ## Internal Packages  
 ### How to export for certain files only (making it "internal" to a module)  

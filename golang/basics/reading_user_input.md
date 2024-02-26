@@ -8,10 +8,10 @@ Can have multiple modules within a single Git repository.
 Create a new module for each week (keeping them in one repository)
 `go mod init github.com/Kolkhis/learn-go/week3`
 
-`go run` - run the code
-`go install` - build a binary in the `$GOBIN` path
-`go build` - builds a binary in the current directory``
-`go install -o ./testbin` - will output to the specified path/name
+* `go run` - run the code
+* `go install` - build a binary in the `$GOBIN` path
+* `go build` - builds a binary in the current directory``
+* `go install -o ./testbin` - will output to the specified path/name
 
 
 ## Command Line Arguments & Environment Variables

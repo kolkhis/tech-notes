@@ -4,6 +4,7 @@
 
 Default to writing packages.
 
+
 ## Go Types
 Go is a strongly typed language.
 Every variable has a type.
@@ -118,14 +119,5 @@ Once the example test is ready:
 
 ## Related
 `git grep say` 
-
 `go generate`
-
-CI/CD: Continuious Integration / Continuious Development
-
-
-next week:
-cli arguments
-env vars
-files
 
