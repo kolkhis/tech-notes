@@ -3,7 +3,7 @@
 Always either `vim.print()` or `vim.inspect()` tables.  
 
 
-## Table of Contents
+## Table of Contents  
 * [Neovim's Lua API](#neovim's-lua-api) 
 * [Getting the current line or a range of lines](#getting-the-current-line-or-a-range-of-lines) 
     * [Getting the current line](#getting-the-current-line) 
@@ -65,6 +65,28 @@ Always either `vim.print()` or `vim.inspect()` tables.
     * [With Telescope](#with-telescope) 
 
 
+
+## nvim_exec2 - Run Vimscript in Neovim  
+* Note: `nvim_exec` is deprecated, so use `nvim_exec2` instead.  
+
+The `nvim_exec2` function executes Vimscript.  
+Vimscript is just a multiline block of Ex commands, like anonymous `:source`.  
+Unlike `nvim_command()` this function supports heredocs, script-scope (s:), etc.  
+```lua  
+nvim_exec2({src}, {*opts})  
+```
+* `{src}`: Vimscript code
+* `{opts}`  Optional parameters.
+    * `output`: (boolean, default `false`) Whether to capture and
+      return all output (non-error output, non-shell `:!` output).
+Example:
+```lua
+nvim_exec2([[
+    set textwidth=80
+    set noexpandtab
+    setlocal nonumber
+]])
+```
 
 
 ## Getting the current line or a range of lines  
@@ -316,54 +338,54 @@ end, { expr = true })
 ```
 
 ## Spawning External Processes with `vim.uv`
-See [external processes](./external_processes.md) for a breakdown of this example:
+See [external processes](./external_processes.md) for a breakdown of this example:  
 
-```lua
-local stdin = vim.uv.new_pipe()
-local stdout = vim.uv.new_pipe()
-local stderr = vim.uv.new_pipe()
+```lua  
+local stdin = vim.uv.new_pipe()  
+local stdout = vim.uv.new_pipe()  
+local stderr = vim.uv.new_pipe()  
 
-print('stdin', stdin)
-print('stdout', stdout)
-print('stderr', stderr)
+print('stdin', stdin)  
+print('stdout', stdout)  
+print('stderr', stderr)  
 
 local handle, pid = vim.uv.spawn('cat', {
     stdio = { stdin, stdout, stderr },
-}, function(code, signal) -- on exit
-    print('exit code', code)
-    print('exit signal', signal)
-end)
+}, function(code, signal) -- on exit  
+    print('exit code', code)  
+    print('exit signal', signal)  
+end)  
 
-print('process opened', handle, pid)
+print('process opened', handle, pid)  
 
-vim.uv.read_start(stdout, function(err, data)
-    assert(not err, err)
-    if data then
-        print('stdout chunk', stdout, data)
-    else
-        print('stdout end', stdout)
-    end
-end)
+vim.uv.read_start(stdout, function(err, data)  
+    assert(not err, err)  
+    if data then  
+        print('stdout chunk', stdout, data)  
+    else  
+        print('stdout end', stdout)  
+    end  
+end)  
 
-vim.uv.read_start(stderr, function(err, data)
-    assert(not err, err)
-    if data then
-        print('stderr chunk', stderr, data)
-    else
-        print('stderr end', stderr)
-    end
-end)
+vim.uv.read_start(stderr, function(err, data)  
+    assert(not err, err)  
+    if data then  
+        print('stderr chunk', stderr, data)  
+    else  
+        print('stderr end', stderr)  
+    end  
+end)  
 
-vim.uv.write(stdin, 'Hello World')
+vim.uv.write(stdin, 'Hello World')  
 
-vim.uv.shutdown(stdin, function()
-    print('stdin shutdown', stdin)
-    if handle then
-        vim.uv.close(handle, function()
-            print('process closed', handle, pid)
-        end)
-    end
-end)
+vim.uv.shutdown(stdin, function()  
+    print('stdin shutdown', stdin)  
+    if handle then  
+        vim.uv.close(handle, function()  
+            print('process closed', handle, pid)  
+        end)  
+    end  
+end)  
 
 ```
 
@@ -898,15 +920,15 @@ Related to namespace highlighting:
 ### Highlighting Tags  
 > *:h tag-highlight*  
 
-If you want to highlight all the tags in your file, you can use the following
-mappings.
+If you want to highlight all the tags in your file, you can use the following  
+mappings.  
 
-`<F11>` -- Generate tags.vim file, and highlight tags.
-`<F12>` -- Just highlight tags based on existing tags.vim file.
+`<F11>` -- Generate tags.vim file, and highlight tags.  
+`<F12>` -- Just highlight tags based on existing tags.vim file.  
 
-```vim
-:map <F11>  :sp tags<CR>:%s/^\([^ :]*:\)\=\([^    ]*\).*/syntax keyword Tag \2/<CR>:wq! tags.vim<CR>/^<CR><F12>
-:map <F12>  :so tags.vim<CR>
+```vim  
+:map <F11>  :sp tags<CR>:%s/^\([^ :]*:\)\=\([^    ]*\).*/syntax keyword Tag \2/<CR>:wq! tags.vim<CR>/^<CR><F12>  
+:map <F12>  :so tags.vim<CR>  
 ```
 
 ### Syntax  
@@ -968,53 +990,53 @@ mappings.
 
 * `Underlined`: text that stands out, HTML links  
 
-* `Ignore`: left blank, hidden (`hl-Ignore`)
+* `Ignore`: left blank, hidden (`hl-Ignore`)  
 * `Error`: any erroneous construct  
 * `Todo`: anything that needs extra attention. 
     * mostly the keywords `TODO` `FIXME` and `XXX`  
 
 
-## Floating Windows
+## Floating Windows  
 
 ### With `vim.lsp.util`
 
-```lua
-open_floating_preview({contents}, {syntax}, {opts})
+```lua  
+open_floating_preview({contents}, {syntax}, {opts})  
 ```
 
-* `{contents}`  (`table`) of lines to show in window
-* `{syntax}`    (`string`) of syntax to set for opened buffer
-* `{opts}`      (`table`) with optional fields.
+* `{contents}`  (`table`) of lines to show in window  
+* `{syntax}`    (`string`) of syntax to set for opened buffer  
+* `{opts}`      (`table`) with optional fields.  
     * Additional keys are filtered with `vim.lsp.util.make_floating_popup_options()`
       before they are passed on to `nvim_open_win()`
-        * `height`: (integer) height of floating window
-        * `width`: (integer) width of floating window
-        * `wrap`: (boolean, default true) wrap long lines
-        * `wrap_at`: (integer) character to wrap at for computing
-          height when wrap is enabled
-        * `max_width`: (integer) maximal width of floating window
-        * `max_height`: (integer) maximal height of floating window
+        * `height`: (integer) height of floating window  
+        * `width`: (integer) width of floating window  
+        * `wrap`: (boolean, default true) wrap long lines  
+        * `wrap_at`: (integer) character to wrap at for computing  
+          height when wrap is enabled  
+        * `max_width`: (integer) maximal width of floating window  
+        * `max_height`: (integer) maximal height of floating window  
         * `focus_id`: (string) if a popup with this id is opened,
-          then focus it
-        * `close_events`: (table) list of events that closes the
-          floating window
-        * `focusable`: (boolean, default true) Make float focusable
-        * `focus`: (boolean, default true) If `true`, and if
-          {focusable} is also `true`, focus an existing floating
+          then focus it  
+        * `close_events`: (table) list of events that closes the  
+          floating window  
+        * `focusable`: (boolean, default true) Make float focusable  
+        * `focus`: (boolean, default true) If `true`, and if  
+          {focusable} is also `true`, focus an existing floating  
           window with the same {`focus_id`}
 
 
-### With Telescope
-Previewers are available with `telescope.previewers`.
+### With Telescope  
+Previewers are available with `telescope.previewers`.  
 
-`previewers.Previewer()`:
+`previewers.Previewer()`:  
 
 * `previewers.new()`
-    * A shorthand for creating a new Previewer.
+    * A shorthand for creating a new Previewer.  
     * The provided table will be forwarded to `Previewer:new(...)`
 
 * `previewers.cat()`
-    * Provides a `termopen_previewer` which has the ability to display files.
+    * Provides a `termopen_previewer` which has the ability to display files.  
 
 
 
