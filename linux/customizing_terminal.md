@@ -1,7 +1,25 @@
 
 # Customizing Your Terminal  
 
-## Modify the PS1 Environment Variable  
+## Table of Contents
+* [Customizing Your Terminal](#customizing-your-terminal) 
+* [Colors](#colors) 
+* [Customizing Your Prompt](#customizing-your-prompt) 
+    * [Modify the PS1 Environment Variable](#modify-the-ps1-environment-variable) 
+    * [Modifying the PS2 Environment Variable](#modifying-the-ps2-environment-variable) 
+
+
+## Colors
+
+See [ANSI escape sequences](./ansi_control_sequences.md) for more details.  
+* `30 - 37` : 8-color foreground colors.
+* `40 - 47` : 8-color background colors.
+* `38;5;0 - 255` : 88/256-color foreground colors.  
+* `48;5;0 - 255` : 88/256-color background colors.  
+
+
+## Customizing Your Prompt
+### Modify the PS1 Environment Variable  
 
 `PS1` is the environment variable that controls what the terminal prompt looks like.  
 
@@ -46,7 +64,7 @@ export PS1="\[\e[38;5;20m\]\u:\h \$ \[\e[0m\]"
 See [ANSI control sequences](./ansi_control_sequences.md) for adding colors.
 
 
-## Modifying the PS2 Environment Variable  
+### Modifying the PS2 Environment Variable  
 
 `PS2` is the environment variable that controls what the next-line prompt looks like.  
 
