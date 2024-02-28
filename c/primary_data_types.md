@@ -11,10 +11,15 @@ Developers might optimize memory by carefully selecting appropriate
 types, using `enum` and bit fields in `struct`s for compact storage,
 and leveraging pointers and dynamic allocation to manage memory efficiently
 
-- Choose the appropriate type based on the data you need to store, considering
-  both the range of values and the memory usage.
-- Be cautious with type conversions and casting, especially between signed
-  and unsigned types or between integer and floating-point types.
+
+### NOTE: The use of the `_t` suffix is not POSIX-compliant
+The `_t` suffix is reserved by POSIX. 
+
+So, if you create a typedef in your program with `_t`, it may end 
+up conflicting with a `typedef` in a header in the future
+
+You can zero initialise a struct with an empty `{}` as of C23.  
+
 
 ## Table of Contents
 
