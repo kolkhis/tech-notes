@@ -1,6 +1,20 @@
 
 ## Packages to install when I have Linux on desktop:
-#### (Distro? Linux Mint??)
+##### (Distro? Linux Mint??)
+
+## Table of Contents
+* [Packages to install when I have Linux on desktop](#packages-to-install-when-i-have-linux-on-desktop) 
+    * [Core utils to remember](#core-utils-to-remember) 
+* [Timezone change](#timezone-change) 
+    * [Tmux vs Screen](#tmux-vs-screen) 
+        * [Multiple user session](#multiple-user-session) 
+    * [Cool Vim Tips/Tricks](#cool-vim-tips/tricks) 
+* [Plain GPG Protected Credential Helper](#plain-gpg-protected-credential-helper) 
+    * [Using GPG for Github Authentication](#using-gpg-for-github-authentication) 
+    * [Generate a New GPG Key](#generate-a-new-gpg-key) 
+    * [Add the New GPG Key to Github](#add-the-new-gpg-key-to-github) 
+* [Signing Commits with GPG](#signing-commits-with-gpg) 
+    * [Git Commit Messages](#git-commit-messages) 
 
 
 * Terminal
@@ -16,19 +30,20 @@
 
 
 `man` sections:
-   1   Executable programs or shell commands
-   2   System calls (functions provided by the kernel)
-   3   Library calls (functions within program libraries)
-   4   Special files (usually found in /dev)
-   5   File formats and conventions eg /etc/passwd
-   6   Games
-   7   Miscellaneous  (including  macro  packages  and  conventions), e.g.
-       man(7), groff(7)
-   8   System administration commands (usually only for root)
-   9   Kernel routines [Non standard]
+| Section | Description
+|-|-
+| `1` | Executable programs or shell commands
+| `2` | System calls (C functions provided by the kernel)
+| `3` | Library calls (functions within program libraries)
+| `4` | Special files (usually found in /dev)
+| `5` | File formats and conventions eg /etc/passwd
+| `6` | Games
+| `7` | Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7)
+| `8` | System administration commands (usually only for root)
+| `9` | Kernel routines [Non standard]
 
-Trying `man 8 ls` will look in section 8 for `ls`
-`man -f ls` will give the available sections/pages for `ls`.
+* Running `man 8 ls` will look in section 8 for `ls`
+* `man -f ls` will give the available sections/pages for `ls`.
    
 ### Core utils to remember
 <details>
