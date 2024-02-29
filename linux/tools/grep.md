@@ -3,6 +3,26 @@
 # The Grep Command  
 Print lines that match patterns.  
 
+## Table of Contents
+* [The Grep Command](#the-grep-command) 
+* [tl;dr](#tl;dr) 
+* [Using Grep](#using-grep) 
+    * [ Basic vs Extended Regular Expressions](#-basic-vs-extended-regular-expressions) 
+    * [Alternation (matching any one of multiple expressions)](#alternation-matching-any-one-of-multiple-expressions) 
+    * [Other Useful `grep` Options](#other-useful-grep-options) 
+* [Character Classes and Bracket Expressions](#character-classes-and-bracket-expressions) 
+    * [What can go inside the brackets](#what-can-go-inside-the-brackets) 
+    * [Character Classes and Their Matches](#character-classes-and-their-matches) 
+    * [Inverting the Matches (Match Non-Matching)](#inverting-the-matches-match-non-matching) 
+* [Exmaples](#exmaples) 
+    * [Count Occurrences of a Word](#count-occurrences-of-a-word) 
+    * [Search Recursively in Directory](#search-recursively-in-directory) 
+    * [Find Lines Not Containing the Pattern](#find-lines-not-containing-the-pattern) 
+    * [Search While Ignoring Case](#search-while-ignoring-case) 
+* [Note on `fgrep` (Fixed Strings)](#note-on-fgrep-fixed-strings) 
+* [Grep Colors](#grep-colors) 
+    * [Breakdown](#breakdown) 
+
 ## tl;dr:
 Syntax:
 ```bash
@@ -11,6 +31,8 @@ grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
 #
 # -n: Line Numbers; -r: recusive; -E: Extended Regex
 ```
+* `-v` will print the lines that *don't* match the pattern.
+    * Matches NON-MATCHING lines.  
 * `-n` will output the line number of the match.
     * No effect used with `-r`/`-R`
 * `-E` will enable *Extended* regex.
