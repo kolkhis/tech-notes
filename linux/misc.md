@@ -118,31 +118,32 @@ Usage: `scp <options> source_path destination_path`
 ### SCP Commands
 ```bash
 # copying a file to the remote system using scp command
-$ scp file user@host:/path/to/file                        
+scp file user@host:/path/to/file                        
 # copying a file from the remote system using scp command
-$ scp user@host:/path/to/file /local/path/to/file         
+scp user@host:/path/to/file /local/path/to/file         
  
 # copying multiple files using scp command
-$ scp file1 file2 user@host:/path/to/directory            
+scp file1 file2 user@host:/path/to/directory            
 # Copying an entire directory with scp command
-$ scp -r /path/to/directory user@host:/path/to/directory  
+scp -r /path/to/directory user@host:/path/to/directory  
 ```
 
 ### SCP Options
-```bash
--r      # transfer directory 
--v      # see the transfer details
--C      # copy files with compression
--l 800  # limit bandwith with 800
--p      # preserving the original attributes of the copied files
--P      # connection port
--q      # hidden the output
-```
+
+| Option   |  Description
+|-|-
+| `-r`     |  Transfer directory 
+| `-v`     |  See the transfer details
+| `-C`     |  Copy files with compression
+| `-l 800` |  Limit bandwith with 800
+| `-p`     |  Preserving the original attributes of the copied files
+| `-P`     |  Connection port
+| `-q`     |  Hidden the output
 
 
 
 
-## Kernel Version  
+## Getting the Current System's Kernel Version  
 Get Kernel version  
 ``` bash  
 ls /boot  
@@ -152,22 +153,28 @@ uname -a
 
 ## sudoers and sudoing
 * List of sudoers or sudo users is found in `/etc/sudoers`
-* sudoers uses per-user timestamp files for credential caching.  
+* `sudoers` uses per-user timestamp files for credential caching.  
 * Once a user has been authenticated (by running `sudo [cmd]` and entering password),
-  a record is written containing the user-ID that was used to authenticate, the
-  terminal session ID, the start time of the session leader (or parent process) and
-  a time stamp (using a monotonic clock if one is available).
+  a record is written.
+    * The record contains: 
+        * The user-ID that was used to authenticate
+        * The terminal session ID
+        * The start time of the session leader (or parent process)
+        * A time stamp (using a monotonic clock if one is available)
 * The authenticated user can sudo without a password for 15 minutes,
   unless overridden by the `timestamp_timeout` option.
 
 
 ## Encrypt a file with Vi  
+Vi/vim only.
 ```vim 
 :X  
 ```
 By default, uses Blowfish2.  
+ 
 It's said to be extremely insecure, and was removed by
 Neovim due to implementation flaws and vulnerability.  
+ 
 Use GPG instead.  
 
 
