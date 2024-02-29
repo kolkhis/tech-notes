@@ -207,9 +207,12 @@ Where:
     * chore: Maintenance tasks or other miscellaneous changes.  
 
 
-* `[description]`: A brief and concise description of the change made in the commit. It should start with a capitalized verb and should not exceed 50 characters.
+* `[description]`: A brief and concise description of the change made in the commit.
+    * It should start with a capitalized verb and should not exceed 50 characters.
 
-* `[body]` (optional): A more detailed description of the changes made in the commit. This part is optional but can be useful for providing additional context or information about the changes.
+* `[body]` (optional): A more detailed description of the changes made in the commit.
+    * This part is optional but can be useful for providing additional context or 
+      information about the changes.
 </details>
 
 [![twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/null_kol)
