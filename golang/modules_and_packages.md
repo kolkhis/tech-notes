@@ -1,37 +1,39 @@
 
 # Packages and Modules in Go
 
-In Go (a.k.a. Golang), the terms `package` and `module` have
-distinct meanings and represent different levels of code organization.  
-
-Understanding these differences is key for effective Go programming
-and project management.
+In Go, the terms `package` and `module` have distinct meanings
+and represent different levels of code organization.  
 
 ### Package in Go
 
 A `package` is the smallest unit of code distribution in Go.  
 It's a way to group related Go source files together.
 
-- **Organization**
-    * A package is a directory inside a Go workspace that contains Go source files.  
+* Organization
+    * A package is a subdirectory inside a Go workspace that contains Go source files.  
+        * E.g., `github.com/user/<project_name>/<package_name>`
     * Each file in the package declares its membership to the package
       with the `package` keyword at the top of the file.
-- **Purpose**
+* Purpose
     * Packages are used to organize code, manage dependencies, and provide
       encapsulation.
-        * Encapsulation means exposing only those names that are meant to be used by other
-          packages while keeping the rest internal.
-- **Usage**
-    * To use code from another package, you import it using the `import` statement
-      followed by the package path.  
+        * Encapsulation means exposing only the types, variables, and functions that
+          are meant to be used by other packages, while keeping the rest internal.
+* To use code from another package, you include it in the `import` statement.  
+```go
+import (
+    "fmt"  // standard package
+    "github.com/kolkhis/my_project/my_package"  // local package
+)
+```
 
-Within a package, you can call public functions, types, and
-variables (those that start with an uppercase letter) from
+Inside a package, you can call public functions, types, and
+variables (ones start with an uppercase letter) from
 other files in the same package without an import.
 
-- **Example**:
+* Example:
     ```go
-    // File: math.go in package "calculator"
+    // File: project/calculator/math.go in package "calculator"
     package calculator
 
     // Add is an exported function
@@ -39,6 +41,7 @@ other files in the same package without an import.
         return a + b
     }
     ```
+Then import it in your `cmd` subdirectory `main.go`
 
 ### Module in Go
 
