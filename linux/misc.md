@@ -407,3 +407,32 @@ nc -dz
 nmap -sS  
 ```
 
+
+## List Users on a System
+1. To list all the user accounts on the system, you can run the command:
+```bash
+cat /etc/passwd | awk '{ print($1) }'
+# or to see the users with shell access
+cat /etc/passwd | grep 'bash'
+ 
+cat /etc/passwd | awk -F: '{ print($1) }' | grep -v "nologin"
+```
+
+2. You can also list all the users on a system with `cut`:
+```bash
+cut -d: -f1 /etc/passwd
+```
+* `-d:` sets the delimiter to `:`
+* `-f1` tells `cut` to print the first field (the username)
+
+3. You can also achieve this with `compgen -u`
+```bash
+compgen -u | column
+```
+* This command outputs possible completions depending on the options.  
+
+
+
+
+
+
