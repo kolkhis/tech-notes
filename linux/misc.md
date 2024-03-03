@@ -81,6 +81,49 @@ A command for programatically checking servers (prod-k8s in this example):
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
 
+## Adding Users Through /etc/passwd
+See [manually adding user accounts in linux](./manually_adding_user_accounts.md).  
+
+### Add a new line for the user:
+Each line in the `/etc/passwd` file represents a user account.
+The format of each line is as follows:
+```bash
+username:password:UID:GID:GECOS:home_directory:shell
+```
+* `username`: The username for the new user.
+* `password`: The encrypted password for the user (you can leave this field empty to disable password login).
+* `UID`: The user ID for the new user.
+* `GID`: The primary group ID for the new user.
+* `GECOS`: Additional information about the user (such as full name or description).
+* `home_directory`: The home directory for the new user.
+* `shell`: The login shell for the new user.
+
+Save and close the file after adding the user information.
+
+* Create the user's home directory: If you specified a home directory for the new 
+  user, you may need to manually create it using the `mkdir` command.  
+    * ```bash
+      sudo mkdir /home/newuser
+      ```
+* Set permissions for the home directory: After creating the home directory, you may 
+  need to set the appropriate permissions to allow the new user to access it.  
+    * ```bash
+      sudo chown newuser:newuser /home/newuser
+      ```
+
+* Set the user's password (if applicable): If you left the password field empty in 
+  the `/etc/passwd` file, you may need to set a password for the new user using the 
+  `passwd` command.  
+    * ```bash
+      sudo passwd newuser
+      ```
+    
+* Test the new user account: After completing those steps, you can test the new 
+  user account by logging in with the username and password (if applicable) and 
+  verifying that the user has access to the home directory.
+
+
+
 ## Playing Games on Linux
 Use Proton - a version of WINE made specifically for gaming.
 
