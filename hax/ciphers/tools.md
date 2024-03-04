@@ -1,15 +1,17 @@
 ## Tools
 
-* hashcat
-* xxd
-* base64
-* openssl enc
-* hd
-* gunzip
-* xz
-* tcpdump
+* `hashcat`
+* `xxd`
+* `base64`
+* `openssl enc`
+* `hd`
+* `gzip -d` / `gunzip`
+* `xz`
+* `tcpdump`
 * `xfreerdp` is for RDP
-* iconv
+* `iconv`
+* `rev` - reverse a string
+
 * ... What else?
 
 ### Hashcat searching
