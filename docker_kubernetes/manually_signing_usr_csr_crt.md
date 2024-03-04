@@ -1,37 +1,61 @@
 
-```bash  
-chown root:root /etc/kubernetes/pki -R  
-```
-
 # User Management and Authentication in Kubernetes  
 
 
-# CertificateSigningRequests sign manually  
+Acronyms:
+* CRT: Certificate (`.crt` file)
+* CSR: Certificate Signing Request (`.csr` file)
+* CN: CommonName 
+    * This is a field inside of the certificate that is used to identify its owner.  
+* CA: Certificate Authority (`ca.crt` file)
+    * The cluster's CA lives inside `/etc/kubernetes/pki/ca.crt`
+
+## Table of Contents
+* [CertificateSigningRequests - Signing Manually](#certificatesigningrequests---signing-manually) 
+* [User Management in K8s](#user-management-in-k8s) 
+* [Create a KEY and CSR](#create-a-key-and-csr) 
+    * [Creating the Key and CSR with OpenSSL](#creating-the-key-and-csr-with-openssl) 
+* [Manual Signing](#manual-signing) 
+    * [Manually sign the CSR file with the K8s CA file to generate the CRT file.](#manually-sign-the-csr-file-with-the-k8s-ca-file-to-generate-the-crt-file.) 
+    * [Create a new context for `kubectl` named 60099@internal.users which uses this CRT to connect to K8s.](#create-a-new-context-for-`kubectl`-named-60099@internal.users-which-uses-this-crt-to-connect-to-k8s.) 
+        * [`kubectl` Commands One by One (and their output)](#`kubectl`-commands-one-by-one-(and-their-output):) 
+* [Broken Down: Manually Creating and Managing User Certificates](#broken-down:-manually-creating-and-managing-user-certificates) 
+    * [Step 1: Generate a Private Key](#step-1:-generate-a-private-key) 
+    * [Step 2: Generate a CSR](#step-2:-generate-a-csr) 
+    * [Step 3: Sign the CSR with the Kubernetes CA](#step-3:-sign-the-csr-with-the-kubernetes-ca) 
+    * [Step 4: Configure `kubectl` to Use the New Certificate](#step-4:-configure-`kubectl`-to-use-the-new-certificate) 
+    * [Verifying Access](#verifying-access) 
+* [Additional Notes](#additional-notes) 
+
+
+
+## CertificateSigningRequests - Signing Manually  
 
 
 ## User Management in K8s  
 
-Users in K8s are managed via CRTs (CertificateSigningRequests) and 
-the CN/CommonName field in them.  
+Users in K8s are managed via CRTs (`CertificateSigningRequests`) and 
+the `CN/CommonName` field in them.  
 
-The cluster CA (Certificate Authority) needs to sign these CRTs.  
+The cluster's CA (Certificate Authority) needs to sign these CRTs.  
 
 This process involves creating and signing Certificate Signing Requests (CSRs) using 
 the cluster's Certificate Authority (CA) through OpenSSL.  
 
 This can be achieved with the following procedure:  
 
-1. Create a KEY (Private Key) file  
-2. Create a CSR (CertificateSigningRequest) file for that KEY  
-3. Create a CRT (Certificate) by signing the CSR. Done using the CA (Certificate Authority) of the cluster  
+1. Create a KEY (Private Key) file.  
+2. Create a CSR (CertificateSigningRequest) file for that KEY.  
+3. Create a CRT (Certificate) by signing the CSR. 
+    * This is done using the cluster's CA (Certificate Authority).  
 
 
 
 
-## Create KEY and CSR  
+## Create a KEY and CSR  
 
 In the first step we'll create a CSR and in the second step we'll manually sign the 
-CSR with the K8s cluster's CA (Certificate Authority) file.  
+CSR with the Kubernetes cluster's CA (Certificate Authority) file.  
 
 The idea here is to create a new "user" that can communicate with K8s.  
 
@@ -47,7 +71,7 @@ openssl genrsa -out XXX 2048
 openssl req -new -key XXX -out XXX  
 ```
 
-* The `openssl genrsa` command creates a new RSA KEY file (size of `2048`).  
+* The `openssl genrsa` command creates a new RSA privake key file (bit length of `2048`).  
     * `genrsa` is the command to generate an RSA key.  
     * `-out XXX` specifies the output path and filename for the KEY file.  
         * ```bash  
@@ -70,39 +94,28 @@ openssl req -new -key XXX -out XXX
 
 ```bash  
 openssl genrsa -out 60099.key 2048  
-
+ 
 openssl req -new -key 60099.key -out 60099.csr  
 # set Common Name = 60099@internal.users  
 ```
 
-## Manual Signing  
+### Manually Signing the CertificateSigningRequest (CSR)
 
 1. Manually sign the CSR with the K8s CA file to generate the CRT at `/root/60099.crt`. 
 
-2. Create a new context for kubectl named 60099@internal.users which uses this CRT to 
-   connect to K8s.  
+2. Create a new context for `kubectl` named `60099@internal.users` which uses this 
+   CRT to connect to K8s.  
 
-### Tips  
 
-1. ```bash  
-   openssl x509 -req -in XXX -CA XXX -CAkey XXX -CAcreateserial -out XXX -days 500  
-   ```
-
-2. ```bash  
-   find /etc/kubernetes/pki | grep ca  
-   ```
-
----  
-
-### Solution  
-
-#### Manually sign the CSR file with the K8s CA file to generate the CRT file. 
+### Manually sign the CSR file with the K8s CA file to generate the CRT file. 
+To generate the certificate file (`.crt`), we'll use the `openssl x509` command.  
 ```bash  
 openssl x509 -req -in 60099.csr -CA /etc/kubernetes/pki/ca.crt -CAkey \
 /etc/kubernetes/pki/ca.key -CAcreateserial -out 60099.crt -days 500  
 ```
 
-#### Create a new context for `kubectl` named 60099@internal.users which uses this CRT to connect to K8s.  
+### Create a new context with `kubectl` for the user.  
+Create a new context with `kubectl` for the user named 60099@internal.users which uses this CRT to connect to K8s.  
 
 ```bash  
 k config set-credentials 60099@internal.users --client-key=60099.key --client-certificate=60099.crt  
@@ -114,7 +127,7 @@ k get ns # fails because no permissions, but shows the correct username returned
 
 ---  
 
-#### Commands One by One (and their output):  
+#### `kubectl` Commands One by One (and their output):  
 
 ```bash  
 kubectl config set-credentials 60099@internal.users --client-key=60099.key --client-certificate=60099.crt 
@@ -139,7 +152,7 @@ kubectl get ns
 
 
 
-## Creating and Managing User Certificates - Step by Step
+## Broken Down: Manually Creating and Managing User Certificates
 
 ### Step 1: Generate a Private Key  
 
@@ -149,29 +162,27 @@ This key will be used to generate a Certificate Signing Request (CSR).
 ```bash  
 openssl genrsa -out /root/60099.key 2048  
 ```
-
 * `openssl genrsa` generates an RSA private key.  
 * `-out /root/60099.key` specifies the output file for the key.  
 * `2048` sets the key length to 2048 bits, a common choice for good security.  
 
----
+---  
 
 ### Step 2: Generate a CSR  
 
-Generate a CSR using the private key.  
+Generate a CertificateSigningRequest (`.csr`) using the private key (`.key`).  
  
 This command will request the user's identifiable information.  
-Most importantly, the Common Name (CN) which Kubernetes uses as the username.  
+Most importantly, the Common Name (CN), is what Kubernetes uses as the username.  
 
 ```bash  
-openssl req -new -key /root/60099.key -out /root/60099.csr -subj "/CN=60099@internal.users"  
+openssl req -new -key /root/60099.key -out /root/60099.csr  
 ```
-Follow the interactive prompt and enter `60099@internal.users` for Common Name.  
+* Follow the interactive prompt and enter `60099@internal.users` for Common Name.  
 
----
 
-Alternatively, to avoid the interactive prompt:
-``` bash
+Alternatively, to avoid the interactive prompt, use `-subj`:  
+``` bash  
 openssl req -new -key /root/60099.key -out /root/60099.csr -subj "/CN=60099@internal.users"  
 ```
 
@@ -182,18 +193,17 @@ openssl req -new -key /root/60099.key -out /root/60099.csr -subj "/CN=60099@inte
   the interactive prompt.  
     * The CN is used by Kubernetes as the username.  
 
----
+---  
 
 ### Step 3: Sign the CSR with the Kubernetes CA  
 
-To authenticate the user with the Kubernetes cluster, their CSR must be signed by the 
-cluster's CA.  
+To authenticate the user with the Kubernetes cluster, their CSR must 
+be signed by the cluster's CA.  
 
 ```bash  
 openssl x509 -req -in /root/60099.csr -CA /etc/kubernetes/pki/ca.crt -CAkey \
 /etc/kubernetes/pki/ca.key -CAcreateserial -out /root/60099.crt -days 500  
 ```
-
 * `openssl x509` is used for certificate signing.  
 * `-req -in /root/60099.csr` specifies the input CSR.  
 * `-CA /etc/kubernetes/pki/ca.crt` and `-CAkey /etc/kubernetes/pki/ca.key` provide 
@@ -205,7 +215,7 @@ openssl x509 -req -in /root/60099.csr -CA /etc/kubernetes/pki/ca.crt -CAkey \
 
 ### Step 4: Configure `kubectl` to Use the New Certificate  
 
-After signing, configure `kubectl` to use the new user certificate for authentication.  
+After signing, configure `kubectl` to use the new user certificate (`.crt`) for authentication.  
 
 ```bash  
 kubectl config set-credentials 60099@internal.users --client-key=/root/60099.key --client-certificate=/root/60099.crt  
@@ -232,7 +242,11 @@ kubectl get ns
 * Role-Based Access Control (RBAC): To grant permissions to users, Kubernetes uses RBAC.  
     * After creating and signing a user's certificate, you must define roles and role bindings to specify what resources the user can access.  
 
-* Automating CSR Signing: While manual signing is useful for understanding the process, in a production environment, automating CSR approval through Kubernetes CertificateSigningRequest resources can streamline user management.  
+* Automating CSR Signing: 
+In a production environment, automating CSR approval through 
+Kubernetes CertificateSigningRequest resources can streamline user management.  
 
-* Security Considerations: Always protect private keys and ensure that certificates have a reasonable expiry period to mitigate the risk of compromise.  
 
+```bash  
+chown root:root /etc/kubernetes/pki -R  
+```
