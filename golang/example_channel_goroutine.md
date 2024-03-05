@@ -134,13 +134,14 @@ println(<-out + <-out)
 
 * Non-Determinism: The values read from `out` depend on the order in which goroutines 
   execute, which is non-deterministic.  
-    * Thus, the program can produce different outputs on different runs.
-* Channel Closing: Closing a channel is a signal that no more values will be sent on 
-  it.  
-    * It's important to only close a channel from the sender side and to ensure no more 
+    * So, the program can produce different outputs on different runs.
+* Channel Closing: Closing a channel is a signal that no more values will be sent on it.  
+    * Important: Only close a channel from the sender side and to ensure no more 
       sends will happen; otherwise, the program will panic.
 * Deadlock Potential: If not careful, concurrent programs can deadlock.  
-    * In this case, there's no deadlock because the main goroutine waits for values from `
-      out`, and each of the spawned goroutines sends a value to `out`.  
+    * In this case, there's no deadlock because the main goroutine waits for values from 
+      `out`, and each of the spawned goroutines sends a value to `out`.  
     * However, if the logic were changed such that not enough values were sent on `out`, 
       the program would deadlock waiting on those values.
+
+
