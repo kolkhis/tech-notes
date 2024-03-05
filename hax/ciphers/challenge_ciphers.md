@@ -85,3 +85,12 @@ The number of octets: 8 + 83 + 8
 The first 8 bits: We use them to find the vertical position of the bits.  
 @arthvadrr We already use netpbm to convert to pgm. We have pgmtopbm.  
 @TrshPuppy Each letter is 800/99-ish pixels high.  
+
+
+
+
+## 03/04/2024
+```
+=AAAAcyR3SO1AMQ1wM1TITVqqwCSoQFSQlMLPjyVLxcy0RvcIYFLIbVyPpoKtkUSusyACAAAAAAAIs4H
+```
+
