@@ -1,8 +1,29 @@
 # Process Substitution  
-`man bash; /Process Substitution`
+`man://bash 1558 - Process Substitution`
 
 * Note: Process substitution is not POSIX-compliant.  
     It's primarily supported in Bash and Zsh.  
+
+
+## Table of Contents
+* [Process Substitution in Bash](#process-substitution-in-bash) 
+* [Overview](#overview) 
+* [Syntax](#syntax) 
+* [How It Works](#how-it-works) 
+* [Examples](#examples) 
+    * [Process Substitution Mechanism](#process-substitution-mechanism) 
+* [Process Substitution Examples](#process-substitution-examples) 
+* [Examples of Using a Command as an Input File `<(list)`](#examples-of-using-a-command-as-an-input-file-`<(list)`) 
+    * [Comparing the Contents of Two Directories](#comparing-the-contents-of-two-directories) 
+    * [Filtering Log Files](#filtering-log-files) 
+* [Examples of Using a Command as an Output File `<(list)`](#examples-of-using-a-command-as-an-output-file-`<(list)`) 
+    * [Transforming a String to All Caps](#transforming-a-string-to-all-caps) 
+    * [Logging and Displaying Output](#logging-and-displaying-output) 
+    * [Real-time Processing of Command Output](#real-time-processing-of-command-output) 
+    * [Transcoding a Video File](#transcoding-a-video-file) 
+* [In Plain English](#in-plain-english) 
+* [Limitations](#limitations) 
+
 
 ## Process Substitution in Bash  
 Process substitution is for treating command outputs as files.  
@@ -20,11 +41,11 @@ files are accepted.
 
 ## Syntax  
 
-* **`<(list)`**: This form is used when you want to treat the output  
+* `<(list)`: This form is used when you want to treat the output  
   of `list` as an input file.  
     * For example, `cat <(ls)` will execute `ls` and then `cat` the output  
       as if it were a file.  
-* **`>(list)`**: This form is for treating the input to the process as an output file.  
+* `>(list)`: This form is for treating the input to the process as an output file.  
     * For example, `echo "Hello" > >(cat)` will pass "Hello" to `cat` as its input.  
 
 
@@ -40,13 +61,13 @@ files are accepted.
 
 ## Examples  
  
-1. **Comparing Two Dynamic Sets of Data**  
+1. Comparing Two Dynamic Sets of Data  
     ```bash  
     diff <(ls dir1) <(ls dir2)  
     ```
     * This command compares the output of `ls` in two different directories.  
 
-2. **Passing Dynamic Input to a Command**  
+2. Passing Dynamic Input to a Command  
     ```bash  
     cat > >(grep "pattern")  
     ```
@@ -121,7 +142,7 @@ does something quite clever:
 
 ## Process Substitution Examples  
 
-## Examples of `<(list)`
+## Examples of Using a Command as an Input File `<(list)`
 You have a command that generates some data, and you want  
 to pass this data, as a *file*, to another command as input.  
 
@@ -156,7 +177,7 @@ grep ERROR <(zcat /var/log/app.log.gz)
 
 
 
-## Examples of `>(list)`
+## Examples of Using a Command as an Output File `<(list)`
  
 `>(list)` is used to direct the output of a command into another  
 command as its input.  
@@ -215,37 +236,30 @@ ffmpeg -i input.mp4 >(x264 -o output.mkv -)
 ```
 * In this example, `ffmpeg` reads a video file and pipes the output 
   to `x264` for transcoding.  
-* It's useful for video processing.  
 
 
+---
 
-
-
-### In Plain English  
+## In Plain English  
  
 * `<(list)`
     * Think of this as creating a temporary file that contains the output of `list`.  
     * Your command then reads from this temporary file.  
 * `>(list)`
-    * Imagine this as directing the output of your *last* command into a temporary file, which is then used as input for `list`.  
-
-
-
-
-
-
+    * Imagine this as directing the output of your *last* command into a temporary file, 
+      which is then used as input for `list`.  
 
 
 
 ## Limitations  
  
-* **Portability**  
+* Portability  
     * Process substitution is not POSIX-compliant, so it might  
       not work in all Unix-like shells.  
     * It's primarily supported in Bash and Zsh.  
-* **Filesystem Support**  
+* Filesystem Support  
     * It requires support for named pipes (FIFOs) or `/dev/fd`.  
-* **Read or Write, Not Both**  
+* Read or Write, Not Both  
     * Each instance of process substitution can be used either for reading or 
       writing, but not both simultaneously.  
 
