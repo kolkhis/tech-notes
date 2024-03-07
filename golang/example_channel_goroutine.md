@@ -8,9 +8,16 @@
 package main
  
 func main() {
+
+    /***** Creating a channel and a map *****/
+
+    /* We are creating 2 channels, one for sending and one for receiving.  */
 	c, out := make(chan int), make(chan int)
- 
+
+    /* The map  */
 	m := map[int]int{1: 2, 3: 4}
+
+
 	for i, v := range m {
 		go func() {
 			<-c
@@ -20,6 +27,7 @@ func main() {
  
 	close(c)
  
+    /* Printing to stderr with the builtin `println` function. */
 	println(<-out + <-out)
 }
 ```
@@ -31,12 +39,10 @@ func main() {
 
 ## Explanation
 
-
 This Go code snippet demonstrates the use of goroutines, channels, and maps
 to perform concurrent computations and communicate the results via channels.  
 
 ### Line by Line
-
 ```go
 package main
 ```
