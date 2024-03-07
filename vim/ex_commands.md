@@ -50,6 +50,8 @@ Quickref:
 :tab Man tmux
 ```
 
+* `xall`: Write all changed buffers and exit Vim.
+* `xit`, `x` : Like `:wq`, but write only when changes have been made.
 
 ## Line Numbers in the Command Line
 
