@@ -1,12 +1,12 @@
-‘\|’  
-
 
 # Misc. Tmux notes that could be helpful in scripting  
+##### See the [docs for more info](https://github.com/tmux/tmux/wiki/Getting-Started#other-features)
 
 In tmux scripting, you'll separate each command with an escaped 
 or quoted semicolon (`\;`/`';'`).  
 Commands don't need to be quoted or escaped when run from  
 the tmux command prompt (`:`).  
+
 
 ## Table of Contents
 * [Default Keybindings (not exhaustive)](#default-keybindings-(not-exhaustive)) 
@@ -44,7 +44,7 @@ the tmux command prompt (`:`).
     * [Mouse Variables](#mouse-variables) 
     * [Pane Variables](#pane-variables) 
         * [Pane Flag Variables](#pane-flag-variables) 
-    * [History, Buffer, and Copy Mode Variables](#history-buffer-and-copy-mode-variables) 
+    * [History, Buffer, and Copy Mode Variables](#history,-buffer,-and-copy-mode-variables) 
     * [Session Variables](#session-variables) 
     * [Window Variables](#window-variables) 
 * [Names and Titles](#names-and-titles) 

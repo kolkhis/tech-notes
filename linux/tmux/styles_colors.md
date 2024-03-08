@@ -1,5 +1,6 @@
 
 # Tmux Styling and Colors  
+##### See the [docs on styling](https://github.com/tmux/tmux/wiki/Getting-Started#list-of-style-and-format-options).  
 
 Tmux offers various options to specify the colour and attributes of aspects of
 the interface, e.g., `status-style` for the status line.  

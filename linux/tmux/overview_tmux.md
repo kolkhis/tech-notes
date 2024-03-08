@@ -115,4 +115,15 @@ To create a session with a given name:
 </details>
 
 
+## Keybindings and Key Tables
+##### See the [docs](https://github.com/tmux/tmux/wiki/Getting-Started#key-bindings)
+
+### Key Tables
+* The `root` table contains key bindings for keys pressed without the prefix key.
+* The `prefix` table contains key bindings for keys pressed after the prefix key, like 
+  those mentioned so far in this document.
+* The `copy-mode` table contains key bindings for keys used in copy mode with 
+  emacs-style keys.
+* The `copy-mode-vi` table contains key bindings for keys used in copy mode with 
+  vi-style keys.
 
