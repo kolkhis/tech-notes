@@ -5,6 +5,16 @@
 The term "build from source" means downloading the source code and compiling it
 yourself.
 
+## Quickref
+Options for extracting tarballs:
+```bash
+tar -xzvf name.tar.gz
+tar -xjvf name.tar.bz2
+```
+* `xvf` for both
+* `z` for `.gz`
+* `j` for `.bz2`
+
 
 ## Tarballs
 
@@ -32,10 +42,4 @@ tar -xzvf <filename>.tar.gz
 ```bash
 tar -xjvf <filename>.tar.bz2
 ```
-
-
-
-
-
-
 
