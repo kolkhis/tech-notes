@@ -182,3 +182,36 @@ for idx in "${!arrayName[@]}"; do       # Iterating over an array (indexes/keys)
 done  
 ```
 
+
+## Using `mapfile` 
+```bash
+mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array]
+```
+Read lines from the standard input into an indexed array variable.
+
+Read lines from the standard input into the indexed array variable ARRAY, or from 
+file descriptor FD if the -u option is supplied.
+
+The variable `MAPFILE` is the default `ARRAY`.
+
+Options:
+* `-d delim`: Use `DELIM` to terminate lines, instead of newline
+* `-n count`: Copy at most `COUNT` lines.  If `COUNT` is 0, all lines are copied
+* `-O origin`: Begin assigning to `ARRAY` at index `ORIGIN`.  The default index is 0.  
+* `-s count`: Discard the first `COUNT` lines read
+* `-t`: Remove a trailing `DELIM` from each line read (default newline)
+* `-u fd`: Read lines from file descriptor FD instead of the standard input
+* `-C callback`: Evaluate `CALLBACK` each time `QUANTUM` lines are read
+* `-c quantum`: Specify the number of lines read between each call to `CALLBACK`
+
+Arguments:
+* `ARRAY`     Array variable name to use for file data
+
+If not supplied with an explicit origin, mapfile will 
+clear `ARRAY` before assigning to it.
+
+Exit Status:
+Returns success unless an invalid option is given or ARRAY is readonly or
+not an indexed array.
+
+
