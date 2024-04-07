@@ -50,6 +50,7 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
 * `gx`: Go to the filepath or URL under the cursor.
     * Uses the system default handler, by calling `vim.ui.open()`.
     * Returns (doesn't show) an error message on failure.
+* `gue` will lowercase all characters from the cursor to the end of the word.
 
 
 ## Making Custom Keybindings  
