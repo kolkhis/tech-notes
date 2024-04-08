@@ -1,17 +1,36 @@
 
+## Table of Contents
+* [Configuring the i3status bar](#configuring-the-i3status-bar) 
+    * [Configuration File](#configuration-file) 
+    * [How to Configure](#how-to-configure) 
+    * [Testing your Configuration](#testing-your-configuration) 
+    * [Calling External Scripts](#calling-external-scripts) 
+* [Variables](#variables) 
+    * [output_format](#output_format) 
+    * [Colors](#colors) 
+* [Default Modules](#default-modules) 
+* [Universal `i3bar` Module Options](#universal-`i3bar`-module-options) 
+    * [General](#general) 
+    * [File Contents](#file-contents) 
+    * [Volume](#volume) 
+* [Sample Configuration (`man://i3status 34`)](#sample-configuration-(`man://i3status-34`)) 
+* [Resources](#resources) 
+* [Examples](#examples) 
+
+
+
 # i3status
 
 The `i3status` is the status bar shown at the bottom while using i3.
 
 
 ## Configuring the i3status bar
-
 * The basic idea of i3status is that you can specify which "modules" should be
   used (the `order` directive).  
 * You can configure each module with its own section.
 
 
-## Configuration File
+### Configuration File
 
 * `-c` Specifies an alternate configuration file path.
     * By default, `i3status` looks for config files in the following order:
@@ -21,9 +40,66 @@ The `i3status` is the status bar shown at the bottom while using i3.
         4. `/etc/i3status.conf`
 
 
+### How to Configure
+
+1. Defining Modules:
+    * To add a module to `i3status`, specify it in the `order` directive of your 
+      configuration file.  
+    * This `order` directive defines which `modules` appear on your status bar and in what order.
+
+   * Example:
+   ```config
+   order += "datetime"
+   order += "cpu_usage"
+   order += "battery"
+   ```
+   Here, `"datetime"`, `"cpu_usage"`, and `"battery"` are the names of modules.
+
+
+2. Configuring Modules:
+    * Each module has its own section in the configuration file where you can customize its 
+      behavior and appearance.
+
+    * A more concrete example, configuring the `datetime` module:
+      ```config
+      datetime {
+          format = "%Y-%m-%d %H:%M:%S"
+      }
+      ```
+
+3. Customizing Output Format:
+    * For every module, you can specify the output format to control how its information 
+      is displayed on the bar.
+
+    * Example of customizing the `battery` module output:
+      ```config
+      battery 0 {
+          format = "%status %percentage %remaining"
+      }
+      ```
+
+### Testing your Configuration
+* Reload your config with a command like `i3-msg restart` from within i3.
+* You can test your `i3status` configuration directly in a terminal by running `i3status`.  
+    * You can change the `output_format` to `term` while doing this. `i3bar` will
+      output JSON.  
+
+
+### Calling External Scripts
+* You can write scripts and call them from `i3status`.  
+    * Example:
+      ```config
+      order += "custom_script"
+      custom_script {
+        exec = "/path/to/your/script.sh"
+      }
+      ```
+      The output of the script is what will be shown on the status bar.  
+
+
 
 ## Variables
-### output_format
+### `output_format`
 For every module, you can specify the output format.  
 You'd set the `output_format` in the `general` module to define it globally.  
  
@@ -43,12 +119,27 @@ Available output formats:
 * `term`
     * Good for debugging config files in the terminal.  
 
-Other ones:
+Other output formats:
 * `dzen2`
 * `xmobar`
 * `lemonbar`
 
 ---
+
+### Other Variables
+
+---
+ 
+* `format`  
+ 
+This is the variable that will determine how the text is displayed on the
+status bar.
+
+---
+
+* `align`
+
+
 
 ### Colors
 
@@ -69,9 +160,6 @@ to define specific colors per module (module scope overrides `general` scope).
 If one of these directives is defined in a module section its value will override the 
 value defined in the `general` section just for this module.
 
-```bash
-entr -c bash -c "[[ -n $SPID ]] && kill $SPID; i3status; export SPID=\"$!\";" < <(find . -name 'config')
-```
 
 ## Default Modules
 
@@ -90,6 +178,8 @@ entr -c bash -c "[[ -n $SPID ]] && kill $SPID; i3status; export SPID=\"$!\";" < 
 * `Memory`: Gets the memory usage from system on a Linux system from /proc/meminfo.
 * `Load`: Gets the system load (number of processes waiting for CPU time in the last 1, 5 and 15
        minutes).
+    * See [`top` output](../tools/top.md#top-output).
+
 * `Time`: Outputs the current time in the local timezone.
 * `TzTime`: Outputs the current time in the given timezone.
 * `DDate`: Outputs the current discordian date in user-specified format.
@@ -256,84 +346,7 @@ read_file uptime {
 
 
 
-
-### Basics of `i3status` Configuration
-
-* Location
-    * For user-specific settings: `~/.config/i3status/config` 
-        * i.e., `$XDG_CONFIG_HOME/i3status/config`
-    * Default system-wide config file: `/etc/i3status.conf` 
-
-* Modules
-    * `i3status` generates its output based on `modules` specified in the configuration.  
-    * These modules can display information like system load, battery status, 
-      network connections, etc..
-
-### How to Configure
-
-1. Defining Modules:
-    * To add a module to `i3status`, specify it in the `order` directive of your 
-      configuration file.  
-    * This `order` directive defines which `modules` appear on your status bar and in what order.
-
-   * Example:
-   ```config
-   order += "datetime"
-   order += "cpu_usage"
-   order += "battery"
-   ```
-   Here, `"datetime"`, `"cpu_usage"`, and `"battery"` are the names of modules.
-
-
-2. Configuring Modules:
-    * Each module has its own section in the configuration file where you can customize its 
-      behavior and appearance.
-
-    * Example structure of a module configuration section:
-      ```c
-      module_name {
-          setting1 = value1
-          setting2 = value2
-          ...
-      }
-      ```
-
-    * A more concrete example, configuring the `datetime` module:
-      ```config
-      datetime {
-          format = "%Y-%m-%d %H:%M:%S"
-      }
-      ```
-
-3. Customizing Output Format:
-    * For every module, you can specify the output format to control how its information 
-      is displayed on the bar.
-
-    * Example of customizing the `battery` module output:
-      ```config
-      battery 0 {
-          format = "%status %percentage %remaining"
-      }
-      ```
-
-### Practical Tips for Configuration
-
-* Reload your config with a command like `i3-msg restart` from within i3.
-
-* You can test your `i3status` configuration directly in a terminal by running `i3status`.  
-
-* For more advanced customizations, you can write scripts and call them from `i3status`.  
-    * This can add functionality not provided by default modules.
-    * Example of calling a custom script:
-      ```config
-      order += "custom_script"
-      custom_script {
-        exec = "/path/to/your/script.sh"
-      }
-      ```
-      The output of the script is what will be shown on the status bar.  
-
-### Resources
+## Resources
 
 * i3 User’s Guide: Comprehensive guide and reference for i3 users.  
     * Available at: [https://i3wm.org/docs/userguide.html](https://i3wm.org/docs/userguide.html)
