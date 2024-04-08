@@ -37,8 +37,8 @@ top - 19:38:28 up 2 days, 20:47, 0 users, load average: 0.52, 0.58, 0.59
     * The number of CPUs (as well as their cores && threads) should be considered
       when evaluating the load averages.  
         * For example, a load average of `10` with a 1-core CPU means that your system is 
-          overloaded.  
-        * However, the same load average with a 12-core CPU is not overloaded.    
+          overloaded, but the same load average with a 12-core CPU is not overloaded.    
+
 
 
 ---
