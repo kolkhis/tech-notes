@@ -1,12 +1,20 @@
 
+# i3status
+
+The `i3status` is the status bar shown at the bottom while using i3.
+
 ## Table of Contents
 * [Configuring the i3status bar](#configuring-the-i3status-bar) 
     * [Configuration File](#configuration-file) 
     * [How to Configure](#how-to-configure) 
+        * [1. Defining Modules](#1.-defining-modules) 
+        * [2. Configuring Modules](#2.-configuring-modules) 
+        * [3. Customizing Output Format](#3.-customizing-output-format) 
     * [Testing your Configuration](#testing-your-configuration) 
     * [Calling External Scripts](#calling-external-scripts) 
 * [Variables](#variables) 
-    * [output_format](#output_format) 
+    * [`output_format`](#`output_format`) 
+    * [Other Variables](#other-variables) 
     * [Colors](#colors) 
 * [Default Modules](#default-modules) 
 * [Universal `i3bar` Module Options](#universal-`i3bar`-module-options) 
@@ -16,12 +24,6 @@
 * [Sample Configuration (`man://i3status 34`)](#sample-configuration-(`man://i3status-34`)) 
 * [Resources](#resources) 
 * [Examples](#examples) 
-
-
-
-# i3status
-
-The `i3status` is the status bar shown at the bottom while using i3.
 
 
 ## Configuring the i3status bar
@@ -42,41 +44,47 @@ The `i3status` is the status bar shown at the bottom while using i3.
 
 ### How to Configure
 
-1. Defining Modules:
-    * To add a module to `i3status`, specify it in the `order` directive of your 
-      configuration file.  
-    * This `order` directive defines which `modules` appear on your status bar and in what order.
-
-   * Example:
-   ```config
-   order += "datetime"
-   order += "cpu_usage"
-   order += "battery"
-   ```
-   Here, `"datetime"`, `"cpu_usage"`, and `"battery"` are the names of modules.
+#### 1. Defining Modules
+To add a module to `i3status`, specify it in the `order` directive of your 
+configuration file.  
+This `order` directive defines which `modules` appear on your status bar and in what order.
 
 
-2. Configuring Modules:
-    * Each module has its own section in the configuration file where you can customize its 
-      behavior and appearance.
+```bash
+order += "module_name"
+```
+* This adds the module called `"module_name"` to the status bar.  
 
-    * A more concrete example, configuring the `datetime` module:
-      ```config
-      datetime {
-          format = "%Y-%m-%d %H:%M:%S"
-      }
-      ```
+Example:
+```config
+order += "datetime"
+order += "cpu_usage"
+order += "battery"
+```
+Here, `"datetime"`, `"cpu_usage"`, and `"battery"` are the names of modules.
 
-3. Customizing Output Format:
-    * For every module, you can specify the output format to control how its information 
-      is displayed on the bar.
 
-    * Example of customizing the `battery` module output:
-      ```config
-      battery 0 {
-          format = "%status %percentage %remaining"
-      }
-      ```
+#### 2. Configuring Modules
+Each module has its own section in the configuration file where you can customize its 
+behavior and appearance.
+
+* A more concrete example, configuring the `datetime` module:
+  ```config
+  datetime {
+      format = "%Y-%m-%d %H:%M:%S"
+  }
+  ```
+
+#### 3. Customizing Output Format
+For every module, you can specify the output format to control how its information 
+is displayed on the bar.
+
+* Example of customizing the `battery` module output:
+  ```config
+  battery 0 {
+      format = "%status %percentage %remaining"
+  }
+  ```
 
 ### Testing your Configuration
 * Reload your config with a command like `i3-msg restart` from within i3.
@@ -137,9 +145,11 @@ status bar.
 
 ---
 
-* `align`
-
-
+* `align`: The alignment policy to use when the minimum width (see below) is not reached.
+* `min_width`: The minimum width (in pixels) the module should occupy.
+* `separator`: A boolean value which specifies whether a separator line should be 
+               drawn after this block.
+* `separator_block_width`: The amount of pixels to leave blank after the block.
 
 ### Colors
 
@@ -163,9 +173,39 @@ value defined in the `general` section just for this module.
 
 ## Default Modules
 
-* `IPv6`: This module gets the IPv6 address used for outgoing connections (that is, the best available
-   public IPv6 address on your computer).
+* `IPv6`: This module gets the IPv6 address used for outgoing connections (that is, 
+  the best available public IPv6 address on your computer).
+
+---
+
 * `Disk`: Gets used, free, available and total amount of bytes on the given mounted filesystem.
+  Can be used as `disk "/"` or `disk /mnt/usbstick` to specify a drive.  
+    * `prefix_type` is used to change how the byte sizes are displayed:
+       * `binary` - IEC prefixes (Ki, Mi, Gi, Ti) represent multiples of powers of 1024. Default.
+       * `decimal`: SI prefixes (k, M, G, T) represent multiples of powers of 1000.
+       * `custom`: The custom prefixes (K, M, G, T) represent multiples of powers of 1024.
+    * Example `disk` module:
+      ```
+      disk "/" {
+         format = "Disk: %avail / %total - %used (%percentage_used) used"
+         separator_block_width = 25
+         prefix_type = custom
+         format_below_threshold = "Warning: %percentage_avail"
+         low_threshold = 10
+         threshold_type = "percentage_free"
+         # %percentage_used %percentage_free %percentage_avail
+      }
+
+      ```
+      * Format options:
+          * `%avail`
+          * `%total`
+          * `%used`
+          * `%free`
+          * `%percentage_avail`
+          * `%percentage_used`
+          * `%percentage_free`
+
 * `Run-watch`: Expands the given path to a pidfile and checks if the process ID found inside is valid (that
        is, if the process is running).
 * `Path-exists`: Checks if the given path exists in the filesystem.
@@ -185,7 +225,12 @@ value defined in the `general` section just for this module.
 * `DDate`: Outputs the current discordian date in user-specified format.
 * `Volume`: Outputs the volume of the specified mixer on the specified device.
 * `File Contents`: Outputs the contents of the specified file.
-
+    * Example variables:
+        * `order += read_file UPTIME`
+        * `format`: `"%title: %content"`
+        * `format_bad`: `"%title - %errno: %error"`
+        * `path`: `"/proc/uptime"`
+        * `Max_characters`: `255`
 
 
 
