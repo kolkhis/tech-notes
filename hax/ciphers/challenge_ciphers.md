@@ -94,3 +94,6 @@ The first 8 bits: We use them to find the vertical position of the bits.
 =AAAAcyR3SO1AMQ1wM1TITVqqwCSoQFSQlMLPjyVLxcy0RvcIYFLIbVyPpoKtkUSusyACAAAAAAAIs4H
 ```
 
+`8J+NlOKIp8Ks8J+Nn+KHkuKKpQo=`
+
+`🍔∧¬🍟⇒⊥`
