@@ -4,6 +4,17 @@
 The runtime configuration file for the i3wm status bar: `~/.config/i3status/config`
 This is separate from the `i3` config file, which is at `~/.config/i3/config`
 
+
+## Table of Contents
+* [i3status](#i3status) 
+* [Example (default) i3status:](#example-(default)-i3status:) 
+* [Suffix Options](#suffix-options) 
+    * [tl;dr](#tl;dr) 
+    * [`_first_` Suffix](#`_first_`-suffix) 
+    * [`_up_` Suffix](#`_up_`-suffix) 
+    * [`_down_` Suffix](#`_down_`-suffix) 
+
+
 ## i3status
 
 ## Example (default) i3status:
@@ -64,22 +75,22 @@ tztime local {
 ```
 
 
-### Suffix Options
+## Suffix Options
 
 There are options you can use to specify network interfaces in i3status.  
  
 These options help you control how i3status selects which network interface to 
 monitor and display.
 
-#### tl;dr
+### tl;dr
 
 * `_first_`: Selects the first network interface of the specified type.
 * `_up_`: Selects the first network interface of the specified type that is currently active.
 * `_down_`: Selects the first network interface of the specified type that is currently inactive.
 
-#### `_first_` Suffix
+### `_first_` Suffix
 
-In i3status configuration, the `_first_` suffix is used to specify the first network 
+In `i3status` config, the `_first_` suffix is used to specify the first network 
 interface that matches a given type (e.g., wireless, ethernet).  
 
 This can be useful when you have multiple network interfaces and you want i3status to 
@@ -99,10 +110,10 @@ display the status of the first available one.
   This configuration tells i3status to display the status of the first wireless network interface it finds.
 
 
-#### `_up_` Suffix
+### `_up_` Suffix
 
-The `_up_` suffix tells i3status to display information for the first network 
-interface of the specified type that is currently up (active).
+The `_up_` suffix tells i3status to display info for the first network 
+interface of the specified type that is currently up/active.
 * Example:
   ```i3config
   wireless _up_ {
@@ -113,12 +124,12 @@ interface of the specified type that is currently up (active).
   }
   ```
 
-  This tells `i3status` to display the status of the first wireless network interface 
-  that is currently active.
+  This displays the status of the first wireless network interface that is currently active.
 
-#### `_down_` Suffix
+### `_down_` Suffix
 
-The `_down_` suffix tells i3status to display information for the first network interface of the specified type that is currently down (inactive).
+The `_down_` suffix tells i3status to display info for the first network interface of 
+the specified type that is currently down/inactive.
 * Example:
   ```i3config
   wireless _down_ {
@@ -128,7 +139,6 @@ The `_down_` suffix tells i3status to display information for the first network 
       separator_block_width = 25
   }
   ```
-  This tells `i3status` to display the status of the first wireless network interface 
-  that is currently inactive.
+  This displays the status of the first wireless network interface that is currently inactive.
 
 
