@@ -10,12 +10,22 @@
     * [Detailed Steps with Tmux Prefix](#detailed-steps-with-tmux-prefix) 
     * [Summary (TL;DR)](#summary-(tl;dr)) 
 
+NOTE: My personal tmux prefix is `Ctrl-a`. The default prefix is `Ctrl-b`.
 
 ## Moving Panes 
 * Identify the Target Pane and Window:
     * Get the index of the pane you want to move.  
         * `prefix+q`
     * Identify the target window AND pane you want to attach the pane to.
+
+### Moving a Pane into a New Window
+* `prefix+!`: This will run the `break-pane` command on the current pane.  
+or
+* Navigate to the pane you want to move.  
+* With your cursor in the pane, enter command mode with `prefix+:`  
+* Use the `break-pane` command.  
+    * This will detach the pane from the current window and put it into a new one.
+
 
 ### Moving a Pane to a Different Window
 * Move the Pane to a Different Window:
