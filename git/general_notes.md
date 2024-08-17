@@ -13,6 +13,9 @@ man gittutorial
 man giteveryday
 ```
 
+Like all `bash` man pages, any parameters in brackets (`[like_this]`) are optional.
+
+
 
 ## Table of Contents
 * [Basic Git Commands](#basic-git-commands) 
@@ -35,11 +38,15 @@ man giteveryday
 * [Git Blame](#git-blame) 
 * [Git Reset](#git-reset) 
     * [Rolling back to a previous commit](#rolling-back-to-a-previous-commit) 
-* [Branches](#branches) 
+* [Branches:](#branches:) 
 * [Creating a New Branch](#creating-a-new-branch) 
     * [Git Checkout / Git Switch / Git Branch](#git-checkout-/-git-switch-/-git-branch) 
 * [Renaming a Branch](#renaming-a-branch) 
 * [List Branches](#list-branches) 
+* [Git Remote](#git-remote) 
+    * [`git reflog`:](#`git-reflog`:) 
+    * [`git archive`:](#`git-archive`:) 
+
 
 
 ## Basic Git Commands  
@@ -60,24 +67,24 @@ It's a quick way to see what changes are pending.
 git status  
 ```
 Options:  
-* `--short` or `-s`: Gives a shorter, more succinct output.  
+* `--short` or `-s`: Gives a shorter output.  
 * `--branch` or `-b`: Shows the branch and tracking information.  
 
 * `--show-stash`: Show the number of entries currently stashed away.
 * `--long`: Give the output in the long-format. This is the default.
 * `-v, --verbose`:
     * Show the names of file *and* the changes that are staged to be committed 
-     (like `git diff --cached`).
+      (like `git diff --cached`).
     * If `-vv` is specified, also show the changes in the working
-     tree that have not yet been staged (like `git diff`).
+      tree that have not yet been staged (like `git diff`).
 * `-u[<mode>], --untracked-files[=<mode>]`:
     * Show untracked files.
     * The `mode` is optional. The possible `mode`s are:
         * `no` - Show no untracked files.
         * `normal` - Shows untracked files and directories.
         * `all` - Also shows individual files in untracked directories.
-    * if this is specified, the mode needs to be "stuck" to the option.
-        * E.g., `git status -uall` will work, `git status -u all` will not.  
+    * If this is specified, the mode needs to be "stuck" to the option.
+        * E.g., GOOD: `git status -uall` (will work), BAD: `git status -u all` (will not work).  
 
 
 ---
@@ -166,6 +173,7 @@ git log
     * `--author="name"`: Filters commits by a specific author.  
     * `--decorate`: Shows branch and tag names on commits.  
 
+
 ### See log history for a specific file or branch  
 To see log history for a specific file, use `git log -p` or `git log --patch`.  
 ```bash  
@@ -197,6 +205,17 @@ git remote add bobs_fork https://github.com/bob/bobs_fork.git
 git fetch bobs_fork  
 git log -p main..bobs_fork/main  
 ```
+
+---
+
+## Git Reflog: 
+Use when you want to see all actions taken in the repo, 
+even those not visible in `git log`.  
+Great for finding older commit hashes.
+```bash
+git reflog
+```
+
 
 ---  
 
@@ -248,22 +267,23 @@ git stash
 ---  
 
 ## Git Fetch  
-Purpose: Downloads objects and refs from a remote repository.  
+Downloads objects and refs from a remote repository.  
 ```bash  
 git fetch  
 ```
 * Options:  
     * `--all`: Fetches from all remotes.  
-    * `-p` or `--prune`: Deletes any remote-tracking references that no longer exist on the remote.  
+    * `-p` or `--prune`: Deletes any remote-tracking references that no longer exist on 
+      the remote.  
 
 ---  
 
 ## Git Pull  
-Purpose: Fetches from and integrates with another repository or local branch.  
+Fetches from and integrates with another repository or local branch.  
 
 The `pull` command performs two operations: 
-1. It fetches changes from a remote branch.  
-2. Then it merges them into the current branch.  
+1. It `fetch`es changes from a remote branch.  
+2. Then it `merge`s them into the current branch.  
 ```bash  
 git pull  
 ```
@@ -284,7 +304,8 @@ git blame [filename]
 ---
 
 ## Git Reset  
-Resets current HEAD to a specified state.  
+Resets current `HEAD` to a specific commit or state.  
+* This can be dangerous, but is powerful for undoing changes.
 ```bash  
 git reset  
 ```
@@ -292,6 +313,12 @@ Options:
 * `--hard`: Resets the index and working tree. Any changes to tracked files are discarded.  
 * `--soft`: Does not touch the index file or the working tree.  
 * `[commit]`: Resets to a specific commit.  
+
+  ```bash
+  git reset --hard {commit_hash}
+  ```
+    * `--hard` discards the changes.
+    * Using `--soft` will keep the changes, but will not change the `HEAD`.
 
 
 ### Rolling back to a previous commit
@@ -357,6 +384,26 @@ Combine other options with `-l` to match optional pattern(s):
   and author of each branch.
 * `-r`, `--remotes`: Shows the remote branch name.
     * Combine with `-d` to delete remote branches.
+
+
+
+--- 
+
+
+## Git Remote
+`git remote` refers to a remote repository.  
+A remote is a repository that is hosted on a server (e.g., GitHub, BitBucket, etc.).  
+
+
+
+
+## Git Archive: 
+* This is used for fetching files without cloning the entire 
+  repository, `git archive` can be used to create a zip/tar archive of
+  specific files or directories.
+  ```bash
+  git archive --remote=ssh://git@{repo_url} {branch_name} {file_path} | tar -xO > {local_file_path}
+  ```
 
 
 
