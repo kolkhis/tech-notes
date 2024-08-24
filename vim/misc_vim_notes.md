@@ -93,6 +93,11 @@ E.g., `!}` at the top of a paragraph will put the whole paragraph selection
 into the Ex Command Line (for example, `:.,.+4!` for a 4-line paragraph).  
 
 
+## Getting the ASCII Code of a Character
+You can also get the ASCII code of a character directly in VIM. To get the code of 
+the character under the cursor in insert mode, you can type `ga` or the command `:as` 
+for ASCII.
+
 ## Searching with :vimgrep or :vim  
 To use `:vimgrep` (`:vim`)  to search for patterns across files  
 in the current directory, use the syntax:  
