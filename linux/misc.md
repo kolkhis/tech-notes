@@ -81,6 +81,49 @@ A command for programatically checking servers (prod-k8s in this example):
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
 
+## MTU and Using Ping without Fragmentation
+```bash
+ping -M do <target>
+```
+This `-M do` makes sure the packet does not get fragmented.  
+* `ping`: The basic `ping` command is used to test the connectivity between two devices 
+  on a network by sending ICMP echo request packets to the target and measuring the 
+  time it takes to receive an echo reply (response). 
+* `-M`: This option sets the path MTU discovery mode, which controls how the `ping` 
+  command deals with IP fragmentation.
+
+
+MTU stands for **Maximum Transmission Unit**, which is the largest size of a packet 
+that can be sent over a network link *without fragmentation*.
+* The MTU for a network interface can be found using `ifconfig` or `ip`:
+  ```bash
+  ifconfig
+  ip addr
+  # or
+  ip a
+  ```
+  These commands list all the network interfaces, their statuses, and other info.  
+  The network interface will usually be named something like `eth0`, `en0`, `enp0`, etc
+    * `ifconfig` may not be installed by default on modern Linux distributions.
+
+
+## Finding the default network interface
+To specifically find the interface being used for outbound traffic (like connecting 
+to the internet), you can check the default route:
+```bash
+ip route
+# or
+ip r
+```
+
+## Checking Active Connections
+You can use `netstat` or `ss` to check active network connections, as well as which 
+network interface is being used.
+```bash
+netstat -i
+ss -i
+```
+
 ## Adding Users Through /etc/passwd
 See [manually adding user accounts in linux](./manually_adding_user_accounts.md).  
 
