@@ -1,22 +1,24 @@
-
-
-#  SSH Commands
-
+# SSH Commands
 
 SSH commands for managing the OpenSSH server  
 This is intended for Linux with `systemd`, specifically Ubuntu Server.
 
+## Table of Contents
+* [Restarting the SSH Service](#restarting-the-ssh-service) 
+* [Stopping the SSH Service](#stopping-the-ssh-service) 
+* [View SSH Status and Current State](#view-ssh-status-and-current-state) 
+* [Enable SSH to Start on Boot](#enable-ssh-to-start-on-boot) 
+* [Disable SSH From Starting on Boot](#disable-ssh-from-starting-on-boot) 
 
 
-
-##  Restarting the SSH Service 
+## Restarting the SSH Service 
 
 SSH needs to be restarted after any changes to `/etc/ssh/sshd_config`.  
 Restart SSH with `systemd` with the command:
 
 ```bash
 sudo systemctl restart sshd
-```  
+```
 
 SSH can also be restarted using `System V. Init` scripts:
 ```bash
@@ -25,15 +27,14 @@ sudo /etc/init.d/ssh restart
 
 
 
-##  Stopping the SSH Service
-
+## Stopping the SSH Service
 SSH can be stopped with `service`:
 ```bash
 sudo service ssh stop
 ```
 
 
-##  View SSH Status and Current State
+## View SSH Status and Current State
 You can view the current status of SSH with `systemd`:
 ```bash
 sudo systemctl status ssh
@@ -52,7 +53,7 @@ This will output the current status of SSH, including:
 
 
 
-##  Enable SSH to Start on Boot
+## Enable SSH to Start on Boot
 If you want the SSH service to start up when the system boots, and it does not do this by default, 
 this behavior can be enabled.  
 To enable this, start the SSH service using `systemd`:
@@ -63,7 +64,7 @@ sudo systemctl enable ssh
 
 The output should look something like this:
 
-```output
+```plaintext
 Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable ssh
 Created symlink /etc/systemd/system/sshd.service → /lib/systemd/system/ssh.service.
@@ -71,9 +72,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/ssh.service → /lib
 ```
 
 
-
-
-##  Disable SSH From Starting on Boot
+## Disable SSH From Starting on Boot
 If you **don't** want the SSH service to start up when the system boots, this behavior
 can be disabled.
 
@@ -82,12 +81,15 @@ sudo systemctl disable ssh
 ```
 
 The output should look something like this:
-```output
+```plaintext
 Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install disable ssh
 Removed /etc/systemd/system/multi-user.target.wants/ssh.service.
 Removed /etc/systemd/system/sshd.service.
 ```
+
+
+
 
 
 
