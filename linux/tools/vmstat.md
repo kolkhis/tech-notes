@@ -5,7 +5,22 @@ The `vmstat` command provides information about system processes, memory,
 paging, block IO, traps, disks, and CPU activity
 
 
+## Table of Contents
+* [Basic Usage](#basic-usage) 
+    * [Summary of System Resource Usage](#summary-of-system-resource-usage) 
+    * [Getting Disk Statistics](#getting-disk-statistics) 
+* [`vmstat` Output](#`vmstat`-output) 
+    * [Procs (Processes)](#procs-(processes)) 
+    * [Memory](#memory) 
+    * [Swap](#swap) 
+    * [IO (Input/Output)](#io-(input/output)) 
+    * [System](#system) 
+    * [CPU](#cpu) 
+
+
 ## Basic Usage
+
+### Summary of System Resource Usage
 
 Run the command with no arguments to get a summary of the current system.  
 ```bash
@@ -19,14 +34,28 @@ vmstat 1 5
 * `1`: Update every second
 * `5`: Run for 5 seconds
 
+---
+
+### Getting Disk Statistics
+
+You can see a summary of disk statistics by using the `-D` flag:
+```bash
+vmstat -D
+```
+Or, get a more detailed view of disk statistics with `-d`:
+```bash
+vmstat -d
+```
+
+
 
 ## `vmstat` Output
 
-Understand the output of vmstat (see below for more detailed explanations):
+Understand the output of `vmstat` (see below for more detailed explanations):
 
 * [Procs](#procs-processes) (Processes):
     * `r`: The number of processes waiting for run time.
-    * `b`: The number of processes in uninterruptible sleep.
+    * `b`: The number of processes blocked waiting for I/O to complete.
 
 * [Memory](#memory):
     * `swpd`: The amount of virtual memory used.
@@ -54,9 +83,7 @@ Understand the output of vmstat (see below for more detailed explanations):
     * `st`: Time stolen from a virtual machine. Relevant in virtualized environments.
 
 
-## Output Explained
-
-### Procs (Processes):
+### Procs (Processes)
 
 * `r`: This is the number of programs (processes) waiting for their turn to run
   on the computer's processor (CPU).  
@@ -65,7 +92,7 @@ Understand the output of vmstat (see below for more detailed explanations):
   up until they get a specific piece of data or event.  
     * Think of it as a chef waiting for an ingredient that's not yet delivered.
 
-### Memory:
+### Memory
 
 * `swpd`: This represents the amount of virtual memory used.  
     * Virtual memory is like an extension of your computer's real memory (RAM), but
@@ -78,7 +105,7 @@ Understand the output of vmstat (see below for more detailed explanations):
     * Imagine it as keeping your most-used books on your desk for quick
       access instead of fetching them from the bookshelf each time.
 
-### Swap:
+### Swap
 
 * `si` and `so`: These indicate how much data is being moved between your
   RAM and your hard drive's swap space (a designated area used as virtual memory).  
@@ -87,31 +114,30 @@ Understand the output of vmstat (see below for more detailed explanations):
     * It's like moving books between your desk and a storage box under
       the desk to make room for what you currently need.
 
-### IO (Input/Output):
+### IO (Input/Output)
 
 * `bi` and `bo`: These show how much data is being read (`bi`) from
   or written (`bo`) to block devices like hard drives.  
     * A block device is a piece of hardware that stores data in fixed-size chunks (blocks).  
-    * Imagine loading and unloading boxes of goods from a truck - `bi` is like
-      loading goods in, and `bo` is like taking goods out.
+    * `bi` is loading stuff in, and `bo` is taking stuff out.
 
-### System:
+### System
 
 * `in`: This is the number of interrupts per second.  
     * An interrupt is a signal to the CPU that it needs to stop and do something else.  
-    * It's like being in a meeting and getting a phone call that you have to answer.
 * `cs`: This is the number of context switches per second.  
     * A context switch occurs when the CPU switches from running one process to another.  
-    * Think of it as working on a task, then stopping to work on a different task, and
+    * i.e., it's working on a task, then stopping to work on a different task, and
       later returning to the original task.
 
-### CPU:
+### CPU
 
 * `us`: Time the CPU spends running programs' code.
 * `sy`: Time the CPU spends running system (kernel) code, like managing memory or devices.
 * `id`: Time the CPU is doing nothing.
 * `wa`: Time the CPU waits for IO operations to complete before doing more work.
-* `st`: Time "stolen" from this virtual machine by the hypervisor for other tasks (in virtual environments).
+* `st`: Time "stolen" from this virtual machine by the hypervisor for other tasks (in 
+        virtual environments).
 
 
 
