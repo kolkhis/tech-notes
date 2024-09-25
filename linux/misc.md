@@ -1,32 +1,37 @@
 # Miscellaneous Linux Notes
 
+
 ## Table of Contents
-* [Miscellaneous Linux Notes](#miscellaneous-linux-notes) 
 * [Tools](#tools) 
     * [Cybersecurity Tools to Check Out](#cybersecurity-tools-to-check-out) 
     * [Other Tools to Check Out](#other-tools-to-check-out) 
+* [MTU and Using Ping without Fragmentation](#mtu-and-using-ping-without-fragmentation) 
+* [Finding the default network interface](#finding-the-default-network-interface) 
+* [Checking Active Connections](#checking-active-connections) 
+* [Adding Users Through /etc/passwd](#adding-users-through-/etc/passwd) 
+    * [Add a new line for the user:](#add-a-new-line-for-the-user:) 
 * [Playing Games on Linux](#playing-games-on-linux) 
 * [Update to Newer Versions of Packages and Commands](#update-to-newer-versions-of-packages-and-commands) 
 * [Specify a Certain Version of a Package](#specify-a-certain-version-of-a-package) 
-* [Builtin Colon (`:`) Command](#builtin-colon-()-command) 
+* [Builtin Colon (`:`) Command](#builtin-colon-(`:`)-command) 
 * [Find > ls](#find->-ls) 
 * [SCP](#scp) 
     * [SCP Commands](#scp-commands) 
     * [SCP Options](#scp-options) 
-* [Kernel Version](#kernel-version) 
+* [Getting the Current System's Kernel Version](#getting-the-current-system's-kernel-version) 
 * [sudoers and sudoing](#sudoers-and-sudoing) 
 * [Encrypt a file with Vi](#encrypt-a-file-with-vi) 
 * [Run a script when any user logs in.](#run-a-script-when-any-user-logs-in.) 
 * [Run a script as another user](#run-a-script-as-another-user) 
 * [Show the PID of the shell you're running in](#show-the-pid-of-the-shell-you're-running-in) 
-* [List all aliases, make an alias, and remove an alias. Make it persistent.](#list-all-aliases-make-an-alias-and-remove-an-alias.-make-it-persistent.) 
-* [`for` Loops](#for-loops) 
-    * [Create 200 files named `file<number>` skipping every even number 001-199](#create-200-files-named-file<number>-skipping-every-even-number-001-199) 
-        * [Using `seq`,](#using-seq) 
+* [List all aliases, make an alias, and remove an alias. Make it persistent.](#list-all-aliases,-make-an-alias,-and-remove-an-alias.-make-it-persistent.) 
+* [`for` Loops](#`for`-loops) 
+    * [Create 200 files named `file<number>` skipping every even number 001-199](#create-200-files-named-`file<number>`-skipping-every-even-number-001-199) 
+        * [Using `seq`,](#using-`seq`,) 
         * [Using Brace Expansion (Parameter Expansion)](#using-brace-expansion-(parameter-expansion)) 
         * [Using and C-style For-Loops](#using-and-c-style-for-loops) 
 * [Set a variable of one data point](#set-a-variable-of-one-data-point) 
-* [Run a command repeatedly, displaying output and errors](#run-a-command-repeatedly-displaying-output-and-errors) 
+* [Run a command repeatedly, displaying output and errors](#run-a-command-repeatedly,-displaying-output-and-errors) 
 * [Make your system count to 100](#make-your-system-count-to-100) 
 * [Loop over an array/list from the command line](#loop-over-an-array/list-from-the-command-line) 
 * [Loop over an array/list in a file](#loop-over-an-array/list-in-a-file) 
@@ -42,7 +47,9 @@
     * [Check how much RAM we have](#check-how-much-ram-we-have) 
     * [Check how much RAM we are using](#check-how-much-ram-we-are-using) 
 * [Connect to another server](#connect-to-another-server) 
-* [GREP_COLORS](#grep_colors) 
+* [List Users on a System](#list-users-on-a-system) 
+* [Hard Links vs Symbolic Links](#hard-links-vs-symbolic-links) 
+    * [Hard Links and File Deletion](#hard-links-and-file-deletion) 
 
 
 
@@ -487,6 +494,11 @@ Using `free -h`, just like checking total RAM.
 free -h | awk '{print $3}' | sed -E 's/^free/\nRAM in Use/'  
 ```
 
+### Swap Memory
+Swap memory is writing down to a block device. It's like a paging file. 
+In a modern Linux system, you want RAM to be used and not SWAP.
+
+
 ## Connect to another server  
 ```bash  
 nc -dz  
@@ -519,6 +531,45 @@ compgen -u | column
 
 
 
+
+
+## Hard Links vs Symbolic Links
+Symbolic links (sometimes called soft links or symlinks) and hard links are both 
+pointers to a memory address where a file is stored. 
+They both allow you to access a file.  
+ 
+The main difference is that hard links are not deleted when the original file is 
+deleted. Symbolic links break when this happens.  
+ 
+Hard links cannot exist across file system boundaries. A symbolic link can.  
+
+Hard links point to the block of memory itself, whereas a symlink points to the file path.  
+
+* Hard Links:
+    * Points to the same inode (file content).
+    * Cannot link to directories.
+    * Still works even if the original file is deleted. 
+    * Can't span across different filesystems.
+
+* Symlinks (Symbolic Links):
+    * Points to the file path.
+    * Can link to directories.
+    * Breaks if the original file is deleted or moved.  
+    * Can span across different filesystems.  
+
+### Hard Links and File Deletion
+When you delete a file in Linux, it's not actually deleted. 
+The inode (index node) pointer to that file is deleted. The file is still there on the disk.
+This is why hard links can exist when the original file is deleted. They're still
+pointing to a valid block of memory on the disk.  
+
+If both the original file and hard link are deleted, the data will still be there on
+the disk, but it will never be recovered through normal means. There are forensic 
+tools that exist that can read the disk and recover the data.
+
+* An inode (index node) is a metadata structure that stores information about files and directories, like ownership, permissions, and pointers to the file's data blocks.
+* Inodes do **not store filenames**, which are managed by directory structures.
+* Every file has an inode, and hard links share inodes, while symbolic links do not.
 
 
 
