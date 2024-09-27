@@ -2,34 +2,31 @@
 
 # Linux Command Cheatsheet  
 
-
 ## Table of Contents
 * [CLI Tools to Become Familiar With](#cli-tools-to-become-familiar-with) 
-* [Tools to Check Out for Networking/Admin](#tools-to-check-out-for-networking/admin) 
+* [Tools to Check Out for Networking/Admin:](#tools-to-check-out-for-networking/admin:) 
 * [CDPATH](#cdpath) 
 * [Miscellaneous Useful Commands](#miscellaneous-useful-commands) 
 * [Check which version of linux is running](#check-which-version-of-linux-is-running) 
-* [Check linux version](#check-linux-version) 
-* [Check kernel version](#check-kernel-version) 
+* [Hiding Text when Getting User Input with `read`](#hiding-text-when-getting-user-input-with-`read`) 
+* [SCP](#scp) 
+    * [SCP Commands](#scp-commands) 
+    * [SCP Options](#scp-options) 
 * [Duplicating File Descriptors](#duplicating-file-descriptors) 
     * [Redirect Stderr to Stdout](#redirect-stderr-to-stdout) 
 * [Check how much memory is being used](#check-how-much-memory-is-being-used) 
-* [Or, simply](#or-simply) 
 * [Check CPU usage](#check-cpu-usage) 
-* [Checking CPU usage](#checking-cpu-usage) 
 * [Check which processes are executing on the processor](#check-which-processes-are-executing-on-the-processor) 
-* [Check process cpu usage](#check-process-cpu-usage) 
 * [Check network usage and load of the system](#check-network-usage-and-load-of-the-system) 
 * [Check Running Processes](#check-running-processes) 
 * [Give a user full sudo access](#give-a-user-full-sudo-access) 
     * [Rule of Least Privilege](#rule-of-least-privilege) 
 * [Expansion via Indirection](#expansion-via-indirection) 
-* [outputs: world](#outputs-world) 
     * [Using Indirection with Arrays (Lists) and Associative Arrays (Dictionaries)](#using-indirection-with-arrays-(lists)-and-associative-arrays-(dictionaries)) 
 * [Using Grep](#using-grep) 
     * [Alternation (matching any one of multiple expressions)](#alternation-(matching-any-one-of-multiple-expressions)) 
 * [Using tput](#using-tput) 
-    * [`tput` Examples](#tput-examples) 
+    * [`tput` Examples](#`tput`-examples) 
 * [Control Sequences](#control-sequences) 
 * [Heredocs in Linux](#heredocs-in-linux) 
     * [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
@@ -37,16 +34,13 @@
 * [Check which sudo commands a user has access to](#check-which-sudo-commands-a-user-has-access-to) 
 * [Replacing All Occurrences of a String in Multiple Files](#replacing-all-occurrences-of-a-string-in-multiple-files) 
 * [Finding Files](#finding-files) 
-    * [The `find` Command](#the-find-command) 
-    * [Testing Files with `find`](#testing-files-with-find) 
-    * [Testing Timestamps of Files with `find`](#testing-timestamps-of-files-with-find) 
+    * [The `find` Command](#the-`find`-command) 
+    * [Testing Files with `find`](#testing-files-with-`find`) 
+    * [Testing Timestamps of Files with `find`](#testing-timestamps-of-files-with-`find`) 
 * [The Three Timestamps Explained](#the-three-timestamps-explained) 
-    * [`find` Options](#find-options) 
+    * [`find` Options](#`find`-options) 
     * [Global Options](#global-options) 
 * [Run a Script when Any User Logs Into the System](#run-a-script-when-any-user-logs-into-the-system) 
-* [/etc/profile: system-wide .profile file for the Bourne shell (sh(1))](#/etc/profile-system-wide-.profile-file-for-the-bourne-shell-(sh(1))) 
-* [Add anything here to be run at](#add-anything-here-to-be-run-at) 
-* [This will timestamp the current user in userlogs.log](#this-will-timestamp-the-current-user-in-userlogs.log) 
 * [Important Linux Commands](#important-linux-commands) 
     * [User and Group Management](#user-and-group-management) 
     * [Network Configuration and Monitoring](#network-configuration-and-monitoring) 
@@ -60,42 +54,30 @@
     * [Listening on Ports](#listening-on-ports) 
     * [Transferring Files](#transferring-files) 
     * [Timezone change](#timezone-change) 
-* [Colored output for `less`](#colored-output-for-less) 
-* [Using `xargs` to Transform Input into Arguments](#using-xargs-to-transform-input-into-arguments) 
+* [Colored output for `less`](#colored-output-for-`less`) 
+* [Using `xargs` to Transform Input into Arguments](#using-`xargs`-to-transform-input-into-arguments) 
 * [Numeric Calculations & Random Numbers](#numeric-calculations-&-random-numbers) 
 * [Get the Directory of a Script](#get-the-directory-of-a-script) 
 * [Search Terms for Bash Man Page](#search-terms-for-bash-man-page) 
 * [Definitions](#definitions) 
 * [Terminal Colors](#terminal-colors) 
     * [256-colors](#256-colors) 
-* [or, if used in your prompt customization](#or-if-used-in-your-prompt-customization) 
 * [SSH Logs and Processes](#ssh-logs-and-processes) 
-* [Cron, Cronjobs & Crontabs](#cron-cronjobs-&-crontabs) 
+* [Cron, Cronjobs & Crontabs](#cron,-cronjobs-&-crontabs) 
 * [File and Directory Permissions](#file-and-directory-permissions) 
 * [Disable Shellcheck From Within Shell Scripts](#disable-shellcheck-from-within-shell-scripts) 
-* [shellcheck disable=SC2059](#shellcheck-disable=sc2059) 
 * [Check if an argument is empty](#check-if-an-argument-is-empty) 
 * [Check if a File Exists or is Larger Than 0 Bytes](#check-if-a-file-exists-or-is-larger-than-0-bytes) 
-* [Check if file exists and source it](#check-if-file-exists-and-source-it) 
-* [Get Command Locations, Binaries, and Aliases](#get-command-locations-binaries-and-aliases) 
-* [Using `find`](#using-find) 
-    * [Exclude files using `find`](#exclude-files-using-find) 
-* [Exclude '.git' from find](#exclude-'.git'-from-find) 
+* [Get Command Locations, Binaries, and Aliases](#get-command-locations,-binaries,-and-aliases) 
+* [Using `find`](#using-`find`) 
+    * [Exclude files using `find`](#exclude-files-using-`find`) 
 * [Getting Help With Commands](#getting-help-with-commands) 
 * [Trapping Errors](#trapping-errors) 
-* [or](#or) 
 * [Source Relative Files](#source-relative-files) 
 * [Changing the system's hostname](#changing-the-system's-hostname) 
-* [Stream Manipulation w/ `awk`, `grep`, and `sed`](#stream-manipulation-w/-awk-grep-and-sed) 
+* [Stream Manipulation w/ `awk`, `grep`, and `sed`](#stream-manipulation-w/-`awk`,-`grep`,-and-`sed`) 
 * [Compare Files](#compare-files) 
 * [Loops](#loops) 
-* [Basic for loop](#basic-for-loop) 
-* [C-like for loop](#c-like-for-loop) 
-* [Ranges](#ranges) 
-* [With step size](#with-step-size) 
-* [Loop over lines from a file in bash](#loop-over-lines-from-a-file-in-bash) 
-* [Loop over lines from a command](#loop-over-lines-from-a-command) 
-* [Forever (Infinite Loop)](#forever-(infinite-loop)) 
 * [Getting Options and Arguments](#getting-options-and-arguments) 
 * [Options](#options) 
 * [Glob Options](#glob-options) 
@@ -106,40 +88,35 @@
 * [Arrays in Bash](#arrays-in-bash) 
 * [List-like Arrays & String Manipulation/Slicing](#list-like-arrays-&-string-manipulation/slicing) 
 * [Dictionaries (Associative Arrays)](#dictionaries-(associative-arrays)) 
-* [Declares sound as a Dictionary object (aka associative array).](#declares-sound-as-a-dictionary-object-(aka-associative-array).) 
-* [Working with dictionaries](#working-with-dictionaries) 
-* [Iterate over values of a dictionary](#iterate-over-values-of-a-dictionary) 
-* [Iterate over keys of a dictionary](#iterate-over-keys-of-a-dictionary) 
 * [Process Substitution in Bash](#process-substitution-in-bash) 
     * [Overview](#overview) 
     * [Syntax](#syntax) 
     * [How It Works](#how-it-works) 
     * [Examples](#examples) 
 * [Process Substitution](#process-substitution) 
-* [Transforming Strings with `tr`](#transforming-strings-with-tr) 
+* [Transforming Strings with `tr`](#transforming-strings-with-`tr`) 
     * [Arguments](#arguments) 
     * [Character Classes](#character-classes) 
 * [All Bash Conditional Flags](#all-bash-conditional-flags) 
-        * [Arithmetic Operators](#arithmetic-operators) 
+        * [Arithmetic Operators:](#arithmetic-operators:) 
 * [Interpreter Order of Operations](#interpreter-order-of-operations) 
 * [Parameter Expansion (Slicing/Substitution)](#parameter-expansion-(slicing/substitution)) 
     * [Slicing](#slicing) 
-* [Cutting out the suffix](#cutting-out-the-suffix) 
-* [Cutting out the prefix](#cutting-out-the-prefix) 
-* [Cutting out the path, leaving the filename](#cutting-out-the-path-leaving-the-filename) 
     * [Substitution](#substitution) 
     * [Substrings](#substrings) 
     * [Getting the Length of a String/Variable](#getting-the-length-of-a-string/variable) 
-* [PS1, PS2, PS3, and PS4 Special Environment Variables](#ps1-ps2-ps3-and-ps4-special-environment-variables) 
+* [PS1, PS2, PS3, and PS4 Special Environment Variables](#ps1,-ps2,-ps3,-and-ps4-special-environment-variables) 
     * [PS1](#ps1) 
-    * [PS2: Secondary Prompt String](#ps2-secondary-prompt-string) 
-    * [PS3: Prompt String for select](#ps3-prompt-string-for-select) 
-    * [PS4: Debug Prompt String](#ps4-debug-prompt-string) 
-* [Get bits: Zero, random or random 0/1](#get-bits-zero-random-or-random-0/1) 
+    * [PS2: Secondary Prompt String](#ps2:-secondary-prompt-string) 
+    * [PS3: Prompt String for select](#ps3:-prompt-string-for-select) 
+    * [PS4: Debug Prompt String](#ps4:-debug-prompt-string) 
+* [Get bits: Zero, random or random 0/1](#get-bits:-zero,-random-or-random-0/1) 
 * [SysAdmin Relevant - Firewall and Network commands](#sysadmin-relevant---firewall-and-network-commands) 
 * [Redirecting Standard Output AND Standard Error](#redirecting-standard-output-and-standard-error) 
-* [GOOD](#good) 
-* [BAD](#bad) 
+* [Getting IP and Network Information](#getting-ip-and-network-information) 
+    * [Show routing information](#show-routing-information) 
+    * [Show network interfaces](#show-network-interfaces) 
+    * [Show IP Address of the current machine](#show-ip-address-of-the-current-machine) 
 
 
 ## CLI Tools to Become Familiar With  
@@ -167,12 +144,17 @@
 
 ## CDPATH  
 
-The search path for the cd command.  This is a colon-separated list of  directories  in  
-which  the shell looks for destination directories specified by the cd command.  
-Sample value: `.:~:/usr`.  
+`CDPATH`: The search path for the `cd` command.  
+This is a colon-separated list of directories.  
+The shell looks for destination directories for `cd` using this list.  
+ 
+Example:  
+```bash
+export CDPATH='.:~:/usr'
+```
 
-* Once the `CDPATH` is set, the cd command will search only in the directories
-  present in the `CDPATH` variable only.  
+* Once the `CDPATH` is set, the `cd` command will search only in the directories
+  present in the `CDPATH` variable.  
 * More details at [The Unix School](https://www.theunixschool.com/2012/04/what-is-cdpath.html)  
 
 
@@ -206,13 +188,18 @@ uname -r
 
 ---
 
-## Hiding Text While Getting User Input
+## Hiding Text when Getting User Input with `read`
 Hide user input while they're typing:
 ```bash
 read -r -s -p "Enter your password: " PASSWORD
 ```
+* `-s`: Stops keyboard input from being printed to the terminal (silent).  
+* `-r`: Stops backslashes (`\`) from escaping anything.  
+* `-p "prompt"`: The prompt. 
+
 This will act like sudo password input.
 No text will be output to the terminal while the user is typing.
+
 
 To output a `*` for each character the user types:
 ```bash
@@ -227,6 +214,7 @@ while IFS= read -r -s -n1 pass; do
   fi
 done
 ```
+* `-n1`: Returns the `read` after every 1 character instead of waiting for a newline (Enter).  
 
 
 
