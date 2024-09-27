@@ -13,5 +13,6 @@ Commands for user management:
 | `addgroup` | Adds a group to the system
 | `delgroup` | Removes a group from the system
 | `passwd`   | Changes user password
+| `chage`    | Changes user password expiration date 
 
 
