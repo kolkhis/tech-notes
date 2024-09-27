@@ -11,6 +11,9 @@
 * `xfreerdp` is for RDP
 * `iconv`
 * `rev` - reverse a string
+* `file` 
+* `type`
+
 
 * ... What else?
 
