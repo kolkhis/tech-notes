@@ -3,12 +3,15 @@
 SSH commands for managing the OpenSSH server  
 This is intended for Linux with `systemd`, specifically Ubuntu Server.
 
+
 ## Table of Contents
 * [Restarting the SSH Service](#restarting-the-ssh-service) 
 * [Stopping the SSH Service](#stopping-the-ssh-service) 
 * [View SSH Status and Current State](#view-ssh-status-and-current-state) 
 * [Enable SSH to Start on Boot](#enable-ssh-to-start-on-boot) 
 * [Disable SSH From Starting on Boot](#disable-ssh-from-starting-on-boot) 
+* [Managing Authentication Methods for SSH](#managing-authentication-methods-for-ssh) 
+    * [Applying Changes to `sshd_config`](#applying-changes-to-`sshd_config`) 
 
 
 ## Restarting the SSH Service 
@@ -91,8 +94,56 @@ Removed /etc/systemd/system/sshd.service.
 
 
 
+## Managing Authentication Methods for SSH
+##### Also see [hardening_ssh](./hardening_ssh.md)
+
+To manage SSH authentication methods, we need edit the server's SSH configuration 
+file, which is located at `/etc/ssh/sshd_config`.  
+
+* Open `/etc/ssh/sshd_config` as root (`sudo`):
+    ```bash
+    sudo vi /etc/ssh/sshd_config
+    ```
+    * `sudo` is required. This file requires root access to write to.
+
+There are a number of settings here, most of them are in there by default (mostly
+commented out).  
+
+* `PermitRootLogin`: This decides whether or not to allow direct root logins via SSH.
+    * It's generally unsafe to have this enabled.  
+    * Uncomment it and change to `no`:
+      ```sh
+      PermitRootLogin no
+      ```
+    * This will prevent the root user from logging in via SSH.  
+
+* `PasswordAuthentication`: Decides whether or not to allow SSH logins with passwords. 
+    * Disable this if you want key-based authentication only:  
+      ```sh
+      PasswordAuthentication no
+      ```
+    * This will disable password authentication.  
+
+* `AuthorizedKeysFile`: Where SSH will look for key-based authentication.  
+    * It should look like this:
+      ```bash
+      AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
+      ```
+    * You can add more files to the list if you want to. 
 
 
+* `AuthenticationMethods`: The methods of authentication that are accepted.  
+    * For key-based authentication, you'll want this set to `publickey`: 
+      ```sh
+      AuthenticationMethods publickey
+      ```
+
+### Applying Changes to `sshd_config`
+
+Reload any changes to SSH with `systemctl`:
+```sh
+sudo systemctl restart ssh
+```
 
 
 
