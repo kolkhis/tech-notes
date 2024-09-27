@@ -22,6 +22,9 @@ when the system was started:
 cat /proc/cmdline
 ```
 
+### nproc
+The `nproc` command shows the number of processors that the system has access to.  
+A machine with a 4-core CPU will have 4 processors.  
 
 
 ### Get System Information
