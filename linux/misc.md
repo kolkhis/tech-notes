@@ -68,6 +68,7 @@ Terminology:
     * `ss -ntulp`
 * `sleuthkit` - File and filesystem analysis/forensics toolkit.
 
+
 ### Other Tools to Check Out
 * `parallel` (GNU Parallel) - Shell tool for executing jobs in parallel using one or more machines.
     * A job is typically a inslge command or small script that has to be run
@@ -83,10 +84,12 @@ Terminology:
     * See [example btop.conf](https://github.com/aristocratos/btop?tab=readme-ov-file#configurability)
     * Goes in `$XDG_CONFIG_HOME/btop/btop.conf` or `$HOME/.config/btop/btop.conf`
 
+
 A command for programatically checking servers (prod-k8s in this example):  
 ```bash  
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
+
 
 ## MTU and Using Ping without Fragmentation
 ```bash
@@ -122,6 +125,10 @@ ip route
 # or
 ip r
 ```
+The name will be something like `enp0s31f6`, or something like `eth1` on older systems.
+* `en`: Indicates that it's an ethernet connection.  
+* `p0s31f6`: This is the info on the ethernet port and bus being used.  
+
 
 ## Checking Active Connections
 You can use `netstat` or `ss` to check active network connections, as well as which 
@@ -131,12 +138,14 @@ netstat -i
 ss -i
 ```
 
+
+
 ## Adding Users Through /etc/passwd
 See [manually adding user accounts in linux](./manually_adding_user_accounts.md).  
 
 ### Add a new line for the user:
 Each line in the `/etc/passwd` file represents a user account.
-The format of each line is as follows:
+The format of each line in `/etc/passwd` is as follows:
 ```bash
 username:password:UID:GID:GECOS:home_directory:shell
 ```
@@ -148,13 +157,24 @@ username:password:UID:GID:GECOS:home_directory:shell
 * `home_directory`: The home directory for the new user.
 * `shell`: The login shell for the new user.
 
-Save and close the file after adding the user information.
+---
+
+* Add the new user by editing /etc/passwd:
+  ```bash
+  sudo vi /etc/passwd
+  # then add:
+  user:password:UID:GID:GECOS:/home/newuser:/bin/bash
+  ```
+    * `sudo` is required for writing to this file.  
+    * Save and close the file after adding the user information.
+    * The shell needs to be the path to the actual binary for the shell.  
 
 * Create the user's home directory: If you specified a home directory for the new 
-  user, you may need to manually create it using the `mkdir` command.  
+  user, you need to manually create it using the `mkdir` command.  
     * ```bash
       sudo mkdir /home/newuser
       ```
+
 * Set permissions for the home directory: After creating the home directory, you may 
   need to set the appropriate permissions to allow the new user to access it.  
     * ```bash

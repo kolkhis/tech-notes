@@ -19,7 +19,10 @@
 Each line in the `/etc/passwd` file represents a user account.  
 
 ### Add a new line for the user:  
-Each line in the `/etc/passwd` file represents a user account.  
+You'll need to open `/etc/passwd` to add a user manually:
+```bash
+sudo vi /etc/passwd
+```
 The format of each line is as follows:  
 ```bash  
 username:password:UID:GID:GECOS:home_directory:shell  
@@ -47,19 +50,19 @@ user, you may need to manually create it using the `mkdir` command.
 
 ### Set permissions for the home directory  
 
-After creating the home directory, you may need to set the appropriate permissions to 
-allow the new user to access it.  
+After creating the home directory, make the new user the owner to allow the new user 
+to access it.  
 * ```bash  
   sudo chown newuser:newuser /home/newuser  
   ```
 
 ### Set the user's password 
-If you left the password field empty in the `/etc/passwd` file, you  
-may need to set a password for the new user using the `passwd` command.  
+If you left the password field empty in the `/etc/passwd` file, set a password for 
+the new user using the `passwd` command.  
 * ```bash  
   sudo passwd newuser  
   ```
-    
+
 ### Test the new user account  
 After completing those steps, you can test the new 
 user account by logging in with the username and password (if applicable) and 
