@@ -1,6 +1,7 @@
 # Miscellaneous Linux Notes
 
 
+
 ## Table of Contents
 * [Tools](#tools) 
     * [Cybersecurity Tools to Check Out](#cybersecurity-tools-to-check-out) 
@@ -46,10 +47,14 @@
 * [RAM Commands](#ram-commands) 
     * [Check how much RAM we have](#check-how-much-ram-we-have) 
     * [Check how much RAM we are using](#check-how-much-ram-we-are-using) 
+    * [Swap Memory](#swap-memory) 
 * [Connect to another server](#connect-to-another-server) 
 * [List Users on a System](#list-users-on-a-system) 
 * [Hard Links vs Symbolic Links](#hard-links-vs-symbolic-links) 
     * [Hard Links and File Deletion](#hard-links-and-file-deletion) 
+* [Different Colors for `less` Output](#different-colors-for-`less`-output) 
+    * [Termcap String Capabilities](#termcap-string-capabilities) 
+    * [Other Options for `less`](#other-options-for-`less`) 
 
 
 
@@ -570,6 +575,7 @@ Hard links point to the block of memory itself, whereas a symlink points to the 
     * Cannot link to directories.
     * Still works even if the original file is deleted. 
     * Can't span across different filesystems.
+        * This means you can't hard link a file on another block device. 
 
 * Symlinks (Symbolic Links):
     * Points to the file path.
@@ -579,7 +585,12 @@ Hard links point to the block of memory itself, whereas a symlink points to the 
 
 ### Hard Links and File Deletion
 When you delete a file in Linux, it's not actually deleted. 
+
 The inode (index node) pointer to that file is deleted. The file is still there on the disk.
+ 
+You'd need to manually overwrite/stripe over the data to remove it.
+Without manually overwriting the data, forensic tools would be able to recover the data.  
+ 
 This is why hard links can exist when the original file is deleted. They're still
 pointing to a valid block of memory on the disk.  
 
@@ -587,9 +598,59 @@ If both the original file and hard link are deleted, the data will still be ther
 the disk, but it will never be recovered through normal means. There are forensic 
 tools that exist that can read the disk and recover the data.
 
-* An inode (index node) is a metadata structure that stores information about files and directories, like ownership, permissions, and pointers to the file's data blocks.
-* Inodes do **not store filenames**, which are managed by directory structures.
-* Every file has an inode, and hard links share inodes, while symbolic links do not.
+* An inode (index node) is a metadata structure that stores information about files 
+  and directories, like ownership, permissions, and pointers to the file's data blocks.
+* Inodes do **not** store filenames. Those are managed by directory structures.
+* Every file has an inode. Hard links share inodes, while symbolic links do not.
 
+
+
+## Different Colors for `less` Output
+`LESS_TERMCAP_**`: Allows you to specify colors for different parts of terminal output.  
+You need to use the `less -R` option to enable this.  
+TODO: Experiment with using the formats `"[10m"` and `$'\e[10m'`
+```bash
+export LESS='-R'
+export LESS_TERMCAP_md=$'\e[33m'  # Start Bold
+export LESS_TERMCAP_mb=$'\e[4m'   # Start Blinking
+export LESS_TERMCAP_us=$'\e[10m'  # Start Underline 
+export LESS_TERMCAP_so=$'\e[11m'  # Start Standout
+export LESS_TERMCAP_me=""         # End all modes
+export LESS_TERMCAP_se=""         # End Standout
+export LESS_TERMCAP_ue=""         # End underline
+```
+
+
+### Termcap String Capabilities
+##### `man://termcap 259`
+Termcap stands for "Terminal Capability".  
+It's a database used by Terminal Control Libraries (e.g., `ncurses`) to manage colors 
+and other terminal features.  
+
+Some of the modes that you can use to colorize output:
+* `me`: End all "modes" (like `so`, `us`, `mb`, `md`, and `mr`)
+* `so`: Start standout mode
+* `md`: Start bold mode
+* `us`: Start underlining
+* `mb`: Start blinking
+* `ue`: End underlining
+* `se`: End standout mode
+* `mr`: Start reverse mode
+* `mh`: Start half bright mode
+
+
+
+
+
+
+### Other Options for `less`
+```bash
+export LESS="-FXR"
+```
+* `-F` causes less to automatically exit if the entire file can be displayed on the first screen.
+* `-X` stops `less` from clearing the screen when it exits.   
+    * Disables sending the termcap initialization and deinitialization strings to the terminal.  
+    * The initialization string is sent when `less` starts. This causes the terminal
+      to be cleared.  The deinitialization string does the same thing.  
 
 
