@@ -234,9 +234,22 @@ You can use the `audit2why` and `audit2allow` tools to interpret these logs and
 create custom policies.
 
 
+## SELinux Troubleshooting
+Check the audit logs for context violations:
+* `/var/log/audit/audit.log`
+* `/var/log/messages` (if auditd isn't running)
+The `ausearch` and `sealert` tools are also useful for troubleshooting:
+```bash
+ausearch -m avc -ts recent
+# or
+sudo sealert -a /var/log/audit/audit.log
+```
+
+
 ## Resources
 * [SELinux Project Documentation](https://selinuxproject.org) 
 * [Red Hat SELinux Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/using_selinux)
+
 
 
 
