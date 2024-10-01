@@ -567,6 +567,7 @@ The main difference is that hard links are not deleted when the original file is
 deleted. Symbolic links break when this happens.  
  
 Hard links cannot exist across file system boundaries. A symbolic link can.  
+Hard links will only work within the same block device. 
 
 Hard links point to the block of memory itself, whereas a symlink points to the file path.  
 
