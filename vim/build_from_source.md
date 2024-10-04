@@ -5,31 +5,20 @@ and does not come with python or clipboard support.
 The latest version from apt is only 8.2. Building from source is probably the only
 way to get an up-to-date vim with full features.  
 
+
 ## Table of Contents
 * [Installing Vim With Full Feature Support](#installing-vim-with-full-feature-support) 
     * [Dependencies](#dependencies) 
-* [Installing Dependencies (full features)](#installing-dependencies-(full-features)) 
+* [Installing Dependencies (full features):](#installing-dependencies-full-features) 
 * [Compiling](#compiling) 
 * [Language Interfaces](#language-interfaces) 
-* [Lua](#lua) 
-* [Perl](#perl) 
-* [Python](#python) 
     * [Enabling the Python Interface](#enabling-the-python-interface) 
     * [Enabling Lua Interface](#enabling-lua-interface) 
     * [Enabling Perl Interface](#enabling-perl-interface) 
     * [Enabling the Ruby Interface](#enabling-the-ruby-interface) 
     * [After Editing Makefile](#after-editing-makefile) 
-* [TL;DR: Uncomment These in Makefile](#tl;dr-uncomment-these-in-makefile) 
-* [Don't build the GUI version](#don't-build-the-gui-version) 
-* [Enable Lua](#enable-lua) 
-* [Make sure the exe is symlinked to /usr/local/bin](#make-sure-the-exe-is-symlinked-to-/usr/local/bin) 
-* [Enable Perl](#enable-perl) 
-* [Enable Python](#enable-python) 
-* [Get the features, all the features](#get-the-features-all-the-features) 
-* [OPTIONAL: Change name and email in '--with-compiledby'](#optional-change-name-and-email-in-'--with-compiledby') 
-* [OR, if you've already run `make`](#or-if-you've-already-run-make) 
+* [TL;DR: Uncomment These in Makefile](#tldr-uncomment-these-in-makefile) 
 * [Starting Over](#starting-over) 
-* [in vim/src](#in-vim/src) 
 
 
 ## Installing Vim With Full Feature Support
