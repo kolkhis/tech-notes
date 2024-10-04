@@ -1,0 +1,104 @@
+
+# Linux RAID (Redundant Array of Independent Disks)  
+RAID is a method of combining multiple physical disks into a single logical unit for 
+the purposes of redundancy, performance, or both.  
+
+It can help protect against hardware failure or improve read/write speeds depending on how it's configured.  
+
+Linux supports RAID through the `mdadm` utility, which allows you to create, manage, and monitor software RAID arrays.  
+
+
+## RAID Levels  
+RAID has 5 common levels:  
+* RAID 0 - Striping 
+* RAID 1 - Mirroring  
+* RAID 5 - Striping with Parity 
+* RAID 6 - Striping with Double Parity  
+* RAID 10 (1 + 0) - Striping and Mirroring  
+
+### RAID 0 (Striping)  
+RAID 0 combines multiple disks for better performance by splitting (striping) data across them. 
+However, this that there is no redundancy.  
+
+
+
+### RAID 1 (Mirroring)  
+RAID 1 duplicates data across multiple disks, which offers redundancy.  
+If one disk fails, the data is still available on the other.  
+
+### RAID 5 (Striping with Parity)  
+With RAID 5, data is striped across multiple disks, and parity information is also stored. 
+This offers both performance and redundancy, but requires at least 3 disks.  
+
+### RAID 6 (Striping with Double Parity)  
+Like RAID 5, but with two sets of parity information instead of 1 set.  
+This allows for the failure of two disks without data loss.  
+Requires at least 4 disks.  
+
+### RAID 10 (1+0)  
+A combination of RAID 1 and RAID 0.  
+This mirrors data (RAID 1) and then stripes it (RAID 0) for both performance and redundancy.  
+This also requires at least 4 disks.  
+
+
+
+## `mdadm` - The Utility for Managing Linux RAID  
+`mdadm` (multiple disk admin) is the primary tool used to manage software RAID arrays.  
+
+It can be used to create, assemble, and monitore RAID ararys.  
+
+## Creating a RAID Array  
+To create a RAID array, the general command syntax is  
+```bash  
+sudo mdadm  --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc  
+```
+* `--create`: Specifies that you're creating a new RAID array.  
+* `--/dev/md0`: The name of the new RAID device. It will live under `/dev/`.  
+* `--level=1`: Specifies the RAID level. In this instance, RAID 1 (mirroring).  
+* `--raid-devices=2`: Specifies that the RAID array will consist of 2 devices.  
+* `/dev/sdb /dev/sdc`: The physical disks that will be used for the RAID array.  
+
+### Example: Creating a RAID 0 (Striping) Array  
+For performance, a RAID 0 array can be used.  
+```bash  
+sudo mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sdb /dev/sdc  
+```
+This creates a RAID 0 array called `/dev/md0`, striping data across `/dev/sdb` and `/dev/sdc`.  
+
+
+### Example: Creating a RAID 5 (Striping with Parity) Array  
+
+```bash  
+sudo mdadm --create --raid-level=5 --raid-devices=3 /dev/md0 /dev/sdb /dev/sdc /dev/sdd
+```
+This creates a RAID 5 array called `/dev/md0`, using the disks `/dev/sdb`, `/dev/sdb`, and `/dev/sdd`.  
+
+#### Verifying the RAID Array
+Once the RAID array is c reated, you can verify its status with `mdadm`:
+```bash
+sudo mdadm --detail /dev/md0
+```
+`--detail`: This prints detailed information about the RAID array.  
+
+
+## How Striping/RAID 0 Improves Performance  
+Striping improves performance by utilizing multiple disks at a time.  
+This means, with 2 disks that have the same speeds, it will essentially double the  
+amount of data throughput.  
+
+* With striping, data is broken into small chunks called "strip units".  
+* These strip units usually have a specific size (e.g., 64KB, 128KB).  
+* Each strip unit is then written to a different disk.  
+* This allows the system to read or write multiple strip units at one time.  
+* This is called "parallel data access".  
+
+This setup provides scalability.  
+ 
+If a single disk can transfer data at 100 MB/s, a RAID 0 array with two disks could, in  
+theory, provide up to 200 MB/s.  
+With four disks, it could scale up to 400 MB/s, assuming no bottlenecks exist 
+elsewhere (like the disk controller or the interface).  
+
+
+
+
