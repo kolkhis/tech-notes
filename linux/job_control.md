@@ -10,6 +10,21 @@ at a later point.
 This mechanism is particularly useful for managing multiple processes from
 a single bash session, i.e., a single shell.
 
+## Table of Contents
+* [Key Concepts](#key-concepts) 
+* [Job Control Commands](#job-control-commands) 
+* [Referring to Jobs](#referring-to-jobs) 
+* [Job States and Notifications](#job-states-and-notifications) 
+* [Examples](#examples) 
+    * [Running a Job in the Background](#running-a-job-in-the-background) 
+    * [Suspending a Foreground Job](#suspending-a-foreground-job) 
+    * [Moving a Job to the Background](#moving-a-job-to-the-background) 
+    * [Bringing a Job to the Foreground](#bringing-a-job-to-the-foreground) 
+    * [Listing Jobs](#listing-jobs) 
+* [Exiting Bash with Active Jobs](#exiting-bash-with-active-jobs) 
+* [Waiting for a Job](#waiting-for-a-job) 
+* [Important Notes](#important-notes) 
+
 
 ## Key Concepts
 * Job: A job is associated with each pipeline and can be a single command or a group of 

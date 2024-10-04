@@ -9,14 +9,13 @@ foreground (text) or background.
 
 
 ## Table of Contents
-* [ANSI Color Control Sequences](#ansi-color-control-sequences) 
 * [Basic Syntax](#basic-syntax) 
 * [Quickref](#quickref) 
 * [Common Style Codes](#common-style-codes) 
-* [Standard Colors (8 color)](#standard-colors-(8-color)) 
+* [Standard Colors (8 color)](#standard-colors-8-color) 
 * [Formatting the Style Code](#formatting-the-style-code) 
     * [Examples](#examples) 
-    * [256-colors](#256-colors) 
+    * [256-colors](#256colors) 
 
 
 ## Basic Syntax  

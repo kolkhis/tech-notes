@@ -2,6 +2,20 @@
 
 # Shell Options & How to Set Them
 
+
+## Table of Contents
+* [`set`](#set) 
+    * [`set` Options and Arguments](#set-options-and-arguments) 
+    * [`set` Uses](#set-uses) 
+* [`shopt`](#shopt) 
+    * [`shopt` Options and Arguments](#shopt-options-and-arguments) 
+    * [`shopt` Uses](#shopt-uses) 
+* [Exhaustive List of Shell Options](#exhaustive-list-of-shell-options) 
+    * [Shell options for `set`:](#shell-options-for-set) 
+    * [Shell options for `shopt`](#shell-options-for-shopt) 
+    * [Uses for Shell Options](#uses-for-shell-options) 
+
+
 > `PAGER='less "+/^ *The list of shopt"' man bash`
 > Opens the bash man page to the `shopt` options and descriptions.
 
@@ -14,7 +28,7 @@
 The set built-in command is used to set or unset shell options and positional parameters. You can change a lot of behaviors of the shell using set.
 
 
-### Options and Arguments
+### `set` Options and Arguments
 * `set -o option`: Enables an option.
 * `set +o option`: Disables an option.
 * `set --`: Unsets all positional parameters.
@@ -23,7 +37,7 @@ The set built-in command is used to set or unset shell options and positional pa
 * `set -u`: Treat unset variables as an error when substituting.
 * `set -x`: Print commands and their arguments as they are executed.
 
-### Uses
+### `set` Uses
 * `set -e`: Useful in scripts where you want to ensure that errors stop the script.
 * `set -u`: Good for debugging uninitialized variables.
 * `set -x`: Helpful for debugging scripts.
@@ -34,12 +48,12 @@ The set built-in command is used to set or unset shell options and positional pa
 
 The shopt built-in allows you to change additional shell optional behavior. It's more flexible than set in some ways.
 
-### Options and Arguments
+### `shopt` Options and Arguments
 * `shopt -s option`: Enables an option.
 * `shopt -u option`: Disables an option.
 * `shopt -q`: Quiet mode. Nothing is output.
 
-### Uses
+### `shopt` Uses
 * `shopt -s nullglob`: Useful when you want patterns that could match filenames
                        to expand to an empty string when no filenames match.
 * `shopt -s dotglob`: Useful when you want patterns to include files that start with a dot (.).
@@ -48,14 +62,14 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 
 ## Exhaustive List of Shell Options
 
-### `set`:
+### Shell options for `set`:
 * `-e`: Exit on error.
 * `-f`: Disable filename expansion.
 * `-H`: Enable ! style history substitution.
 * `-u`: Treat unset variables as an error.
 * `-x`: Debug mode.
 
-### All `shopt` 
+### Shell options for `shopt` 
 * `cdspell`: Autocorrects minor spelling errors in a cd command.
 * `checkhash`: Checks that commands found in hash tables exist.
 * `cmdhist`: Save multi-line commands in the history as a single line.

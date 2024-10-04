@@ -1,20 +1,12 @@
 
-## Packages to install when I have Linux on desktop:
-##### (Distro? Linux Mint??)
 
 ## Table of Contents
-* [Packages to install when I have Linux on desktop](#packages-to-install-when-i-have-linux-on-desktop) 
+* [Packages to install when I have Linux on desktop:](#packages-to-install-when-i-have-linux-on-desktop) 
     * [Core utils to remember](#core-utils-to-remember) 
 * [Timezone change](#timezone-change) 
     * [Tmux vs Screen](#tmux-vs-screen) 
-        * [Multiple user session](#multiple-user-session) 
-    * [Cool Vim Tips/Tricks](#cool-vim-tips/tricks) 
-* [Plain GPG Protected Credential Helper](#plain-gpg-protected-credential-helper) 
-    * [Using GPG for Github Authentication](#using-gpg-for-github-authentication) 
-    * [Generate a New GPG Key](#generate-a-new-gpg-key) 
-    * [Add the New GPG Key to Github](#add-the-new-gpg-key-to-github) 
-* [Signing Commits with GPG](#signing-commits-with-gpg) 
-    * [Git Commit Messages](#git-commit-messages) 
+        * [Multiple user session:](#multiple-user-session) 
+    * [Cool Vim Tips/Tricks](#cool-vim-tipstricks) 
 
 
 * Terminal
@@ -106,9 +98,5 @@ Vim Filters:
 `<C-o>p` <- quickly pastes register while in insert mode  
 :h i_ctrl-o 
 
-
-[![twitter](https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/null_kol)
-[![twitch](https://img.shields.io/badge/Twitch-purple?style=for-the-badge&logo=twitch&logoColor=white)](https://twitch.tv/kolkhis)
-[![ko-fi](https://img.shields.io/badge/kofi-pink?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/kolkhis)
 
 

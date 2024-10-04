@@ -9,15 +9,16 @@ It's available on a lot of Linux distributions.
 
 
 ## Table of Contents
-* [Basics of `bc`](#basics-of-`bc`) 
+* [Basics of `bc`](#basics-of-bc) 
     * [Options](#options) 
 * [Converting Celsuis to Fahrenheit](#converting-celsuis-to-fahrenheit) 
-    * [Getting around `scale` with `-l`](#getting-around-`scale`-with-`-l`) 
+    * [Getting around `scale` with `-l`](#getting-around-scale-with-l) 
 * [Syntax](#syntax) 
     * [Comments](#comments) 
-* [Variables in `bc`](#variables-in-`bc`) 
-* [Converting Base10 (Decimal) to Base8 (Octal)](#converting-base10-(decimal)-to-base8-(octal)) 
+* [Variables in `bc`](#variables-in-bc) 
+* [Converting Base10 (Decimal) to Base8 (Octal)](#converting-base10-decimal-to-base8-octal) 
     * [Example Conversion Script](#example-conversion-script) 
+
 
 
 ## Basics of `bc`

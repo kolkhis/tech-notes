@@ -2,6 +2,15 @@
 # rsync  
 `rsync` is a tool that can be used to synchronize files and directories between two locations.  
 
+## Table of Contents
+* [Using `rsync`](#using-rsync) 
+* [Basic Options and Syntax for `rsync`](#basic-options-and-syntax-for-rsync) 
+* [Using `--delete` to Delete Files on the Remote Host](#using-delete-to-delete-files-on-the-remote-host) 
+* [Using rsync to Transfer Files and Changes via SSH](#using-rsync-to-transfer-files-and-changes-via-ssh) 
+* [Preview the Changes of an `rsync` Command](#preview-the-changes-of-an-rsync-command) 
+* [rsync Options](#rsync-options) 
+    * [Archive Mode](#archive-mode) 
+
 ## Using `rsync`
 
 ## Basic Options and Syntax for `rsync`

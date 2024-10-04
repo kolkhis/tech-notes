@@ -2,17 +2,18 @@
 
 # Run Processes in the Background  
 
+
+
 ## Table of Contents
-* [Run Processes in the Background](#run-processes-in-the-background) 
-* [Background Processes with `&`](#background-processes-with-&) 
+* [Background Processes with `&`](#background-processes-with-) 
 * [Directing Output of Background Processes](#directing-output-of-background-processes) 
 * [Backgrounding Subshells and Subshell Commands](#backgrounding-subshells-and-subshell-commands) 
-    * [Using `&` with Subshells (Inside vs. Outside)](#using-&-with-subshells-(inside-vs.-outside)) 
-    * [`&` Inside the Subshell `(command &)`](#&-inside-the-subshell-(command-&)) 
+    * [Using `&` with Subshells (Inside vs. Outside)](#using--with-subshells-inside-vs-outside) 
+    * [`&` Inside the Subshell `(command &)`](#-inside-the-subshell-command-) 
         * [Scope of Background Process](#scope-of-background-process) 
         * [Subshell Environment](#subshell-environment) 
         * [Immediate Return](#immediate-return) 
-    * [`&` Outside the Subshell `(command) &`](#&-outside-the-subshell-(command)-&) 
+    * [`&` Outside the Subshell `(command) &`](#-outside-the-subshell-command-) 
         * [Entire Subshell in Background](#entire-subshell-in-background) 
         * [Parent Script Continuation](#parent-script-continuation) 
         * [Subshell Benefits](#subshell-benefits) 
