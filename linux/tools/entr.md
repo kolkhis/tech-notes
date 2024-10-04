@@ -4,6 +4,14 @@
 `entr` is a tool used for running a command when a file changes.  
 This is very helpful in testing.  
 
+## Table of Contents
+* [Using `entr` with a single file](#using-entr-with-a-single-file) 
+* [Using `entr` with multiple files](#using-entr-with-multiple-files) 
+    * [Example with Golang Project Testing](#example-with-golang-project-testing) 
+* [Other ways to automate](#other-ways-to-automate) 
+    * [Using `watch`](#using-watch) 
+    * [Infinite Loop (Generally a Bad Idea)](#infinite-loop-generally-a-bad-idea) 
+
 
 ## Using `entr` with a single file  
 

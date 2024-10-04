@@ -2,14 +2,15 @@
 
 # Automation on Linux Using Cron
 
+
 ## Table of Contents
 * [Quickref](#quickref) 
-* [What is Cron?](#what-is-cron?) 
+* [What is Cron?](#what-is-cron) 
     * [Basic Concepts](#basic-concepts) 
 * [How to Use Cron](#how-to-use-cron) 
 * [Basic Commands](#basic-commands) 
 * [Tips and Tricks](#tips-and-tricks) 
-* [/etc/crontab](#/etc/crontab) 
+* [/etc/crontab](#etccrontab) 
 
 
 ## Quickref

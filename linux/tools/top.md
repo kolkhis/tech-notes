@@ -6,7 +6,7 @@ Its output is very detailed.
 
 
 ## Table of Contents
-* [`top` Output](#`top`-output) 
+* [`top` Output](#top-output) 
     * [First Line](#first-line) 
     * [Second Line](#second-line) 
     * [Third Line](#third-line) 

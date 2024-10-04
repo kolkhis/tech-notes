@@ -2,18 +2,54 @@
 # Finding Files
 
 The bulk of this file is notes on the `find` command.  
-Before that, some other commands to find files:  
+Before that, some other commands to find files.  
 
-#### `tree`
+## Table of Contents
+* [`tree`](#tree) 
+* [`ls`](#ls) 
+* [`which`](#which) 
+* [The `find` Command](#the-find-command) 
+* [Quick Overview of File Timestamps](#quick-overview-of-file-timestamps) 
+* [tl;dr: Examples](#tldr-examples) 
+    * [Skipping directories (Omitting directories)](#skipping-directories-omitting-directories) 
+        * [If `-prune` doesn't work use an Operator instead:](#if-prune-doesnt-work-use-an-operator-instead) 
+    * [Finding files that match multiple conditions](#finding-files-that-match-multiple-conditions) 
+    * [Searching files by age](#searching-files-by-age) 
+* [Executing commands on found file(s)](#executing-commands-on-found-files) 
+    * [Executing a command for *each* file found](#executing-a-command-for-each-file-found) 
+    * [Executing a command on *all* files *simultaneously*](#executing-a-command-on-all-files-simultaneously) 
+    * [Searching files by permissions (more in [Permission Searching](#Permission-Searching))](#searching-files-by-permissions-more-in-permission-searchingpermissionsearching) 
+        * [Note: the `-perm` argument supports both octal notation and symbolic notation (`u=x`, etc)](#note-the-perm-argument-supports-both-octal-notation-and-symbolic-notation-ux-etc) 
+        * [Conditional Search Examples:](#conditional-search-examples) 
+* [`find` Options](#find-options) 
+    * [Global Options](#global-options) 
+    * [Change How `find` Handles Symbolic Links](#change-how-find-handles-symbolic-links) 
+    * [Get Diagnostic Information from `find`](#get-diagnostic-information-from-find) 
+    * [`find` Query Optimization](#find-query-optimization) 
+* [Testing Files with `find`](#testing-files-with-find) 
+    * [Users and Groups](#users-and-groups) 
+    * [Permissions](#permissions) 
+* [Testing Timestamps of Files with `find`](#testing-timestamps-of-files-with-find) 
+    * [Other Tests That Use Timestamps](#other-tests-that-use-timestamps) 
+* [Performing Actions on Files Using `find`](#performing-actions-on-files-using-find) 
+* [Operators For Multiple Conditions](#operators-for-multiple-conditions) 
+    * [Searching with and/or Examples](#searching-with-andor-examples) 
+* [Permission Searching](#permission-searching) 
+    * [Searching for Permissions Examples](#searching-for-permissions-examples) 
+* [Timestamps Explained](#timestamps-explained) 
+
+
+## `tree`
 * `tree -I '.git'` - Tree view of current directory and subdirectories.  
     * `-I`(gnore) the `.git` directory.  
-#### `ls`
+## `ls`
 ```bash
 ls -I '.git'          # List current directory, -I(gnore) .git/
 ls -I '.git' *.md     # List all markdown files in current directory
 ls -I '.git' **/*.md  # List all markdown files, recursively (**). Requires `set -o globstar` in bash.
 ```
-#### `which`
+
+## `which`
 The `which` command will show you where the executable binary is
 for a command or script:  
 ```bash
@@ -42,7 +78,7 @@ You can specify the type of regex used with `-regextype` (`find -regextype help`
 * Change Time: Use `ls --time=ctime -lt` to list files with change times.  
 
 ## tl;dr: Examples  
-##### Examples start on line 1147 of `man find`
+##### Examples start on line 1147 of [man find](`man://find 1147`)
 
 ### Skipping directories (Omitting directories)  
 Skip directories with `find`:
@@ -119,7 +155,7 @@ find . -writable       # Checks that 'w' is present for current user
 find . -executable     # Checks that 'x' is present for current user  
 find . \! -executable  # Checks that 'x' is absent for current user  
 ```
-#### Examples:  
+#### Conditional Search Examples:  
 * Search for files that are executable but not readable:  
 ```bash  
 find /sbin /usr/sbin -executable \! -readable -print  
@@ -423,7 +459,7 @@ find . \( -path "./my*pt.py" \) -path './some*path'
 find . '( -path "./my*pt.py" )' -path './some*path'
 ```
 
-#### Examples
+### Searching with and/or Examples
 ```bash
 find . -name '*.py' -and -path './sr*py*'   # This will match any `.py` files in `./src/python`.
 find . -name '*.py' -a -path './sr*py*'  # Same thing. POSIX-compliant
@@ -455,7 +491,7 @@ find . -perm -220   # Matches if given permissions are there. File can have more
 find . -perm /220   # Matches if ANY of the given permissions are there.  
 ```
 
-### Examples
+### Searching for Permissions Examples
 
 * Search for files which are executable but not readable.  
 ```bash  

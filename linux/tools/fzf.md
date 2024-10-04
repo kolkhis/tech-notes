@@ -1,6 +1,21 @@
 
 # Using fzf (Fuzzy Finder) on Linux  
 
+## Table of Contents
+* [Default Options for fzf](#default-options-for-fzf) 
+* [Key Bindings / Event Bindings](#key-bindings--event-bindings) 
+    * [Availble keys for fzf keybinding: `man fzf` -> `/AVAILBLE KEYS`](#availble-keys-for-fzf-keybinding-man-fzf--availble-keys) 
+    * [Available Events:](#available-events) 
+* [Available Actions](#available-actions) 
+* [Replacements for Parentheses](#replacements-for-parentheses) 
+* [Running commands from fzf](#running-commands-from-fzf) 
+* [Previewing with fzf](#previewing-with-fzf) 
+* [Customizing fzf Display](#customizing-fzf-display) 
+    * [Changing the Preview Window's Attributes/Display](#changing-the-preview-windows-attributesdisplay) 
+    * [Changing Main Window's Display](#changing-main-windows-display) 
+* [Multiple Selections with fzf](#multiple-selections-with-fzf) 
+* [Adding Line Numbers to fzf](#adding-line-numbers-to-fzf) 
+
 
 ## Default Options for fzf  
 

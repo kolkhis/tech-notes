@@ -1,7 +1,6 @@
 
 # Heredocs / Here Documents  
 
-
 ## Table of Contents
 * [Heredocs in Linux](#heredocs-in-linux) 
     * [Quickref](#quickref) 

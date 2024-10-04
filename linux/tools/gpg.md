@@ -1,5 +1,15 @@
 # GNU Privacy Guard (GPG)
 
+## Table of Contents
+* [Generating a New GPG Key](#generating-a-new-gpg-key) 
+* [Exporting the Public Key](#exporting-the-public-key) 
+* [Other GPG Information](#other-gpg-information) 
+    * [Revoking Keys (Creating a Revocation Certificate)](#revoking-keys-creating-a-revocation-certificate) 
+    * [Trust Levels](#trust-levels) 
+    * [Back Up Your GPG Keys!](#back-up-your-gpg-keys) 
+    * [Using GPG Agent](#using-gpg-agent) 
+    * [GPG in Different Environments](#gpg-in-different-environments) 
+
 ## Generating a New GPG Key
 
 1. Run the command to generate a new key:  

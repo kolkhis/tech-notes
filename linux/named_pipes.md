@@ -1,18 +1,17 @@
 
 # Named Pipes (FIFO Files)  
 
-## Table of Contents  
+## Table of Contents
 * [Description of Named Pipes](#description-of-named-pipes) 
-    * [What is a Named Pipe?](#what-is-a-named-pipe?) 
+    * [What is a Named Pipe?](#what-is-a-named-pipe) 
     * [How it Works](#how-it-works) 
     * [Uses](#uses) 
     * [Benefits](#benefits) 
-* [Usage](#usage) 
+* [Named Pipe Usage](#named-pipe-usage) 
     * [Named Pipe Creation](#named-pipe-creation) 
     * [Relevant Conditional Statements](#relevant-conditional-statements) 
-* [Named Pipe Usage](#named-pipe-usage) 
     * [Capturing the Output of a Background Process](#capturing-the-output-of-a-background-process) 
-* [Practical Examples of Using Named Pipes (FIFO Files)](#practical-examples-of-using-named-pipes-(fifo-files)) 
+* [Examples of Using Named Pipes (FIFO Files)](#examples-of-using-named-pipes-fifo-files) 
     * [Streaming Log Files](#streaming-log-files) 
     * [Transcoding a Video Stream](#transcoding-a-video-stream) 
 * [Breakdown of Named Pipes](#breakdown-of-named-pipes) 

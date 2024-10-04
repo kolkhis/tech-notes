@@ -5,6 +5,12 @@
 The term "build from source" means downloading the source code and compiling it
 yourself.
 
+## Table of Contents
+* [Quickref](#quickref) 
+* [Tarballs](#tarballs) 
+* [Download the Source Code](#download-the-source-code) 
+    * [Extracting an Archive](#extracting-an-archive) 
+
 ## Quickref
 Options for extracting tarballs:
 ```bash
