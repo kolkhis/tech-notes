@@ -3,32 +3,79 @@
 See *`:help vim.re`* for regex through Nvim's Lua API.  
 
 
-## Table of Contents  
 
-- [Very Magic](#very-magic)  
-- [Vim Regex and Perl Regex](#vim-regex-and-perl-regex)  
-- [Unique to Vim](#unique-to-vim)  
-- [Unique to Perl](#unique-to-perl)  
-- [Important Help Files](#important-help-files)  
-- [Metacharacters (Escaped Characters) and Character Classes](#metacharacters-escaped-characters-and-character-classes)  
-    * [Whitespace](#whitespace)  
-    * [Digits](#digits)  
-    * [Letters](#letters)  
-    * [Special Characters](#special-characters)
-* [Substitution Special Characters](#substitution-special-characters)  
-* [Tricks](#tricks)  
-    * [Ignoring Case in a Pattern](#ignoring-case-in-a-pattern)  
-    * [Including End-of-Line and Start-of-Line in a Pattern](#including-end-of-line-eol-and-start-of-line-sol-in-pattern-matches)  
-* [Matching Start-of-Line *after* Another Atom](#matching-start-of-line-after-another-atom)  
-* [Word Boundaries in Vim Regex](#word-boundaries-in-vim-regex)  
-* [Overview of Multi Items](#overview-of-multi-items)  
-    * [Greedy Multis](#greedy-multis)  
-    * [Non-Greedy Multis](#non-greedy-multis)  
-* [Capture groups](#capture-groups-and-backreferences-with-substitutions-and-other-pattern-commands)  
-* [Collections and Sets (Optionally Match)](#collections-sets)  
-* [Matching Decimal, Octal, and Hexadecimal Number Systems](#matching-decimal-octal-and-hexadecimal-number-systems)
-* [Good ones to remember](#good-ones-to-remember)  
-
+## Table of Contents
+* [Very Magic](#very-magic) 
+* [Vim Regex and Perl Regex](#vim-regex-and-perl-regex) 
+    * [Unique to Vim](#unique-to-vim) 
+    * [Unique to Perl](#unique-to-perl) 
+    * [Important Help Files](#important-help-files) 
+* [Metacharacters (Escaped Characters) and Character Classes](#metacharacters-escaped-characters-and-character-classes) 
+    * [Whitespace](#whitespace) 
+    * [Digits](#digits) 
+    * [Letters](#letters) 
+    * [Special Characters](#special-characters) 
+    * [Substitution Special Characters](#substitution-special-characters) 
+* [Tricks](#tricks) 
+    * [Ignoring Case in a Pattern](#ignoring-case-in-a-pattern) 
+* [Including End-of-Line (EOL) and Start-of-Line (SOL) in Pattern Matches](#including-end-of-line-eol-and-start-of-line-sol-in-pattern-matches) 
+    * [Matching a Character Class *and* End of Line](#matching-a-character-class-and-end-of-line) 
+* [Matching Start-of-Line *after* Another Atom](#matching-start-of-line-after-another-atom) 
+    * [Word Boundaries in Vim Regex](#word-boundaries-in-vim-regex) 
+* [Overview of Multi Items](#overview-of-multi-items) 
+    * [Greedy Multis](#greedy-multis) 
+    * [Non-Greedy Multis](#non-greedy-multis) 
+    * [Non-greedy `pattern-multi-items`](#non-greedy-pattern-multi-items) 
+    * [Matching Newlines / End-of-Line Inside a Collection](#matching-newlines--end-of-line-inside-a-collection) 
+* [Matching Literal Key Characters](#matching-literal-key-characters) 
+* [Dealing with Accents in Unicode](#dealing-with-accents-in-unicode) 
+    * [Unicode Accents Example](#unicode-accents-example) 
+* [Range of Operation](#range-of-operation) 
+* [Capture Groups and Backreferences with Substitutions and Other Pattern Commands](#capture-groups-and-backreferences-with-substitutions-and-other-pattern-commands) 
+* [Flags](#flags) 
+    * [Two and Three Letter `:substitute` Commands](#two-and-three-letter-substitute-commands) 
+    * [Repeating Substitutions](#repeating-substitutions) 
+* [Substitutions with Expressions](#substitutions-with-expressions) 
+* [Quantifiers, Greedy and Non-Greedy](#quantifiers-greedy-and-non-greedy) 
+    * [Greedy](#greedy) 
+    * [Non-Greedy](#non-greedy) 
+* [Optionally Match Atoms](#optionally-match-atoms) 
+    * [Optional Matching Example](#optional-matching-example) 
+* [Match Inside the Visual Area](#match-inside-the-visual-area) 
+    * [Visual Area Matching Example](#visual-area-matching-example) 
+* [Match with the Cursor Position](#match-with-the-cursor-position) 
+* [Using Marks for Matching](#using-marks-for-matching) 
+* [Line Number Matching](#line-number-matching) 
+    * [Using Line Numbers for Matching](#using-line-numbers-for-matching) 
+    * [Using the Current Line for Matching](#using-the-current-line-for-matching) 
+* [Matching with Start and End of the File](#matching-with-start-and-end-of-the-file) 
+* [Matching with Columns](#matching-with-columns) 
+* [Matching After a Pattern](#matching-after-a-pattern) 
+    * [Lookback (Matching after a pattern) Example](#lookback-matching-after-a-pattern-example) 
+* [Matching After a NON-matching pattern](#matching-after-a-non-matching-pattern) 
+    * [Lookback (Match after a non-matching pattern) Example](#lookback-match-after-a-non-matching-pattern-example) 
+* [Match Excluding the Preceding Atom](#match-excluding-the-preceding-atom) 
+    * [Lookback (Matching the beginning of a pattern) Example](#lookback-matching-the-beginning-of-a-pattern-example) 
+    * [Use Cases](#use-cases) 
+* [Zero-Width](#zero-width) 
+    * [Zero-Width Matching Example](#zero-width-matching-example) 
+* [Setting the Start of a Match with `\zs`](#setting-the-start-of-a-match-with-zs) 
+    * [Matching with `\zs` Example](#matching-with-zs-example) 
+* [Setting the End of a Match with `\ze`](#setting-the-end-of-a-match-with-ze) 
+    * [Ending match with `\ze` Example](#ending-match-with-ze-example) 
+* [Less Useful Patterns](#less-useful-patterns) 
+* [Match if Previous Pattern Doesn't Match at the CURRENT Position](#match-if-previous-pattern-doesnt-match-at-the-current-position) 
+    * [Zero-Width Match after Non-Match Example](#zero-width-match-after-non-match-example) 
+* [Match at the Current Position like a Single Pattern](#match-at-the-current-position-like-a-single-pattern) 
+    * [Matching with `\@>` Example](#matching-with--example) 
+* [Matching Different Number Systems](#matching-different-number-systems) 
+* [Matching Decimal, Octal, and Hexadecimal Number Systems](#matching-decimal-octal-and-hexadecimal-number-systems) 
+    * [Examples](#examples) 
+* [Collections / Sets](#collections--sets) 
+    * [Collection Limitations / Caveats](#collection-limitations--caveats) 
+    * [Collection Examples](#collection-examples) 
+* [Good Ones to Remember](#good-ones-to-remember) 
+    * [Make it Non-Greedy](#make-it-non-greedy) 
 
 
 
@@ -315,7 +362,7 @@ you'll need to use one of these:
     * This means that characters are matched that  
       have **almost** the same meaning, e.g., when ignoring accents.  
     * This only works for Unicode, latin1 and latin9.  
-### Example  
+### Unicode Accents Example  
 `[=a=]` will match characters like `a`, `à`, `á`, `â`, etc., because  
 they are all variations of the base character `a` with different accents.  
 
@@ -483,7 +530,7 @@ Parentheses can be used to make a pattern into an atom.
     * The longest that matches is used.  
     * There can be no `\(\)`, `\%(\)` or `\z(\)` items inside the `[]` 
     * `\%[]` does not nest.  
-### Example  
+### Optional Matching Example  
 |       **Pattern**      |  **Matches**   |
 |------------------------|-----------------------------------------------------|
 |   `/r\%[ead]`          | matches `r`, `re`, `rea` or `read`. |
@@ -500,7 +547,7 @@ Parentheses can be used to make a pattern into an atom.
             * i.e., `/\%Vfoo.*ba\%Vr`
     * Only works for the current buffer.  
 
-### Example  
+### Visual Area Matching Example  
 String: `foo bar`
 
 |       **Pattern**      |  **Matches**   |
@@ -563,7 +610,7 @@ These six can be used to match specific lines in a buffer.
           follows. |/zero-width|
     * Like `(?<=pattern)` in Perl, but Vim allows non-fixed-width patterns.  
 
-### Example  
+### Lookback (Matching after a pattern) Example  
 |       **Pattern**      |  **Matches**   |
 |------------------------|-----------------------------------------------------|
 | `\(an\_s\+\)\@<=file`  | "file" after "an" and white space or an end-of-line |
@@ -576,7 +623,7 @@ These six can be used to match specific lines in a buffer.
     * Like `(?<!pattern)` in Perl, but Vim allows non-fixed-width patterns.  
     * This can be a bit slow.  
 
-### Example  
+### Lookback (Match after a non-matching pattern) Example  
 |      **Pattern**     |  **Matches**   |
 |----------------------|---------------------------------------------|
 | `\(foo\)\@<!bar`     | any "bar" that's not in "foobar" |
@@ -593,7 +640,7 @@ These six can be used to match specific lines in a buffer.
 ## Match Excluding the Preceding Atom  
 * `\@=` (or `\&`): Matches the preceding atom with [zero width](#Zero-Width).  
     * Like `(?=pattern)` in Perl.  
-### Example  
+### Lookback (Matching the beginning of a pattern) Example  
 The string: `foobar`
 |     **Pattern**    |    **Matches**    |
 |--------------------|-------------------|
@@ -617,7 +664,7 @@ The string: `foobar`
     * These items are only used to check if a match can be made.  
     * This can be tricky, because a match with following items will  
       be done in the same position.  
-### Example  
+### Zero-Width Matching Example  
 |     **Pattern**     |  **Matches**   |
 |---------------------|----------------|
 | `foo\(bar\)\@=foo`  | nothing        |
@@ -631,7 +678,7 @@ because it tries match `foo` in the **same** position where
         match there: 
     * The next char is the first char of the whole match.  
     * This cannot be followed by a multi. `:h multi`
-### Example  
+### Matching with `\zs` Example  
 |     **Pattern**        |  **Matches**   |
 |------------------------|----------------|
 | `/^\s*\zsif`           | matches an "if" at the start of a line, ignoring white space. |
@@ -644,7 +691,7 @@ because it tries match `foo` in the **same** position where
 * `\ze`: Matches at any position, but not inside [], and sets the end of the  
  match there:  
     * The previous char is the last char of the whole match.  
-### Example  
+### Ending match with `\ze` Example  
 |     **Pattern**        |  **Matches**   |
 |------------------------|----------------|
 | `end\ze\(if\|for\)`    | matches the `end` in `endif` and `endfor`. |
@@ -656,9 +703,9 @@ because it tries match `foo` in the **same** position where
 
 ## Match if Previous Pattern Doesn't Match at the CURRENT Position  
 * `\@!`: Matches with zero width if the preceding atom does NOT match at the  
-         **current** position. |/zero-width|
+         **current** position.  
     * Like `(?!pattern)` in Perl.  
-### Example  
+### Zero-Width Match after Non-Match Example  
 |         **Pattern**       |  **Matches**   |
 |---------------------------|---------------------------------------------|
 | `if \(\(then\)\@!.\)*$`   | `if ` not followed by `then` |
@@ -677,7 +724,7 @@ Use `\(foo\)\@<!bar` (`\@<!`).
 ## Match at the Current Position like a Single Pattern  
 * `\@>` Matches the preceding atom like matching a whole pattern.  
     * Like `(?>pattern)` in Perl.  
-### Example  
+###  Matching with `\@>` Example  
 * The string:  `aaab`
 
 |         **Pattern**        |  **Matches**   |

@@ -2,16 +2,17 @@
 
 # Formatting Text in Vim / Neovim  
 
+
 ## Table of Contents
-* [Formatting Text in Vim / Neovim](#formatting-text-in-vim-/-neovim) 
 * [Keymaps for Formatting](#keymaps-for-formatting) 
     * [Formatting keymaps](#formatting-keymaps) 
 * [Indenting keymaps](#indenting-keymaps) 
-    * [Normal/Visual mode](#normal/visual-mode) 
+    * [Normal/Visual mode](#normalvisual-mode) 
     * [Insert Mode](#insert-mode) 
 * [Easy Formatting](#easy-formatting) 
-* [C-style Indenting](#c-style-indenting) 
+* [C-style Indenting](#cstyle-indenting) 
     * [The cinkeys option](#the-cinkeys-option) 
+
 
 ## Keymaps for Formatting  
 ### Formatting keymaps:  
