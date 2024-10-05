@@ -96,6 +96,40 @@ A command for programatically checking servers (prod-k8s in this example):
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
 
+## Testing Filesystems with Write Tests and Read Tests 
+With bash you can use a `for` loop with the notation `{1..10}` to loop through 1
+and 10.  
+For POSIX compliance, use `seq` for the loop.  
+
+* Write test:
+  ```bash
+  for i in {1..10}; do time dd if=/dev/zero of=/space/testfile_$i bs=1024k count=1000 | tee -a /tmp/speedtest1.basiclvm
+  ```
+
+* Read tests:
+  ```bash
+  for i in seq 1 10; do time dd if=/space/testfile_$i of=/dev/null; done
+  ```
+
+* Cleanup:
+  ```bash
+  for i in seq 1 10; do rm -rf /space/testfile_$i; done
+  ```
+
+
+
+
+## Preserving Positional Line Numbers in Text
+Use `nl` to preserve line numbers.  
+```bash
+cat somefile | nl | grep "search for this"
+```
+This will preserve the line numbers in the output.  
+You can also use the `grep -n` option.  
+```bash
+cat somefile | grep -n "search for this"
+```
+
 
 ## MTU and Using Ping without Fragmentation
 ```bash
