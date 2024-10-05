@@ -66,4 +66,29 @@ By default, mount will use `/etc/fstab` if either `device` or `directory` are om
 * The mount program does not read the `/etc/fstab` file if both `device` and `directory` are given. 
 
 
+## Mounting a File System by Editing `/etc/fstab`
+You can add an entry to `/etc/fstab` and then running `mount -a` to mount a file system.  
+
+* Open `/etc/fstab` to edit:
+  ```bash
+  vi /etc/fstab
+  ```
+
+* Then add:
+  ```bash
+  /dev/mapper/VolGroup-my_lv /space ext4 defaults 0 0
+  ```
+
+* After that, run:
+  ```bash
+  mount -a
+  ```
+
+* Check if the filesystem was mounted:
+  ```bash
+  df -h
+  ```
+
+
+
 
