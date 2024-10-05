@@ -1,8 +1,5 @@
 # Logical Volume Management (LVM)
 
-
-
-
 ## Table of Contents
 * [What is LVM?](#what-is-lvm) 
 * [How does LVM work?](#how-does-lvm-work) 
@@ -17,15 +14,17 @@
     * [Implementing RAID on Logical Volumes with mdadm](#implementing-raid-on-logical-volumes-with-mdadm) 
     * [Creating a Logical Volume from Raw Disks](#creating-a-logical-volume-from-raw-disks) 
 * [Resizing Logical Volumes](#resizing-logical-volumes) 
-* [Tools for Managing Physical Volumes, Volume Groups, and Logical Volumes (PV, VG, LV):](#tools-for-managing-physical-volumes-volume-groups-and-logical-volumes-pv-vg-lv) 
-    * [**Physical Volume Management (PV)**](#physical-volume-management-pv) 
-    * [Volume Group Management (VG)](#volume-group-management-vg) 
-    * [**Logical Volume Management (LV)**](#logical-volume-management-lv) 
-    * [More LVM Actions](#more-lvm-actions) 
-        * [Check available free space in a volume group](#check-available-free-space-in-a-volume-group) 
-        * [Filesystem resizing](#filesystem-resizing) 
-        * [LVM snapshots](#lvm-snapshots) 
-        * [LVM Thin Provisioning](#lvm-thin-provisioning) 
+* [Tools for Managing Physical Volumes, Volume Groups, and Logical Volumes (PV, VG, LV)](#tools-for-managing-physical-volumes-volume-groups-and-logical-volumes-pv-vg-lv) 
+    * [Physical Volume Management](#physical-volume-management) 
+    * [Volume Group Management](#volume-group-management) 
+    * [Logical Volume Management](#logical-volume-management) 
+    * [Other Useful LVM Commands](#other-useful-lvm-commands) 
+* [More LVM Actions](#more-lvm-actions) 
+    * [Check available free space in a volume group](#check-available-free-space-in-a-volume-group) 
+    * [Filesystem resizing](#filesystem-resizing) 
+    * [LVM snapshots](#lvm-snapshots) 
+    * [LVM Thin Provisioning](#lvm-thin-provisioning) 
+* [Reverting a Logical Volume back to Raw Disks](#reverting-a-logical-volume-back-to-raw-disks) 
 
 
 
@@ -77,11 +76,18 @@ For more indepth info on these, see [this section](#tools-for-managing-physical-
   ```
     * `-n`: Name of the LV
     * `-L`: Size of the LV
+    * Use `-l +100%FREE` to use all available space in the VG.  
+        * `man://lvcreate 558`
+    * The `-L` (`--size`) and `-l` (`--extents`) options are alternate methods of specifying size.
 * `lvcreate --snapshot`: Creates a snapshot of a LV
   ```bash
   sudo lvcreate --size 1G --snapshot --name my_snapshot /dev/my_volume_group/my_logical_volume
   ```
-    
+    * This creates only a 1 gig snapshot of the LV.  
+    * For a snapshot, the size can be expressed with `-l` as a percentage of the total 
+      size of the origin LV with the suffix `%ORIGIN` (`100%ORIGIN` provides space for the 
+      whole origin).
+
 * `lvextend`: Increases the size of LV
 * `lvreduce`: Decreases the size of LV
 
@@ -232,7 +238,7 @@ You can both extend or reduce the size of a logical volume.
 
 ## Tools for Managing Physical Volumes, Volume Groups, and Logical Volumes (PV, VG, LV):
 
-### **Physical Volume Management (PV)**
+### Physical Volume Management 
 
 * `pvcreate`: Initializes a physical volume for use by LVM.
   ```bash
@@ -262,7 +268,7 @@ You can both extend or reduce the size of a logical volume.
   sudo vgreduce myvg /dev/sdb1
   ```
 
-### Volume Group Management (VG)
+### Volume Group Management 
 
 * `vgcreate`: Creates a volume group using one or more physical volumes.
   ```bash
@@ -316,7 +322,7 @@ You can both extend or reduce the size of a logical volume.
    sudo vgmerge myvg1 myvg2
    ```
 
-### **Logical Volume Management (LV)**
+### Logical Volume Management 
 
    - `lvcreate`: Creates a logical volume from a volume group. You can specify the size and the name for the logical volume.
      - Example:
@@ -350,7 +356,7 @@ You can both extend or reduce the size of a logical volume.
        sudo lvdisplay /dev/mapper/myvg-mylv
        ```
 
-4. Other Useful LVM Commands
+### Other Useful LVM Commands
 
    - `lvmdiskscan`: Scans for all storage devices and shows their suitability for use as physical volumes in LVM.
      - Example:
@@ -419,6 +425,50 @@ is allocated only when data is written.
  ```
 
 ---
+
+
+
+## Reverting a Logical Volume back to Raw Disks
+1. Backup data. Removing a logical volume is destructive and irreversible.  
+
+2. Identify the LV, VG, and PGs
+   ```bash
+   lvdisplay
+   vgdisplay
+   pvdisplay
+   ```
+
+3. Unmount the LV 
+   ```bash
+   umount /dev/mapper/myvg-mylv
+   # or
+   umount /dev/myvg/mylv
+   ```
+   Also remove the entry in `/etc/fstab`
+
+4. Remove the LV
+   ```bash
+   lvremove /dev/mapper/myvg-mylv
+   # or
+   lvremove /dev/myvg/mylv
+   ```
+
+5. Remove the VG
+   ```bash
+   vgremove myvg
+   ```
+
+6. Remove the PVs
+   ```bash
+   pvremove /dev/xda  # Replace with the PVs you want to remove
+   ```
+
+7. (Optional) Wipe the disk to return it to a raw state.  
+   `wipefs -a` will return the disk to a raw, unpartitioned state.  
+   `dd` can also be used to do this.  
+   ```bash
+   wipefs -a /dev/xda
+   ```
 
 
 
