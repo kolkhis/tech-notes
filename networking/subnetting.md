@@ -81,6 +81,7 @@ Class C IP addresses have the first three bits of the first octet set to `110`.
     * For each 8 network bits an IP has, one of the numbers is reserved for the  
       network.  
 
+### Host Bits
 For example, in `192.168.1.0/24`, only the last number can be used for hosts.  
 * The first number (`192` the first 8 network bits) is reserved for the network.  
 * The second number (`168` the next 8 network bits) is reserved for the network.  
@@ -406,6 +407,12 @@ are `2^(32 - 24) - 2 = 254` usable host addresses.
         * The network (N) portions are represented by 1s  
         * The subnet  (S) portions are represented by 1s  
         * The host (H) portion is represented by 0s  
+
+Steps to Calculate the Subnet Mask
+1. Determine the number of bits used for the subnet mask (from the CIDR notation). 
+2. Set the corresponding number of bits to `1` (starting from the left), followed 
+   by `0`s for the remaining bits. 
+3. Convert the binary subnet mask into decimal format for easy representation.
 
 ### Checking for the Right Number of Bits 
 ```bash  
