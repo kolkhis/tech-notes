@@ -1,19 +1,20 @@
 
 # Useful Ex Commands  
 
+
 ## Table of Contents
 * [Line Numbers in the Command Line](#line-numbers-in-the-command-line) 
 * [Filter](#filter) 
     * [Filtering Example](#filtering-example) 
-* [How Bangs `!` in the Command Line are Expanded](#how-bangs-!-in-the-command-line-are-expanded) 
+* [How Bangs `!` in the Command Line are Expanded](#how-bangs--in-the-command-line-are-expanded) 
 * [Buffer List](#buffer-list) 
     * [Buffer Types](#buffer-types) 
 * [Quickfix List](#quickfix-list) 
 * [Location List](#location-list) 
 * [Searching with :vimgrep or :vim](#searching-with-vimgrep-or-vim) 
-* [++opt - Options/Flags for Ex Commands](#++opt---options/flags-for-ex-commands) 
+* [++opt - Options/Flags for Ex Commands](#opt--optionsflags-for-ex-commands) 
 * [Browsing the List of Options](#browsing-the-list-of-options) 
-    * [`ex-flags`](#ex-flags) 
+    * [`ex-flags`](#exflags) 
 * [Ex Commands for Inputting Text](#ex-commands-for-inputting-text) 
 * [Redirecting the Output of Ex Commands](#redirecting-the-output-of-ex-commands) 
     * [Redirect Ex command output into a file](#redirect-ex-command-output-into-a-file) 
@@ -22,7 +23,7 @@
     * [Redirect Ex command output into variables](#redirect-ex-command-output-into-variables) 
 * [Using the Filter Command](#using-the-filter-command) 
 * [Useful for Scripting](#useful-for-scripting) 
-    * [Insert Mode / Replace Mode](#insert-mode-/-replace-mode) 
+    * [Insert Mode / Replace Mode](#insert-mode--replace-mode) 
     * [Reading Files](#reading-files) 
 * [Pasting text](#pasting-text) 
 * [Ex special characters](#ex-special-characters) 

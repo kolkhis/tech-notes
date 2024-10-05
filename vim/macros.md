@@ -1,15 +1,15 @@
 
 # Macros in Vim  
 
+
 ## Table of Contents
-* [Macros in Vim](#macros-in-vim) 
 * [Recording a Macro](#recording-a-macro) 
 * [Paste a Recorded Macro](#paste-a-recorded-macro) 
 * [Repeating Macro](#repeating-macro) 
 * [Apply Macro to a Visual Selection](#apply-macro-to-a-visual-selection) 
 * [Some keymaps](#some-keymaps) 
-* [tl;dr: Recursive Macros](#tl;dr-recursive-macros) 
-* [Recursive Macros (more detailed)](#recursive-macros-(more-detailed)) 
+* [tl;dr: Recursive Macros](#tldr-recursive-macros) 
+* [Recursive Macros (more detailed)](#recursive-macros-more-detailed) 
 * [Making a Numbered List Using Macros](#making-a-numbered-list-using-macros) 
 * [Etc](#etc) 
 

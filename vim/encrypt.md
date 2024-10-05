@@ -1,8 +1,7 @@
 # Encryption with Vim
 
 ## Table of Contents
-* [Encryption with Vim](#encryption-with-vim) 
-* [tl;dr](#tl;dr) 
+* [tl;dr:](#tldr) 
 * [Help Page](#help-page) 
 
 ## tl;dr:

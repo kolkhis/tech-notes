@@ -6,14 +6,15 @@ would have traversed, and put them in the Ex command line.
 E.g., `!}` at the top of a paragraph will put the whole paragraph selection  
 into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).  
 
+
 ## Table of Contents
-* [Vim Keybindings, Hotkeys & Shortcuts](#vim-keybindings-hotkeys-&-shortcuts) 
+* [Quickref](#quickref) 
 * [Making Custom Keybindings](#making-custom-keybindings) 
     * [Mapping Modes](#mapping-modes) 
     * [Special Mapping Arguments](#special-mapping-arguments) 
-    * [Clearing / Deleting Mappings](#clearing-/-deleting-mappings) 
+    * [Clearing / Deleting Mappings](#clearing--deleting-mappings) 
 * [Normal Mode](#normal-mode) 
-    * [Insert text at the same position on the line below/above](#insert-text-at-the-same-position-on-the-line-below/above) 
+    * [Insert text at the same position on the line below/above](#insert-text-at-the-same-position-on-the-line-belowabove) 
     * [Toggling Case](#toggling-case) 
     * [Editing Motions](#editing-motions) 
     * [Macros](#macros) 
@@ -23,8 +24,8 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
     * [Insert Mode Completion](#insert-mode-completion) 
 * [Visual Mode](#visual-mode) 
     * [Basic Operations](#basic-operations) 
-    * [Highlingting Around (Inclusive)](#highlingting-around-(inclusive)) 
-    * [Highlingting Inside (Non-Inclusive)](#highlingting-inside-(non-inclusive)) 
+    * [Highlingting Around (Inclusive)](#highlingting-around-inclusive) 
+    * [Highlingting Inside (Non-Inclusive)](#highlingting-inside-non-inclusive) 
 * [Select mode](#select-mode) 
     * [Commands in Select mode](#commands-in-select-mode) 
 * [Ex Mode](#ex-mode) 
@@ -33,11 +34,11 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
     * [Ex Mode Completion](#ex-mode-completion) 
     * [Quick Insertion](#quick-insertion) 
 * [Netrw](#netrw) 
-    * [View / Opening Files](#view-/-opening-files) 
+    * [View / Opening Files](#view--opening-files) 
     * [Browsing](#browsing) 
     * [Modifying Files](#modifying-files) 
     * [Bookmarks](#bookmarks) 
-    * [File Display / Information](#file-display-/-information) 
+    * [File Display / Information](#file-display--information) 
 
 
 

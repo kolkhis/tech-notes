@@ -3,7 +3,7 @@
 
 
 ## Table of Contents
-* [Special Characters (Diagraphs)](#special-characters-(diagraphs)) 
+* [Special Characters (Diagraphs)](#special-characters-diagraphs) 
 * [Omnicomplete](#omnicomplete) 
 * [Netrw](#netrw) 
 * [Tags](#tags) 
@@ -15,9 +15,10 @@
     * [More Tab Options](#more-tab-options) 
         * [Formatting Options For `gq`](#formatting-options-for-gq) 
     * [Undo Options](#undo-options) 
-* [Misc `:!{cmd}` Notes](#misc-!cmd-notes) 
+* [Misc `:!{cmd}` Notes](#misc-cmd-notes) 
 * [Recursive Macros](#recursive-macros) 
-* [Using the `=` Register for Formulas](#using-the-=-register-for-formulas) 
+    * [More from the author of the Recursive macro tip](#more-from-the-author-of-the-recursive-macro-tip) 
+* [Using the `=` Register for Formulas](#using-the--register-for-formulas) 
 * [Function author for a quick search type thing](#function-author-for-a-quick-search-type-thing) 
 * [Help Sections to Read Up On](#help-sections-to-read-up-on) 
 
@@ -166,18 +167,18 @@ Repeat last ":!{cmd}".
     :!!  
 
 ## Recursive Macros
-* <Position my cursor where I want to make the first change>  
+* Position my cursor where I want to make the first change  
 * `qa` - start recording into register 'a'
-* <Make all my changes, doing it in a way that should apply cleanly to all locations>
+* Make all my changes, doing it in a way that should apply cleanly to all locations
 * `q` - stop recording
-* <Position cursor on next location I want changed>
+* Position cursor on next location I want changed
 * `@a` - run the macro to test and make sure it works as intended
 * `qA` - start recording to append to macro register 'a'
-* <Move cursor to next location to change>
+* Move cursor to next location to change
 * `@a`
 * `q`
 
-#### More from the author of the Recursive macro tip
+### More from the author of the Recursive macro tip
 Now, if I call it again, register 'a' contains a macro that does my change, moves to the next spot, and then calls itself again.  
 It will run repeatedly until it encounters an error.  
 This could be trying to move past the end of the buffer, finding no matches for a search, search hitting the end of buffer if 'nowrapscan' is set, or any other command failure indicating all the changes are complete.  
