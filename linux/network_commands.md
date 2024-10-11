@@ -45,12 +45,14 @@ Used for configuring network interfaces.
 ifconfig -a # List all interfaces and their status
 ```
 
+
 ### `route`
 ##### Deprecated in favor of [`ip route`](#ip).
 Used to view and manipulate the IP routing table.
 ```bash
 route -n # Display the routing table
 ```
+
 
 ### `netstat`
 ##### Considered deprecated in favor of [`ss`](#ss).
@@ -59,12 +61,14 @@ Shows network status, listening ports, and routing tables.
 netstat -tulnp # Show listening TCP and UDP ports with process IDs
 ```
 
+
 ### `ss`
 Replaces `netstat`.
 Used to display various network socket statistics.
 ```bash
-ss -tuln # List listening TCP and UDP ports
+ss -tulnp # List listening TCP and UDP ports
 ```
+
 
 ### `ping`
 Sends `ICMP ECHO_REQUEST` packets to network hosts.
@@ -72,17 +76,20 @@ Sends `ICMP ECHO_REQUEST` packets to network hosts.
 ping -c 4 google.com # Ping google.com 4 times
 ```
 
+
 ### `traceroute`
 Prints the route packets take to a network host.
 ```bash
 traceroute google.com
 ```
 
+
 ### `mtr`
 Combines the functionality of `traceroute` and `ping`. It provides continuous traceroute and ping statistics.
 ```bash
 mtr google.com
 ```
+
 
 ### `nc` (`netcat`)
 Swiss army knife for TCP/IP.
@@ -92,11 +99,13 @@ nc -l 1234          # Listen on port 1234
 nc example.com 1234 # Connect to example.com on port 1234
 ```
 
+
 ### `curl`
 Tool to transfer data from or to a server. Supports various protocols.
 ```bash
 curl https://example.com
 ```
+
 
 ### `wget`
 Similar to `curl`, used to download files from the web.
@@ -104,6 +113,7 @@ Similar to `curl`, used to download files from the web.
 wget https://example.com/file.txt  # Download file.txt
 wget -O remote_file.txt https://example.com/file.txt # save the file to remote_file.txt
 ```
+
 
 ### `dig`
 DNS lookup utility.
@@ -135,10 +145,15 @@ DNS lookup utility, simpler than `dig`.
 host example.com
 ```
 
+
 ## Choosing Which Tool to Use
 
 * For modern systems, prefer using `ip` over `ifconfig` and `route`,
   and `ss` over `netstat` for updated functionalities.
+    * Replacement for `ifconfig` is `ip addr`
+    * Replacement for `netstat` is `ss`.  
+    * Replacement for `netstat -i`: `ip -s link`.
+    * Replacement for `netstat -g` is `ip maddr`.
 
 * DNS Troubleshooting: Use `dig`, `host`, and `nslookup` for diagnosing DNS 
   issues.  
