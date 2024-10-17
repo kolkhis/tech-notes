@@ -102,6 +102,7 @@ Awk recognizes two types of separators:
 
 1. The field separator, which is the character or string that 
    separates **fields** (columns) in a record.  
+    * Also called the delimiter.  
 
 2. The record separator, which is the character or string that  
     separates **records** (lines) in a file.  
@@ -113,7 +114,7 @@ Awk recognizes two types of separators:
 awk -F: '{print($1)}' /etc/passwd  
 ```
 **Note**: Parentheses are optional for the `print` function.  
-* You can also specify a new field separator from within the `awk` program, using 
+* You can also specify a new field separator or delimiter from within the `awk` program, using 
   the `BEGIN` block:  
     ```bash  
     awk 'BEGIN { FS=":" } {print($1)}' /etc/passwd  
@@ -219,7 +220,7 @@ awk '{ for(i=1; 1<=NF; i++) print($i); }' file.txt
 
 ## Conditionals in Awk
 
-### 1. Relational Operators
+### Relational Operators
 
 Relational operators compare two values or expressions.  
 awk supports the following relational operators: 
