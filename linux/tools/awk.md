@@ -147,8 +147,15 @@ awk 'BEGIN {FS=":"} {print $1, $2}' /etc/passwd
 These are builtin variables in awk:  
 * `FS`: Field separator variable (default is whitespace).  
 * `OFS`: Output field separator (default is a space).  
-* `NR`: Number of the current record.  
+* `NR`: Number of the current record (line).  
 * `NF`: Number of fields in the current record.  
+    * This can be used to print the last field in a line when we don't know how many
+      fields there are.
+      ```bash
+      cat somefile | awk '{ print $NF }'
+      ```
+      If there are 7 fields, `NF` holds the value 7. So, `$NF` is equivalent to `$7`.  
+
 
 ### Line Variables (Field Variables)  
 
