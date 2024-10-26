@@ -19,6 +19,31 @@ Commands for user management:
 | `gpasswd`  | Change the password or membership of groups
 
 
+### Creating and modifying users
+```bash
+useradd username  # Add a new user
+usermod -aG groupname username  # Add user to a supplementary group
+userdel username  # Delete a user account
+passwd username  # Set or change password for a user
+groupadd groupname  # Add a new group
+groupdel groupname  # Delete a group
+id username  # Display user and group IDs
+whoami  # Display your current username
+su - username  # Switch to another user account
+sudo command  # Run command as superuser (or another user)
+```
+
+### Permissions and ownership
+```bash
+ls -l filename  # View file permissions
+chmod 644 file  # Change permissions (owner=read/write, group=read, others=read)
+chown user:group file  # Change owner and group of a file
+chgrp groupname file  # Change the group ownership of a file
+umask 022  # Set default file permissions for new files
+```
+
+
+
 ## Creating a New User
 
 To create a new user using commands, use `useradd`:  
@@ -119,4 +144,14 @@ One other file is used to store the hashing algorithm:
 
 ### `/etc/login.defs`
 
+
+
+### Permissions and Ownership
+```bash
+ls -l filename  # View file permissions
+chmod 644 file  # Change permissions (owner=read/write, group=read, others=read)
+chown user:group file  # Change owner and group of a file
+chgrp groupname file  # Change the group ownership of a file
+umask 022  # Set default file permissions for new files
+```
 
