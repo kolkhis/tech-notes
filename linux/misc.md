@@ -1,7 +1,6 @@
 # Miscellaneous Linux Notes  
 
 
-
 ## Table of Contents
 * [Tools](#tools) 
     * [Cybersecurity Tools to Check Out](#cybersecurity-tools-to-check-out) 
@@ -58,8 +57,16 @@
 * [Different Colors for `less` Output](#different-colors-for-less-output) 
     * [Termcap String Capabilities](#termcap-string-capabilities) 
     * [Other Options for `less`](#other-options-for-less) 
-
-
+* [MEF (Metro Ethernet Framework)](#mef-metro-ethernet-framework) 
+* [Finding Environment Variables](#finding-environment-variables) 
+* [Important Linux Commands for Sysadmins](#important-linux-commands-for-sysadmins) 
+    * [Getting general information about the system](#getting-general-information-about-the-system) 
+    * [Package Management commands](#package-management-commands) 
+        * [For **Debian-based systems** (like Ubuntu)](#for-debian-based-systems-like-ubuntu) 
+        * [For **Red Hat-based systems** (like CentOS, Fedora)](#for-red-hat-based-systems-like-centos-fedora) 
+    * [Process Management Commands](#process-management-commands) 
+    * [System Monitoring and Logging Commands](#system-monitoring-and-logging-commands) 
+    * [Network Management Commands](#network-management-commands) 
 
 
 Terminology:  
@@ -684,15 +691,15 @@ It's a database used by Terminal Control Libraries (e.g., `ncurses`) to manage c
 and other terminal features.  
 
 Some of the modes that you can use to colorize output:  
-* `me`: End all "modes" (like `so`, `us`, `mb`, `md`, and `mr`)  
 * `so`: Start standout mode  
-* `md`: Start bold mode  
-* `us`: Start underlining  
-* `mb`: Start blinking  
-* `ue`: End underlining  
 * `se`: End standout mode  
+* `us`: Start underlining  
+* `ue`: End underlining  
+* `md`: Start bold mode  
+* `mb`: Start blinking  
 * `mr`: Start reverse mode  
 * `mh`: Start half bright mode  
+* `me`: End all "modes" (like `so`, `ue`, `us`, `mb`, `md`, and `mr`)  
 
 
 
@@ -708,5 +715,104 @@ export LESS="-FXR"
     * Disables sending the termcap initialization and deinitialization strings to the terminal.  
     * The initialization string is sent when `less` starts. This causes the terminal  
       to be cleared.  The deinitialization string does the same thing.  
+
+
+
+## MEF (Metro Ethernet Framework)
+MEF is a protocol that allows you to connect multiple Ethernet devices to a 
+single Ethernet port.  
+
+
+## Finding Environment Variables
+Print out environment variables line-by-line:  
+```bash
+env
+printenv
+```
+These two commands will output the same variables.  
+
+
+## Important Linux Commands for Sysadmins
+### Getting general information about the system
+Use `lshw` to list the hardware on the system
+```bash
+lshw  # List the hardware on the system
+lscpu # List the CPU information
+uname -a  # Get information about the system (kernel, version, hostname, etc)
+who  # Shows who is logged into the system
+w    # More detailed version of 'who'
+last # Show the last users to log into the system (prints in reverse)
+cat /etc/*release  # Get information about the operating system
+cat /proc/cmdline  # Get the kernel command line arguments (boot parameters, boot image)
+ethtool  # Show info on the network interfaces
+ip a     # Show info on the network interfaces
+ip r     # Show the routing table (shows network gateway)
+lsblk    # List the block devices on the system (disk info)
+blkid    # Show the UUIDs of the block devices (or a specific block device)
+ps       # Show running processes on the system
+pstree   # Show the processes running in a tree
+df -h    # Show disk usage (-h is human-readable)
+free -h  # Show memory usage
+du -sh /dir  # Show the disk usage of a specific directory
+```
+
+### Package Management commands
+#### For **Debian-based systems** (like Ubuntu):
+```bash
+apt update  # Update package lists
+apt upgrade  # Upgrade all packages
+apt install package  # Install a package
+apt remove package  # Remove a package
+dpkg -i package.deb  # Install a .deb package manually
+dpkg -r package  # Remove a package
+dpkg -l  # List all installed packages
+```
+
+#### For **Red Hat-based systems** (like CentOS, Fedora):
+```bash
+yum update  # Update packages
+yum install package  # Install a package
+yum remove package  # Remove a package
+rpm -ivh package.rpm  # Install an .rpm package manually
+rpm -qa  # List all installed packages
+```
+
+
+
+### Process Management Commands
+```bash
+ps aux     # View all processes
+top        # Interactive process viewer
+htop       # Enhanced interactive process viewer (often pre-installed)
+kill PID   # Kill a process by PID
+killall processname  # Kill all instances of a process by name
+pkill -u username  # Kill all processes from a specific user
+nice -n 10 command  # Start a command with a priority (lower values = higher priority)
+renice -n 10 -p PID  # Change the priority of an existing process
+```
+
+### System Monitoring and Logging Commands
+```bash
+dmesg | less  # View boot and kernel-related messages
+journalctl    # Query the systemd journal logs
+tail -f /var/log/syslog  # Follow system logs in real-time
+uptime        # Show how long the system has been running
+vmstat 5      # Display memory, CPU, and I/O statistics every 5 seconds
+iostat 5      # Display disk I/O statistics every 5 seconds
+```
+
+### Network Management Commands
+```bash
+ping hostname_or_IP  # Test connectivity to another host
+nslookup hostname  # Query DNS for a host
+traceroute hostname  # Trace the route packets take to reach a host
+netstat -tuln  # Show open ports and connections
+ss -tuln       # Similar to netstat; show listening sockets and ports
+iptables -L    # View firewall rules
+firewalld-cmd --list-all  # View firewalld rules (CentOS/RedHat)
+curl url       # Transfer data from or to a server
+wget url       # Download files from the internet
+scp file user@remote:/path  # Securely copy files to a remote system
+```
 
 
