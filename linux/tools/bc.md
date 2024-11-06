@@ -40,6 +40,30 @@ i.e., `+=`, `*=`, `/=`, etc..
 | `-q, --quiet`       | Do not print the normal GNU bc welcome.          |
 | `-v, --version`     | Print the version number and copyright and quit. |
 
+Using `-l` will give a more precise decimal result:  
+```bash
+echo "(79 + 79 + 80 + 80 + 45) / 5" | bc
+# 72
+echo "(79 + 79 + 80 + 80 + 45) / 5" | bc -l
+# 72.60000000000000000000
+```
+
+## Passing Strings to `bc`
+Some strings passed to `bc` will change the way it behaves.  
+* `scale=2;` sets the decimal precision to 2 decimal places.  
+```bash
+echo "scale=2;10/3" | bc
+# 3.33
+```
+* `ibase` and `obase`: Set the input base and output base (for base number conversion).  
+    * Useful for converting binary, octal, decimal, and hexadecimal numbers.  
+```bash
+echo "ibase=16;obase=2; A" | bc  # Convert A from hexadecimal to binary
+# 1010
+echo "ibase=10;obase=8; 160" | bc  # Convert 160 from deciaml to octal
+# 240
+```
+
 
 ## Converting Celsuis to Fahrenheit  
 
