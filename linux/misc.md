@@ -1,6 +1,5 @@
 # Miscellaneous Linux Notes  
 
-
 ## Table of Contents
 * [Tools](#tools) 
     * [Cybersecurity Tools to Check Out](#cybersecurity-tools-to-check-out) 
@@ -72,11 +71,16 @@
     * [Parameter Transformation Operators](#parameter-transformation-operators) 
     * [Multiple Parameter Transformation Operators](#multiple-parameter-transformation-operators) 
     * [Parameter Transformation Examples](#parameter-transformation-examples) 
+* [Checking the Operating System with the `OSTYPE` Variable](#checking-the-operating-system-with-the-ostype-variable) 
+* [Patching Linux Systems](#patching-linux-systems) 
+    * [Updating Linux Boxes in Enterprise Environments](#updating-linux-boxes-in-enterprise-environments) 
+    * [System Update Strategy](#system-update-strategy) 
+    * [Scheduling System Updates](#scheduling-system-updates) 
+    * [Automating System Updates](#automating-system-updates) 
+    * [System Patching Compliance and Security](#system-patching-compliance-and-security) 
+    * [Testing System Updates](#testing-system-updates) 
+    * [Updating Linux Boxes, tl;dr](#updating-linux-boxes-tldr) 
 
-
-
-Terminology:  
-* RCA = Root Cause Analysis  
 
 ## Tools  
 ### Cybersecurity Tools to Check Out  
@@ -696,6 +700,8 @@ Termcap stands for "Terminal Capability".
 It's a database used by Terminal Control Libraries (e.g., `ncurses`) to manage colors 
 and other terminal features.  
 
+You can use `LESS_TERMCAP_**` to add colors to `less` output in the terminal (where
+`**` are two letters that indicate a mode).  
 Some of the modes that you can use to colorize output:  
 * `so`: Start standout mode  
 * `se`: End standout mode  
@@ -706,7 +712,14 @@ Some of the modes that you can use to colorize output:
 * `mr`: Start reverse mode  
 * `mh`: Start half bright mode  
 * `me`: End all "modes" (like `so`, `ue`, `us`, `mb`, `md`, and `mr`)  
-
+E.g.:
+```bash
+export LESS="-FXR"  # Add default options for less
+export LESS_TERMCAP_mb="[35m" # magenta
+export LESS_TERMCAP_md="[33m" # yellow
+export LESS_TERMCAP_me=""      # "0m"
+export LESS_TERMCAP_se=""      # "0m"
+```
 
 
 
@@ -938,5 +951,68 @@ echo "${array[@]^}"   # Capitalize each array element: "One Two Three"
 files=("file1.txt" "*.sh")
 echo "${files[@]^}"   # Expands "*.sh" to match any shell scripts in the directory
 ```
+
+## Checking the Operating System with the `OSTYPE` Variable
+Use `OSTYPE` instead of `uname` for checking the operating system. 
+* This is an environment variable. On Ubuntu Server (or any Linux distro), it will have the value `linux-gnu`.  
+* This saves you from making an external call to the shell (with `uname`).  
+
+
+## Patching Linux Systems
+How you go about patching/updating systems in Linux depends on if the node is
+stateful or stateless. 
+* A stateful node retains its state, data, and specific configurations across session
+  and reboots.  
+* A stateless node is ephemeral. This means that it does not retain state, data, or
+  configurations across sessions.
+    * Stateless nodes are easier to scale and redeploy with updated versions.
+
+### Updating Linux Boxes in Enterprise Environments
+
+* Stateful nodes need to be patched.
+    * This is because stateful nodes retain data and specific configurations that persist across reboots.  
+* Updating and patching these nodes ensures security vulnerabilities are fixed and that software is up to date while maintaining the state and data.  
+* Patching is crucial here since these nodes can’t simply be replaced without data loss or complex migration.
+
+* Stateless nodes typically aren’t patched directly.
+* Stateless nodes don’t retain data or configuration once they’re restarted or terminated; they’re often part of horizontally scaled environments (like microservices or containerized applications).  
+* Instead of patching, stateless nodes are redeployed with a new image that includes all updates and patches.  
+* This approach allows for easy replacement and minimizes downtime.
+
+---
+
+### System Update Strategy
+* Rolling Updates: For services that require high availability, rolling updates allow nodes to be updated in a staggered manner.  
+    * This minimizes downtime by ensuring that some nodes remain available while others are updated.
+* Blue-Green Deployment: For stateless applications, a blue-green deployment can be used.  
+    * Deploy the updated image to a “blue” environment while the “green” environment continues serving traffic.  
+    * Once validated, switch all traffic to the blue environment.
+* Canary Releases: Deploy updates to a small subset of nodes initially to monitor for issues before rolling out to the full environment.
+
+### Scheduling System Updates
+* Non-Peak Hours: Schedule updates during off-peak hours to reduce the impact on end-users.
+* Maintenance Windows: Use designated maintenance windows approved by stakeholders to ensure updates do not interfere with critical operations.
+
+### Automating System Updates
+* Use configuration management tools like Ansible, Chef, or Puppet to automate patching and updating of stateful nodes.
+* For stateless nodes, use CI/CD pipelines to automate the creation and deployment of new images with the latest updates.
+
+### System Patching Compliance and Security:
+* Compliance: Regular updates are often required to maintain compliance with security standards (e.g., PCI-DSS, HIPAA).  
+    * Ensure systems are patched according to these standards.
+* Vulnerability Management: Use tools like OpenSCAP or Lynis for vulnerability scanning to ensure updates address all known vulnerabilities.
+* Audit Logs: Keep detailed logs of updates and patches applied to ensure traceability and accountability for changes in the environment.
+
+### Testing System Updates:
+* Always test updates in a staging environment that mirrors production.
+    * This is to ensure compatibility and identify potential issues before applying them in production.
+* Have a rollback plan.
+    * For each update, have a rollback plan in case of failures, especially for stateful systems where data integrity is critical.
+
+### Updating Linux Boxes, tl;dr
+* Stateful nodes require patching due to their persistent state and data.
+* Stateless nodes are usually replaced with updated images, avoiding direct patching.
+* Automate and schedule updates to minimize impact and maintain consistency.
+* Ensure testing, compliance, and logging to meet enterprise standards and maintain system reliability.
 
 
