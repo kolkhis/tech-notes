@@ -1517,12 +1517,12 @@ Redirect first, then do `2>&1`.
 The order of redirections is significant:  
 ```bash  
 # GOOD  
-ls > dirlist 2>&1  
+ls > dirlist 2>&1  # Do it this way!
 ```
 directs both standard output and standard error to the file `dirlist`, while the command  
 ```bash  
 # BAD  
-ls 2>&1 > dirlist  
+ls 2>&1 > dirlist  # Don't do it this way!
 ```
 directs  only  the  standard output to file `dirlist`, because the standard error was duplicated  
 from the standard output before the standard output was redirected to `dirlist`.  
