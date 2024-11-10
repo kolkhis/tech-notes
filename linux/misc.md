@@ -85,6 +85,7 @@
 ## Tools  
 ### Cybersecurity Tools to Check Out  
 * `pfsense` - A tool for authentication  
+* `fail2ban` - Ban IPs that fail to login too many times
 * `OpenSCAP` - benchmarking tool  
 * `nmap`  
     * `nmap` maps the server if you don't have permissions  
@@ -1014,5 +1015,7 @@ stateful or stateless.
 * Stateless nodes are usually replaced with updated images, avoiding direct patching.
 * Automate and schedule updates to minimize impact and maintain consistency.
 * Ensure testing, compliance, and logging to meet enterprise standards and maintain system reliability.
+
+
 
 
