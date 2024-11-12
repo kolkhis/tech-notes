@@ -6,6 +6,7 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
 
 ## Table of Contents
 * [Podman Cheatsheet](#podman-cheatsheet) 
+* [Building a Container from a Dockerfile](#building-a-container-from-a-dockerfile) 
 * [Running a Container with Podman (Apache HTTP Server)](#running-a-container-with-podman-apache-http-server) 
 * [Stopping a Container](#stopping-a-container) 
 * [Avoiding Port Conflicts](#avoiding-port-conflicts) 
@@ -13,10 +14,17 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
     * [Containers](#containers) 
     * [Pods](#pods) 
 * [List of Podman Commands](#list-of-podman-commands) 
+* [Managing Image Storage with Podman](#managing-image-storage-with-podman) 
+    * [Podman Storage Configuration File](#podman-storage-configuration-file) 
+    * [Directory Structure in `/varlib/containers/storage`](#directory-structure-in-varlibcontainersstorage) 
+
 
 
 ## Podman Cheatsheet
 ```bash
+cd /var/lib/containers/storage/      # Where container images are stored
+vi /var/lib/containers/storage.conf  # Edit the storage configuration file.  
+
 # Basic Container Commands
 podman ps                       # Show running containers
 podman ps -a                    # Show all containers (including stopped ones)
@@ -26,6 +34,7 @@ podman restart 'container'      # Restart a container
 podman rm 'container'           # Remove a stopped container
 podman rm -f 'container'        # Force remove a running container
 podman logs 'container'         # Show logs for a container
+podman build -t imageName .     # Build a container image from a Dockerfile (in the . directory)
 
 # Running Containers
 podman run 'image'              # Run a container from an image
@@ -69,6 +78,40 @@ podman system df                # Show disk usage information for Podman
 podman version                  # Show Podman version
 podman info                     # Display system-level information about Podman
 ```
+
+## Building a Container from a Dockerfile
+* [Source: Docker Documentation](https://docs.docker.com/build/concepts/dockerfile/#dockerfile-syntax)
+
+Building a container image from a Dockerfile is done using `podman build`.  
+1. Make a Dockerfile in a directory.  
+   ```Dockerfile
+   # syntax=docker/dockerfile:1
+   # Get the base image
+   FROM ubuntu:22.04
+    
+   # Install dependencies (environment setup)
+   RUN apt-get update && apt-get install -y python3 python3-pip
+   RUN pip install flask==3.0.*
+   
+   # Copy files from the local directory into the container
+   COPY hello.py /
+    
+   # Set environment variables
+   ENV FLASK_APP=hello
+   # Expose port 8000 to the host machine
+   EXPOSE 8000
+   # Set the command to run when the container starts
+   CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8000"]
+   ```
+
+2. Build the container image from the Dockerfile.  
+   ```bash
+   podman build -t kol_hello .
+   # or, to add a tag
+   podman build -t kol_hello:latest .
+   ```
+    * `-t kol_hello`: Specify a name and tag for the image. The tag is optional.  
+    * `.`: Specifies the path to the directory containing the Dockerfile.  
 
 
 ## Running a Container with Podman (Apache HTTP Server)
@@ -227,4 +270,84 @@ containers to function as a single unit.
 | `podman version`     |  Display the Podman version information.
 | `podman volume`      |  Simple management tool for volumes.
 | `podman wait`        |  Wait on one or more containers to stop and print their exit codes.
+
+
+## Managing Image Storage with Podman
+Podman images are stored locally after being pulled from a registry
+* `/var/lib/containers/storage/`: The default storage location for images.  
+
+To check Podman's active storage location:
+```bash
+podman info --format "{{.Store.GraphRoot}}"
+```
+
+### Podman Storage Configuration File
+[Source: Oracle](https://docs.oracle.com/en/operating-systems/oracle-linux/podman/podman-ConfiguringStorageforPodman.html)  
+
+You can configure how Podman stores images and containers by editing the `storage.conf`
+configuration file.  
+
+* `/etc/containers/storage.conf`: The location for the storage configuration file.  
+* `$CONTAINERS_STORAGE_CONF`: An environment variable that points to the storage
+  configuration file.  
+    * This is not usually set by default.
+    * Set it yourself to specify a custom config file.  
+
+The storage file will look something like:
+```ini
+[storage]
+  driver = "overlay"
+  runroot = "/run/user/1000"
+  runroot = "/var/run/containers/storage"
+  graphroot = "/var/lib/containers/storage"
+  [storage.options]
+    size = ""
+    remap-uids = ""
+    remap-gids = ""
+    ignore_chown_errors = ""
+    remap-user = ""
+    remap-group = ""
+    mount_program = "/usr/bin/fuse-overlayfs"
+    mountopt = ""
+    [storage.options.thinpool]
+      autoextend_percent = ""
+      autoextend_threshold = ""
+      basesize = ""
+      blocksize = ""
+      directlvm_device = ""
+      directlvm_device_force = ""
+      fs = ""
+      log_level = ""
+      min_free_space = ""
+      mkfsarg = ""
+      mountopt = ""
+      use_deferred_deletion = ""
+      use_deferred_removal = ""
+      xfs_nospace_max_retries = ""
+```
+* `driver`: The storage driver, used to define how images and containers are stored.  
+    * With Podman, `overlay` defaults to `overlay2` (not Docker).
+* `graphroot`: The default location where images are stored.  
+    * You can change this to a different directory if you want to store images on a
+      separate filesystem or disk.  
+* `runroot`: The default storage directory for writable content inside a container.  
+    * Defaults to `/var/run/containers/storage` for root users.  
+
+
+### Directory Structure in `/varlib/containers/storage`
+The `/var/lib/contianers/storage/` directory usually contains:
+* Image layers and metadata, stored under subdirectories like `overlay` if you're
+  using the overlay storage driver, which is specified in 
+  the [configuration file](#podman-storage-configuration-file).  
+    * `overlay/`: Contains overlay layers for each image, making up the filesystem
+      for each container
+    * `overlay-containers/`: Stores metadata and configuration for each container.  
+    * `overlay-images/`: Stores metadata for each image, including image layers.  
+
+
+
+
+
+
+
 
