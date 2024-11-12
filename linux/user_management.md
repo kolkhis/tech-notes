@@ -2,15 +2,14 @@
 
 # User Management
 
-
 ## Table of Contents
 * [Commands for User Management](#commands-for-user-management) 
+* [Show Default User Settings](#show-default-user-settings) 
+    * [Changing the Default User Settings](#changing-the-default-user-settings) 
 * [Creating a New User](#creating-a-new-user) 
+* [Setting up Password Change Policies](#setting-up-password-change-policies) 
 * [User Files](#user-files) 
 * [The Shadow Password Suite](#the-shadow-password-suite) 
-    * [`/etc/login.defs`](#etclogindefs) 
-* [Lock or Unlock a User Account](#lock-or-unlock-a-user-account) 
-* [Change a user's login shell](#change-a-users-login-shell) 
 * [Manually Adding Users Through `/etc/passwd`](#manually-adding-users-through-etcpasswd) 
     * [Add a new line for the user](#add-a-new-line-for-the-user) 
     * [Create the user's home directory](#create-the-users-home-directory) 
@@ -21,6 +20,12 @@
     * [Finding an Available UID](#finding-an-available-uid) 
     * [Determining the **GID (Group ID)**](#determining-the-gid-group-id) 
 * [The GECOS Field (General Electric Comprehensive Operating System)](#the-gecos-field-general-electric-comprehensive-operating-system) 
+* [Useful User and Group Management Commands](#useful-user-and-group-management-commands) 
+    * [Lock or Unlock a User Account](#lock-or-unlock-a-user-account) 
+    * [Change a user's login shell](#change-a-users-login-shell) 
+    * [Add a User to a Group](#add-a-user-to-a-group) 
+    * [Change a User's Home Directory](#change-a-users-home-directory) 
+* [Best Practices for User and Group Management](#best-practices-for-user-and-group-management) 
 
 
 ## Commands for User Management
@@ -39,6 +44,50 @@ Commands for user management:
 | `users`    | Lists the users currently logged into the system
 | `groups`   | Lists all the groups on the system  
  
+
+
+## Show Default User Settings 
+
+Show the defaults for users made with the `useradd` command:
+```bash
+useradd -D
+```
+
+Output:
+```plaintext
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/sh
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+```
+This shows:
+* `GROUP`: The group that they will be added to when created,
+* `HOME`: Where their home directory will be.  
+* `INACTIVE`: The number of days after a password expires before the account is locked.  
+    * `-1` means the account will never be locked when a password expires.  
+* `EXPIRE`: The date when the account will expire and be disabled.  
+* `SHELL`: The login shell they will have
+* `SKEL`: The skeleton directory, where their default home files will be copied from.
+* `CREATE_MAIL_SPOOL`: Whether or not to create a mail spool (mailbox) for the user.  
+
+The skeleton directory is the location where it will pull default files from (`SKEL`).  
+Every file in `/etc/skel` will be copied into the new user's home directory.  
+
+
+### Changing the Default User Settings
+The defaults can be changed by adding more arguments to the `useradd -D` command:
+```bash
+useradd -D -b /home/user1   # Change the default home directory
+useradd -D -s /bin/sh       # Change the default shell
+useradd -D -e 01/01/2024    # Change the default expiration date of new accounts
+useradd -D -f 40            # Change the default inactivity period for new accounts
+useradd -D -g 100           # Change the default group ID for new accounts
+```
+
+
 
 ## Creating a New User
 
@@ -65,6 +114,32 @@ username:password:UID:GID:GECOS:home_dir:login_shell
 
 When a user is created, the default files are pulled from `/etc/skel` and put in the
 new user's home directory.  
+
+Every file from `/etc/skel/` is copied to the new user's home directory.  
+
+This is a good way to make sure new users have certain files or settings that you
+want them to have.  
+
+
+## Setting up Password Change Policies
+Having users regularly change their passwords is a good security practice.  
+You can use the `chage` command to set password change policies.  
+
+`chage` changes the number of days between password changes and the date of the 
+last password change.
+```bash
+chage -m 30 user1  # Sets the minimum number of days between password changes to 30 days
+
+chage -M 45 user1  # Sets the max number of days between password changes to 45 days
+chage -M -1        # Remove checking a password's validity.  
+
+chage -I 3 user1  # Set the number of days until the user must change their password to 3 days.
+chage -I -1 user1 # Stop the account from being locked after a password expires.  
+
+chage -M 90 user1  # Set the number of days after a password has expired until the account is disabled.  
+chage -W 5 user1   # Set the number of days the user will be warned before the password expires. 
+chage -d 0 user1   # Disable password aging. Resets the age of the password to 0 days.   
+```
 
 
 
@@ -115,9 +190,7 @@ Four files compromise the shadow password suite.
 
 One other file is used to store the hashing algorithm:
 * `/etc/login.defs`
-
-### `/etc/login.defs`
-There are a few options in this file that can be changed.  
+    * There are a few options in this file that can be changed.  
 
 
 
@@ -240,12 +313,14 @@ usermod -s /bin/sh user1
 ```
 This changes `user1`'s login shell to `/bin/sh`.  
 
+
 ### Add a User to a Group
 Add a user to a group with `usermod -aG`:
 ```bash
 usermod -aG group1 user1
 ```
 * `-aG`: Adds the user to a secondary group without removing them from existing groups.  
+
 
 ### Change a User's Home Directory
 User home directories can be changed with `usermod -d`:
@@ -258,8 +333,13 @@ usermod -d /new_home/dir -m user1
 
 
 ## Best Practices for User and Group Management
-* Always create individual user accounts for each person who needs access. Avoid
-  using shared accounts.  
-* Use strong password policies, and enforce regular password changes with tools like `chage`.  
+* Always create individual user accounts for each person who needs access.
+  Avoid using shared accounts.  
+* Use strong password policies. Enforce regular password changes with tools like `chage`.  
+    * `chage` changes the number of days between password changes and the date of the 
+      last password change.
+    * `chage -d 0` disables password aging. It resets the age of the password to `0` days.   
+    * `chage -I -1` sets the number of days until the user must change their password to `1` day.
+    * `chage -M 90` sets the number of days after a password has expired until the account is disabled.  
 
 
