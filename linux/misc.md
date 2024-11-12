@@ -134,6 +134,50 @@ A command for programatically checking servers (prod-k8s in this example):
 for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "I am checking $server"; ssh $server 'uptime; uname -r'; done  
 ```
 
+
+## The Three "Main" Families of Linux
+There are three major families of Linux distributions:
+* Red Hat
+* SUSE
+* Debian
+
+### Red Hat Family Systems (incl CentOS, Fedora, Rocky Linux)
+Red Hat Enterprise Linux (RHEL) heads up the Red Hat family.  
+
+* The basic version of CentOS is virutally identical to RHEL.  
+    * CentOS is a close clone of RHEL, and has been a part of Red Hat since 2014.  
+* Fedora is an upstream testing platform for RHEL.  
+* Supports multiple hardware platforms.  
+* Uses `dnf`, an RPM-based package manager to manage packages.  
+* RHEL is a popular distro for enterprises that host their own systems.  
+
+
+### SUSE Family Systems (incl openSUSE)
+SUSE (SUSE Linux Enterprise Server, or SLES) and openSUSE are very close to each
+other, just like RHEL/CentOS/Fedora.  
+
+* SLES (SUSE Linux Enterprise Server) is upstream for openSUSE.  
+* Uses `zypper`, an RPM-based package manager to manage packages. 
+* Includes `YaST` (Yet Another Setup Tool) for system administration.  
+* SLES is widely used in retail and other sectors.  
+
+
+
+### Debian Family Systems (incl Ubuntu and Linux Mint)
+
+Debian provides the largest and most complete software repo to its users of any other
+Linux distribution.  
+ 
+* Ubuntu tries to provide a compromise of long term stability and ease of use.  
+* The Debian family is upstream for several other distros (including Ubuntu).  
+    * Ubuntu is upstream for Linux Mint and other distros.  
+* Uses `apt`, a DPKG-based package manager to manage packages.  
+* Ubuntu is widely used for cloud deployments.  
+
+
+
+
+
 ## Testing Filesystems with Write Tests and Read Tests 
 With bash you can use a `for` loop with the notation `{1..10}` to loop through 1  
 and 10.  
