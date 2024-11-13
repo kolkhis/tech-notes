@@ -297,7 +297,7 @@ The storage file will look something like:
 ```ini
 [storage]
   driver = "overlay"
-  runroot = "/run/user/1000"
+  #runroot = "/run/user/1000"
   runroot = "/var/run/containers/storage"
   graphroot = "/var/lib/containers/storage"
   [storage.options]
