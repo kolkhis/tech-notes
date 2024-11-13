@@ -1100,6 +1100,7 @@ This file is used by `echo`ing a number between `1` and `3` into the file.
   ```bash
   sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
   ```
+    * This frees up memory but potentially impacting performance until caches are rebuilt.
 
 These commands do not delete data from the disk. These only release cached data 
 that's kept in RAM to free up memory.  
