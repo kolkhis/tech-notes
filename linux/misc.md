@@ -1,6 +1,6 @@
 # Miscellaneous Linux Notes  
 
-## Table of Contents
+## Table of Contents  
 * [Tools](#tools) 
     * [Cybersecurity Tools to Check Out](#cybersecurity-tools-to-check-out) 
     * [Other Tools to Check Out](#other-tools-to-check-out) 
@@ -85,7 +85,7 @@
 ## Tools  
 ### Cybersecurity Tools to Check Out  
 * `pfsense` - A tool for authentication  
-* `fail2ban` - Ban IPs that fail to login too many times
+* `fail2ban` - Ban IPs that fail to login too many times  
 * `OpenSCAP` - benchmarking tool  
 * `nmap`  
     * `nmap` maps the server if you don't have permissions  
@@ -135,13 +135,13 @@ for server in `cat /etc/hosts | grep -i prod-k8s | awk '{print $NF}'`; do echo "
 ```
 
 
-## The Three "Main" Families of Linux
-There are three major families of Linux distributions:
-* Red Hat
-* SUSE
-* Debian
+## The Three "Main" Families of Linux  
+There are three major families of Linux distributions:  
+* Red Hat  
+* SUSE  
+* Debian  
 
-### Red Hat Family Systems (incl CentOS, Fedora, Rocky Linux)
+### Red Hat Family Systems (incl CentOS, Fedora, Rocky Linux)  
 Red Hat Enterprise Linux (RHEL) heads up the Red Hat family.  
 
 * The basic version of CentOS is virutally identical to RHEL.  
@@ -152,8 +152,8 @@ Red Hat Enterprise Linux (RHEL) heads up the Red Hat family.
 * RHEL is a popular distro for enterprises that host their own systems.  
 
 
-### SUSE Family Systems (incl openSUSE)
-SUSE (SUSE Linux Enterprise Server, or SLES) and openSUSE are very close to each
+### SUSE Family Systems (incl openSUSE)  
+SUSE (SUSE Linux Enterprise Server, or SLES) and openSUSE are very close to each  
 other, just like RHEL/CentOS/Fedora.  
 
 * SLES (SUSE Linux Enterprise Server) is upstream for openSUSE.  
@@ -163,9 +163,9 @@ other, just like RHEL/CentOS/Fedora.
 
 
 
-### Debian Family Systems (incl Ubuntu and Linux Mint)
+### Debian Family Systems (incl Ubuntu and Linux Mint)  
 
-Debian provides the largest and most complete software repo to its users of any other
+Debian provides the largest and most complete software repo to its users of any other  
 Linux distribution.  
  
 * Ubuntu tries to provide a compromise of long term stability and ease of use.  
@@ -745,7 +745,7 @@ Termcap stands for "Terminal Capability".
 It's a database used by Terminal Control Libraries (e.g., `ncurses`) to manage colors 
 and other terminal features.  
 
-You can use `LESS_TERMCAP_**` to add colors to `less` output in the terminal (where
+You can use `LESS_TERMCAP_**` to add colors to `less` output in the terminal (where  
 `**` are two letters that indicate a mode).  
 Some of the modes that you can use to colorize output:  
 * `so`: Start standout mode  
@@ -757,13 +757,13 @@ Some of the modes that you can use to colorize output:
 * `mr`: Start reverse mode  
 * `mh`: Start half bright mode  
 * `me`: End all "modes" (like `so`, `ue`, `us`, `mb`, `md`, and `mr`)  
-E.g.:
-```bash
-export LESS="-FXR"  # Add default options for less
-export LESS_TERMCAP_mb="[35m" # magenta
-export LESS_TERMCAP_md="[33m" # yellow
-export LESS_TERMCAP_me=""      # "0m"
-export LESS_TERMCAP_se=""      # "0m"
+E.g.:  
+```bash  
+export LESS="-FXR"  # Add default options for less  
+export LESS_TERMCAP_mb="[35m" # magenta  
+export LESS_TERMCAP_md="[33m" # yellow  
+export LESS_TERMCAP_me=""      # "0m"  
+export LESS_TERMCAP_se=""      # "0m"  
 ```
 
 
@@ -782,153 +782,153 @@ export LESS="-FXR"
 
 
 
-## MEF (Metro Ethernet Framework)
+## MEF (Metro Ethernet Framework)  
 MEF is a protocol that allows you to connect multiple Ethernet devices to a 
 single Ethernet port.  
 
 
-## Finding Environment Variables
+## Finding Environment Variables  
 Print out environment variables line-by-line:  
-```bash
-env
-printenv
+```bash  
+env  
+printenv  
 ```
 These two commands will output the same variables.  
 
 
-## Important Linux Commands for Sysadmins
-### Getting general information about the system
-Use `lshw` to list the hardware on the system
-```bash
-lshw  # List the hardware on the system
-lscpu # List the CPU information
-uname -a  # Get information about the system (kernel, version, hostname, etc)
-who  # Shows who is logged into the system
-w    # More detailed version of 'who'
-last # Show the last users to log into the system (prints in reverse)
-cat /etc/*release  # Get information about the operating system
-cat /proc/cmdline  # Get the kernel command line arguments (boot parameters, boot image)
-ethtool  # Show info on the network interfaces
-ip a     # Show info on the network interfaces
-ip r     # Show the routing table (shows network gateway)
-lsblk    # List the block devices on the system (disk info)
-blkid    # Show the UUIDs of the block devices (or a specific block device)
-ps       # Show running processes on the system
-pstree   # Show the processes running in a tree
-df -h    # Show disk usage (-h is human-readable)
-free -h  # Show memory usage
-du -sh /dir  # Show the disk usage of a specific directory
+## Important Linux Commands for Sysadmins  
+### Getting general information about the system  
+Use `lshw` to list the hardware on the system  
+```bash  
+lshw  # List the hardware on the system  
+lscpu # List the CPU information  
+uname -a  # Get information about the system (kernel, version, hostname, etc)  
+who  # Shows who is logged into the system  
+w    # More detailed version of 'who'  
+last # Show the last users to log into the system (prints in reverse)  
+cat /etc/*release  # Get information about the operating system  
+cat /proc/cmdline  # Get the kernel command line arguments (boot parameters, boot image)  
+ethtool  # Show info on the network interfaces  
+ip a     # Show info on the network interfaces  
+ip r     # Show the routing table (shows network gateway)  
+lsblk    # List the block devices on the system (disk info)  
+blkid    # Show the UUIDs of the block devices (or a specific block device)  
+ps       # Show running processes on the system  
+pstree   # Show the processes running in a tree  
+df -h    # Show disk usage (-h is human-readable)  
+free -h  # Show memory usage  
+du -sh /dir  # Show the disk usage of a specific directory  
 ```
 
-### Package Management commands
-#### For **Debian-based systems** (like Ubuntu):
-```bash
-apt update  # Update package lists
-apt upgrade  # Upgrade all packages
-apt install package  # Install a package
-apt remove package  # Remove a package
-dpkg -i package.deb  # Install a .deb package manually
-dpkg -r package  # Remove a package
-dpkg -l  # List all installed packages
+### Package Management commands  
+#### For **Debian-based systems** (like Ubuntu):  
+```bash  
+apt update  # Update package lists  
+apt upgrade  # Upgrade all packages  
+apt install package  # Install a package  
+apt remove package  # Remove a package  
+dpkg -i package.deb  # Install a .deb package manually  
+dpkg -r package  # Remove a package  
+dpkg -l  # List all installed packages  
 ```
 
-#### For **Red Hat-based systems** (like CentOS, Fedora):
-```bash
-yum update  # Update packages
-yum install package  # Install a package
-yum remove package  # Remove a package
-rpm -ivh package.rpm  # Install an .rpm package manually
-rpm -qa  # List all installed packages
+#### For **Red Hat-based systems** (like CentOS, Fedora):  
+```bash  
+yum update  # Update packages  
+yum install package  # Install a package  
+yum remove package  # Remove a package  
+rpm -ivh package.rpm  # Install an .rpm package manually  
+rpm -qa  # List all installed packages  
 ```
 
 
 
-### Process Management Commands
-```bash
-ps aux     # View all processes
-top        # Interactive process viewer
-htop       # Enhanced interactive process viewer (often pre-installed)
-kill PID   # Kill a process by PID
-killall processname  # Kill all instances of a process by name
-pkill -u username  # Kill all processes from a specific user
-nice -n 10 command  # Start a command with a priority (lower values = higher priority)
-renice -n 10 -p PID  # Change the priority of an existing process
+### Process Management Commands  
+```bash  
+ps aux     # View all processes  
+top        # Interactive process viewer  
+htop       # Enhanced interactive process viewer (often pre-installed)  
+kill PID   # Kill a process by PID  
+killall processname  # Kill all instances of a process by name  
+pkill -u username  # Kill all processes from a specific user  
+nice -n 10 command  # Start a command with a priority (lower values = higher priority)  
+renice -n 10 -p PID  # Change the priority of an existing process  
 ```
 
-### System Monitoring and Logging Commands
-```bash
-dmesg | less  # View boot and kernel-related messages
-journalctl    # Query the systemd journal logs
-tail -f /var/log/syslog  # Follow system logs in real-time
-uptime        # Show how long the system has been running
-vmstat 5      # Display memory, CPU, and I/O statistics every 5 seconds
-iostat 5      # Display disk I/O statistics every 5 seconds
+### System Monitoring and Logging Commands  
+```bash  
+dmesg | less  # View boot and kernel-related messages  
+journalctl    # Query the systemd journal logs  
+tail -f /var/log/syslog  # Follow system logs in real-time  
+uptime        # Show how long the system has been running  
+vmstat 5      # Display memory, CPU, and I/O statistics every 5 seconds  
+iostat 5      # Display disk I/O statistics every 5 seconds  
 ```
 
-### Network Management Commands
-```bash
-ping hostname_or_IP  # Test connectivity to another host
-nslookup hostname  # Query DNS for a host
-traceroute hostname  # Trace the route packets take to reach a host
-netstat -tuln  # Show open ports and connections
-ss -tuln       # Similar to netstat; show listening sockets and ports
-iptables -L    # View firewall rules
-firewalld-cmd --list-all  # View firewalld rules (CentOS/RedHat)
-curl url       # Transfer data from or to a server
-wget url       # Download files from the internet
-scp file user@remote:/path  # Securely copy files to a remote system
+### Network Management Commands  
+```bash  
+ping hostname_or_IP  # Test connectivity to another host  
+nslookup hostname  # Query DNS for a host  
+traceroute hostname  # Trace the route packets take to reach a host  
+netstat -tuln  # Show open ports and connections  
+ss -tuln       # Similar to netstat; show listening sockets and ports  
+iptables -L    # View firewall rules  
+firewalld-cmd --list-all  # View firewalld rules (CentOS/RedHat)  
+curl url       # Transfer data from or to a server  
+wget url       # Download files from the internet  
+scp file user@remote:/path  # Securely copy files to a remote system  
 ```
 
-## Network Firewalls vs. WAFs
+## Network Firewalls vs. WAFs  
 A WAF and a standard firewall are both firewalls, but they function in different ways.  
 A standard firewall acts like a gatekeeper.  
 Standard firewalls are designed to permit or deny access to networks.  
 On the other hand, a WAF generally focuses on threats aimed at HTTP/HTTPS and other areas of the application, as you mentioned in your post.  
 Additionally, WAFs run on different algorithms such as anomaly detection, signature-based, and heuristic algorithms.  
-Therefore, it is best to place a standard firewall as the first layer of security and then place a WAF in front of the application servers in the DMZ zone.
+Therefore, it is best to place a standard firewall as the first layer of security and then place a WAF in front of the application servers in the DMZ zone.  
 
 
-## Bash Parameter Transformation
+## Bash Parameter Transformation  
 `man://bash 1500`
-Parameter transformation is a way to perform a transformation on a parameter before it is used.
-Syntax:
-```bash
+Parameter transformation is a way to perform a transformation on a parameter before it is used.  
+Syntax:  
+```bash  
 ${parameter@operator}
 ```
-Each operator is a single letter
+Each operator is a single letter  
 
-### Parameter Transformation Operators
-* `U`: Converts all lowercase letters in the value to uppercase.
-* `u`: Capitalizes only the first letter of the value.
-* `L`: Converts all uppercase letters in the value to lowercase.
-* `Q`: Quotes the value, making it safe to reuse as input.
-* `E`: Expands escape sequences in the value (like `$'...'` syntax).
-* `P`: Expands the value as a prompt string.
-* `A`: Generates an assignment statement to recreate the variable with its attributes.
-* `K`: Produces a quoted version of the value, displaying arrays as key-value pairs.
-* `a`: Returns the variable's attribute flags (like `readonly`, `exported`).
+### Parameter Transformation Operators  
+* `U`: Converts all lowercase letters in the value to uppercase.  
+* `u`: Capitalizes only the first letter of the value.  
+* `L`: Converts all uppercase letters in the value to lowercase.  
+* `Q`: Quotes the value, making it safe to reuse as input.  
+* `E`: Expands escape sequences in the value (like `$'...'` syntax).  
+* `P`: Expands the value as a prompt string.  
+* `A`: Generates an assignment statement to recreate the variable with its attributes.  
+* `K`: Produces a quoted version of the value, displaying arrays as key-value pairs.  
+* `a`: Returns the variable's attribute flags (like `readonly`, `exported`).  
 
 
-### Multiple Parameter Transformation Operators
-You can use parameter transformation on multiple positional parameters or arguments
+### Multiple Parameter Transformation Operators  
+You can use parameter transformation on multiple positional parameters or arguments  
 at once by using `@` or `*`.  
 
 When you use `${@}` or `${*}`, Bash treats each positional 
 parameter (e.g., command-line arguments) one by one, applying the 
-transformation to each.
-The output is a list with each item transformed according to the specified operator.
+transformation to each.  
+The output is a list with each item transformed according to the specified operator.  
 
-If you use `${array[@]}` or `${array[*]}`, Bash applies the transformation to each element of the array, one by one. The result is also a list with each array item transformed individually.
+If you use `${array[@]}` or `${array[*]}`, Bash applies the transformation to each element of the array, one by one. The result is also a list with each array item transformed individually.  
 
 The final transformed output might go through word splitting (separating by spaces) 
 and pathname expansion (turning wildcard characters like `*` into matching filenames) 
 if enabled, so the result could expand further into multiple words or paths.  
 
-Typically `*` will combine the parameters into one string, whereas `@` will split the
+Typically `*` will combine the parameters into one string, whereas `@` will split the  
 parameters into an array.  
 
 | Syntax       | Description           | Example Output (for `hello world bash`)   |
-|--------------|-------------------------------------------------|--------------------
+|--------------|-------------------------------------------------|--------------------  
 | `${@^}` | Capitalizes each parameter                            | `Hello World Bash`
 | `${*^}` | Capitalizes only the first letter of the combined string | `Hello world bash`
 | `${@^^}`| Uppercases each parameter completely                  | `HELLO WORLD BASH`
@@ -940,170 +940,224 @@ parameters into an array.
 
 ### Parameter Transformation Examples  
 
-Parameter transformation on variables, arrays, and associative arrays:
-```bash
-# Example variable for demonstration
-var="hello world"
-array_var=("one" "two" "three")
-declare -A assoc_array_var=([key1]="value1" [key2]="value2")
+Parameter transformation on variables, arrays, and associative arrays:  
+```bash  
+# Example variable for demonstration  
+var="hello world"  
+array_var=("one" "two" "three")  
+declare -A assoc_array_var=([key1]="value1" [key2]="value2")  
 
-# U: Convert all lowercase letters to uppercase
-echo "${var@U}"        # Output: HELLO WORLD
+# U: Convert all lowercase letters to uppercase  
+echo "${var@U}"        # Output: HELLO WORLD  
 
-# u: Capitalize only the first letter
-echo "${var@u}"        # Output: Hello world
+# u: Capitalize only the first letter  
+echo "${var@u}"        # Output: Hello world  
 
-# L: Convert all uppercase letters to lowercase
-var="HELLO WORLD"
-echo "${var@L}"        # Output: hello world
+# L: Convert all uppercase letters to lowercase  
+var="HELLO WORLD"  
+echo "${var@L}"        # Output: hello world  
 
-# Q: Quote the value, safe for reuse as input
-echo "${var@Q}"        # Output: 'HELLO WORLD' (or "HELLO WORLD" depending on context)
+# Q: Quote the value, safe for reuse as input  
+echo "${var@Q}"        # Output: 'HELLO WORLD' (or "HELLO WORLD" depending on context)  
 
-# E: Expand escape sequences (e.g., newline, tab)
-esc_var=$'hello\nworld'
-echo "${esc_var@E}"    # Output: hello
-                       #         world
+# E: Expand escape sequences (e.g., newline, tab)  
+esc_var=$'hello\nworld'  
+echo "${esc_var@E}"    # Output: hello  
+                       #         world  
 
-# P: Expand as a prompt string (useful for prompt formatting)
-PS1="[\u@\h \W]\$ "    # Set the prompt
-echo "${PS1@P}"        # Output: [user@host directory]$
+# P: Expand as a prompt string (useful for prompt formatting)  
+PS1="[\u@\h \W]\$ "    # Set the prompt  
+echo "${PS1@P}"        # Output: [user@host directory]$  
 
-# A: Generate an assignment statement that recreates the variable
-echo "${var@A}"        # Output: declare -- var="HELLO WORLD"
+# A: Generate an assignment statement that recreates the variable  
+echo "${var@A}"        # Output: declare -- var="HELLO WORLD"  
 
-# K: Quoted version of the value, with arrays as key-value pairs
-echo "${array_var@K}"          # Output: 'one' 'two' 'three'
-echo "${assoc_array_var@K}"    # Output: [key1]="value1" [key2]="value2"
+# K: Quoted version of the value, with arrays as key-value pairs  
+echo "${array_var@K}"          # Output: 'one' 'two' 'three'  
+echo "${assoc_array_var@K}"    # Output: [key1]="value1" [key2]="value2"  
 
-# a: Display attributes of the variable (flags)
-declare -r readonly_var="test"
-echo "${readonly_var@a}"       # Output: r (indicates readonly)
+# a: Display attributes of the variable (flags)  
+declare -r readonly_var="test"  
+echo "${readonly_var@a}"       # Output: r (indicates readonly)  
 ```
 
-Examples of using parameter transformation with positional parameters and arrays
-using the `^` and `@` operators:
-```bash
-# Positional parameters example
-set -- "hello" "world"
-echo "${@^}"   # Each positional parameter capitalized: "Hello World"
+Examples of using parameter transformation with positional parameters and arrays  
+using the `^` and `@` operators:  
+```bash  
+# Positional parameters example  
+set -- "hello" "world"  
+echo "${@^}"   # Each positional parameter capitalized: "Hello World"  
 
-# Array example
-array=("one" "two" "three")
-echo "${array[@]^}"   # Capitalize each array element: "One Two Three"
+# Array example  
+array=("one" "two" "three")  
+echo "${array[@]^}"   # Capitalize each array element: "One Two Three"  
 
-# Word splitting and pathname expansion example
-files=("file1.txt" "*.sh")
-echo "${files[@]^}"   # Expands "*.sh" to match any shell scripts in the directory
+# Word splitting and pathname expansion example  
+files=("file1.txt" "*.sh")  
+echo "${files[@]^}"   # Expands "*.sh" to match any shell scripts in the directory  
 ```
 
-## Checking the Operating System with the `OSTYPE` Variable
+## Checking the Operating System with the `OSTYPE` Variable  
 Use `OSTYPE` instead of `uname` for checking the operating system. 
 * This is an environment variable. On Ubuntu Server (or any Linux distro), it will have the value `linux-gnu`.  
 * This saves you from making an external call to the shell (with `uname`).  
 
 
-## Patching Linux Systems
-How you go about patching/updating systems in Linux depends on if the node is
+## Patching Linux Systems  
+How you go about patching/updating systems in Linux depends on if the node is  
 stateful or stateless. 
-* A stateful node retains its state, data, and specific configurations across session
+* A stateful node retains its state, data, and specific configurations across session  
   and reboots.  
-* A stateless node is ephemeral. This means that it does not retain state, data, or
-  configurations across sessions.
-    * Stateless nodes are easier to scale and redeploy with updated versions.
+* A stateless node is ephemeral. This means that it does not retain state, data, or  
+  configurations across sessions.  
+    * Stateless nodes are easier to scale and redeploy with updated versions.  
 
-### Updating Linux Boxes in Enterprise Environments
+### Updating Linux Boxes in Enterprise Environments  
 
-* Stateful nodes need to be patched.
+* Stateful nodes need to be patched.  
     * This is because stateful nodes retain data and specific configurations that persist across reboots.  
 * Updating and patching these nodes ensures security vulnerabilities are fixed and that software is up to date while maintaining the state and data.  
-* Patching is crucial here since these nodes can’t simply be replaced without data loss or complex migration.
+* Patching is crucial here since these nodes can’t simply be replaced without data loss or complex migration.  
 
-* Stateless nodes typically aren’t patched directly.
+* Stateless nodes typically aren’t patched directly.  
 * Stateless nodes don’t retain data or configuration once they’re restarted or terminated; they’re often part of horizontally scaled environments (like microservices or containerized applications).  
 * Instead of patching, stateless nodes are redeployed with a new image that includes all updates and patches.  
-* This approach allows for easy replacement and minimizes downtime.
+* This approach allows for easy replacement and minimizes downtime.  
 
----
+---  
 
-### System Update Strategy
+### System Update Strategy  
 * Rolling Updates: For services that require high availability, rolling updates allow nodes to be updated in a staggered manner.  
-    * This minimizes downtime by ensuring that some nodes remain available while others are updated.
+    * This minimizes downtime by ensuring that some nodes remain available while others are updated.  
 * Blue-Green Deployment: For stateless applications, a blue-green deployment can be used.  
     * Deploy the updated image to a “blue” environment while the “green” environment continues serving traffic.  
-    * Once validated, switch all traffic to the blue environment.
-* Canary Releases: Deploy updates to a small subset of nodes initially to monitor for issues before rolling out to the full environment.
+    * Once validated, switch all traffic to the blue environment.  
+* Canary Releases: Deploy updates to a small subset of nodes initially to monitor for issues before rolling out to the full environment.  
 
-### Scheduling System Updates
-* Non-Peak Hours: Schedule updates during off-peak hours to reduce the impact on end-users.
-* Maintenance Windows: Use designated maintenance windows approved by stakeholders to ensure updates do not interfere with critical operations.
+### Scheduling System Updates  
+* Non-Peak Hours: Schedule updates during off-peak hours to reduce the impact on end-users.  
+* Maintenance Windows: Use designated maintenance windows approved by stakeholders to ensure updates do not interfere with critical operations.  
 
-### Automating System Updates
-* Use configuration management tools like Ansible, Chef, or Puppet to automate patching and updating of stateful nodes.
-* For stateless nodes, use CI/CD pipelines to automate the creation and deployment of new images with the latest updates.
+### Automating System Updates  
+* Use configuration management tools like Ansible, Chef, or Puppet to automate patching and updating of stateful nodes.  
+* For stateless nodes, use CI/CD pipelines to automate the creation and deployment of new images with the latest updates.  
 
-### System Patching Compliance and Security:
+### System Patching Compliance and Security:  
 * Compliance: Regular updates are often required to maintain compliance with security standards (e.g., PCI-DSS, HIPAA).  
-    * Ensure systems are patched according to these standards.
-* Vulnerability Management: Use tools like OpenSCAP or Lynis for vulnerability scanning to ensure updates address all known vulnerabilities.
-* Audit Logs: Keep detailed logs of updates and patches applied to ensure traceability and accountability for changes in the environment.
+    * Ensure systems are patched according to these standards.  
+* Vulnerability Management: Use tools like OpenSCAP or Lynis for vulnerability scanning to ensure updates address all known vulnerabilities.  
+* Audit Logs: Keep detailed logs of updates and patches applied to ensure traceability and accountability for changes in the environment.  
 
-### Testing System Updates:
-* Always test updates in a staging environment that mirrors production.
-    * This is to ensure compatibility and identify potential issues before applying them in production.
-* Have a rollback plan.
-    * For each update, have a rollback plan in case of failures, especially for stateful systems where data integrity is critical.
+### Testing System Updates:  
+* Always test updates in a staging environment that mirrors production.  
+    * This is to ensure compatibility and identify potential issues before applying them in production.  
+* Have a rollback plan.  
+    * For each update, have a rollback plan in case of failures, especially for stateful systems where data integrity is critical.  
 
-### Updating Linux Boxes, tl;dr
-* Stateful nodes require patching due to their persistent state and data.
-* Stateless nodes are usually replaced with updated images, avoiding direct patching.
-* Automate and schedule updates to minimize impact and maintain consistency.
-* Ensure testing, compliance, and logging to meet enterprise standards and maintain system reliability.
+### Updating Linux Boxes, tl;dr  
+* Stateful nodes require patching due to their persistent state and data.  
+* Stateless nodes are usually replaced with updated images, avoiding direct patching.  
+* Automate and schedule updates to minimize impact and maintain consistency.  
+* Ensure testing, compliance, and logging to meet enterprise standards and maintain system reliability.  
 
 
 
-## Clear Cache, Memory, and Swap Space on Linux
+## Clear Cache, Memory, and Swap Space on Linux  
 
-tl;dr:
-```bash
+tl;dr:  
+```bash  
 echo 1 > /proc/sys/vm/drop_caches  # Clears only the PageCache. Frees memory used for caching file data. 
 echo 2 > /proc/sys/vm/drop_caches  # Clears dentries and inodes. Releases memory used for filesystem metadata. 
 echo 3 > /proc/sys/vm/drop_caches  # Clears all three types of caches.  
+sync && echo 1 > /proc/sys/vm/drop_caches  # Clears Buffer Cache and PageCache 
+swapoff -a && swapon -a  # Clear swap space (turn it off and on again)
 ```
 
----
+---  
 
+### Clearing PageCache and inode/dentry Caches 
 Clearing cache, memory, and swap space on Linux is done with a special file:  
 `/proc/sys/vm/drop_caches`
 
-This file is used to clean cache without killing any applications.  
+The `drop_caches` file is used to clean cache without killing any applications.  
 
 This file is used by `echo`ing a number between `1` and `3` into the file.  
-* Clear PageCache only:
-  ```bash
-  sudo sh -c 'echo 1 > /proc/sys/vm/drop_caches'
+* Clear PageCache only:  
+  ```bash  
+  sudo sh -c 'echo 1 > /proc/sys/vm/drop_caches'  
   ```
-    * The PageCache is the in-memory cache for storing file contents that are read from the disk.
+    * The PageCache is the in-memory cache for storing file contents that are read from the disk.  
     * This speeds up file access by caching disk data in RAM.  
-* Clear dentries and inodes:
-  ```bash
-  sudo sh -c 'echo 2 > /proc/sys/vm/drop_caches'
+* Clear dentries and inodes:  
+  ```bash  
+  sudo sh -c 'echo 2 > /proc/sys/vm/drop_caches'  
   ```
-    * The dentry (directory entry) cache is the directory-related metadata stored in
+    * The dentry (directory entry) cache is the directory-related metadata stored in  
       memory.  
-        * This is used for navigating the system quickly without repeatedly
+        * This is used for navigating the system quickly without repeatedly  
           scanning the disk.  
     * The inode (index node) cache is the metadata for files and directories.  
-        * This is used to quickly locate files and access metadata without scanning
+        * This is used to quickly locate files and access metadata without scanning  
           the disk.  
-* Clear all 3 (PageCache, dentries, and inodes):
-  ```bash
-  sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+* Clear all 3 (PageCache, dentries, and inodes):  
+  ```bash  
+  sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'  
   ```
-    * This frees up memory but potentially impacting performance until caches are rebuilt.
+    * This frees up memory but potentially impacting performance until caches are rebuilt.  
 
 These commands do not delete data from the disk. These only release cached data 
 that's kept in RAM to free up memory.  
+
+### Clear Buffer Cache  
+
+To clear the buffer cache, use `sync` before clearing the PageCache.  
+```bash  
+sudo sync && echo 1 > /proc/sys/vm/drop_caches  
+```
+This is both clears the PageCache and the buffer cache.  
+* `sync`: Flushes the filesystem buffers to disk.  
+    * It synchronizes cached writes to the disk.  
+
+
+
+### Clearing Swap Space  
+Swap space is a part of the HDD (or SSD) that is used as summplemetary RAM.  
+Swap is FAR slower than RAM, so it's not a great practice to use a ton of it.  
+
+To clear swap space, use `swapoff` and `swapon`:  
+```bash  
+sudo swapoff -a  
+sudo swapon -a   
+```
+
+* `swapoff`: Disables swapping on a given device.  
+    * `-a`: Disables swapping on all swap devices and files.  
+* `swapon`: Used to specify devices to be used for paging and swapping.  
+    * `-a`: All devices marked with `swap` in the `/etc/fstab` file will be enabled.  
+
+Clearing swap space will not free up RAM.  
+It only frees up space used for swap on the disk.  
+
+
+### Buffer Cache vs PageCache  
+* PageCache: Used to cache the contents of files on the disk into memory.  
+    * Makes file access and R/W operations faster by storing the actual contents of a file in memory.  
+    * When a process reads from a file, the data is loaded into the PageCache first,
+      then all subsequent reads can pull directly from memory rather than needing to  
+      access the disk.  
+    * When a process requests data from a file, the system checks if it's already in  
+      the PageCache (if it is, it's called a "cache hit").  
+    * If it's a cache hit, it serves the data from memory.  
+
+* Buffer Cache: Used to cache raw block data that is read from, or written to, the disk.  
+    * Primarily used for I/O operations on the block level.  
+    * Serves as temporary storage for data that is read from, or written to, disk sectors.  
+    * Stores disk block and sector data, including low-level metadata about  
+      filesystem structures, which the kernel needs to manage disk operations (superblocks, 
+      inodes, dentries).  
+    * Helps with filesystem metadata and block-level operations. Optimizes the  
+      performance of low-level disk I/O operations by minimizing direct reads and  
+      writes to disk.  
 
 
 
