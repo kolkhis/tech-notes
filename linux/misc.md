@@ -1062,4 +1062,49 @@ stateful or stateless.
 
 
 
+## Clear Cache, Memory, and Swap Space on Linux
+
+tl;dr:
+```bash
+echo 1 > /proc/sys/vm/drop_caches  # Clears only the PageCache. Frees memory used for caching file data. 
+echo 2 > /proc/sys/vm/drop_caches  # Clears dentries and inodes. Releases memory used for filesystem metadata. 
+echo 3 > /proc/sys/vm/drop_caches  # Clears all three types of caches.  
+```
+
+---
+
+Clearing cache, memory, and swap space on Linux is done with a special file:  
+`/proc/sys/vm/drop_caches`
+
+This file is used to clean cache without killing any applications.  
+
+This file is used by `echo`ing a number between `1` and `3` into the file.  
+* Clear PageCache only:
+  ```bash
+  sudo sh -c 'echo 1 > /proc/sys/vm/drop_caches'
+  ```
+    * The PageCache is the in-memory cache for storing file contents that are read from the disk.
+    * This speeds up file access by caching disk data in RAM.  
+* Clear dentries and inodes:
+  ```bash
+  sudo sh -c 'echo 2 > /proc/sys/vm/drop_caches'
+  ```
+    * The dentry (directory entry) cache is the directory-related metadata stored in
+      memory.  
+        * This is used for navigating the system quickly without repeatedly
+          scanning the disk.  
+    * The inode (index node) cache is the metadata for files and directories.  
+        * This is used to quickly locate files and access metadata without scanning
+          the disk.  
+* Clear all 3 (PageCache, dentries, and inodes):
+  ```bash
+  sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+  ```
+
+These commands do not delete data from the disk. These only release cached data 
+that's kept in RAM to free up memory.  
+
+
+
+
 
