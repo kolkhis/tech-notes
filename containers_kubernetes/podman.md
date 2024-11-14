@@ -3,7 +3,6 @@
 Podman is a container engine for developing, managing, and running OCI Containers on a Linux System.
 OCI (Open Container Initiative) Containers are a kind of package that encapsulate your application and all its dependencies.
 
-
 ## Table of Contents
 * [Podman Cheatsheet](#podman-cheatsheet) 
 * [Building a Container from a Dockerfile](#building-a-container-from-a-dockerfile) 
@@ -17,7 +16,7 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
 * [Managing Image Storage with Podman](#managing-image-storage-with-podman) 
     * [Podman Storage Configuration File](#podman-storage-configuration-file) 
     * [Directory Structure in `/varlib/containers/storage`](#directory-structure-in-varlibcontainersstorage) 
-
+* [Podman Environment Variables](#podman-environment-variables) 
 
 
 ## Podman Cheatsheet
@@ -274,11 +273,22 @@ containers to function as a single unit.
 
 ## Managing Image Storage with Podman
 Podman images are stored locally after being pulled from a registry
-* `/var/lib/containers/storage/`: The default storage location for images.  
+* `/var/lib/containers/storage/`: The default image storage location for UID 0
+  (the root user).  
+* `$HOME/.local/share/containers/storage`: The default image storage location for all
+  other users.  
 
 To check Podman's active storage location:
 ```bash
 podman info --format "{{.Store.GraphRoot}}"
+```
+
+To override the default storage location:
+```bash
+# Either use --root with podman:
+podman --root /path/to/images run...
+# change the storage.graphroot in /etc/containers/storage.conf
+# or 
 ```
 
 ### Podman Storage Configuration File
@@ -346,6 +356,22 @@ The `/var/lib/contianers/storage/` directory usually contains:
 
 
 
+
+## Podman Environment Variables
+
+* `CONTAINERS_CONF`: Set default locations of `containers.conf` file
+* `CONTAINERS_REGISTRIES_CONF`: Set default location of the `registries.conf` file.
+* `CONTAINERS_STORAGE_CONF`: Set default location of the `storage.conf` file.
+* `CONTAINER_CONNECTION`: Override default `--connection` value to access Podman service. Also enabled `--remote` option.
+* `CONTAINER_HOST`: Set default `--url` value to access Podman service. Also enabled --remote option.
+* `CONTAINER_SSHKEY`: Set default `--identity` path to ssh key file value used to access Podman service.
+* `STORAGE_DRIVER`: Set default `--storage-driver` value.
+* `STORAGE_OPTS`: Set default `--storage-opts` value.
+* `TMPDIR`: Set the temporary storage location of downloaded container images. Podman defaults to use `/var/tmp`.
+
+* `XDG_CONFIG_HOME`: In  Rootless mode, configuration files are read from `XDG_CONFIG_HOME` when specified, otherwise in the home directory of the user under `$HOME/.config/containers`.
+* `XDG_DATA_HOME`: In Rootless mode, images are pulled under XDG_DATA_HOME when specified, otherwise in the home directory of the user under `$HOME/.local/share/containers/storage`.
+* `XDG_RUNTIME_DIR`: In Rootless mode, temporary configuration data is stored in `${XDG_RUNTIME_DIR}/containers`.
 
 
 
