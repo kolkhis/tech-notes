@@ -32,8 +32,9 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
 
 ## Podman Cheatsheet
 ```bash
-cd /var/lib/containers/storage/      # Where container images are stored
-vi /var/lib/containers/storage.conf  # Edit the storage configuration file.  
+cd /var/lib/containers/storage/       # Where container images are stored for root
+cd ~/.local/share/containers/storage/ # The default image storage location for normal users
+vi /var/lib/containers/storage.conf   # Edit the storage configuration file.  
 
 # Basic Container Commands
 podman ps                       # Show running containers
@@ -50,11 +51,11 @@ podman build -t imageName .     # Build a container image from a Dockerfile (in 
 podman run 'image'              # Run a container from an image
 podman run -d 'image'           # Run a container in detached mode
 podman run -dt 'image'          # Run a container in detached mode and give it its own TTY
-podman run --name 'name' *image* # Run container with a specific name
+podman run --name 'name' *image* # Run container with a specific name, without, the name is random
 podman run -p 'host_port':*container_port* *image*  # Map ports between host and container
 podman run -v 'host_path':*container_path* *image*  # Mount a host directory in the container
 
-# Images Management
+# Image Management
 podman images                   # List all images
 podman pull 'image'             # Pull an image from a registry
 podman rmi 'image'              # Remove an image
@@ -178,8 +179,8 @@ Once the image is downloaded, you'll need to manually remove it.
 | `podman create`      |  Create a new container.            
 | `podman diff`        |  Inspect changes on a container or image's filesystem.
 | `podman events`      |  Monitor Podman events
-| `podman exec`        |  Execute a  command in a running container.
-| `podman export`      |  Export a  container's filesystem contents as a tar archive.
+| `podman exec`        |  Execute a command in a running container.
+| `podman export`      |  Export a container's filesystem contents as a tar archive.
 | `podman generate`    |  Generate structured data based on containers, pods or volumes.
 | `podman healthcheck` |  Manage healthchecks for containers
 | `podman history`     |  Show the history of an image.
@@ -188,23 +189,23 @@ Once the image is downloaded, you'll need to manually remove it.
 | `podman import`      |  Import a tarball and save it as a filesystem image.
 | `podman info`        |  Display Podman related system information. 
 | `podman init`        |  Initialize one or more containers
-| `podman inspect`     |  Display a container,  image,  volume,  network, or pod's configuration.
+| `podman inspect`     |  Display a container, image, volume, network, or pod's configuration.
 | `podman kill`        |  Kill the main process in one or more containers.
 | `podman load`        |  Load image(s)  from a tar archive into container storage.
 | `podman login`       |  Log in to a container registry.
 | `podman logout`      |  Log out of a container registry.
 | `podman logs`        |  Display the logs of one or more containers.
 | `podman machine`     |  Manage Podman's virtual machine
-| `podman manifest`    |  Create   and manipulate manifest lists and image indexes.
+| `podman manifest`    |  Create and manipulate manifest lists and image indexes.
 | `podman mount`       |  Mount a working container's root filesystem.
 | `podman network`     |  Manage Podman networks.
 | `podman pause`       |  Pause one or more containers.
-| `podman kube`        |  Play containers,  pods or volumes based on a structured input file.
+| `podman kube`        |  Play containers, pods or volumes based on a structured input file.
 | `podman pod`         |  Management tool for groups of containers, called pods.
-| `podman port`        |  List port mappings for a  container.
+| `podman port`        |  List port mappings for a container.
 | `podman ps`          |  Print out information about containers.
 | `podman pull`        |  Pull an image from a registry.
-| `podman push`        |  Push an image,  manifest list or image index from local storage to elsewhere. 
+| `podman push`        |  Push an image, manifest list or image index from local storage to elsewhere. 
 | `podman rename`      |  Rename an existing container.
 | `podman restart`     |  Restart one or more containers.
 | `podman rm`          |  Remove one or more containers.
@@ -245,9 +246,8 @@ To override the default storage location:
 ```bash
 # Either use --root with podman:
 podman --root /path/to/images run...
-# change the storage.graphroot in /etc/containers/storage.conf
-# or 
 ```
+Or, change the storage `graphroot` in `/etc/containers/storage.conf` (the [podman storage config file](#podman-storage-configuration-file)).  
 
 ### Podman Storage Configuration File
 [Source: Oracle](https://docs.oracle.com/en/operating-systems/oracle-linux/podman/podman-ConfiguringStorageforPodman.html)  
@@ -315,6 +315,7 @@ The `/var/lib/contianers/storage/` directory usually contains:
 
 ## Binding Local Storage to a Container Directory
 You can use `-v` to bind a local directory (or named container volume) to a directory inside a container.  
+
 Syntax:
 ```plaintext
 --volume, -v=[[SOURCE-VOLUME|HOST-DIR:]CONTAINER-DIR[:OPTIONS]]
@@ -334,11 +335,12 @@ Syntax:
 * `OPTIONS`: Options for the mount. 
     * This is a comma-separated list of options (see below) 
 
-* If no `SOURCE-VOLUME` or `HOST-DIR` is given, Podman creates an anonymous named volume
-  with a random name. This volume is removed when the container is removed using
-  `--rm` or `podman rm --volumes`
+---
 
 * Mount multiple volumes into a container by adding more `-v` options.
+* If no local storage is given, Podman creates an [anonymous volume](#named-container-volumes-and-anonymous-volumes) with a random name.
+
+---
 
  Create a bind mount.
 If -v /HOST-DIR:/CONTAINER-DIR is specified, Podman bind mounts /HOST-DIR from the host into /CONTAINER-DIR in the Podman container.
@@ -349,7 +351,8 @@ If no such named volume exists, Podman creates one.
 mounted from the remote server, not necessarily the client machine.)
 
 ### Container Volume Options
-The `OPTIONS` is a comma-separated list and can be: [1] ⟨#Footnote1⟩
+The `OPTIONS` for `-v` is a comma-separated list.  
+Available options:
 * `rw|ro`
     * `rw`: Mounts the volume with read/write permissions (default).  
     * `ro`: Mounts the volume as read-only.  
@@ -490,5 +493,30 @@ Volumes created with actual names are not anonymous.
 They are not removed by the `--rm` option or `podman rm --volumes`.
 
 ---
+
+## Getting into a Running Container
+`man://podman-exec`
+Attach to a container:
+
+If the container was started in detached mode (`podman run -d`), you can "attach"
+to it. 
+
+You can execute a command inside the container or start an interactive shell
+session using `podman exec`.  
+ 
+`podman exec` executes a command in a running container.
+
+```bash
+podman exec -it mycontainer bash
+```
+* `-i`: Keep STDIN open even if not attached.
+    * This means that you will be able to type into the container, enabling
+      interactive input.  
+* `-t`: Allocate a pseudo-TTY. 
+    * Creates a terminal-like session inside the container.  
+    * This does the same as `-t` when running `podman run`.  
+* `bash`: Specify the command to run.
+    * This can be any command, including shells, and you can specify arguments
+      to the command.  
 
 
