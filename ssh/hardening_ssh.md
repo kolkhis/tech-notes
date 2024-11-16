@@ -40,7 +40,10 @@ For example:
 * If I'm trying to log in as `kolkhis@remote-server`, then the `authorized_keys`
   file will be `remote-server:/home/kolkhis/.ssh/authorized_keys`.  
 
-## Generating an SSH Key
+
+## Change Auth Method of SSH to PublicKey Auth Only
+
+### Generating an SSH Key
 
 If you don't already have an SSH key, you'll need to generate one.  
 
@@ -56,18 +59,25 @@ Public keys will always end with `.pub`.
 cat ~/.ssh/id_ed25519.pub
 ```
 
-## Authorizing a User with Public Key Authentication
+### Authorizing a User with Public Key Authentication
 On the Server, add the contents of the public key file to `~/.ssh/authorized_keys`.
+* This is in the home directory of the user you're logging in as.  
+* If the file doesn't exist, create it.
 
-If the file doesn't exist, create it.
+The public SSH key will look like:
+```ssh
+ssh-ed25519 AAAAsdfNonsensicalKeyText comment if you made one
+```
+Each line in the `authorized_keys` file should be a single public key.  
 
 
-## Change Auth Method of SSH to Public Key Auth Only
-
+### Update `sshd_config` to only allow Public Key Authentication
 
 A quick note:
 Using this, you MUST have a public key in the `authorized_keys` file to access
-the server. Any other authentication methods will not work.  
+the server. 
+Any other authentication methods will not work (unless you allow password auth in step 5).  
+
 Only do this after accessing the server and making sure you have your key in there.
 Otherwise you could lock yourself out of the server.  
 
