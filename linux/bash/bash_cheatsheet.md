@@ -334,13 +334,6 @@ Check TCP packets and errors:
 ```bash  
 sar -n TCP,ETCP 1 5  
 ```
-Tried using my brain, maybe you can tell me if this is right:  
-`int* p` declares a pointer to an integer called `p`
-`int *p` declares and integer which is a derefereced `p` object  
-`int*p` is a stroke  
-
----  
-
 
 ---  
 
