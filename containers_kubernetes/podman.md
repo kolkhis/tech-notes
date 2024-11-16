@@ -3,10 +3,11 @@
 Podman is a container engine for developing, managing, and running OCI Containers on a Linux System.
 OCI (Open Container Initiative) Containers are a kind of package that encapsulate your application and all its dependencies.
 
+
 ## Table of Contents
 * [Podman Cheatsheet](#podman-cheatsheet) 
 * [Building a Container from a Dockerfile](#building-a-container-from-a-dockerfile) 
-* [Running a Container with Podman (Apache HTTP Server)](#running-a-container-with-podman-apache-http-server) 
+* [Example of Running a Container with Podman (Apache HTTP Server)](#example-of-running-a-container-with-podman-apache-http-server) 
 * [Stopping a Container](#stopping-a-container) 
 * [Avoiding Port Conflicts](#avoiding-port-conflicts) 
 * [Pods vs. Containers](#pods-vs-containers) 
@@ -16,7 +17,17 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
 * [Managing Image Storage with Podman](#managing-image-storage-with-podman) 
     * [Podman Storage Configuration File](#podman-storage-configuration-file) 
     * [Directory Structure in `/varlib/containers/storage`](#directory-structure-in-varlibcontainersstorage) 
+* [Binding Local Storage to a Container Directory](#binding-local-storage-to-a-container-directory) 
+    * [Container Volume Options](#container-volume-options) 
+    * [Volume Mount Option Examples](#volume-mount-option-examples) 
+        * [Basic read-only bind mount](#basic-read-only-bind-mount) 
+        * [Mounting with Overlay option](#mounting-with-overlay-option) 
+        * [Mount with SELinux Contexts](#mount-with-selinux-contexts) 
+        * [Bind mount with `nosuid` and `noexec` options](#bind-mount-with-nosuid-and-noexec-options) 
+* [Named Container Volumes and Anonymous Volumes](#named-container-volumes-and-anonymous-volumes) 
 * [Podman Environment Variables](#podman-environment-variables) 
+* [Removing Images and Anonymous Volumes after Container Exits](#removing-images-and-anonymous-volumes-after-container-exits) 
+* [Limitations of Containers](#limitations-of-containers) 
 
 
 ## Podman Cheatsheet
@@ -113,7 +124,7 @@ Building a container image from a Dockerfile is done using `podman build`.
     * `.`: Specifies the path to the directory containing the Dockerfile.  
 
 
-## Running a Container with Podman (Apache HTTP Server)
+## Example of Running a Container with Podman (Apache HTTP Server)
 ```bash
 podman run -dt -p 8080:80/tcp docker.io/library/httpd 
 ```
@@ -148,60 +159,7 @@ Once the image is downloaded, you'll need to manually remove it.
 
 
 
-## Avoiding Port Conflicts
 
-Each container should be assigned a different port on the host system.  
-Services cannot share ports on a system. The first one to bind a port will win.    
-
-Kubernetes automatically handles port conflicts by assigning a new port to each
-container.  
-
-
-## Pods vs. Containers
-
-Containers and pods are two different concepts.  
-
-Containers are individual instances of an application, focused on running a single
-process or service.  
-
-Pods are essentially a layer of abstraction on top of containers, used to group
-containers that work together closely and share their network and storage.  
-
-
-### Containers
-Containers are single, isolated application instances.  
-
-A container is an isolated instance of an application with its own filesystem, 
-network stack, and process space.  
-It runs a single process or service (though it can technically run multiple
-processes).  
-
-Containers package an application and its dependencies, making it portable and 
-consistent across environemtns.  
-
-Containers are the basic unit of deployment.
-They're intended to run a single microservice or an application process.  
-
----
-
-
-### Pods
-
-
-A pod is collection of one or more containers that are tightly coupled and share the
-same network and storage resources. 
-Containers within a pod can communicate with each other via `localhost` and share volumes.  
-
-All containers within a pod share the same contexts.
-This means they share an IP address, network namespace, and storage volumes. 
-This enables them to work closely together as parts of a single service.  
-
-In Kubernetes, a pod is the smallest deployable unit. Not a container. 
-Even if there is only one container, it will still be part of a pod.  
-Pods enable better organization and scaling of applications by allowing multiple
-containers to function as a single unit. 
-
----
 
 ## List of Podman Commands
 `man://podman 330`
@@ -355,7 +313,150 @@ The `/var/lib/contianers/storage/` directory usually contains:
     * `overlay-images/`: Stores metadata for each image, including image layers.  
 
 
+## Binding Local Storage to a Container Directory
+You can use `-v` to bind a local directory (or named container volume) to a directory inside a container.  
+Syntax:
+```plaintext
+--volume, -v=[[SOURCE-VOLUME|HOST-DIR:]CONTAINER-DIR[:OPTIONS]]
+```
+* `SOURCE-VOLUME|HOST-DIR`: Optional. The source directory on the host machine or
+  [named container volume](#named-container-volumes-and-anonymous-volumes).  
+    * Must be a path on the host or the name of a named volume.  
+    * You can also specify a container volume name instead of a directory. 
+        * If you specify a named volume, it will be created if it doesn't exist.  
+        * Volumes will be in `/var/lib/containers/storage/volumes`
+    * Host paths are allowed to be absolute or relative.
+        * Relative paths are resolved relative to the directory Podman is run in.
+    * Any source that does not begin with a `.` or `/` is treated as the name of a named volume.
+* `CONTAINER-DIR`: The directory inside the container.  
+    * The `SOURCE-VOLUME/HOST-DIR` is mounted into the container at this directory.
+    * The `CONTAINER-DIR` must be an absolute path.
+* `OPTIONS`: Options for the mount. 
+    * This is a comma-separated list of options (see below) 
 
+* If no `SOURCE-VOLUME` or `HOST-DIR` is given, Podman creates an anonymous named volume
+  with a random name. This volume is removed when the container is removed using
+  `--rm` or `podman rm --volumes`
+
+* Mount multiple volumes into a container by adding more `-v` options.
+
+ Create a bind mount.
+If -v /HOST-DIR:/CONTAINER-DIR is specified, Podman bind mounts /HOST-DIR from the host into /CONTAINER-DIR in the Podman container.
+Similarly, -v SOURCE-VOLUME:/CONTAINER-DIR mounts the named volume from the host into the container.  
+If no such named volume exists, Podman creates one.  
+
+(Note when using the remote client, including Mac and Windows (excluding  WSL2)  machines,  the  volumes  are
+mounted from the remote server, not necessarily the client machine.)
+
+### Container Volume Options
+The `OPTIONS` is a comma-separated list and can be: [1] ⟨#Footnote1⟩
+* `rw|ro`
+    * `rw`: Mounts the volume with read/write permissions (default).  
+    * `ro`: Mounts the volume as read-only.  
+* `z|Z`
+    * `z`: Apply shared SELinux labels to the mount.
+        * Allows the volume to be accessed by multiple containers that require shared access.  
+    * `Z`: Apply a private SELinux label to the mount.
+        * Makes it accessible only to the current container.  
+      
+* `[O]`: Enable the "OverlayFS" storage driver.  
+    * Allows the "Overlay Storage Driver" to be used for the mount.
+    * Useful when mountaing an overlay filesystem to improve performance in some scenarios
+    * Using this requires the host directory to support the overlay filesystem.  
+    * TODO: Find out what "OverlayFS"/"Overlay Storage Driver" is.  
+
+* `[U]`: User namespace remapping
+    * Automatically remaps UIDs and GIDs to match user namespaces if they're enabled.  
+    * Useful for running containers with different user permissions than the host.  
+
+* `[no]copy`
+    * `copy`: Copies data from the container's original directory into the mount
+      location on first use.   
+    * `nocopy`: Skips copying data on first use.
+        * Can improve performance on empty or new directories.  
+
+* `[no]dev`
+    * `dev`: Allows access to device files on the host within the mount.  
+    * `nodev`: Restricts access to device files within the mount. 
+        * Generally more secure.  
+
+* `[no]exec`
+    * `exec`: Allows execution of binaries on the host within the mount.
+    * `noexec`: Prevents the execution of binaries from the mount.  
+        * Generally more secure.  
+
+* `[no]suid`
+    * `suid`: Enables the `setuid` and `setgid` bits.  
+        * These bits allow executables to run with elevated privileges.  
+    * `nosuid`: Disables the `setuid` and `setgid` bits.
+        * Generally more secure.  
+
+* `[r]bind`
+    * `bind`: Creates a simple bind mount that mirrors a host directory into the
+      container, and reflects any changes on the host.  
+    * `rbind` (recursibe bind): Binds the specified directory and all its subdirectories.  
+
+* `[r]shared|[r]slave|[r]private[r]unbindable`: Defines mount propagation settings.
+  Controls how changes within the mount are propgated between the host and container.  
+    * `shared`: Changes in the mount point are propagated between the container and
+      the host in both directoies.  
+    * `slave`: Only changes on the host propagate to the container.  
+    * `private`: No changes are propagated in either direction.  
+    * `unbindable`: Marks the mount as unbindable. Prevents it from being mounted elsewhere.  
+    * `r`: Makes any of the options above recursive, applying the setting to all subdirectories.  
+* `idmap[=options]`
+    * Sets ID mapping options. 
+    * Allows you to specify how UIDs and GIDs are mapped betwee nthe host and
+      container. 
+    * Used when you need finer control over user and group access.  
+    * `idmap=container:[user_name_in_container[:user_id_in_container]]`
+
+
+### Volume Mount Option Examples
+#### Basic read-only bind mount:
+```bash
+podman run -v /host/config:/app/config:ro myimage
+```
+
+#### Mounting with Overlay option:
+```bash
+podman run -v /host/data:/data:O myimage
+```
+Enables overlay.
+Potentially improves performance in `/host/data` supports overlay storage.  
+
+#### Mount with SELinux Contexts
+```bash
+podman run -v /shared/data:/container/data:z myimage
+```
+
+#### Bind mount with `nosuid` and `noexec` options
+```bash
+podman run -v /host/shared:/contianer/shared:nosuid,noexec myimage
+```
+This makes `/host/shared` available inside the contianer at /container/shared, but 
+prevents the execution of binaries (`noexec`) from the mount, and disables `suid`
+permissions (`nosuid`) permissions.
+This improves security within the container.  
+
+
+---
+
+## Named Container Volumes and Anonymous Volumes
+The actual storage location on the host machine: 
+* `/var/lib/containers/storage/volumes` for Podman 
+* `/var/lib/docker/volumes` for Docker
+
+If you specify a name for `SOURCE-VOLUME`, Podman creates a new volume with that name
+if it doesn't already exist.  
+
+If you don't specify a name or path to mount to the container, Podman creates an
+anonymous volume and mounts it to the container. 
+This anonymous volume will have a random name and will be stored in the same place as
+named volumes.  
+
+
+---
 
 ## Podman Environment Variables
 
@@ -375,5 +476,19 @@ The `/var/lib/contianers/storage/` directory usually contains:
 
 
 
+## Removing Images and Anonymous Volumes after Container Exits
+Remove images and anonymous volumes automatically using `podman run` with these flags:
+* `--rm`: Automatically remove the container and any anonymous unnamed volume 
+          associated with the container when it exits.
+    * This is disabled by default.  
+
+* `--rmi`: After the container exits, remove the image unless another container is using it. 
+    * Implies `--rm` on  the  new container.
+    * This is disabled by default.  
+
+Volumes created with actual names are not anonymous. 
+They are not removed by the `--rm` option or `podman rm --volumes`.
+
+---
 
 
