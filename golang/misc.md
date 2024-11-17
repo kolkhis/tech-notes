@@ -1,19 +1,27 @@
 
 # Misc Golang Notes
 
+Golang is a popular language for platform engineering.  
+Writing CLI tools, web services, middleware, APIs, etc., are common use cases.  
+
 
 ## Table of Contents
-* [What is Platform Engineering?](#what-is-platform-engineering?) 
 * [The Defer Keyword](#the-defer-keyword) 
-* [File Structure for `main.go`](#file-structure-for-main.go) 
-* [Zero Values](#zero-values) 
+* [File Structure for `main.go`](#file-structure-for-maingo) 
+* [Zero Values (Zero Initialization)](#zero-values-zero-initialization) 
+* [Map Declaration and Initialization](#map-declaration-and-initialization) 
+    * [Looping Over a Map](#looping-over-a-map) 
+* [Channels](#channels) 
+    * [Channel Creation](#channel-creation) 
+    * [Closing a Channel](#closing-a-channel) 
+* [Goroutines](#goroutines) 
+    * [Launching a Goroutine](#launching-a-goroutine) 
+    * [Receiving Results and Output](#receiving-results-and-output) 
+* [Import Statement](#import-statement) 
+* [Pain Point](#pain-point) 
 
 
-## What is Platform Engineering?
-Platform engineering is creating systems that other developers can use to develop applications,  
-which are then used by users.  
-You'll write things that are used by other development teams.  
-Golang is a popular language for platform engineering.  
+
 
 ## The Defer Keyword
 
@@ -44,7 +52,11 @@ put your `main.go` file in there.
 "n to m" is a "many to many" mapping
 
 
-## Zero Values
+## Zero Values (Zero Initialization)
+Go supports zero-initialized variables by default.  
+Any time a variable is declared, it's given a zero-value by default.  
+The zero value given depends on the type of the variable.  
+ 
 The zero value for a type is the value that is assigned to a variable of that type
 when it is declared.
 
@@ -52,8 +64,9 @@ when it is declared.
 var some_number int
 fmt.Println(some_number)  // 0
 ```
-The `some_number` variable is declared, but not initialized. Go automatically assigns it the
-zero-value of its type (in this case, `0`).
+The `some_number` variable is declared, but not initialized with a value.  
+Go automatically assigns it the zero-value of its type.  
+In this case, it's an `int`, so the zero-value is `0`.
 
 
 | Type        | Zero Value
@@ -144,4 +157,11 @@ zero-value of its type (in this case, `0`).
 If your program doesn't explicitly import any packages, it can only use builtin
 functions and types (`make`, `chan`, `map`, `for`, `range`, `go`, `func`, `close`, 
 and `println`), which do not require an import statement.
+
+
+## Pain Point
+
+Go modules are the biggest pain point of Go.  
+`go mod tidy` doesn't do what it's supposed to do. 
+Managing dependencies sometimes needs to be done manually in a `go.mod` file.  
 
