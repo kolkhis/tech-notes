@@ -887,6 +887,74 @@ On the other hand, a WAF generally focuses on threats aimed at HTTP/HTTPS and ot
 Additionally, WAFs run on different algorithms such as anomaly detection, signature-based, and heuristic algorithms.  
 Therefore, it is best to place a standard firewall as the first layer of security and then place a WAF in front of the application servers in the DMZ zone.  
 
+## Bash Parameter Expansion (Slicing/Substitution)  
+
+Not to be confused with [parameter transformation](#bash-parameter-transformation).  
+This does technically transform variables, but it serves a different purpose.  
+
+Replace strings and variables in place with parameter expansion.  
+
+### Slicing with Parameter Expansion
+```bash  
+name="John"  
+echo "${name}"  
+echo "${name/J/j}"    #=> "john" (substitution)  
+echo "${name:0:2}"    #=> "Jo" (slicing)  
+echo "${name::2}"     #=> "Jo" (slicing)  
+echo "${name::-1}"    #=> "Joh" (slicing)  
+echo "${name:(-1)}"   #=> "n" (slicing from right)  
+echo "${name:(-2):1}" #=> "h" (slicing from right)  
+echo "${food:-Cake}"  #=> $food or "Cake"  
+length=2
+echo "${name:0:length}"  #=> "Jo"  
+# Cutting out the suffix  
+str="/path/to/foo.cpp"  
+echo "${str%.cpp}"    # /path/to/foo  
+echo "${str%.cpp}.o"  # /path/to/foo.o  
+echo "${str%/*}"      # /path/to  
+# Cutting out the prefix  
+echo "${str##*.}"     # cpp (extension)  
+echo "${str##*/}"     # foo.cpp (basepath)  
+# Cutting out the path, leaving the filename  
+echo "${str#*/}"      # path/to/foo.cpp  
+echo "${str##*/}"     # foo.cpp  
+
+echo "${str/foo/bar}" # /path/to/bar.cpp  
+
+str="Hello world"  
+echo "${str:6:5}"   # "world"  
+echo "${str: -5:5}"  # "world"  
+```
+
+### Substitution with Parameter Expansion
+```bash  
+${foo%suffix}   Remove suffix  
+${foo#prefix}   Remove prefix  
+${foo%%suffix}  Remove long suffix  
+${foo/%suffix}  Remove long suffix  
+${foo##prefix}  Remove long prefix  
+${foo/#prefix}  Remove long prefix  
+${foo/from/to}  Replace first match  
+${foo//from/to}     Replace all  
+${foo/%from/to}     Replace suffix  
+${foo/#from/to}     Replace prefix  
+
+src="/path/to/foo.cpp"  
+base=${src##*/}   #=> "foo.cpp" (basepath)  
+dir=${src%$base}  #=> "/path/to/" (dirpath)  
+```
+
+### Substrings with Parameter Expansion
+```bash  
+${foo:0:3}      # Substring (position, length)  
+${foo:(-3):3}   # Substring from the right  
+```
+
+### Getting the Length of a String/Variable with Parameter Expansion  
+```bash  
+${#foo}        # Length of $foo  
+```
+
 
 ## Bash Parameter Transformation  
 `man://bash 1500`
@@ -996,6 +1064,51 @@ echo "${array[@]^}"   # Capitalize each array element: "One Two Three"
 files=("file1.txt" "*.sh")  
 echo "${files[@]^}"   # Expands "*.sh" to match any shell scripts in the directory  
 ```
+
+## Handling Empty and Undefined Variables in Bash
+The walrus operator `:=` is available in bash using the syntax:
+```bash
+"${foo:=default_value}"
+```
+This will only set `foo` if `foo` is either:
+* Unset (variable doesn't exist yet)
+* Empty (variable exists but has no value)
+
+If `foo` is set to a value, then the `:=` operator will do nothing, and the value of
+`foo` is returned. 
+
+### Bash Walrus Examples
+#### Assigning a Default Value
+```bash
+unset VAR
+echo "${VAR:=default}"  # Output: default
+echo "VAR"              # Output: default
+```
+
+A more practical example:
+```bash
+FILENAME="${1:=default_file.txt}"
+echo "Processing ${FILENAME}"
+```
+This either take `$1` (the first argument) as the `FILENAME`, or if `$1` is empty, not set,
+or doesn't exist, it will use `default_file.txt` as the value instead.  
+
+
+#### Leaving a non-null value unchanged
+```bash
+VAR="Hello"
+echo "${VAR:=default}"  # Output: Hello
+echo "VAR"              # Output: Hello (does not change)
+```
+
+#### Handling an Empty Variable
+```bash
+VAR=""
+echo "${VAR:=default}"  # Output: default
+echo "VAR"              # Output: default (value is updated)
+```
+
+
 
 ## Checking the Operating System with the `OSTYPE` Variable  
 Use `OSTYPE` instead of `uname` for checking the operating system. 
@@ -1160,6 +1273,51 @@ It only frees up space used for swap on the disk.
       writes to disk.  
 
 
+## OPNsense
+OPNsense is an open-source firewall and routing software.  
+It's based on FreeBSD and designed to provide advanced networking features while
+still being easy to use and highly customizabale.  
+
+Widely used for both home and enterprise networks.  
+
+Easy, free, secure, and flexible.  
+
+---
+
+OPNsense is commonly used for:
+* Home network firewalls
+* Enterprise gateway firewalls
+* VPN servers
+* Content filtering
+* Load balancing
+
+---
+
+Some of the features of OPNsense:
+* Firewall and security:
+    * Uses `pfSense`'s `pf` (packet fileter) for robust and efficient packet filtering.  
+    * Supports statful packet inspection; tracks the state of connections and applies
+      rules accordingly.  
+    * Supports VPNs; Includes options for setting up OpenVPN, IPsec, and WireGuard VPNs.  
+* Has a web-based interface:
+    * The entire configuration is managed through a web interface.  
+    * Provides graphs, dashboards, and real-time monitoring of system and network activity/performance.  
+* Advanced routing options:
+    * Supports static and dynamic routing protocols.  
+        * OSFP, BGP, OSPF, RIP, RIPng, IS-IS, EIGRP, PIM, and HSRP.
+    * Can function as a gateway for complex network setups.  
+* Plugins and extensibility:
+    * OPNsense includes a plugin system that allows for third-party software
+      extensions to be installed and managed.  
+        * Intrusion Detection/Prevention (IDS/IPS) with tools like Suricata
+        * Proxy server for content filtering anc caching.  
+        * Dynamic DNS support.  
+    * You can extend functionality to meet enterprise-grade needs or specific home
+      network needs.  
+* Hardware compatibility
+    * Runs on x86 hardware, making it compatible with many devices, including
+      embedded systems.  
+    * Available as an image for VMs.  
 
 
 
