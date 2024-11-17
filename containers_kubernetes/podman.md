@@ -512,11 +512,25 @@ podman exec -it mycontainer bash
 * `-i`: Keep STDIN open even if not attached.
     * This means that you will be able to type into the container, enabling
       interactive input.  
-* `-t`: Allocate a pseudo-TTY. 
+* `-t`: Allocate a pseudo-TTY (terminal interface). 
     * Creates a terminal-like session inside the container.  
     * This does the same as `-t` when running `podman run`.  
-* `bash`: Specify the command to run.
+* `bash`: Specify the command to run.  
     * This can be any command, including shells, and you can specify arguments
       to the command.  
+
+`podman attach` can also be used to attach to a running container
+
+```bash
+podman attach mycontainer
+```
+* This attaches to the container using the primary process that's already running
+  inside the container.  
+* Unlike the `exec` cmd, this does *not* start a new process in the container.  
+* If the primary process does not output to a terminal, or `stdin` is not
+  interactive, attaching may not be very useful.  
+* Can be useful to monitor the output of the process running in a container.  
+* So, unless the container is running a shell, you may want to use `exec` instead.  
+
 
 
