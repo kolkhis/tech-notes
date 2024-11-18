@@ -2,8 +2,9 @@
 
 # User Management
 
+
 ## Table of Contents
-* [Commands for User Management](#commands-for-user-management) 
+* [Commands for User and Group Management](#commands-for-user-and-group-management) 
 * [Show Default User Settings](#show-default-user-settings) 
     * [Changing the Default User Settings](#changing-the-default-user-settings) 
 * [Creating a New User](#creating-a-new-user) 
@@ -26,9 +27,11 @@
     * [Add a User to a Group](#add-a-user-to-a-group) 
     * [Change a User's Home Directory](#change-a-users-home-directory) 
 * [Best Practices for User and Group Management](#best-practices-for-user-and-group-management) 
+* [Backing up User Configuration Files](#backing-up-user-configuration-files) 
+* [Resources](#resources) 
 
 
-## Commands for User Management
+## Commands for User and Group Management
 Commands for user management:
 | Command    | Description
 | ---------- | ------------
@@ -43,8 +46,50 @@ Commands for user management:
 | `chage`    | Changes user password expiration date 
 | `users`    | Lists the users currently logged into the system
 | `groups`   | Lists all the groups on the system  
- 
+| `id`       | Get GID, UID, and groups for a user
+| `who`      | Show who is logged in and what they are doing
+| `w`        | More detailed version of `who`  
+| `last`     | Show login records for all users
+| `lslogins` | Information about users and processes
+| `getent`   | Display entries from the Name Service Switch libraries
 
+
+```bash
+# Creating and managing users
+useradd -m username        # Create a new user with a home directory
+passwd username            # Set a password for the user
+usermod -aG sudo username  # Add a user to a specific group 
+userdel -r username        # Delete a user and their home directory
+
+# Managing groups
+addgroup groupname             # Create a new group
+usermod -aG groupname username # Add an existing user to a group
+delgroup groupname             # Delete a group
+groups username                     # List all groups a user belongs to
+
+# Getting user and group information
+id username      # Show UID, GID, and groups for the user
+who              # Show who is logged in
+w                # Show who is logged in, and what they're doing
+last             # Show login records, newest to oldest
+last | tac       # Show login records, oldest to newest 
+getent passwd username  # Show the /etc/passwd entry for a user
+
+
+# Password management
+passwd                  # Change the password for the current user
+passwd username         # Change the password for another user (root only)
+passwd -l username      # Lock a user's account
+passwd -u username      # Unlock a user's account
+chage -M 30 username    # Set password expiration for a user (expire in 30 days)
+chage -l username       # View password expiration details
+
+# User modifications
+usermod -l newusername username  # Rename a user account
+usermod -d /new/home/dir -m username # Change a user's home directory and create it
+gpasswd -d username groupname  # Remove a user from a group
+
+```
 
 ## Show Default User Settings 
 
@@ -331,7 +376,6 @@ usermod -d /new_home/dir -m user1
 * `-m`: Moves the contents of the old home directory to the new one.  
 
 
-
 ## Best Practices for User and Group Management
 * Always create individual user accounts for each person who needs access.
   Avoid using shared accounts.  
@@ -341,5 +385,20 @@ usermod -d /new_home/dir -m user1
     * `chage -d 0` disables password aging. It resets the age of the password to `0` days.   
     * `chage -I -1` sets the number of days until the user must change their password to `1` day.
     * `chage -M 90` sets the number of days after a password has expired until the account is disabled.  
+
+## Backing up User Configuration Files
+It's a good idea to back up user configuration files:
+```bash
+sudo cp /etc/passwd /etc/passwd.bak
+sudo cp /etc/shadow /etc/shadow.bak
+sudo cp /etc/group /etc/group.bak
+```
+
+
+
+## Resources
+* [User mangement on Linux (GeeksForGeeks)](https://www.geeksforgeeks.org/user-management-in-linux/)
+* [Finding User Info (hostingmate)](https://hostingmate.net/web-hosting/12-ways-to-find-user-account-info-and-login-details-in-linux/)
+
 
 
