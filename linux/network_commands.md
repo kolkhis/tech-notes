@@ -104,6 +104,19 @@ nc example.com 1234 # Connect to example.com on port 1234
 Tool to transfer data from or to a server. Supports various protocols.
 ```bash
 curl https://example.com
+curl -o ~/downloaded_file.txt https://example.com/file.txt # Download file.txt
+
+# Silently download file.txt
+curl -s -o ~/downloaded_file.txt https://example.com/file.txt 
+
+# Silently download file.txt, and be silent if it fails
+curl -sf -o ~/downloaded_file.txt https://example.com/file.txt 
+
+# Follow redirects (like if the file has moved), and be silent even when it fails
+curl -sfL -o ~/downloaded_file.txt https://example.com/file.txt 
+
+# Follow redirects (like if the file has moved), fail silently but output error messages if it fails
+curl -sfSL -o ~/downloaded_file.txt https://example.com/file.txt 
 ```
 
 
