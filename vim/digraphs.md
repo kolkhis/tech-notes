@@ -8,6 +8,8 @@
 ## Digraphs  
 * `:h dig` | `digraphs`  
   
+∆ ♩♪♫ ♭♮
+ ⑇ ⑈ ⑉ 
 Digraphs are special characters that can be inserted (while in insert mode) with `<C-k>xx` where  
 `xx` is a key combination for a given `digraph`.  
 
@@ -20,6 +22,8 @@ There are two ways to insert digraph characters:
       digraph, shown to the right of each digraph in `:digraphs`.  
 
 ### List of Digraphs
+This is a non-exhaustive list of digraph characters.  
+For a full list, see `:dig`.  
 ```digraphs
 dH ┯  9519   Dh ┰  9520   DH ┳  9523   uh ┴  9524   uH ┷  9527   Uh ┸  9528   UH ┻  9531
 vh ┼  9532   vH ┿  9535   Vh ╂  9538   VH ╋  9547   FD ╱  9585   BD ╲  9586   TB ▀  9600
