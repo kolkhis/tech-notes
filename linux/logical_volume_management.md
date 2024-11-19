@@ -73,6 +73,7 @@ For more indepth info on these, see [this section](#tools-for-managing-physical-
 * `lvcreate`: Creates LV inside VG
   ```bash
   lvcreate vg1 -n space -L 5G # Create a logical volume called space, with 5GB of storage space
+  lvcreate vg1 -n storage -l +100%FREE  # Create a logical volume called storage, with all free space inside the VG.  
   ```
     * `-n`: Name of the LV
     * `-L`: Size of the LV
