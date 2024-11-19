@@ -91,10 +91,12 @@ dpkg -i package.deb  # Install a .deb package manually
 
 ### For **Red Hat-based systems** (like CentOS, Fedora):
 ```bash
-yum update  # Update packages
-yum install package  # Install a package
-yum remove package  # Remove a package
+dnf update  # Update packages
+dnf install package  # Install a package
+dnf remove package  # Remove a package
+dnf whatprovides command  # Show what package provides a command  
 rpm -ivh package.rpm  # Install an .rpm package manually
+rpm -qa  # List all packages
 ```
 
 ## Process Management
@@ -124,8 +126,8 @@ iostat 5      # Display disk I/O statistics every 5 seconds
 ping hostname_or_IP  # Test connectivity to another host
 nslookup hostname  # Query DNS for a host
 traceroute hostname  # Trace the route packets take to reach a host
-netstat -tuln  # Show open ports and connections
-ss -tuln       # Similar to netstat; show listening sockets and ports
+ss -tuln       # Show open ports and sockets  
+netstat -tuln  # Older version of ss. Shows open ports and connections
 iptables -L    # View firewall rules
 firewalld-cmd --list-all  # View firewalld rules (CentOS/RedHat)
 curl url       # Transfer data from or to a server
