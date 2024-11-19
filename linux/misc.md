@@ -1336,7 +1336,7 @@ echo -e "o\nn\np\n1\n\n\nw" | fdisk /dev/sda
     * `w`: Writes the changes and exits fdisk .
     * `\n`: Each `\n` is a linebreak, same as pressing Enter in the interactive prompt.  
 
-2. `|` : Pipe. It takes the output from the previous command (`echo`) and sends it as input to the next command ( fdisk ).
+2. `|` : Pipe. It takes the output from the previous command (`echo`) and sends it as input to the next command (`fdisk`).
 
 3. `fdisk /dev/sda`
     * `fdisk` is a command line utility used to create and manipulate disk partition tables.
@@ -1344,4 +1344,29 @@ echo -e "o\nn\np\n1\n\n\nw" | fdisk /dev/sda
 
 * This command will delete all partitions on the first hard disk and create a new primary partition that uses the whole disk.
 
+## Wipe Existing Data on a Disk or Parition
+You can use `dd` to wipe a disk by overwriting the disk.  
+```bash
+sudo dd if=/dev/zero of=/dev/sdb1 bs=1M count=100
+```
+This can wipe a disk or wipe a partition.  
+Adjust the count to roughly match the size of the disk or partition you want to wipe.  
 
+
+## Testing a Disk for Errors using `smartctl`
+`smartctl` is a command line utility that can be used to test a disk for errors.  
+```bash
+smartctl -a /dev/sda            # Show all SMART info about the disk
+smartctl -t short /dev/sda      # Start a quick test (~2 minutes, runs in background)
+smartctl -l selftest /dev/sda   # View test results
+ 
+smartctl -t long /dev/sda       # Run a full test (takes a long time)
+smartctl -l selftest /dev/sda   # View test results 
+```
+
+
+
+## Special Files to Get Bits: Zero, Random or Random 0/1
+* `/dev/zero` : returns zero
+* `/dev/random` : returns random
+* `/dev/urandom` : returns random 0 or 1
