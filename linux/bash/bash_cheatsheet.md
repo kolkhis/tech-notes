@@ -656,7 +656,6 @@ printf "%s: %s" "$DATE" "$USER" >> /home/kolkhis/userlogs.log
 ```
 
 ## Important Linux Commands  
-
 ### User and Group Management  
 ```bash  
 passwd      # Change user password  
@@ -709,8 +708,10 @@ du      # Get disk usage
 free    # Get RAM/swapfile information  
 lscpu   # Get CPI information  
 lshw    # Get all system information  
-lsblk   # Get information about block devices  
+lsblk   # Get information about block devices (storage devices) as a tree
+fdisk -l # Get more detailed information about block devices 
 ulimit  # Get current settings about current system limits & more  
+mount   # List mounted filesystems, or mount a filesystem
 ```
 
 #### "others"  
