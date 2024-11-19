@@ -1,6 +1,7 @@
 
 ## Linux Cheatsheet
 
+Also see [the linux sysadmin cheatsheet](./sysadmin_command_cheatsheet.md).  
 
 ## Table of Contents
 * [Linux Cheatsheet](#linux-cheatsheet) 
@@ -79,9 +80,9 @@ dpkg -i package.deb  # Install a .deb package manually
 
 #### For **Red Hat-based systems** (like CentOS, Fedora):
 ```bash
-yum update  # Update packages
-yum install package  # Install a package
-yum remove package  # Remove a package
+dnf update  # Update packages
+dnf install package  # Install a package
+dnf remove package  # Remove a package
 rpm -ivh package.rpm  # Install an .rpm package manually
 ```
 
@@ -179,32 +180,55 @@ The `nproc` command shows the number of processors that the system has access to
 A machine with a 4-core CPU will have 4 processors.  
 
 
-### Get System Information
-* `uname -a`: Check kernel/OS  
-* `uname -r`: Check kernel version
-* `uptime`  : Check how long system has been up
-* `cat /proc/cmdline` : Get info on how the system was started
+### Getting Resource Usage Information
+#### Processes
+```bash
+ps -ef                  # Check what processes are running on the system (Shows their PIDs and PPIDs)
+ps -ef | awk '{print $1}' | sort | uniq -c  # Show all unique users running processes  
+ps aux                  # Different notation, shows all processes (also memory and cpu usage of them)
+pidstat 1 5             # Show process resource CPU Usage.  Check which processes are executing on the processor
+pidstat --human 1 5     # Human-readable format.  
+```
+The different between `ps -ef` and `ps aux`:  
+* `ps -ef` shows the PPIDs of processes (parent process ID), `ps aux` doesn't.  
+    * This is `System V` style.  
+* `ps aux` shows CPU and Memory usage of processes, `ps -ef` doesn't.  
+    * This is `BSD` style.  
+
+ps aux vs ps -ef
+
+#### Kernel
+```bash
+uname -a            # Check kernel/OS  
+uname -r            # Check kernel version
+cat /proc/cmdline   # Get info on how the system was started
+```
+
+#### Uptime
+```bash
+uptime              # Check how long system has been up
+w                   # Show uptime and all the users currently logged into the system.  
+who                 # a less detailed version of ``
+```
+
+#### Memory, CPU, Disk, and Network Usage
+
 * `vmstat 1 5` : Check virtual memory usage (1 second intervals for 5 seconds)
 * `mpstat 1 5` : Check overall CPU usage
-* `ps -ef` : Check what processes are running on the system
-* `ps -ef | awk '{print $1}' | sort | uniq -c`
-
-* `pidstat 1 5` : Check which processes are executing on the processor
 * `iostat -xz 1 5` : More CPU and Disk usages
-
 * `sar -n DEV 1 5`: Check network usage and load of system
-
 * `ethtool enp1s0`: Check link to `enp1s0`, or any other network connection
 
-* `dmidecode` : Get system information
+#### Software Packages
 
 * `dpkg -l | wc -l` : Get number of packages in `dpkg`
 * `dpkg -l | grep -i ssh`: Get packages with `ssh` in their names
-
 * `rpm -qa | wc -l`: Get the number of packages on Red-Hat-adjacent systems (rpm)
-    * `xdsh computer 'rpm -qa | wc -l'`: ???
 
-## Disk Information
+
+## Disk and Device Information
+
+* `dmidecode`: Get extensive info on hardware components.  
 
 * `fdisk -l | grep -i vd`: Check physical disk(s) and their partitions.  
     * Physical disks will be `vd{a,b,c..}` or `sd{a,b,c..}`  
@@ -214,21 +238,21 @@ A machine with a 4-core CPU will have 4 processors.
         * `/dev/vda1`  
         * `/dev/sda1`  
 
-* `lsblk`: check disk information  
-* `blkid`: check disk information  
+* `lsblk`: Show storage devices (block devices) in a tree.  
+* `blkid`: Show block device attributes (UUIDs, labels, etc.)
     * `blkid /dev/vda1`  
     * `blkid /dev/sda2`  
 
 * `df -h`: Filesystem usage  
 
-* `mount | grep vda`: Mount with no args lists mounted devices  
+* `mount`: lists mounted devices (with no arguments), or mounts a filesystem.  
 
 * `df -h / | grep -v Size | awk '{print $2}'`  
 * `df -h / ` will show the `/` root directory in df  
 * `grep -v Size` will remove the Size column  
 * `awk '{print $2}'` will print 2nd column  
 
-* `df -i`: Inodes  
+* `df -i`: Show inode usage
 
 
 ## Logging and Monitoring
