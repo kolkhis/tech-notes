@@ -1320,4 +1320,28 @@ Some of the features of OPNsense:
     * Available as an image for VMs.  
 
 
+## Scriptable Way to Partition Disks with `fdisk`/`gdisk`
+Send input to `fdisk` (or `gdisk`) without entering the interactive prompt by using a
+pipe to send input to the program.  
+```bash
+echo -e "o\nn\np\n1\n\n\nw" | fdisk /dev/sda
+```
+1. `echo -e "o\nn\np\n1\n\n\nw"`: This line is sending a series of commands
+    to `fdisk` as follows:
+    * `o`: Delete all partitions and create a new empty DOS partition table.
+    * `n`: Add a new partition.
+    * `p`: Makes the new partition primary.
+    * `1`: Specifies it as partition number 1.
+    * The three blank lines (`\n`) give the default start and end values, i.e., use the entire disk.
+    * `w`: Writes the changes and exits fdisk .
+    * `\n`: Each `\n` is a linebreak, same as pressing Enter in the interactive prompt.  
+
+2. `|` : Pipe. It takes the output from the previous command (`echo`) and sends it as input to the next command ( fdisk ).
+
+3. `fdisk /dev/sda`
+    * `fdisk` is a command line utility used to create and manipulate disk partition tables.
+    * `/dev/sda` specifies the first hard disk.
+
+* This command will delete all partitions on the first hard disk and create a new primary partition that uses the whole disk.
+
 
