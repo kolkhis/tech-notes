@@ -30,7 +30,13 @@ This is enabled by default but if you want to check:
     * If `AuthenticationMethods` is set (not commented out), it needs to include `publickey`.  
 
 
-You'll need a public and private SSH key. See [ssh-keygen](./ssh_keygen.md).  
+Any changes to `sshd_confi` will require a restart of the SSH service.  
+```bash
+sudo systemctl restart ssh
+```
+
+
+You'll need a local public and private SSH key. See [ssh-keygen](./ssh_keygen.md).  
 * In `~/.ssh/` you should have 2 files.
     * `id_*` where `*` is `rsa`, `ed25519`, etc. This is your private key.  
     * `id_*.pub`, same as above. This is your public key.  
