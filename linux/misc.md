@@ -1319,6 +1319,34 @@ Some of the features of OPNsense:
       embedded systems.  
     * Available as an image for VMs.  
 
+## Creating a Partition Table on a Disk using `parted`
+`parted` is a command-line utility for partitioning disks.  
+
+Example disk: `/dev/sdb`
+```bash
+parted /dev/sdb
+# Now we're in the interactive prompt for parted
+
+# Create the partition tabel
+mklabel gpt
+# Or, for older MBR systems:
+mklabel msdos
+ 
+# Create a partition using 100% of the disk
+mkpart primary 0% 100%
+ 
+# Verify the partition
+print
+ 
+# Quit parted
+quit
+```
+* `mkpart primary 0% 100%`
+    * `mkpart`: Make partition. Creates a new partition on the disk.  
+    * `primary`: Specify the type of partition.   
+    * `0%`: Start point. Starts at the beginning of the disk.  
+    * `100%`: End point. Ends at the end of the disk.  
+
 
 ## Scriptable Way to Partition Disks with `fdisk`/`gdisk`
 Send input to `fdisk` (or `gdisk`) without entering the interactive prompt by using a
