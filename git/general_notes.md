@@ -17,35 +17,36 @@ Like all `bash` man pages, any parameters in brackets (`[like_this]`) are option
 
 
 
+
 ## Table of Contents
 * [Basic Git Commands](#basic-git-commands) 
-* [Git Init](#git-init) 
-* [Git Status](#git-status) 
-* [Git Diff](#git-diff) 
+    * [`git init`](#git-init) 
+    * [`git status`](#git-status) 
+    * [`git diff`](#git-diff) 
     * [See changes from the current commit and the previous commit](#see-changes-from-the-current-commit-and-the-previous-commit) 
-* [Git Add](#git-add) 
-* [Git Commit](#git-commit) 
-* [Git Log](#git-log) 
+    * [`git add`](#git-add) 
+    * [`git commit`](#git-commit) 
+    * [`git log`](#git-log) 
     * [See log history for a specific file or branch](#see-log-history-for-a-specific-file-or-branch) 
     * [See log history for a specific range of commits](#see-log-history-for-a-specific-range-of-commits) 
     * [See log history for a forked repository](#see-log-history-for-a-forked-repository) 
-* [Git Branch](#git-branch) 
-* [Git Checkout](#git-checkout) 
-* [Git Merge](#git-merge) 
-* [Git Stash](#git-stash) 
-* [Git Fetch](#git-fetch) 
-* [Git Pull](#git-pull) 
-* [Git Blame](#git-blame) 
-* [Git Reset](#git-reset) 
+    * [`git reflog:`](#git-reflog) 
+    * [`git branch`](#git-branch) 
+    * [`git checkout`](#git-checkout) 
+    * [`git merge`](#git-merge) 
+    * [`git stash`](#git-stash) 
+    * [`git fetch`](#git-fetch) 
+    * [`git pull`](#git-pull) 
+    * [`git blame`](#git-blame) 
+    * [`git reset`](#git-reset) 
     * [Rolling back to a previous commit](#rolling-back-to-a-previous-commit) 
-* [Branches:](#branches:) 
+* [Branches](#branches) 
 * [Creating a New Branch](#creating-a-new-branch) 
-    * [Git Checkout / Git Switch / Git Branch](#git-checkout-/-git-switch-/-git-branch) 
+    * [Git Checkout / Git Switch / Git Branch](#git-checkout--git-switch--git-branch) 
 * [Renaming a Branch](#renaming-a-branch) 
 * [List Branches](#list-branches) 
-* [Git Remote](#git-remote) 
-    * [`git reflog`:](#`git-reflog`:) 
-    * [`git archive`:](#`git-archive`:) 
+    * [`git remote`](#git-remote) 
+    * [`git archive:`](#git-archive) 
 
 
 
@@ -53,14 +54,14 @@ Like all `bash` man pages, any parameters in brackets (`[like_this]`) are option
 The options lists for these aren't exhaustive.  
 They're just examples.  
  
-## Git Init
+### `git init`
 Initializes a new git repository in the current directory.
 ```bash
 git init
 ```
 
 
-## Git Status  
+### `git status`
 Shows the status of changes as untracked, modified, or staged.  
 It's a quick way to see what changes are pending.  
 ```bash  
@@ -89,7 +90,7 @@ Options:
 
 ---
 
-## Git Diff  
+### `git diff`
 By default, show the changes to unstaged **git** files (already part of the repository).
   
 Shows changes between commits, commit and working tree, etc.  
@@ -121,13 +122,13 @@ git diff HEAD HEAD~1
 
 ---  
 
-## Git Add  
+### `git add`
 `git add`  
 Adds files to the staging area.  
 
 ---  
 
-## Git Commit  
+### `git commit`
 `git commit`  
 Commits the staged files, and any changes made to them, to the repository.  
 Running `git commit` without any options will open a text editor (determined  
@@ -161,7 +162,7 @@ by the `$EDITOR` environment variable) for you to write a commit message.
 
 ---  
 
-## Git Log  
+### `git log`
 Shows the commit history.  
 ```bash  
 git log  
@@ -208,7 +209,7 @@ git log -p main..bobs_fork/main
 
 ---
 
-## Git Reflog: 
+### `git reflog:`
 Use when you want to see all actions taken in the repo, 
 even those not visible in `git log`.  
 Great for finding older commit hashes.
@@ -219,7 +220,7 @@ git reflog
 
 ---  
 
-## Git Branch  
+### `git branch`
 Lists, creates, or deletes branches.  
 ```bash  
 git branch  
@@ -232,7 +233,7 @@ git branch
 
 ---  
 
-## Git Checkout  
+### `git checkout`
 Switches branches or restores working tree files.  
 ```bash  
 git checkout branch_name  
@@ -243,7 +244,7 @@ git checkout branch_name
 
 ---  
 
-## Git Merge  
+### `git merge`
 Merges another branch into your current branch.  
 ```bash  
 git merge branch_name  
@@ -254,7 +255,7 @@ git merge branch_name
 
 ---  
 
-## Git Stash  
+### `git stash`
 Temporarily stores modified, tracked files.  
 ```bash  
 git stash  
@@ -266,7 +267,7 @@ git stash
 
 ---  
 
-## Git Fetch  
+### `git fetch`
 Downloads objects and refs from a remote repository.  
 ```bash  
 git fetch  
@@ -278,7 +279,7 @@ git fetch
 
 ---  
 
-## Git Pull  
+### `git pull`
 Fetches from and integrates with another repository or local branch.  
 
 The `pull` command performs two operations: 
@@ -293,7 +294,7 @@ git pull
 ---  
 
 
-## Git Blame  
+### `git blame`
 Shows what revision and author last modified each line of a file.  
 ```bash  
 git blame [filename]  
@@ -303,7 +304,29 @@ git blame [filename]
 
 ---
 
-## Git Reset  
+### `git remote`
+`git remote` refers to a remote repository.  
+A remote is a repository that is hosted on a server (e.g., GitHub, BitBucket, etc.).  
+To link a remote repository to a local repository:  
+```bash
+git remote add origin https://remote-repo.url.git       # For HTTS
+git remote add origin git@github.com:username/repo.git  # For SSH
+```
+It's important to add `.git` to the end of the remote repository URL.  
+
+---
+
+### `git archive:`
+* This is used for fetching files without cloning the entire 
+  repository, `git archive` can be used to create a zip/tar archive of
+  specific files or directories.
+  ```bash
+  git archive --remote=ssh://git@{repo_url} {branch_name} {file_path} | tar -xO > {local_file_path}
+  ```
+
+---
+
+### `git reset`
 Resets current `HEAD` to a specific commit or state.  
 * This can be dangerous, but is powerful for undoing changes.
 ```bash  
@@ -390,20 +413,10 @@ Combine other options with `-l` to match optional pattern(s):
 --- 
 
 
-## Git Remote
-`git remote` refers to a remote repository.  
-A remote is a repository that is hosted on a server (e.g., GitHub, BitBucket, etc.).  
-
-
-
-
-## Git Archive: 
-* This is used for fetching files without cloning the entire 
-  repository, `git archive` can be used to create a zip/tar archive of
-  specific files or directories.
-  ```bash
-  git archive --remote=ssh://git@{repo_url} {branch_name} {file_path} | tar -xO > {local_file_path}
-  ```
-
+## Configure Git to use SSH by Default
+Configure Git to use SSH instead of HTTPS by default.  
+```bash
+git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+```
 
 

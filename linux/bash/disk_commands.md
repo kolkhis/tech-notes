@@ -77,6 +77,7 @@ Partitions will end in a number, starting with `1`.
     * `/dev/vda1`
 
 ### `mount`
+Without args, `mount` will dump every file system that's mounted, in the order they were mounted.  
 `mount` can be used to view filesystems on the system.  
 ```bash
 mount               # List all mounted filesystems
@@ -87,6 +88,39 @@ It can also be used to mount a filesystem.
 mount /dev/sda1 /mnt/disk1
 ```
 This mounts the disk partition `/dev/sda1` to `/mnt/disk1`.  
+
+---
+
+Syntax for mounting a file system to a directory:  
+```bash  
+mount -t type /dev/device directory  
+```
+* `-t`: Optional. Specifies the type of filesystem to be mounted. (e.g., `ext4`, `ntfs`, `zfs`)
+    * `mount -t xfs`: Tells `mount` that the `-t`ype of file system is `xfs`.  
+    * `ext4` and `xfs` are some of the most common file system formats in the industry.  
+    * By default, mount will use `/etc/fstab` if either `device` or `directory` are omitted.
+        * The `mount` program does not read the `/etc/fstab` file if both `device` and `directory` are given. 
+    * The `/etc/fstab` (file system tables) file contains info about the file systems and 
+      their mount points.  
+    * `mount` uses this file to determine how to mount certain filesystems automatically,
+      when the user doesn't specify exactly how to mount them.  
+    * If you want to override mount options from `/etc/fstab`, use the `-o` option:  
+      ```bash  
+      mount /device/or/directory -o options  
+      ```
+    * The `mount` options from the command line will be appended to the list of options from `/etc/fstab`.  
+
+
+#### Remounting
+You can either use `umount` to unmount and then `mount` to mount, or use `mount -o remount`
+```bash
+mount -o remount /boot/efi  # Remount the `/boot/efi` file system (the boot partition).  
+```
+* `mount` reads from `/etc/mtab` when it does this.  
+    * Never edit `/etc/mtab` in real-time yourself. 
+This example tells the kernel to attach the filesystem found on `/dev/device` (which is the 
+given `type`) at the directory `dir`.  
+
 
 ### `blkid`
 `blkid` shows the filesystem type and UUID of a block device.  
@@ -187,4 +221,118 @@ smartctl -l selftest /dev/sda   # View test results
 smartctl -t long /dev/sda       # Run a full test (takes a long time)
 smartctl -l selftest /dev/sda   # View test results 
 ```
+
+
+
+
+Weird things about `mount`:  
+* The same filesystem can be mounted more than once.  
+* In some cases (e.g., network filesystems) the same filesystem can be mounted on the 
+  same mountpoint multiple times.  
+
+Example of making and mounting a file system:  
+```bash  
+mkfs.ext4 /dev/xvdc1  
+mount -t ext4 /dev/xvdc1 /directory  
+```
+This uses an existing partition (`/dev/xvdc1`), formats it with the `ext4` format,
+and mounts it to the directory `/directory`
+
+
+* `umount`: Unmount a file system.  
+    * If a file system has file handles open in it, you can't unmount it.  
+    * This will force it to unmount (NOT recommended!):  
+      ```bash  
+      umount -l /boot/efi  
+      ```
+        * This could potentially leave zombie processes running.  
+
+    * To check if there are any files open in a file system:  
+      ```bash  
+      du /boot/efi  
+      lsof /boot/efi
+      ```
+      If `du` hangs, there is something is wrong with the file system.  
+      `lsof` will list all the file open in the file system.  
+
+
+* `lsof` - Lists all open files and the processes that are using them.  
+  ```bash  
+  lsof /proc  
+  ```
+    * Shows process IDs (PIDs).  
+    * You can check the PID of the shell you're in (with `echo $$`) against the
+      output of `lsof` to see if you're currently in that file system.  
+    * You can check your shell's PID against `lsof /root` to see if you're currently  
+      in that file system.  
+
+---
+* `journalctl` 
+    * Log analysis tools like `journalctl` can be used to quickly triage system issues 
+      based on error severity.
+      ```bash
+      journalctl -p 3 -xb
+      ```
+        * `-p 3`: Show only logs with the given priority. 
+            * In this case, only messages with an error level of 3 or higher (critical errors)
+        * `-x`: Add explanatory help texts about the logs from the "message catalog", which provides possible causes or solutions to certain log messages.  
+        * `-b`: Show only the latest boot.  
+
+* `mkfs`
+    * `mkfs.<Tab>` will show all the different types of file systems you can make using bash completion.  
+        * e.g., `mkfs.ext4`, `mkfs.xfs`, etc.
+    * This will format a block device with the given type.  
+    * All inode pointers on the block device are deleted when formatted with `mkfs`, but 
+      the data still remains on the disk. Forensic tools can recover that data.  
+
+* `sar`: Collect, report, or save system activity information.  
+* `lsblk`: Lists all mount points that are block devices  
+* `blkid`: Locates and prints block device attributes. Shows the TYPE of filesystem.
+* `tune2fs`: Shows information about a block device/file system  
+  ```bash  
+  tune2fs -l /dev/vda1  # -l lists all the information about the file system  
+  ```
+    * Shows when a file system was created, mounted, etc.  
+    * This command can also tune a file system (mount it as root)  
+    * Can use `tune2fs` to fix file systems, but not when they're mounted.  
+
+* `dumpe2fs`: Get more verbose information about a file system/block device  
+  ```bash  
+  dumpe2fs /dev/vda1  
+  ```
+    * This command has a bunch of repair functions.  
+    * This is usually used for very low-level troubleshooting.  
+
+
+
+* `mdadm`: Manage MD devices (AKA Linux Software RAID).  
+    * This is used to create and manage RAID devices. 
+    
+* `dd`
+* `mttr`
+
+* `fsck` - never run on mounted file systems  
+* `df -h`: Show disk space usage (in a `-h`uman readable format)
+* `w`: Shows who is logged in on the system.  
+
+
+* `fdisk`: Disk partitioning tool. 
+    * This allows you to view, modify, create, and delete disk partitions  
+    * E.g., `fdisk /dev/xvdc`  
+        * Any changes made with `fdisk` need to be written with `w` to be saved.  
+  * Example: List all `xvd` partitions  
+    ```bash  
+    fdisk -l | grep -i xvd  
+    ```
+    This will list all partitions of a particular type (`xvd` in this example).  
+    * This can be used with many disk partition table formats: `GPT`, `MBR`, `Sun`, `SGI` and `BSD` partition tables.
+        * `GPT` (GUID Partition Table) is part of the UEFI specification. This is the modern replacement for the older `MBR` partitioning system.  
+        * `MBR` (Master Boot Record) was used on older BIOS-based systems.  
+        * `Sun` is used on Solaris-based systems or on SPARC architecture.   
+        * `SGI` (Silicon Graphics Inc) partition tables are specific to `IRIX`. Used in legacy SGI hardware and systems runnin IRIX.  
+        * `BSD` (Berkeley Software Distribution) partition tables are used on BSD-based systems. Sometimes called disklabels.  
+    * `fdisk` has other programs in the same family for editing GUID Partition Tables (GPT): 
+        * `cgdisk`: Curses-based GPT editor 
+        * `gdisk`: Non-curses-based, feature-rich GPT editor
+        * `sgdisk`: GPT editor driven via command-line options.
 
