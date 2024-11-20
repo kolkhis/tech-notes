@@ -111,6 +111,38 @@ mount -t type /dev/device directory
     * The `mount` options from the command line will be appended to the list of options from `/etc/fstab`.  
 
 
+Example of making and mounting a file system:  
+```bash  
+mkfs.ext4 /dev/xvdc1  
+mount -t ext4 /dev/xvdc1 /directory  
+```
+This uses an existing partition (`/dev/xvdc1`), formats it with the `ext4` format,
+and mounts it to the directory `/directory`
+
+
+### `umount`
+Unmount a file system.  
+```bash
+umount /  # Unmounts the filesystem that is mounted at / (root)
+umount /mnt/disk1  # Unmounts the filesystem that is mounted at /mnt/disk1
+```
+
+
+If a file system has file handles open in it, you can't unmount it.  
+* To check if there are any files open in a file system:  
+  ```bash  
+  du /boot/efi  
+  lsof /boot/efi
+  ```
+  If `du` hangs, there is something is wrong with the file system.  
+  `lsof` will list all the file open in the file system.  
+* This will force it to unmount (NOT recommended!):  
+  ```bash  
+  umount -l /boot/efi  
+  ```
+    * This could potentially leave zombie processes running.  
+
+
 #### Remounting
 You can either use `umount` to unmount and then `mount` to mount, or use `mount -o remount`
 ```bash
