@@ -533,4 +533,23 @@ podman attach mycontainer
 * So, unless the container is running a shell, you may want to use `exec` instead.  
 
 
+## Pulling Images from Registries  
+You can pull images with `podman pull IMAGE`.  
+```bash
+podman pull docker.io/library/python:3.11
+```
+
+If you have registries configured in `registries.conf`, you can pull using short names. 
+```bash
+cat /etc/containers/registries.conf
+# This is the variable that contains a list of registries to pull from using short names
+unqualified-search-registries = ["registry.access.redhat.com", "registry.redhat.io", "docker.io"]
+```
+It's suggested to always use the fully qualified name of the image in order to
+protect against spoofing.  
+ 
+This means specifying the link, the domain, image name, and tag (optionally, the
+digest).  
+
+
 
