@@ -1,188 +1,30 @@
-
-
 # Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
-This tool is very useful for testing and practicing Ansible.  
+[Proxmox](https://proxmox.com/) is a virtualization platform that allows us to create
+virtual machines and containers.  
+These tools are very useful for testing and practicing Ansible.  
+
+Also see [conditionals in Ansible](./conditionals_in_ansible.md).  
+
 
 ## Table of Contents
-* [Basic Concepts and Terms](#basic-concepts-and-terms) 
-* [Getting Help with Ansible](#getting-help-with-ansible) 
-* [Most Common Ansible Tools](#most-common-ansible-tools) 
-    * [Different Ansible CLIs](#different-ansible-clis) 
-* [Requirements for Ansible](#requirements-for-ansible) 
-    * [Control Node Requirements](#control-node-requirements) 
-    * [Managed Nodes Requirements](#managed-nodes-requirements) 
-* [Installing Ansible](#installing-ansible) 
-    * [Installing Ansible on Debian-based Systems](#installing-ansible-on-debian-based-systems) 
-    * [Installing Ansible with Python](#installing-ansible-with-python) 
-    * [Upgrading Ansible](#upgrading-ansible) 
-    * [Verify the Installation](#verify-the-installation) 
-* [Testing Ansible with a Demo](#testing-ansible-with-a-demo) 
 * [Ansible Playbooks](#ansible-playbooks) 
     * [Run an Ansible Playbook](#run-an-ansible-playbook) 
+    * [Debugging an Ansible Playbook](#debugging-an-ansible-playbook) 
     * [Items in Playbooks](#items-in-playbooks) 
     * [Tasks](#tasks) 
     * [Modules](#modules) 
+        * [Common Modules](#common-modules) 
         * [General Structure of a Task using a Module](#general-structure-of-a-task-using-a-module) 
+* [Getting Help with Ansible Modules](#getting-help-with-ansible-modules) 
 * [Ansible Roles](#ansible-roles) 
-    * [Role Directory Structure](#role-directory-structure) 
-    * [Creating and Using a Role](#creating-and-using-a-role) 
-        * [Creating a Role](#creating-a-role) 
-        * [Defining Role Tasks](#defining-role-tasks) 
-        * [Using a Role in a Playbook](#using-a-role-in-a-playbook) 
-        * [Where you can Use Roles](#where-you-can-use-roles) 
-    * [Example of Using a Role in Ansible](#example-of-using-a-role-in-ansible) 
-        * [Directory Structure](#directory-structure) 
-        * [Playbook: `site.yml`](#playbook-siteyml) 
-        * [Role tasks: `roles/nginx/tasks/main.yml`](#role-tasks-rolesnginxtasksmainyml) 
+* [Loops in Ansible](#loops-in-ansible) 
+* [Defining an Inventory using a Hosts File](#defining-an-inventory-using-a-hosts-file) 
+    * [More Detailed Example Host Files](#more-detailed-example-host-files) 
 * [Resources](#resources) 
 * [What about Terraform?](#what-about-terraform) 
 * [Questions](#questions) 
 
-
-
-## Basic Concepts and Terms  
-
-* Host: A remote machine managed by Ansible.  
-* Group: Several hosts grouped together that share a common attribute.  
-
-* Inventory: A collection of all the hosts and groups that Ansible manages.  
-    * Could be a static file in the simple cases or we can pull the inventory  
-      from remote sources, such as cloud providers.  
-
-* YAML: The file format used for Ansible inventories and playbooks. 
-
-* Roles: Redistributable units of organization that allow users to share automation code easier.  
-
----
-
-* Playbooks: An ordered list of tasks along with its necessary parameters that define a recipe to configure a system.  
-* Modules: Units of code that Ansible sends to the remote nodes for execution.  
-* Tasks: Units of action that combine a module and its arguments along with some other parameters.  
-
-
-
-## Getting Help with Ansible
-`ansible-doc` is the help command used to view documentation on Ansible modules.  
-```bash
-ansible-doc module-name
-```
-It will show you all the `options` you can use for a module in a playbook.  
-It will also show you the types that the options should have.  
-
-```bash
-ansible-doc apt  # Show options for the `apt` Ansible module
-```
-
-
-
-## Most Common Ansible Tools
-* `ansible`: Run ad-hoc commands on hosts.
-* `ansible-playbook`: Execute structured automation workflows via YAML playbooks.
-* `ansible-doc`: Look up documentation for modules and plugins.
-* `ansible-vault`: Manage secrets securely.
-* `ansible-inventory`: Work with inventories dynamically.
-* `ansible-galaxy`: Handle roles and collections for modular automation.
-* `ansible-console`: Experiment and debug interactively.
-
-
-### Different Ansible CLIs
-```bash
-ansible 
-ansible-console     # REPL console for executing Ansible tasks (interactive prompt).
-ansible-inventory   # View or manipulate inventory data (i.e., listing all hosts or their variables)
-ansible-config      # View, list, or validate Anxible config files and settings
-ansible-doc         # Plugin documentation tool. Displays module docs, inventory plugins, etc.
-ansible-playbook    # Runs ansible playbooks.  
-ansible-vault       # Encryption/decryption utility for Ansible data files
-ansible-galaxy      # Manage roles and collections (install, list, remove, or create)
-ansible-pull        # Pull and execute playbooks from remote SCM repositories (like Git)
-ansible-connection  # Internal tool for managing remote connections (primarily for devs)
-ansible-test        # Internal testing tool for validating changes to ansible itself (for contributors)
-```
-
-
-
-
-## Requirements for Ansible  
-
-### Control Node Requirements  
-Your "Control Node" (the machine running Ansible) can be any Linux/Unix  
-machine with Python 3.8 or newer installed.  
-* Your Control Node cannot be a Windows machine.  
-
-### Managed Nodes Requirements  
-
-For the "Managed Nodes" (the machines being managed by Ansible), Ansible  
-needs to communicate with them over SSH and SFTP (can be switched to SCP in  
-the `ansible.cfg` file), or WinRM (Windows Remote Management) for Windows hosts.  
-
-The Managed Nodes also need Python 2.6 or later, *or* Python 3.5 or later.  
- 
-For Windows nodes, you need PowerShell 3.0 or later, and at least .NET 4.0 installed.  
-
-So, to summarize, managed nodes need:  
-* SSH/SFTP (or SCP) access to the Managed Nodes 
-* Python 2.6 or later, *or* Python 3.5 or later.  
-
-Or, managed nodes on windows:
-* WinRM access for Windows.  
-* PowerShell 3.0+ and .NET 4.0+ for Windows.  
- 
-
-
-## Installing Ansible  
-Ansible installation can vary depending on your OS.  
-
-### Installing Ansible on Debian-based Systems
-For Debian-based systems, you can install Ansible using `apt`.
-```bash
-apt-get install ansible -y
-```
-* See [here](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu) for the official installation guide.  
-
-### Installing Ansible with Python
-
-If you don't have `pip` installed, you will need to install `pip` under  
-your current Python version.  
-```bash  
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py  
-python3 get-pip.py --user  
-```
-
-With `pip` installed, you can install Ansible.  
-```bash  
-python3 -m pip install --user ansible  
-```
-
-### Upgrading Ansible  
-To upgrade the existing Ansible installation, just 
-add `--upgrade` or `-U` to the command:  
-```bash  
-python3 -m pip install --upgrade --user ansible  
-```
-
-### Verify the Installation  
-Test in the terminal to see if the installation was successful.  
-```bash  
-ansible --version  
-```
-
-## Testing Ansible with a Demo  
-The demo is [here](https://spacelift.io/blog/ansible-tutorial).  
-
-To test Ansible, we need a machine to use as a Control Node, and  
-either physical machines or Virtual Machines to use for Managed Node(s).  
-
-The managed nodes only need to be reachable by the Control Node via SSH/SFTP 
-(or SCP if you changed it in `ansible.cfg`), or reachable via WinRM for Windows.  
-
-
-The managed nodes can be physical machines or VMs, so we can use 
-[Vagrant](https://developer.hashicorp.com/vagrant/docs/installation) to  
-create some VMs. 
-* Vagrant is a Hashicorp tool that allows us to create virtual machines.  
-  This tool is very useful for running Ansible tests and practicing Ansible.  
 
 ## Ansible Playbooks
 Ansible playbooks are `yaml` files that can do several things:
@@ -203,6 +45,11 @@ ansible-playbook -i inventory.yml my_playbook.yml
 * `-i`: Specifies the inventory file.  
 
 ---
+
+### Debugging an Ansible Playbook
+Run playbooks with `-v` for 'verbose' output.  
+You can use up to 3 levels of verbosity (`-vvv`).  
+
 
 ### Items in Playbooks
 When a line starts with a `-` (hyphen), it represents an item in a list.  
@@ -263,6 +110,14 @@ ansible-doc -l           # List all modules available
 ansible-doc module-name  # View docs for a specific module  
 ```
 
+#### Common Modules 
+* `apt`: Managing packages on Debian-based systems.  
+* `setup`: Gathering facts about remote hosts.  
+* `stat`: Getting information about files and directories.  
+* `copy`: Copying files to remote hosts.  
+* `file`: Managing files and directories.  
+
+
 #### General Structure of a Task using a Module
 ```yaml
 - name: Description of the task
@@ -272,181 +127,80 @@ ansible-doc module-name  # View docs for a specific module
     ...etc
 ```
 
+## Getting Help with Ansible Modules
+`ansible-doc` is the help command used to view documentation on Ansible modules.  
+```bash
+ansible-doc module-name  # Show docs for a specific module
+```
+It will show you all the `options` you can use for a module in a playbook.  
+It will also show you the types that the options should have.  
+
+```bash
+ansible-doc apt # Show options for the `apt` Ansible module
+ansible-doc -l  # List all modules available
+```
+
+To see a snippet of how to use a module in a playbook, use `-s`/`--snippet`.  
+```bash
+ansible-doc -s module-name
+ansible-doc -s apt   # Show snippet for the `apt` Ansible module
+ansible-doc -s stat  # Show snippet for the `stat` Ansible module
+ansible-doc -s setup # Show snippet for the `setup` Ansible module
+```
+
+
 ## Ansible Roles 
-Roles are used to organize and reuse playbook content.  
+See [roles in Ansible](./roles_in_ansible.md).  
 
-Roles are essentially a collection of tasks and their associated resources (variables,
-templates, handlers, etc.) packaged together for a specific purpose.  
-The purpose can be something like configuring a web server or setting up a database.  
-
----
-
-### Role Directory Structure
-A role has a predefined structure with specific directories for different types of content.  
-This is what a typical role looks like:
-```bash
-roles/
-└── myrole/
-    ├── tasks/           # Contains the main list of tasks to execute
-    │   └── main.yml     # Entry point for tasks
-    ├── handlers/        # Contains handlers (triggered by tasks)
-    │   └── main.yml
-    ├── templates/       # Contains Jinja2 template files
-    ├── files/           # Contains static files to copy to remote machines
-    ├── vars/            # Contains variable definitions (static)
-    │   └── main.yml
-    ├── defaults/        # Contains default variable definitions (can be overridden)
-    │   └── main.yml
-    ├── meta/            # Contains metadata about the role (dependencies, etc.)
-    │   └── main.yml
-    └── tasks/main.yml   # Main entry point for the role
-```
-* `tasks/`: Where you define the main tasks for the role.  
-* `handlers/`: Define handlers that are triggered by `notify` directive in `tasks`.  
-* `templates/`: Store `Jinja2` templates for dynamically generating files.  
-* `files/`: Store static files that can be copied to remote hosts.  
-* `vars/`: Define variables that are specific to the role.  
-* `defaults/`: Define default values for variables (lowest precedence).  
-* `meta/`: Include metadata about the role (like depenencies).  
-
----
-
-### Creating and Using a Role
-
-#### Creating a Role
-You *can* manually create the directory structure.  
-You can also use the `ansible-galaxy` command:
-```bash
-ansible-galaxy init roles/myrole  # Initialize a new role
-```
-This will generate the full directory structure for a role named `myrole` under the
-`roles` directory.  
-
----
-
-#### Defining Role Tasks
-The file `roles/myrole/tasks/main.yml` is used to define tasks for the role.  
+## Loops in Ansible
+You can use a conditional to loop through a list of items.  
 ```yaml
-- name: Install NGINX
-  apt:
-    name: nginx
-    state: present
-    update_cache: yes
+tasks:
+  - name: Loop through a list of items
+    debug:
+      msg: "The current item is {{ item }}.  "
+    loop:
+      - nginx
+      - apache2
+      - python3
+      - "some other item"
+    when: item != 'apache2'
+```
 
-- name: Enxure NGINX is started
-  service:
-    name: nginx
-    state: started
-    enabled: yes
+
+## Defining an Inventory using a Hosts File
+See [inventory files in Ansible](./inventory_files.md) for more details.  
+
+You can use a hosts file to define a group of hosts.  
+By default, Ansible looks for `/etc/ansible/hosts` to specify an inventory.  
+
+Specify an inventory file by using the `-i` option when running an Ansible command.
+```bash
+ansible-playbook -i inventory.yml my_playbook.yml
 ```
 
 ---
 
-#### Using a Role in a Playbook
-Use the name of the role in a playbook using the `roles` key.  
-```yaml
-- name: Example Playbook play
-  hosts: webserver
-  roles:
-    - myrole
-```
-The playbook calls the `myrole` role.  
-This runs the tasks and resources defined in the role (`roles/myrole`).  
-
----
-
-#### Where you can Use Roles
-* Playbooks
-  ```yaml
-  - hosts: webservers
-    roles:
-      - myrole
-      - otherrole
+The file can be in `ini` format (most common) or `yaml` format.  
+* `hosts.ini`:
+  ```ini
+  [servers]
+  controlplane
+  node01
   ```
-* Role dependencies
-    * Roles can depend on other roles. Define dependencies in
-      `roles/myrole/meta/main.yml`
-      ```yaml
-      dependencies:
-        - role: common
-        - role: firewall
-        - role: otherrole
-      ```
-* In the `include_role` task. You can include roles dynamically in a task.  
-```yaml
-- name: Include the myrole role
-  include_role:
-    name: myrole
-```
-* In collections. Roles can be part of an Ansible collection.
-    * This can make them easy to distribute and reuse.  
 
-
----
-
-
-### Example of Using a Role in Ansible
-
-#### Directory Structure
-This is the directory structure for the example:
-```bash
-myproject/
-├── roles/
-│   └── nginx/
-│       ├── tasks/
-│       │   └── main.yml
-│       ├── handlers/
-│       │   └── main.yml
-│       ├── templates/
-│       │   └── nginx.conf.j2
-│       ├── files/
-│       ├── vars/
-│       │   └── main.yml
-│       ├── defaults/
-│       │   └── main.yml
-│       ├── meta/
-│       │   └── main.yml
-├── inventory
-└── site.yml
-```
-
-#### Playbook: `site.yml`
-```yaml
-- hosts: webservers
-  roles:
-    - nginx
-```
-* `-` Indicates the start of the play.  
-* This will inherit and run all the `tasks` in the `nginx` role.  
-* All tasks will be run on the `webservers` hosts defined in the `inventory.yml`
-
-#### Role tasks: `roles/nginx/tasks/main.yml`
-```yaml
-- name: Install NGINX
-  apt:
-    name: nginx
-    state: present
-
-- name: Deploy NGINX configuration
-  template:
-    src: nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-    mode: 0644
-
-- name: Start and Enable NGINX
-  service:
-    name: nginx
-    state: started
-    enabled: yes
-```
-
-
-
-
-
-
-
-
+* `hosts.yaml`:
+  ```yaml
+  all:
+    hosts:
+      controlplane:
+        ansible_host: 192.168.1.10
+        ansible_user: ubuntu
+      node01:
+        ansible_host: 192.168.1.11
+        ansible_user: ubuntu
+      
+  ```
 
 
 ## Resources
@@ -455,16 +209,26 @@ myproject/
 * [Ansible Basics Cheatsheet](https://devhints.io/ansible-guide)
 * [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)  
 * [The Copy Module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html)
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
 
+### Practicing with Ansible
+[Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
+[Proxmox](https://proxmox.com/) is a virtualization platform that allows us to create
+virtual machines and containers.  
+These tools are very useful for testing and practicing Ansible, as you can set up a
+bunch of hosts to run playbooks on.  
 
 ## What about Terraform?
 Ansible and Terraform serve very different purposes.  
 Ansible is more automating server configuration & tasks, where Terraform is automating infrastructure.  
-You'd use Terraform to spin up an EC2 instance, you'd use Ansible to install nginx on that EC2 instance
-Generally speaking, TF spins up your infrastructure, Ansible configures it
+You'd use Terraform to spin up an EC2 instance, you'd use Ansible to install nginx on that EC2 instance.  
+Generally speaking, TF spins up your infrastructure, Ansible configures it.  
 
 ## Questions
 
-What is an ansible collection?
+How do conditionals work in ansible?  
+What is an ansible collection?  
+What are 'blocks' in ansible?  
+What are 'handlers' in ansible?
 
 
