@@ -167,6 +167,30 @@ tasks:
     when: item != 'apache2'
 ```
 
+## Updating in Batches (Serial)
+In Ansible, `serial` refers to the number of hosts to run tasks on simultaneously during a play.  
+It controls how Ansible processes a play across a group of hosts in chunks or "batches."
+
+The `serial` keyword is defined in a playbook to specify the batch size for
+processing hosts.  
+```yaml
+- name: Run tasks on hosts in batches
+  hosts: webservers
+  serial: 2
+  tasks:
+    - name: Example task
+      debug: 
+        msg: "Running on {{ inventory_hostname }}"
+```
+In this example, if there are 6 `webservers` in the inventory, tasks will be executed
+on 2 hosts at a time.  
+The play will process the first 2 hosts in parallel, then the next 2 hosts, etc.  
+
+`ansible_play_batch` contains the list of active hosts in the current batch being
+processed.  
+If you're processing hosts in batches of 2, then `ansible_play_batch` will contain
+the first 2 hosts in the inventory, then the next 2, as they're being processed.  
+
 
 ## Defining an Inventory using a Hosts File
 See [inventory files in Ansible](./inventory_files.md) for more details.  
