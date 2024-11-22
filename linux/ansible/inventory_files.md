@@ -3,7 +3,6 @@
 An inventory file is a list of hosts and groups of hosts. 
 These files are used to run Ansible playbooks on multiple hosts at a time.  
 
-
 ## Table of Contents
 * [Defining an Inventory using a Hosts File](#defining-an-inventory-using-a-hosts-file) 
 * [Example Host Files](#example-host-files) 
@@ -14,7 +13,8 @@ These files are used to run Ansible playbooks on multiple hosts at a time.
     * [Using `yaml`](#using-yaml) 
 * [Testing a Hosts File](#testing-a-hosts-file) 
 * [Specifying Different Groups of Hosts (Grouping Hosts)](#specifying-different-groups-of-hosts-grouping-hosts) 
-    * [Vizualize It](#vizualize-it) 
+    * [Vizualize an Inventory](#vizualize-an-inventory) 
+* [View the Inventory in `yaml` or `json` format](#view-the-inventory-in-yaml-or-json-format) 
 
 
 ## Defining an Inventory using a Hosts File
@@ -71,7 +71,7 @@ web2 ansible_host=192.168.1.12
 db1 ansible_host=192.168.1.21
 db2 ansible_host=192.168.1.22
 
-# Nested groups
+# Nested groups. The parent group will contain all hosts in all its child groups.
 [all_servers:children]
 webservers
 databases
@@ -91,8 +91,8 @@ Each line specifies a hostname or alias (e.g., `webserver`) and optional connect
 
 #### Groups:
 
-Group hosts together under headers like `[webservers]` or `[databases]`.
-Use nested groups with the `:children` suffix.  
+Group hosts together using descriptive names, like `[webservers]` or `[databases]`.  
+Create nested groups with the `:children` suffix.  
 `[all_servers:children]` makes `webservers` and `databases` groups children of the `all_servers` group.  
 
 #### Group Variables:
@@ -121,8 +121,8 @@ all:
         db1:
           ansible_host: 192.168.1.21
           ansible_user: root
-
 ```
+
 `yaml` uses a nested structure.
 * `all`: The top-level group containing all hosts and subgroups.
 * `children`: Subgroups under the all group.
@@ -171,7 +171,7 @@ If I specify `hosts` as `non-prod` in a playbook, it will run on all hosts in
 the `servers` and `test_env` groups.
 
 
-### Vizualize It
+### Vizualize an Inventory
 To see a graph of the hosts file:
 ```bash
 ansible-inventory -i /root/hosts --graph
@@ -190,6 +190,20 @@ We see that hosts file is interpreted by Ansible as:
   |  |--controlprod
   |  |--node01prod
   |--@ungrouped:
+```
+
+## View the Inventory in `yaml` or `json` format
+You can specify the format of the output when using `ansible-inventory` to view the
+inventory in `json` or `yaml` data.  
+By default, `ansible-inventory --list` will output in `json`.  
+Add `-y`/`--yaml` to see it in `yaml` format.  
+```bash
+# View inventory in json
+ansible-inventory -i hosts.ini --list 
+ansible-inventory -i hosts.ini --list 
+# For yaml format:
+ansible-inventory -i hosts.ini --list --yaml
+ansible-inventory -i hosts.ini --list -y
 ```
 
 
