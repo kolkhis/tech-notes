@@ -55,6 +55,9 @@ tasks:
     when: ansible_facts['os_family'] == 'Debian'
 ```
 
+When you start running Ansible at scale (like 300 machines), you'll want to limit
+what Ansible gathers. You can run into memory problems.  
+
 ### Using Multiple Conditions
 You can use multiple conditions in `when` statements using `and`/`or`.  
 ```yaml
