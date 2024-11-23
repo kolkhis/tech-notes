@@ -111,6 +111,12 @@ Tasks are defined by a name, then a module.
         mode: 0755  # Setting file permissions 
 ```
 
+Module actions in tasks can be one-liners as well.  
+```yaml
+- name: Install Vim
+  apt: name=vim state=present
+```
+
 #### Task keywords  
 Most commonly used task keywords:  
 * `name`: A descriptive name for the task.  
@@ -211,6 +217,10 @@ These are some common `ansible.builtin` modules.
     * Use this module when you actually need a shell (e.g., for redirections, pipes, etc)  
 * `script`: Running local scripts on a remote host.  
 * `reboot`: Rebooting remote hosts.  
+* `lineinfile`: Managing text in files (linewise).  
+    * Good for single line changes. 
+    * For multiple line changes, check `ansible.builtin.replace`.  
+    * For modifying blocks of lines `ansible.builtin.blockinfile`.  
 
 
 #### General Structure of a Task using a Module  
@@ -517,16 +527,47 @@ The `always` section runs no matter what happens in the `block`.
 
 ---
 
+## Ansible Configuration Files
+
+Default config file locations:
+* `/etc/ansible/ansible.cfg`: Global config file, used if it exists.  
+* `~/.ansible.cfg`: User config file. Overrides the default config if it exists.  
+* `./ansible.cfg`: Local config file (in current working directory).
+    * This file is assumed to be 'project specific' and overrides the rest if present.
+
+If the `ANSIBLE_CONFIG` environment variable is set, it will override all others and
+use the file specified in the variable.  
+* This should point to the config file you want to use.  
+
+Check the current config file:
+```bash
+ansible-config view
+ansible-config view -c 'config_file'
+```
+
+---
+Generate an Ansible config file with all the defaults:
+```bash
+ansible-config init --disabled > ansible.cfg
+```
+
+View the ansible config:
+```bash
+ansible-config dump
+ansible-config list
+```
 
 
 
 ## Resources  
+* [Intro to Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)  
+* [Ansible builtin modules](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html)
 * [Ansible Cheatsheet](https://devhints.io/ansible)  
 * [Ansible Modules](https://devhints.io/ansible-modules) 
 * [Ansible Basics Cheatsheet](https://devhints.io/ansible-guide)  
 * [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)  
 * [The Copy Module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html)  
-https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html  
+* [Ansible Configuration](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
 
 ### Practicing with Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
