@@ -5,14 +5,16 @@ virtual machines and containers.
 These tools are very useful for testing and practicing Ansible.  
 
 Also see:  
-* [Conditionals in Ansible](./conditionals_in_ansible.md)  
-* [Collections in Ansible](./collections_in_ansible.md)  
-* [Ansible variables](./variables.md)  
-* [Roles in Ansible](./roles_in_ansible.md)  
-* [Inventory files](./inventory_files.md)  
+* [Collections](./collections_in_ansible.md)
+* [Conditionals](./conditionals_in_ansible.md)
+* [Variables](./variables.md)
+* [Roles](./roles_in_ansible.md)
+* [Inventory Files](./inventory_files.md)
+* [Misc. Ansible Notes](./misc_ansible.md)
+* [Setting up Ansible](./setting_up_ansible.md)
 
 
-## Table of Contents  
+## Table of Contents
 * [Ansible Playbooks](#ansible-playbooks) 
     * [Run an Ansible Playbook](#run-an-ansible-playbook) 
     * [Debugging an Ansible Playbook](#debugging-an-ansible-playbook) 
@@ -25,6 +27,9 @@ Also see:
 * [Tags in Tasks](#tags-in-tasks) 
 * [Getting Help with Ansible Modules](#getting-help-with-ansible-modules) 
 * [Ad-hoc Commands using Ansible](#ad-hoc-commands-using-ansible) 
+    * [Create a Directory on Remote Hosts](#create-a-directory-on-remote-hosts) 
+    * [Copy File to Remote Hosts](#copy-file-to-remote-hosts) 
+    * [Modifying a Line in a File on Remote Hosts](#modifying-a-line-in-a-file-on-remote-hosts) 
 * [Handlers](#handlers) 
 * [Ansible Roles](#ansible-roles) 
 * [Loops in Ansible](#loops-in-ansible) 
@@ -34,10 +39,15 @@ Also see:
 * [Defining an Inventory using a Hosts File](#defining-an-inventory-using-a-hosts-file) 
 * [Save the Output of a Task in Ansible](#save-the-output-of-a-task-in-ansible) 
     * [Accessing The Registered Variable](#accessing-the-registered-variable) 
+* [Blocks in Ansible](#blocks-in-ansible) 
+    * [Basic Block Example](#basic-block-example) 
+    * [Block Error Handling with `rescue` and `always`](#block-error-handling-with-rescue-and-always) 
+* [Ansible Configuration Files](#ansible-configuration-files) 
 * [Resources](#resources) 
     * [Practicing with Ansible](#practicing-with-ansible) 
 * [Questions](#questions) 
     * [What about Terraform?](#what-about-terraform) 
+
 
 
 ## Ansible Playbooks  
@@ -281,6 +291,35 @@ Ad-hoc commands are used to run tasks on a remote host without creating a playbo
 # Send a command to a host  
 ansible servers -m shell -a "reboot"  
 ```
+* `-m`: The module to use.
+* `-a`: Arguments to pass to the module.  
+
+```bash
+ansible servers -i /hosts/file -m setup -a 'filter=ansible_distribution'
+ansible servers -i /hosts/file -m setup -a 'filter=ansible_date_time'
+```
+
+### Create a Directory on Remote Hosts
+To create a new directory on a list of hosts:
+```bash
+ansible servers -i /inventory/file -m file -a 'path=/home/user/new_dir state=directory'
+```
+
+### Copy File to Remote Hosts
+To copy files into that new directory:
+```bash
+ansible servers -i /inventory/file -m copy -m 'src=/local/file dest=/home/user/new_dir'
+```
+
+### Modifying a Line in a File on Remote Hosts
+To modify a line in a file:
+```bash
+ansible servers -i /inventory/file -m lineinfile -a "path=/home/user/new_dir/file.txt regexp='^var1' line='var1=1000"
+```
+You use a regular expression to specify the line(s) you want to modify.  
+Then you specify the new line you want to replace it with.  
+
+
 
 ## Handlers  
 Handlers are defined at the play level under `handlers`. 
