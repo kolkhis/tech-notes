@@ -61,6 +61,12 @@ dig @8.8.8.8 google.com
 ```
 This command queries the Google DNS server for records related to google.com.  
 
+```bash
+dig google.com A +short
+```
+* This retrieves the `A` records for `google.com`.
+* `+short`: This flag makes `dig` only output the IP addresses.  
+
 
 ### `netstat`
 Deprecated in favor of `ss`.  
