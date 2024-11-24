@@ -1398,3 +1398,69 @@ smartctl -l selftest /dev/sda   # View test results
 * `/dev/zero` : returns zero
 * `/dev/random` : returns random
 * `/dev/urandom` : returns random 0 or 1
+
+
+## Setting up ClamAV Antivirus
+###### [source](https://killercoda.com/het-tanis/course/Linux-Labs/105-install-antivirus)
+ClamAV is an open-source antivirus engine for detecting trojans, viruses, malware, and other malicious threats.
+It is mostly used on Linux and Unix systems.  
+
+ClamAV is in the `apt` package repository, for Debian-based systems.  
+```bash
+sudo apt update 
+sudo apt install clamav clamav-daemon
+```
+* `clamav`: The main ClamAV package.
+* `clamav-daemon`: The ClamAV daemon.  
+
+To manually update the database, stop `clamav-freshclam` and run `freshclam`.  
+```bash
+sudo systemctl status clamav-freshclam
+sudo systemctl stop clamav-freshclam
+freshclam
+sudo systemctl start clamav-freshclam --now
+```
+
+Run a scan against a directory, and time it:
+```bash
+time clamscan -i -r --log=/var/log/clamav/clamav.log /home/
+```
+* `-i`/`--infected`: Only show infected files.  
+* `--remove`: Automatically remove infected files.  
+* `-r`/`--recursive`: Recursively scan directories.  
+
+### Automate Scans 
+Set up a script to run scans daily.  
+```bash
+#!/bin/bash
+# Set your logfiles
+DAILYLOGFILE="/var/log/clamav/clamav-$(date +'%Y-%m-%d').log";
+LOGFILE="/var/log/clamav/clamav.log";
+
+# Scan the entire system from root
+clamscan -ri / &> "$LOGFILE"
+
+# Copying to daily log file for history tracking
+cp $LOGFILE $DAILYLOGFILE
+
+# Gather Metrics to use later
+scanDirectories=`tail -20 $DAILYLOGFILE | grep -i directories | awk '{print $NF}'`
+scanFiles=`tail -20 $DAILYLOGFILE | grep -i "scanned files" | awk '{print $NF}'`
+infectedFiles=`tail -20 $DAILYLOGFILE | grep -i infected | awk '{print $NF}'`
+runTimeSeconds=`tail -20 $DAILYLOGFILE | grep -i time | awk '{print $2}' | awk -F. '{print $1}'`
+
+# Report out what metrics you have
+echo "Directories: $scanDirectories Files: $scanFiles Infected: $infectedFiles Time: $runTimeSeconds"
+ 
+exit 0
+```
+To run the script daily:
+* Copy the script into `/etc/cron.daily/`
+* Set it to run in the `crontab` (cron table)
+  ```bash
+  crontab -e
+  # Then add the line:
+  0 1 * * * root /path/to/script
+  ```
+
+
