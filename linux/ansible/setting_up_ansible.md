@@ -22,20 +22,22 @@
 * Group: Several hosts grouped together that share a common attribute.  
 
 * Inventory: A collection of all the hosts and groups that Ansible manages.  
-    * Usually stored as `inventory.yml`
+    * Usually stored as `inventory.yml` or `hosts.ini`
     * Could be a static file in the simple cases or we can pull the inventory  
       from remote sources, such as cloud providers.  
 
 * YAML: The file format used for Ansible inventories and playbooks. 
 
+
 * Roles: Redistributable units of organization that allow users to share automation code easier.  
     * Roles are similar to classes in OOP languages. They have the same tasks,
-      variables, and handlers.   
+      variables, and handlers.  
 
----
 
 * Playbooks: An ordered list of tasks along with its necessary parameters that define a recipe to configure a system.  
+
 * Modules: Units of code that Ansible sends to the remote nodes for execution.  
+
 * Tasks: Units of action that combine a module and its arguments along with some other parameters.  
 
 
@@ -128,7 +130,7 @@ add `--upgrade` or `-U` to the command:
 python3 -m pip install --upgrade --user ansible  
 ```
 
-### Verify the Installation  
+## Verify the Installation  
 Test in the terminal to see if the installation was successful.  
 ```bash  
 ansible --version  
