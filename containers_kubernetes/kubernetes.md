@@ -15,8 +15,13 @@ With k3s, you sacrifice the deep granularity and control that you get from k8s.
 
 To install `k3s`:
 ```bash
-curl -sFL https://get.k3s.io | sh -
+curl -sFL https://get.k3s.io | sh -  # Install k3s
+# or, if that doesn't work
+curl -sL https://get.k3s.io | sh -  # Install k3s
 ```
+* `-s`: Silent mode.  
+* `-F`: Emulates pressing `Submit` on a filled-in form.  
+* `-L`: Follows redirects.  
 
 
 ## `kubectl`
