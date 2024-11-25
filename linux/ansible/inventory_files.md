@@ -206,4 +206,15 @@ ansible-inventory -i hosts.ini --list --yaml
 ansible-inventory -i hosts.ini --list -y
 ```
 
+## Targeting a Single Host by Limiting the Hosts with `--limit`
+Using `--limit`, you can target a specific host by name from a hosts file.  
+
+```bash
+ansible all -i hosts.ini --limit host2 -a "/bin/echo Hello, world."
+```
+* `ansible all`: Targets all hosts in the inventory.  
+* `-a`: The argument to send to the host.  
+This will run `echo Hello, world` only on `host2` (as it's defined in `hosts.ini`).  
+
+
 
