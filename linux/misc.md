@@ -263,8 +263,6 @@ ss -i
 
 
 ## Adding Users Through /etc/passwd  
-See [manually adding user accounts in linux](./manually_adding_user_accounts.md).  
-
 ### Add a new line for the user:  
 Each line in the `/etc/passwd` file represents a user account.  
 The format of each line in `/etc/passwd` is as follows:  
@@ -1462,5 +1460,19 @@ To run the script daily:
   # Then add the line:
   0 1 * * * root /path/to/script
   ```
+
+## Format Drives and Create Partitions
+Format drives and create disk partitions using `gdisk`.  
+```bash
+sudo gdisk /dev/sdX
+o  # Create a new empty GPT partition table
+n  # Create a new partition
+p  # Make it the primary partition
+# Use defaults
+w  # Write changes (otherwise they won't be applied)
+```
+If you want to create a partition of a specific size, then when it prompts for the
+`Last sector`, you can specify a specific size, like `+100G` for a 100GB partition.  
+
 
 
