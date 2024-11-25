@@ -28,13 +28,50 @@ You can define your own variables, and use built-in special variables.
 Ansible has a number of builtin variables that you can use.  
 
 
-### Ansible Facts
+### Ansible Facts (`ansible_facts`)
 Ansible has a builtin "facts" variable (`ansible_facts`) that gathers information about the remote
 systems it runs on.  
 These facts are available to use in playbooks.  
 
 It's a dictionary, and can be accessed like any other variable.  
+```yaml
+- name: View the contents of ansible_facts
+  ansible.builtin.debug:
+    var: ansible_facts
+```
 
+Using `ansible_facts['env']`, you can access the environment variables on the remote
+system. 
+E.g.,
+```yaml
+- name: Show the environment variables on the remote system
+  ansible.builtin.debug:
+    var: ansible_facts['env']['PS1']
+```
+
+### Hostvars (`hostvars`)
+
+This is different from `ansible_facts`, which is a dictionary of facts about the
+**current** host.  
+
+Ansible keeps information collected on **all** hosts throughout a playbook in `hostvars`.  
+Any variables that are defined within tasks run on those hosts are stored in `hostvars`.  
+
+```yaml
+- name: View the contents of hostvars
+  ansible.builtin.debug:
+    var: hostvars
+```
+
+---
+#### Accessing `hostvars` for a given host:
+Use `hostvars['host-name']` to access the variables for any host in the inventory.  
+You can use dot notation to access any of its variables.  
+```bash
+hostvars['host1'].ansible_host  # The IP address of host1
+hostvars['host1'].ansible_user  # The username used on host1
+hostvars['host1'].some_output.stdout  # Access the output of a `register`ed task on host1
+```
 
 
 ### Magic Variables
@@ -49,7 +86,7 @@ These are variables that Ansible sets itself, and can't be set by the user.
 * `ansible_version`: Dictionary with Ansible version details (keys: `full`, `major`, `minor`, etc.).
 * `ansible_config_file`: Path to the Ansible configuration file being used.
 * `ansible_playbook_python`: Path to the Python interpreter on the control node.
-
+* `ansible_host`: The name of the current host.  
 
 #### Inventory and Host Context Variables
 * `inventory_dir`: Directory of the inventory file where the host was defined.
@@ -61,6 +98,14 @@ These are variables that Ansible sets itself, and can't be set by the user.
     * If `group_names = ["web", "db"]`, the current host is in the `web` and `db` groups.
 * `groups`: Dictionary of all inventory groups and their hosts.
 * `hostvars`: Dictionary of all hosts and their variables.
+    * Get the ip address of a host using the `hostvars['host-name'].ansible_host` variable.  
+      ```bash
+      hostvars['host-name'].ansible_host
+      ```
+    * Get any of the variables gathered on that host with:
+      ```bash
+      hostvars['host-name'].var_name
+      ```
 
 
 #### Playbook/Play Context Variables
@@ -113,4 +158,4 @@ These are variables that Ansible sets itself, and can't be set by the user.
 
 ## Resources
 * [Special variables in Ansible](https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#special-variables)
-
+* [Playbook Variables and Facts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html)
