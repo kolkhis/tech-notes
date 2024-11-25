@@ -1,8 +1,14 @@
 # Ansible  
-[Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
-[Proxmox](https://proxmox.com/) is a virtualization platform that allows us to create  
-virtual machines and containers.  
-These tools are very useful for testing and practicing Ansible.  
+Ansible is used extensively for automation.  
+It has the ability to run tasks on a list of remote hosts.  
+
+---
+
+Ansible uses [Playbooks](#ansible-playbooks), written in `yaml`, to define a list of [tasks](#tasks) to run on a list of hosts.  
+Inside the Playbooks, you use [modules](#modules) to define how Ansible will complete tasks.  
+
+---
+
 
 Also see:  
 * [Collections](./collections_in_ansible.md)
@@ -490,6 +496,49 @@ You can use `Jinja2` dot-notation to access the values in the dictionary.
   debug:  
     msg: "{{ df_output.stdout }}"  
 ```
+* `.stdout`: This is the actual output of the command.
+    * Variables created from `register` are dictionaries themselves.  
+    * The `stdout` is a key in the dictionary that contains the standard output of
+      the command.  
+
+### Accessing the Registered Variable in a Separate Play in the Same Playbook
+If you define a variable in a playbook that has several plays, you can access your 
+defined variables using the `hostvars` variable.  
+This is a dictionary that holds all the variables and facts about every host in the
+inventory.  
+
+---
+
+For example, if your hosts file contains a host named `host1`, you can access the
+variables collected on that host in tasks from other hosts by using:
+```bash
+hostvars['host1']
+```
+Then you can use dot notation to access any of its variables.  
+```bash
+hostvars['host1'].ansible_host  # The IP address of host1
+hostvars['host1'].ansible_user  # The username used on host1
+```
+
+### Capturing the output of Debug Messages
+Using `register` with `debug` messages is a good way to save variables to use later.  
+```yaml
+    - name: Get the hostname for the local host
+      ansible.builtin.debug:
+        msg: "{{ ansible_hostname }}"
+      register: localHostName
+
+    - name: Print the hostname that was captured
+      ansible.builtin.debug:
+        msg: {{ localHostName.msg }}
+```
+The `msg` variable is the output of the debug message.  
+
+This can also be done with `echo` from `ansible.builtin.command`, but you'd 
+use the `stdout` key to access it instead of `msg`.
+
+## Getting the IP Address of any Host in a Playbook
+Get the ip address of a host using the `hostvars['host-name'].ansible_host` variable.  
 
 ## Blocks in Ansible
 Blocks are a way to logically group tasks in Ansible.  
@@ -596,6 +645,32 @@ ansible-config dump
 ansible-config list
 ```
 
+## Using `set_fact` to Persist Variables Across Plays
+You can have multiple plays inside a playbook.  
+But, when you define a variable inside of a play, it is local to that play.  
+It will not be available in other plays, even within the same playbook.  
+
+```yaml
+- name: Collect information from one system
+  hosts: localhost
+  tasks:
+    - name: Get the IP of the localhost
+      ansible.builtin.debug:
+        msg: "{{ ansible_host }}"
+      register: localHostIP
+
+    - name: Save IP to facts
+      ansible.builtin.set_fact:
+        localHostIP: "{{ localHostIP.msg }}"
+
+- name: Different play to test fact
+  hosts: servers
+  tasks:
+    - name: Show the information gathered on localhost
+      ansible.msg.debug:
+        msg: "Localhost IP:  {{ hostvars['localhost']['localHostIP'] }}"
+```
+
 
 
 ## Resources  
@@ -607,6 +682,8 @@ ansible-config list
 * [Ansible Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)  
 * [The Copy Module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html)  
 * [Ansible Configuration](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+* [Playbook Variables, Hostvars and Facts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html)
+
 
 ### Practicing with Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
