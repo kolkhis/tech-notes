@@ -654,22 +654,41 @@ It will not be available in other plays, even within the same playbook.
 - name: Collect information from one system
   hosts: localhost
   tasks:
-    - name: Get the IP of the localhost
-      ansible.builtin.debug:
-        msg: "{{ ansible_host }}"
-      register: localHostIP
+
+    - name: Get the actual network IP for the current machine
+      ansible.builtin.shell:
+        cmd: 'hostname -I | awk "{ print $1 }"'
+      register: master_node_ip
 
     - name: Save IP to facts
       ansible.builtin.set_fact:
-        localHostIP: "{{ localHostIP.msg }}"
+        MASTER_NODE_IP: "{{ master_node_ip.stdout | trim }}" # Trim whitespace
 
 - name: Different play to test fact
   hosts: servers
   tasks:
     - name: Show the information gathered on localhost
       ansible.msg.debug:
-        msg: "Localhost IP:  {{ hostvars['localhost']['localHostIP'] }}"
+        msg: "Localhost IP:  {{ hostvars['localhost']['MASTER_NODE_IP'] }}"
 ```
+
+## Jinja2 Filters 
+Filter can be used on any variable using the pipe (`|`) character.  
+Syntax:
+```bash
+"{{ variable | filter }}"
+```
+
+Common, useful filters:
+* `trim`: Trim whitespace from the value.  
+* `upper`: Converts a value to uppercase.  
+* `lower`: Converts a value to lowercase.  
+* `capitalize`: Converts the first character to uppercase, and the rest to lowercase.  
+* `pprint`: Pretty-print the value.  
+* `replace`: Perform a substitution on a value.  
+    * `replace("hello", "goodbye")`: Replaces all instances of `hello` with `goodbye`.  
+    * `replace("hello", "goodbye", 1)`: Replaces `1` instance of `hello` with `goodbye`.  
+* See [jinja2 bultin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
 
 
 
