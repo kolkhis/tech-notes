@@ -114,6 +114,8 @@ Building a container image from a Dockerfile is done using `podman build`.
    # Set the command to run when the container starts
    CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8000"]
    ```
+* [Dockerfile instructions reference](https://docs.docker.com/reference/dockerfile/)
+
 
 2. Build the container image from the Dockerfile.  
    ```bash
