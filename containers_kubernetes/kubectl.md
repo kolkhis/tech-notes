@@ -157,3 +157,16 @@ kubectl untaint nodes 'node-name' key=value:NoSchedule # Remove a taint from a n
   ```
 * Use `--watch` with `kubectl get` commands to observe real-time updates.
 
+
+## Get the Main PID (Process ID) for `k3s` or `k8s`
+Running `systemctl status` on the service will show the main PID for the service.  
+```bash
+systemctl status k3s | grep -i 'Main PID'
+```
+Then you can use that PID in other commands.
+```bash
+ss -ntulp | grep PID
+lsof -p PID
+```
+
+
