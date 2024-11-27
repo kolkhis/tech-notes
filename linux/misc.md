@@ -1427,7 +1427,7 @@ time clamscan -i -r --log=/var/log/clamav/clamav.log /home/
 * `--remove`: Automatically remove infected files.  
 * `-r`/`--recursive`: Recursively scan directories.  
 
-### Automate Scans 
+### Automate ClamAV Scans 
 Set up a script to run scans daily.  
 ```bash
 #!/bin/bash
@@ -1475,4 +1475,6 @@ If you want to create a partition of a specific size, then when it prompts for t
 `Last sector`, you can specify a specific size, like `+100G` for a 100GB partition.  
 
 
+## Resources
+* [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
 
