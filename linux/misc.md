@@ -1474,6 +1474,12 @@ w  # Write changes (otherwise they won't be applied)
 If you want to create a partition of a specific size, then when it prompts for the
 `Last sector`, you can specify a specific size, like `+100G` for a 100GB partition.  
 
+## Checking the Systemd Configuration for a Service
+Use the `systectl cat` command to view the `systemd` configuration for a service. 
+```bash
+systemctl cat k3s
+```
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
