@@ -169,4 +169,13 @@ ss -ntulp | grep PID
 lsof -p PID
 ```
 
+## Quickly Looking at the Environment
+```bash
+kubectl version
+kubectl get nodes
+kubectl get pods -A
+kubectl get namespaces
+kubectl get configmaps -A
+kubectl get secrets -A
+```
 
