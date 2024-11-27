@@ -85,6 +85,7 @@ systemd-analyze --help
 This will output all of the different arguments and commands that
 you can use with `systemd-analyze`.
 
+* `systemctl is-enabled ssh`: Shows whether or not a service is enabled.  
 
 ## Maniuplating Services with `systemctl` 
 
