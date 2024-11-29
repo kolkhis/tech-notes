@@ -159,6 +159,20 @@ host example.com
 ```
 
 
+### `iperf3`
+Network speed testing tool.  
+One machine (server) needs to be ready to receive packets, while another machine (client) sends packets.  
+Default port used is `5201`.  
+```bash
+# Start an iperf3 server
+iperf3 -s
+# or
+iperf3 --server
+iperf3 -c 192.168.4.11 -u -n 20G
+```
+
+* `-P`: Allow parallel streams.  
+
 ## Choosing Which Tool to Use
 
 * For modern systems, prefer using `ip` over `ifconfig` and `route`,
