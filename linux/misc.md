@@ -1480,6 +1480,17 @@ Use the `systectl cat` command to view the `systemd` configuration for a service
 systemctl cat k3s
 ```
 
+## Set a Timeout Timer for a Command
+Use the `timeout` command to kill it if it doesn't finish in a certain amount of time.  
+```bash
+timeout 5 ssh user@hostname 
+timeout --preserve-status 5 ssh user@hostname  # Exit with the same status as ssh
+timeout -s SIGINT 5 ssh user@hostname
+```
+* `--preserve-status`: Exit `timeout` with the same status as the command.  
+* `-s`/`--signal`: Specify the signal to exit with if a timeout occurs.  
+
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
