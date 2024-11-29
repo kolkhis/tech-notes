@@ -5,12 +5,14 @@ Manual inspection of system resource usage and logs is valid for one or two syst
 This is why monitoring tools exist.  
 
 
-
 ## Table of Contents
 * [Monitoring Tools for Linux Systems](#monitoring-tools-for-linux-systems) 
     * [Aggregating data](#aggregating-data) 
     * [Storing data (Time Series Database)](#storing-data-time-series-database) 
     * [Data visualization](#data-visualization) 
+    * [Real-time Monitoring and Alerts](#real-time-monitoring-and-alerts) 
+    * [Cloud-Native Monitoring Tools](#cloud-native-monitoring-tools) 
+    * [Tools Specialized for Logging](#tools-specialized-for-logging) 
 * [Grafana + Loki + Promtail Monitoring Stack](#grafana--loki--promtail-monitoring-stack) 
     * [Installing and Configuring Grafana](#installing-and-configuring-grafana) 
     * [Installing and Configuring Loki](#installing-and-configuring-loki) 
@@ -53,6 +55,37 @@ For both logs and system metrics
     * Best for querying and analyzing log data.  
 * `victoriametrics Dasboards`: Vizualization and analysis tool for time-series data stored in VictoriaMetrics.  
     * Similar functionality to Prometheus+Grafana.  
+
+### Real-time Monitoring and Alerts
+Real-time system and application monitoring:
+* `nagios`: Classic tool for monitoring systems and infrastructure.
+    * Provides real-time alerts based on thresholds. 
+`zabbix`: Robust monitoring system for networks, servers, and applications.  
+    * Inlucdes bultin alerting and vizualization tools.  
+* `monit`: Lightweight monitoring and process management tool. 
+    * Can automatically restart failing services.  
+* `glances`: Terminal-based real-time system monitoring tools.  
+    * Displays metrics like CPU, memory, and disk usage with a user-friendly interface.  
+* `htop`: Interactive process viewer. Similar to `top` but more visual and user-friendly.  
+
+### Cloud-Native Monitoring Tools
+Specifically designed for containerized and distributed environments:  
+* `promtail`: A log collection agent that works with Loki in cloud-native environments.  
+* `cAdvisor`: Monitors container resource usage and performance. 
+    * Often used with Docker and Kubernetes.  
+* `kubectl top`: Part of the Kubernetes CLI.
+    * Provides real-time resource usage metrics for pods and nodes.  
+* `thanos`: Highly available, scalable, and long-term storage solution for Prometheus metrics.  
+
+### Tools Specialized for Logging
+Specifically for log aggregation, processing, and storage:
+* `rsyslog`: A log collector and forwarder built into many Linux distros.  
+    * Can send logs to remote servers or central aggregation systems.  
+* `logstash`: Data processing pipeline for ingesting and enriching logs.  
+    * Works with `Elasticsearch` and `Kibana` (ELK stack).  
+* `journald`: System service for managing an querying logs on modern Linux systems. 
+    * This is part of `systemd`, can be accessed with `journalctl`.  
+
 
 ## Grafana + Loki + Promtail Monitoring Stack
 ### Installing and Configuring Grafana
