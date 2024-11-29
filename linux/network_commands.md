@@ -163,6 +163,7 @@ host example.com
 Network speed testing tool.  
 One machine (server) needs to be ready to receive packets, while another machine (client) sends packets.  
 Default port used is `5201`.  
+Default packet type is TCP. Use `-u` for UDP.  
 ```bash
 # Start an iperf3 server
 iperf3 -s
