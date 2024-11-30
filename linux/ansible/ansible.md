@@ -133,7 +133,8 @@ Module actions in tasks can be one-liners as well.
   apt: name=vim state=present
 ```
 
-#### Task keywords  
+
+### Task keywords  
 Most commonly used task keywords:  
 * `name`: A descriptive name for the task.  
 * `vars`: Define variables that are only available to the task.  
@@ -184,6 +185,9 @@ Most commonly used task keywords:
 * `tags`: Assign tags to the task for selective execution.  (see [tags](#tags-in-tasks))  
 
 * `action`: Explicitly defines the module and its parametes (rarely needed, modules are usually defined dicrectly)  
+
+### Playbook Keywords
+###### See [Ansible docs on playbook keywords](https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html).  
 
 ### Modules  
 Modules are essentially "tools" that perform individual tasks.  
@@ -356,10 +360,13 @@ If `serial` is used, handlers are executed after all tasks in the current batch.
 See [roles in Ansible](./roles_in_ansible.md).  
 
 ## Loops in Ansible  
+###### Also see [playbook loops in ansible docs](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html).  
+There are several ways to iterate over a list of items using `loop`.  
+When `loop` is being used, each item is stored in the `item` variable.  
 You can use a conditional to loop through a list of items.  
 ```yaml  
 tasks:  
-  - name: Loop through a list of items  
+  - name: Loop through a list of items with a conditional
     debug:  
       msg: "The current item is {{ item }}.  "  
     loop:  
@@ -368,9 +375,16 @@ tasks:
       - python3
       - "some other item"  
     when: item != 'apache2'  
+
+  - name: Loop over a range of numbers
+    debug: msg="Number is {{ item }}"
+    loop: "{{ range(0, 10) }}"
+
 ```
 
+
 ### Controlling Loops  
+###### Also see [Loop control in the Ansible docs](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_loops.html#loop-control) 
 You can use `loop_control` to change the behavior of a loop.  
 
 #### `loop_control` Examples  
@@ -387,6 +401,19 @@ The label is shown in the output on every iteration of the loop.
     - curl  
   loop_control:  
     label: "Installing {{ item }}"  
+
+- name: Break out of a loop when a condition is met (version 2.18+)
+  vars:
+    my_var: "MATCH ME"
+  debug: msg="Currently checking {{ item }}"
+  loop:
+    - "This won't match"
+    - "Neither will this"
+    - "MATCH ME"
+    - "This won't get printed"
+  loop_control:
+    break_when: # Only version 2.18+
+      - item is my_var
 ```
 
 ---  
