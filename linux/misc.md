@@ -192,6 +192,7 @@ For POSIX compliance, use `seq` for the loop.
   ```bash  
   for i in seq 1 10; do time dd if=/space/testfile_$i of=/dev/null; done  
   ```
+    * You don't need to specify the `bs` (blocksize) or `count` for read tests.  
 
 * Cleanup:  
   ```bash  
