@@ -14,6 +14,7 @@ jq '.' data.json        # Pretty-print
 jq '.key' data.json     # Extract values with the given .key
 jq '.[] | select(.key > value)' # Filter based on conditions
 ```
+* `.[]`: Used to iterate over each element of an array.
 
 
 
