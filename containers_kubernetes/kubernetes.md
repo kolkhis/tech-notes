@@ -5,6 +5,13 @@ deployment, scaling, and management.
 It solves many problems that arise from managing containerized applications at scale.  
 
 
+## Table of Contents
+* [k3s](#k3s) 
+* [`kubectl`](#kubectl) 
+* [k3s Exercise: Setting up a Small Cluster](#k3s-exercise-setting-up-a-small-cluster) 
+* [Helm](#helm) 
+
+
 ## k3s
 k3s is a fully compliant Kubernetes distribution designed to be extremely lightweight.  
 It ships as a single binary and it's incredibly easy to install on most platforms.  
@@ -26,6 +33,7 @@ curl -sL https://get.k3s.io | sh -  # Install k3s
 
 ## `kubectl`
 `kubectl` is the command-line interface for interacting with Kubernetes clusters.  
+Also see [kubectl commands](./kubectl.md)
 
 ```bash
 kubectl version
@@ -38,8 +46,6 @@ kubectl get pods -n kube-system -o wide --show-labels # scope down to the kube-s
 ```
 
 
-## Shameful 
-k8s had an `uwu` version: Kubernetes v1.30: Uwubernetes
 
 
 ## k3s Exercise: Setting up a Small Cluster
@@ -83,3 +89,17 @@ k8s had an `uwu` version: Kubernetes v1.30: Uwubernetes
   ```
 
 
+## Helm
+Helm is a package manager for kubernetes. Helm charts. 
+Helm charts are a way to define/simplify deployment and management of applications with kubernetes. 
+
+A helm chart is a package that contains three components :
+
+* Templates: Yaml files for kubernetes manifests, which can be deployments, services, configMaps, secrets, etc. 
+* Values: Config files that allow for customization without modifying the templates themselves 
+* Metadata: Info about the chart (version, app name, etc.) 
+
+
+---
+
+Bit of history: k8s had an `uwu` version: Kubernetes v1.30: Uwubernetes
