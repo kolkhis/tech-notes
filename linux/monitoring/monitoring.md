@@ -4,6 +4,9 @@ There are a lot of ways to monitor Linux systems.
 Manual inspection of system resource usage and logs is valid for one or two systems, but tedious and not valid at scale.  
 This is why monitoring tools exist.  
 
+Most 3rd party tools will be installed in `/opt`.  
+E.g., Install Loki in `/opt/loki` 
+
 
 ## Table of Contents
 * [Monitoring Tools for Linux Systems](#monitoring-tools-for-linux-systems) 
@@ -205,7 +208,6 @@ The actual numeric IP is usually preferred over `localhost`, just to be sure not
 
 
 Create a dashboard (import -> enter ID 13639 for a Loki preset dashboard) that shows the log files for your server.
-
 
 
 
