@@ -629,6 +629,13 @@ So, passing it through `sed` can fix that.
         cat /proc/meminfo | grep -E "MemFree|SwapFree"  
         ```
 
+* `free -h` shows usage in a base2/binary format:
+    * `B` bytes - 8 bits each
+    * `Ki`: kibibytes - 1024 bytes 
+    * `Mi`: mebibytes - 1024 kibibytes
+    * `Gi`: gibibytes - 1024 mebibytes
+    * `Ti`: tebibytes - 1024 gibibytes
+
 ### Check how much RAM we are using  
 Using `free -h`, just like checking total RAM.  
 ```bash  
