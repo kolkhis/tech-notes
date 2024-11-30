@@ -538,7 +538,8 @@ This can also be done with `echo` from `ansible.builtin.command`, but you'd
 use the `stdout` key to access it instead of `msg`.
 
 ## Getting the IP Address of any Host in a Playbook
-Get the ip address of a host using the `hostvars['host-name'].ansible_host` variable.  
+Get the ip address of a REMOTE host using the `hostvars['host-name'].ansible_host` variable.  
+Using this on the localhost (in `hosts: localhost`) will result in localhost being returned (`127.0.0.1`).
 
 ## Blocks in Ansible
 Blocks are a way to logically group tasks in Ansible.  
