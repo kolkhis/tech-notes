@@ -126,4 +126,16 @@ rsync -avn -e ssh user@homelab:/path/to/files/ /path/to/local/home/
 
 
 ### Archive Mode  
+Using `-a` (`--archive`) is equivalent to `-rlptgoD`.
+
+It will tell `rsync` to recurse down any directories and preserve many of the 
+attributes of the files.  
+
+The only things it does not preserve:
+* `ACL` (Access Control Lists), use `-A` for this.
+* `xattr`, use `-X` for this. 
+* `atime`, use `-U` for this
+* `crtime`, use `-N` for this.
+* Finding/preserving hardlinks, use `-H` for this.  
+
 
