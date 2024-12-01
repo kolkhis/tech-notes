@@ -1,0 +1,13 @@
+[Unit]
+Description=Node Exporter
+Requires=node_exporter.socket
+
+[Service]
+User=node_exporter
+# Fallback when environment file does not exist
+Environment=OPTIONS=
+EnvironmentFile=-/etc/sysconfig/node_exporter
+ExecStart=/usr/sbin/node_exporter --web.systemd-socket $OPTIONS
+
+[Install]
+WantedBy=multi-user.target
