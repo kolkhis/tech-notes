@@ -230,6 +230,7 @@ These are some common `ansible.builtin` modules.
 * `cron`: Managing cron jobs on the remote host.  
 * `find`: Finding files on the remote host.  
 * `fetch`: Fetching files from the remote host.  
+    * Works like `copy`, except in reverse.
 * `groups`: Managing groups on the remote host.  
 * `ping`: Pinging remote hosts and verifying a usable Python.  
 * `shell`: Executing shell commands on the remote host. 
@@ -245,11 +246,11 @@ These are some common `ansible.builtin` modules.
 
 #### General Structure of a Task using a Module  
 ```yaml  
-- name: Description of the task  
-  module.name:  
-    argument1: value1  
-    argument2: value2
-    ...etc  
+tasks:
+  - name: Description of the task  
+    module.name:  
+      argument1: value1  
+      argument2: value2
 ```
 Each module has its own set of `arguments`.  
 Refer to the module docs for the list of arguments a module will accept.  
@@ -315,10 +316,16 @@ To create a new directory on a list of hosts:
 ansible servers -i /inventory/file -m file -a 'path=/home/user/new_dir state=directory'
 ```
 
-### Copy File to Remote Hosts
+### Copy File from Local Machine to Remote Hosts
 To copy files into that new directory:
 ```bash
-ansible servers -i /inventory/file -m copy -m 'src=/local/file dest=/home/user/new_dir'
+ansible servers -i /inventory/file -m copy -a 'src=/local/file dest=/home/user/new_dir'
+```
+
+### Copy file from Remote Host to Local Machine
+Use the `fetch` command to bring down files from remote hosts to the local machine.
+```bash
+ansible servers -i /inventory/file -m fetch -a "src=/remote/file dest=/local/destination"
 ```
 
 ### Modifying a Line in a File on Remote Hosts
