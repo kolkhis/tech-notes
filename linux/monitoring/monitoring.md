@@ -21,6 +21,9 @@ E.g., Install Loki in `/opt/loki`
     * [Installing and Configuring Loki](#installing-and-configuring-loki) 
     * [Promtail Setup](#promtail-setup) 
     * [Linking Loki to Grafana](#linking-loki-to-grafana) 
+* [Grafana Dashboard Templates](#grafana-dashboard-templates) 
+* [Installation of InfluxDB2](#installation-of-influxdb2) 
+* [Telegraf Installation](#telegraf-installation) 
 
 
 ## Monitoring Tools for Linux Systems
@@ -208,6 +211,100 @@ The actual numeric IP is usually preferred over `localhost`, just to be sure not
 
 
 Create a dashboard (import -> enter ID 13639 for a Loki preset dashboard) that shows the log files for your server.
+
+
+## Grafana Dashboard Templates
+Grafana has dashboard templates that allow you to quickly set up a dashboard for a
+service.  
+
+Some template numbers:
+* `159`: Prometheus template
+* `13639`: Loki (log) template
+
+
+## Installation of InfluxDB2
+
+```bash
+# Get the GPG key
+wget -q https://repos.influxdata.com/influxdata-archive_compat.key
+
+# Dearmor the key and save it to /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg
+echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+
+# Add the repo and use the key to sign for the repo
+echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | tee /etc/apt/sources.list.d/influxdata.list
+
+# Install InfluxDB
+sudo apt update && sudo apt-get install -y influxdb2
+
+sudo systemctl start influxdb
+sudo systemctl enable influxdb
+```
+
+InfluxDB listens on port `8086`
+```bash
+ss -ntulp | grep 8086
+lsof -i :8086
+```
+
+Go to the web UI at `https://127.0.0.1:8086` and set up an account, organization, bucket, and copy the token that is given. It looks like a base64 encoded string.  
+
+It'll look like:
+```base64
+bBInHhXJ8z6VOz4kbyr_mrvl25AWk__8HxzTkyGl33AMZlYXVp8kHui0SDhbLUC9w5aVJY_O3GY3pp6qaPSmXA==
+```
+
+
+## Telegraf Installation
+
+```bash
+# Get the key
+wget -q https://repos.influxdata.com/influxdata-archive_compat.key
+
+# Dearmor the key and save it in /etc/apt/trusted.gpg.d/influxdata-
+echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+
+# Set up the repository
+echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | tee /etc/apt/sources.list.d/influxdata.list
+
+# Install Telegraf
+sudo apt update && sudo apt-get install -y telegraf
+```
+
+You need to set up the telegraf configuration file to write to the "output producer"
+for `influxdb2`:
+```bash
+vi /etc/telegraf/telegraf.conf
+```
+
+Then add your token, bucket, and organization:
+```conf
+# # Configuration for sending metrics to InfluxDB 2.0
+ [[outputs.influxdb_v2]]
+#   ## The URLs of the InfluxDB cluster nodes.
+#   ##
+#   ## Multiple URLs can be specified for a single cluster, only ONE of the
+#   ## urls will be written to each interval.
+#   ##   ex: urls = ["https://us-west-2-1.aws.cloud2.influxdata.com"]
+   urls = ["http://127.0.0.1:8086"]
+#
+#   ## Token for authentication.
+   token = "bBInHhXJ8z6VOz4kbyr_mrvl25AWk__8HxzTkyGl33AMZlYXVp8kHui0SDhbLUC9w5aVJY_O3GY3pp6qaPSmXA=="
+#
+#   ## Organization is the name of the organization you wish to write to.
+   organization = "killerkodalab"
+#
+#   ## Destination bucket to write into.
+   bucket = "killerkodalab"
+```
+
+Make sure it's writing out to InfluxDB2:
+```bash
+systemctl restart telegraf
+systemctl status telegraf --no-pager -l
+```
+
+
 
 
 
