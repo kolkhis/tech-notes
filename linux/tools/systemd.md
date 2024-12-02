@@ -29,9 +29,11 @@ Many `systemd` functions are available through `systemctl`.
 
 * `/var/log/journal/` stores `systemd` logs, and can be accessed with `journalctl`.  
 * `/etc/systemd/system` is where custom service files are stored.  
+    * The files named `*.socket`/`*.service` in `/etc/systemd/system` are called `unit files`.  
     * You’ll also find `*.wants/` and `*.requires/` directories here, representing dependencies and conditional requirements for services.  E.g.,:
         * `network-online.target.wants/`: Services that require the network to be online.
         * `multi-user.target.wants/`: Services to start in multi-user mode (non-graphical mode).
+
 
 
 ## What `systemd` does
