@@ -554,4 +554,33 @@ This means specifying the link, the domain, image name, and tag (optionally, the
 digest).  
 
 
+## Layers
+Each time Docker/Podman makes a change inside a Dockerfile, it creates a layer.  
+That layer is summed up into a sha256 hash, so if that line in the Dockerfile ever
+changes, it breaks the hash.  
+
+This makes layers immutable, meaning once a layer is created, it can't be changed,
+only replaced.  
+
+Layers are stacked on top of each other to form the final container image.  
+
+The base layer is typically an operating system image, and each subsequent layer adds
+or modifies files and configs.  
+
+### Layer features
+* Docker/Podman uses cached layers to speed up builds.
+    * If a layer hasn't changed, the cached version is reused instead of rebuilding it.  
+
+* Each layer is stored as a compressed tarball, making it easy to distribute 
+  container images.  
+
+* Layers enable efficient storage by reusing unchanged layers across different images.
+    * Multiple images can share the same base or intermediate layers, which saves disk space.  
+
+* Changes in a lower layer require rebuilding all subsequent layers. 
+    * This is why it's important to optimize the Dockerfile order.  
+
+
+
+
 
