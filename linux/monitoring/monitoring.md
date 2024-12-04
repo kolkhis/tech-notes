@@ -7,7 +7,6 @@ This is why monitoring tools exist.
 Most 3rd party tools will be installed in `/opt`.  
 E.g., Install Loki in `/opt/loki` 
 
-
 ## Table of Contents
 * [Monitoring Tools for Linux Systems](#monitoring-tools-for-linux-systems) 
     * [Aggregating data](#aggregating-data) 
@@ -19,14 +18,15 @@ E.g., Install Loki in `/opt/loki`
 * [Grafana + Loki + Promtail Monitoring Stack](#grafana--loki--promtail-monitoring-stack) 
     * [Installing and Configuring Grafana](#installing-and-configuring-grafana) 
     * [Installing and Configuring Loki](#installing-and-configuring-loki) 
-    * [Promtail Setup](#promtail-setup) 
+    * [Setting up Promtail](#setting-up-promtail) 
     * [Linking Loki to Grafana](#linking-loki-to-grafana) 
 * [Grafana Dashboard Templates](#grafana-dashboard-templates) 
 * [Installation of InfluxDB2](#installation-of-influxdb2) 
-* [Telegraf Installation](#telegraf-installation) 
+* [Setting up Telegraf](#setting-up-telegraf) 
 * [Setting up node_exporter](#setting-up-nodeexporter) 
+    * [node_exporter `sysconfig` file](#nodeexporter-sysconfig-file) 
+    * [node_exporter textfile_collector](#nodeexporter-textfilecollector) 
 * [Setting up Prometheus](#setting-up-prometheus) 
-    * [Prometheus Config File](#prometheus-config-file) 
 
 
 ## Monitoring Tools for Linux Systems
