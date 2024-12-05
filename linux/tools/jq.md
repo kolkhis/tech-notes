@@ -159,10 +159,13 @@ This results in the output:
     * Use this to expand escape sequences.  
 
 
+
+
 ## `jq` Learning Resources
 
 * [Official Documentation](https://github.com/jqlang/jq)
 * [jq Online Playground](https://jqplay.org/)
 * [Learn `jq` in Y Minutes](https://learnxinyminutes.com/docs/jq/)
 * [jq manual](https://jqlang.github.io/jq/manual/)
+* [jq cheat sheet](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4)
 
