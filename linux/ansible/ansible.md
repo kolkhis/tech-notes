@@ -725,6 +725,20 @@ Common, useful filters:
     * `replace("hello", "goodbye", 1)`: Replaces `1` instance of `hello` with `goodbye`.  
 * See [jinja2 bultin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
 
+## Prompt for Passwords
+
+### Password for `become`
+Use the `-K` option when running a playbook to prompt for a `become` password.  
+This is the same as `--ask-become-pass`.  
+That way you don't have to set it anywhere on the system.  
+```bash
+ansible-playbook example_playbook.yml -K
+```
+
+### Password for SSH Connection
+Use the `-k` (lowercase) option to prompt for the password needed to connect to the
+remote machine.  
+
 
 
 ## Resources  
