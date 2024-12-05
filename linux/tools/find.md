@@ -4,6 +4,8 @@
 The bulk of this file is notes on the `find` command.  
 Before that, some other commands to find files.  
 
+
+
 ## Table of Contents
 * [`tree`](#tree) 
 * [`ls`](#ls) 
@@ -12,15 +14,15 @@ Before that, some other commands to find files.
 * [Quick Overview of File Timestamps](#quick-overview-of-file-timestamps) 
 * [tl;dr: Examples](#tldr-examples) 
     * [Skipping directories (Omitting directories)](#skipping-directories-omitting-directories) 
-        * [If `-prune` doesn't work use an Operator instead:](#if-prune-doesnt-work-use-an-operator-instead) 
+        * [If `-prune` doesn't work use an Operator instead](#if--prune-doesnt-work-use-an-operator-instead) 
     * [Finding files that match multiple conditions](#finding-files-that-match-multiple-conditions) 
     * [Searching files by age](#searching-files-by-age) 
 * [Executing commands on found file(s)](#executing-commands-on-found-files) 
     * [Executing a command for *each* file found](#executing-a-command-for-each-file-found) 
+        * [Grep inside Found Files](#grep-inside-found-files) 
     * [Executing a command on *all* files *simultaneously*](#executing-a-command-on-all-files-simultaneously) 
-    * [Searching files by permissions (more in [Permission Searching](#Permission-Searching))](#searching-files-by-permissions-more-in-permission-searchingpermissionsearching) 
-        * [Note: the `-perm` argument supports both octal notation and symbolic notation (`u=x`, etc)](#note-the-perm-argument-supports-both-octal-notation-and-symbolic-notation-ux-etc) 
-        * [Conditional Search Examples:](#conditional-search-examples) 
+    * [Searching files by permissions](#searching-files-by-permissions) 
+        * [Conditional Search Examples](#conditional-search-examples) 
 * [`find` Options](#find-options) 
     * [Global Options](#global-options) 
     * [Change How `find` Handles Symbolic Links](#change-how-find-handles-symbolic-links) 
@@ -126,6 +128,12 @@ find . -name 'target.md' -exec cat '{}' ';'
 ```
 ##### *The braces `{}` and semicolon `;` can either be quoted or escaped.*  
 
+#### Grep inside Found Files
+```bash  
+find . -name 'target.md' -exec grep -i 'tar.gz' '{}' ';'  
+```
+This uses `grep` to find the word `tar.gz` inside the found files.  
+
 ---  
 
 Run `my_script` on every file in or below the current directory:  
@@ -140,11 +148,17 @@ Pass all files to `my_script` as arguments:
 ```bash  
 find . -type f -exec my_script '{}' +  
 ```
+* `'{}'` expands to the names of the file(s) that are found with `find`.  
+* `+`: Tell `find` to pass **all** files to `my_script` as arguments.  
+    * This is different than using `';'`, which passes the found file to `exec` one
+      at a time.  
+    * More efficient than `;` in this case, which would invoke the script once per file.  
 
 ---  
 
-### Searching files by permissions (more in [Permission Searching](#Permission-Searching))  
-#### Note: the `-perm` argument supports both octal notation and symbolic notation (`u=x`, etc)
+### Searching files by permissions 
+More in [Permission Searching](#Permission-Searching).  
+###### Note: the `-perm` argument supports both octal notation and symbolic notation (`u=x`, '755' etc)
 Overview:  
 ```bash  
 find . -perm 220       # Match if ONLY the given permissions are there. (exact match)  
