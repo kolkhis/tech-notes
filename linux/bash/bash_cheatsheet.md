@@ -1587,4 +1587,26 @@ The second address is the IPv6 address of the current machine on the local netwo
 
 
 
+## Get the Full Path of the Current Script
+
+You can use this inside a script to get the directory that the script is inside:
+```bash
+script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+```
+This method works for `source`d scripts.  
+Use this if you're not running this script directly.  
+
+---
+
+To get the whole path, including the filename, just use `realpath`:
+```bash
+script_dir=$(realpath $0)
+```
+If you want to trim the filename from this, you can use parameter expansion.  
+```bash
+${script_dir%/*}
+```
+This method does **not** work for sourced scripts.  
+The `$0` argument changes to reflect the script calling it.  
+
 
