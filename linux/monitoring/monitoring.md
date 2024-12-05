@@ -7,7 +7,8 @@ This is why monitoring tools exist.
 Most 3rd party tools will be installed in `/opt`.  
 E.g., Install Loki in `/opt/loki` 
 
-## Table of Contents  
+
+## Table of Contents
 * [Monitoring Tools for Linux Systems](#monitoring-tools-for-linux-systems) 
     * [Aggregating data](#aggregating-data) 
     * [Storing data (Time Series Database)](#storing-data-time-series-database) 
@@ -16,17 +17,23 @@ E.g., Install Loki in `/opt/loki`
     * [Cloud-Native Monitoring Tools](#cloud-native-monitoring-tools) 
     * [Tools Specialized for Logging](#tools-specialized-for-logging) 
 * [Grafana + Loki + Promtail Monitoring Stack](#grafana--loki--promtail-monitoring-stack) 
-    * [Installing and Configuring Grafana](#installing-and-configuring-grafana) 
-    * [Installing and Configuring Loki](#installing-and-configuring-loki) 
-    * [Setting up Promtail](#setting-up-promtail) 
+* [Installing and Configuring Grafana](#installing-and-configuring-grafana) 
+    * [Resetting the admin Password for Grafana](#resetting-the-admin-password-for-grafana) 
+* [Installing and Configuring Loki](#installing-and-configuring-loki) 
     * [Linking Loki to Grafana](#linking-loki-to-grafana) 
+* [Setting up Promtail](#setting-up-promtail) 
 * [Grafana Dashboard Templates](#grafana-dashboard-templates) 
-* [Installation of InfluxDB2](#installation-of-influxdb2) 
+* [Setting up InfluxDB2](#setting-up-influxdb2) 
 * [Setting up Telegraf](#setting-up-telegraf) 
 * [Setting up node_exporter](#setting-up-nodeexporter) 
     * [node_exporter `sysconfig` file](#nodeexporter-sysconfig-file) 
     * [node_exporter textfile_collector](#nodeexporter-textfilecollector) 
 * [Setting up Prometheus](#setting-up-prometheus) 
+* [Grafana Provisioning: Automatic Data Source and Dashboard Provisioning](#grafana-provisioning-automatic-data-source-and-dashboard-provisioning) 
+    * [Grafana Data Source Provisioning](#grafana-data-source-provisioning) 
+    * [Dashboard Provisioning](#dashboard-provisioning) 
+        * [Changing Provisioned Dashboards](#changing-provisioned-dashboards) 
+* [Resources](#resources) 
 
 
 ## Monitoring Tools for Linux Systems  
