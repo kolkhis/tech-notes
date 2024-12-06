@@ -61,7 +61,7 @@ nmap -iL targets.txt
 ### OS Detection
 `nmap` can guess the OS of a system simply by the ports and services that are open.  
 ```bash
-nmap -O --osscan_guess 192.168.1.1
+nmap -O --osscan-guess 192.168.1.1
 ```
 * `-O`: Enable OS detection
 * `--osscan-limit`: Limit OS detection to promising targets
