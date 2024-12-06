@@ -16,3 +16,9 @@ git reset --soft HEAD~1  # Rolls back to the previous commit, leaves changes in 
 * If you've already pushed the commit to a remote repository and you perform a reset, you'll have to force push (`git push --force`) to update the remote repository.
     * Be cautious with this, as it can overwrite history on the remote and can impact others who have pulled the changes.
 
+### Fast Forwarding to HEAD
+If you go back to a previous commit, using `reset` or something else, use `git merge`
+to get back to the HEAD of the branch. 
+```bash
+git merge origin/main
+```
