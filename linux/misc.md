@@ -1522,6 +1522,14 @@ This method does **not** work for sourced scripts.
 The `$0` argument changes to reflect the script calling it.  
 
 
+## Setting up Bash on a Mac
+Instead of using the old v3 bash on mac systems, use `brew` to install bash v5.
+```bash
+brew install bash
+echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells
+chsh -s "$(brew --prefix)/bin/bash"
+```
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
