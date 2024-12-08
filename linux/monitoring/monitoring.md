@@ -526,7 +526,7 @@ datasources:
     editable: false  
 ```
 
-More robust example from the [Grafana docs](https://grafana.com/docs/grafana/latest/administration/provisioning/#example-data-source-configuration-file):  
+Below is a more robust example from the [Grafana docs](https://grafana.com/docs/grafana/latest/administration/provisioning/#example-data-source-configuration-file):  
 ```yaml  
 # Configuration file version  
 apiVersion: 1  
@@ -604,11 +604,12 @@ datasources:
 ```
 
 ### Dashboard Provisioning  
-
-Dashboards themselves can be in `json` format in a directory on the server:  
-`/var/lib/grafana/dashboards/`
-Create a provisioning file for dashboards, like  
-`/etc/grafana/provisioning/dashboards/default.yaml`.  
+Create a provisioning file for dashboards, like:  
+```bash
+/etc/grafana/provisioning/dashboards/default.yaml.  
+```
+This yaml file will have a `path` key that points to where the actual `json` files 
+for the dashboards are stored.  
 ```yaml  
 apiVersion: 1  
 providers:  
@@ -619,6 +620,9 @@ providers:
     options:  
       path: /var/lib/grafana/dashboards  
 ```
+
+The dashboards themselves go in `/var/lib/grafana/dashboards/`, 
+in `json` format.  
 
 More robust example from the [Grafana docs](https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards):  
 ```yaml  
@@ -650,10 +654,13 @@ providers:
 
 #### Changing Provisioned Dashboards  
 NOTE: Any changes made to provisioned dashboards through the UI can't be saved back  
-to the provisioning source.  
+to the provisioning source (the `json` file that it is read from).  
+
 If `allowUiUpdates` is set to `true` and you make a change to a provisioned  
 dashboard, you can `Save` the dashboard and changes will persist to the Grafana  
-database. But, if it's reloaded from the source then any changes will be overwritten.  
+database.  
+This will not save changes to the original `json` file.  
+But, if the dashboard is reloaded from the source then any changes will be overwritten.  
 
 
 ## Resources  
@@ -662,4 +669,4 @@ database. But, if it's reloaded from the source then any changes will be overwri
 * [Grafana Installation](https://grafana.com/docs/grafana/latest/setup-grafana/installation/)  
 * [Grafana Dashboard Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards):  
 * [Grafana Data Source Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/#example-data-source-configuration-file):  
-* [Grafana Alert Discord](https://grafana.com/docs/grafana/latest/administration/provisioning/#alert-notification-discord)  
+* [Grafana Alert Discord](https://grafana.com/docs/grafana/ltest/administration/provisioning/#alert-notification-discord)  
