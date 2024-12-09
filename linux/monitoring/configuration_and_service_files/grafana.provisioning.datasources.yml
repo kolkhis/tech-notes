@@ -1,0 +1,23 @@
+
+# /etc/grafana/provisioning/datasources/prometheus.yml
+apiVersion: 1  # Specifies the API version (1 is currently used for provisioning).
+datasources:  
+  - name: Prometheus  # The name of the data source as it appears in Grafana.
+    type: prometheus  # Specifies the data source type (Prometheus in this case).
+    access: proxy     # 'proxy' (server) or 'direct' (browser UI)
+    url: http://localhost:9090  # URL where Prometheus is accessible.
+    isDefault: true  # Sets this data source as the default.
+    editable: false  # Prevents editing this data source via the UI.
+
+# /etc/grafana/provisioning/datasources/loki.yml
+apiVersion: 1
+datasources:
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://localhost:3100
+    jsonData:
+      timeout: 60
+      maxLines: 1000
+
+
