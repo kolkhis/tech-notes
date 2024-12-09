@@ -670,3 +670,9 @@ But, if the dashboard is reloaded from the source then any changes will be overw
 * [Grafana Dashboard Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards):  
 * [Grafana Data Source Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/#example-data-source-configuration-file):  
 * [Grafana Alert Discord](https://grafana.com/docs/grafana/ltest/administration/provisioning/#alert-notification-discord)  
+* [TLS Encryption with Prometheus](https://prometheus.io/docs/guides/tls-encryption/)
+* [Prometheus Configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
+* [Prometheus Basic Auth](https://prometheus.io/docs/guides/basic-auth/)
+* [Prometheus File-based service discovery](https://prometheus.io/docs/guides/file-sd/)
+    * [Configuring File-based Service Discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#file_sd_config)
+* [Prometheus Labels and relabel_configs](https://grafana.com/blog/2022/03/21/how-relabeling-in-prometheus-works/)
