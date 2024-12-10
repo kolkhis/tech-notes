@@ -606,11 +606,12 @@ datasources:
 ### Dashboard Provisioning  
 Create a provisioning file for dashboards, like:  
 ```bash
-/etc/grafana/provisioning/dashboards/default.yaml.  
+/etc/grafana/provisioning/dashboards/default.yaml  
 ```
 This yaml file will have a `path` key that points to where the actual `json` files 
 for the dashboards are stored.  
 ```yaml  
+# /etc/grafana/provisioning/dashboards/default.yaml  
 apiVersion: 1  
 providers:  
   - name: 'default'  
@@ -622,7 +623,7 @@ providers:
 ```
 
 The dashboards themselves go in `/var/lib/grafana/dashboards/`, 
-in `json` format.  
+in `json` format (or wherever you specify the `path:`).  
 
 More robust example from the [Grafana docs](https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards):  
 ```yaml  
