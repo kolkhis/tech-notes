@@ -1,10 +1,47 @@
 
 
-See [Project Layout from golang-standards](https://github.com/golang-standards/project-layout/).  
-
 # Go Project File Structure
 
-```
+Directories communicate how code should be used, whether it’s internal-only code, 
+public libraries, configuration files, or executable commands.
+
+Be explicit about your intentions by using the right directories!
+
+For example, if some of your code isn't meant to be imported and used by other
+people/applications, put it in the correct directory (`internal/`).  
+
+## Table of Contents
+* [Visualization](#visualization) 
+* [Go Directories](#go-directories) 
+    * [`/cmd`](#cmd) 
+    * [`/internal`](#internal) 
+    * [`/pkg`](#pkg) 
+    * [`/vendor`](#vendor) 
+* [Service Application Directories](#service-application-directories) 
+    * [`/api`](#api) 
+* [Web Application Directories](#web-application-directories) 
+    * [`/web`](#web) 
+* [Common Application Directories](#common-application-directories) 
+    * [`/configs`](#configs) 
+    * [`/init`](#init) 
+    * [`/scripts`](#scripts) 
+    * [`/build`](#build) 
+    * [`/deployments`](#deployments) 
+    * [`/test`](#test) 
+* [Other Directories](#other-directories) 
+    * [`/docs`](#docs) 
+    * [`/tools`](#tools) 
+    * [`/examples`](#examples) 
+    * [`/third_party`](#thirdparty) 
+    * [`/githooks`](#githooks) 
+    * [`/assets`](#assets) 
+    * [`/website`](#website) 
+* [References](#references) 
+
+## Visualization
+Below is a visualization of all the directories you *can* have in your Go project.  
+
+```bash
 myproject/
 ├── cmd/
 │   ├── myapp/
@@ -33,39 +70,39 @@ myproject/
 └── go.mod
 ```
 
-1. **cmd:** The `cmd` directory contains executable main packages
+* `cmd`: The `cmd` directory contains executable main packages
    for different applications or command-line utilities.  
     * Each subdirectory inside `cmd` represents an individual application or utility.  
     * For instance, you might have `myapp` for a web server and `mycli` for a command-line tool.
-    
-2. **internal:** The `internal` directory contains private packages that should
+
+* `internal`: The `internal` directory contains private packages that should
    not be imported by external projects.  
     * This directory helps enforce encapsulation and avoids accidental use by external code.
-    
-3. **pkg:** The `pkg` directory contains public packages that can be
+
+* `pkg`: The `pkg` directory contains public packages that can be
    imported and used by external projects.  
     * It should contain reusable libraries and code that can be shared across 
-      different parts of your project or potentially across multiple projects.
-    
-4. **api:** The `api` directory can contain code related to defining API contracts,
+      different parts of your project, or potentially across multiple projects.
+
+* `api`: The `api` directory can contain code related to defining API contracts,
    such as gRPC or REST API definitions, if applicable.
-    
-5. **web:** The `web` directory can contain web-related code.  
+
+* `web`: The `web` directory can contain web-related code.  
     * E.g., front-end assets or templates if your project includes a web application.
+
+* `config`: The `config` directory can store configuration files.
+    * E.g., `.yaml`, `.json`, or `.toml` files used by the application.
     
-6. **config:** The `config` directory can store configuration files.
-    * E.g., `.yaml`, `.json`, or `.toml` files used by your application.
-    
-7. **scripts:** The `scripts` directory can contain helper scripts for tasks like
-   building, testing, or setting up the project.
-    
-8. **tests:** The `tests` directory contains unit tests, integration tests, and
+* `scripts`: The `scripts` directory can contain shell scripts for helper tasks.  
+    * E.g., building, testing, or setting up the project.
+
+* `tests`: The `tests` directory contains unit tests, integration tests, and
    other test-related files.
-    
-9. **README.md:** A Markdown file with project documentation, including instructions
-   for building, testing, and running the project.
-    
-10. **go.mod:** The `go.mod` file is used to manage Go dependencies for the project.
+
+* `README.md`: A Markdown file with project documentation.
+    * Should include instructions for building, testing, and running the project.
+
+* `go.mod`: The `go.mod` file is used to manage Go dependencies for the project.
 
 
 ---
@@ -76,44 +113,55 @@ myproject/
 These notes are taken directly from [golang-standards/project-layout](https://github.com/golang-standards/project-layout/blob/master/README.md?plain=1).  
 
 ### `/cmd`
+Stores executable `main` packages that define entry points for the application or CLI tools.  
 
+Each subdirectory inside `cmd/` corresponds to a separate executable program.  
 
-Main applications for this project.
+```bash
+myproject/
+└── cmd/
+    ├── myapp/
+    │   └── main.go
+    └── mycli/
+        └── main.go
+```
+* `cmd/myapp/main.go`: Stores one application called `myapp`.  
+* `cmd/mycli/main.go`: Stores a separate application called `mycli`.  
 
-The directory name for each application should match the name of the executable you want 
-to have (e.g., `/cmd/myapp`).
+Keep the `main.go` files minimal. Let them just call functions from `internal/` or `pkg/`.  
 
-
-Don't put a lot of code in the application directory.  
-
-If you think the code can be imported and used in other projects, then it should live 
-in the `/pkg` directory.  
+Example `main.go`: 
+```go
+package main
+ 
+import "myproject/internal/pkg1"
+ 
+func main() {
+    pkg1.Run()
+}
+```
+It's common to have a small `main` function that imports and invokes the code from the 
+`/internal` and `/pkg` directories and nothing else.
 
 If the code is not reusable or if you don't want others to reuse it, put that code in 
 the `/internal` directory.  
 
-You'll be surprised what others will do, so be explicit about your intentions!
+If you think the code can be imported and used in other projects, then it should live 
+in the `/pkg` directory.  
 
 
-It's common to have a small `main` function that imports and invokes the code from the 
-`/internal` and `/pkg` directories and nothing else.
 
 
 ### `/internal`
+Contains code that is *not* intended for external use.  
+
+The compiler enforces that packages in `internal/` cannot be imported by code outside
+of the project.  
 
 
-Private application and library code.  
 
-This is the code you don't want others importing in their applications or libraries.  
-
-Note that this layout pattern is enforced by the Go compiler itself.  
-
-Note that you are not limited to the top level `internal` directory.  
-
+You are not limited to the top level `internal` directory,  
 You can have more than one `internal` directory at any level of your project tree.
-
-You can optionally add a bit of extra structure to your internal packages to separate 
-your shared and non-shared internal code.  
 
 It's not required (especially for smaller projects), but it's nice to have visual clues 
 showing the intended package use.  
@@ -245,32 +293,26 @@ have more flexibility in terms of how you name your test data directory.
 ### `/docs`
 Design and user documents (in addition to your godoc generated documentation).
 
-
 ### `/tools`
 Supporting tools for this project.  
 Note that these tools can import code from the `/pkg` and `/internal` directories.
 
-
 ### `/examples`
 Examples for your applications and/or public libraries.
-
 
 ### `/third_party`
 External helper tools, forked code and other 3rd party utilities (e.g., Swagger UI).
 
-
 ### `/githooks`
 Git hooks.
 
-
 ### `/assets`
 Other assets to go along with your repository (images, logos, etc).
-
 
 ### `/website`
 This is the place to put your project's website data if you are not using GitHub pages.
 
 
 
-
-
+## References
+* [Project Layout from golang-standards](https://github.com/golang-standards/project-layout/)  
