@@ -64,6 +64,7 @@ Use `/connect twitch` and `/disconnect twitch` as necessary.
   /save
   ```
     * Just be aware, this will save your oauth token in plaintext in `~/.config/weechat/irc.conf`.  
+    * Go [here](https://id.twitch.tv/oauth2/revoke) if you ever need to revoke the token.  
       
 
 ---
