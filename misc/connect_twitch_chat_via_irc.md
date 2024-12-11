@@ -49,15 +49,22 @@ Optionally, you can add `-autoconnect` to connect to this server when `weechat` 
 
 ### Connect & Disconnect Commands for Twitch IRC
 Use `/connect twitch` and `/disconnect twitch` as necessary.  
-Connect to twitch:
-```bash
-/connect twitch
-```
+* Connect to twitch:
+  ```bash
+  /connect twitch
+  ```
 
-Then join any given channel with `/join #channelName`:
-```css
-/join #rwxrob
-```
+* Then join any given channel with `/join #channelName`:
+  ```css
+  /join #rwxrob
+  ```
+
+* Save your configuration:
+  ```bash
+  /save
+  ```
+    * Just be aware, this will save your oauth token in plaintext in `~/.config/weechat/irc.conf`.  
+      
 
 ---
 
@@ -105,9 +112,9 @@ Then join any given channel with `/join #channelName`:
   /close
   ```
 * To quit weechat:
-```bash
-/quit
-```
+  ```bash
+  /quit
+  ```
 
-* Now you've got a minimal `weechat` setup for twitch!
+Now you've got a minimal `weechat` setup for twitch!
 
