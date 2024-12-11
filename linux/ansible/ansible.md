@@ -751,7 +751,7 @@ remote machine.
 * [The Copy Module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html)  
 * [Ansible Configuration](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
 * [Playbook Variables, Hostvars and Facts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html)
-
+* [Using Filters to Manipulate Data](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_filters.html)
 
 ### Practicing with Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
