@@ -723,7 +723,10 @@ Common, useful filters:
 * `replace`: Perform a substitution on a value.  
     * `replace("hello", "goodbye")`: Replaces all instances of `hello` with `goodbye`.  
     * `replace("hello", "goodbye", 1)`: Replaces `1` instance of `hello` with `goodbye`.  
-* See [jinja2 bultin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
+
+* See [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
+
+See [Ansible Builtin Filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins)
 
 ## Prompt for Passwords
 
