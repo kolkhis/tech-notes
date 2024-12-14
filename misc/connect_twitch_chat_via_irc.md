@@ -3,13 +3,18 @@
 This short how-to is geared toward Linux users.  
 This includes WSL2.  
 
+I highly recommend you use weechat's [encrypted storage to store your access token](#securely-store-your-oauth-token-recommended).
+
+
+
 
 ## Table of Contents
 * [Install Weechat](#install-weechat) 
 * [Get OAuth Token](#get-oauth-token) 
 * [Connecting to twitch with weechat](#connecting-to-twitch-with-weechat) 
     * [Adding the twitch server](#adding-the-twitch-server) 
-    * [Connect & Disconnect Commands for Twitch IRC](#connect--disconnect-commands-for-twitch-irc) 
+* [Securely Store your OAuth Token (RECOMMENDED)](#securely-store-your-oauth-token-recommended) 
+* [Connect & Disconnect Commands for Twitch IRC](#connect--disconnect-commands-for-twitch-irc) 
 * [Some Useful Keybinds and Commands](#some-useful-keybinds-and-commands) 
 * [tl;dr, just gimme the commands](#tldr-just-gimme-the-commands) 
 
@@ -42,12 +47,38 @@ Breakdown:
 - `-ssl`: Enables SSL/TLS for a secure connection.
 - `-ssl_verify`: Enables SSL certificate verification for security.
 * `-password=oauth:youraccesstoken`: The password that will be used to connect to the server.  
-    * This must contain the `oauth:` part, since you're using an access token.  
+    * This must contain the `oauth:` part.  
+    * NOTE: This stores your key in plaintext.  
+    * See [this section](#securely-store-your-oauth-token-recommended) for encrypted storage of your oauth token.
 * `-nicks=username`: The username of your twitch account.  
 
 Optionally, you can add `-autoconnect` to connect to this server when `weechat` launches.  
 
-### Connect & Disconnect Commands for Twitch IRC
+## Securely Store your OAuth Token (RECOMMENDED)
+
+You can utilize Weechat's secure encrypted storage for your Twitch token.  
+Use `/secure set` to set a "secure variable."  
+```bash
+/secure set twitch_token oauth:YOUR_TOKEN
+```
+Once that's done, change the twitch `password` to read from this variable. 
+```bash
+/set irc.server.twitch.password "${sec.data.twitch_token}"
+```
+Then `/save`.  
+```bash
+/save
+```
+
+In your `irc.conf` (default `~/.config/weechat/irc.conf`), you should see this in
+the Twitch settings:
+```ini
+twitch.password = "${sec.data.twitch_token}"
+```
+
+Verify it worked by relaunching weechat and connecting to twitch.  
+
+## Connect & Disconnect Commands for Twitch IRC
 Use `/connect twitch` and `/disconnect twitch` as necessary.  
 * Connect to twitch:
   ```bash
@@ -70,6 +101,9 @@ Use `/connect twitch` and `/disconnect twitch` as necessary.
 ---
 
 ## Some Useful Keybinds and Commands
+
+* `/autojoin add #channel_name`: Add a channel to auto-join when weechat starts.
+    * Remember to `/save` after doing this.  
 
 * Use `Alt-<NUM>` to switch channels (channels are numbered, shown on left). 
     * `Alt-1` to show the main system buffer.  
