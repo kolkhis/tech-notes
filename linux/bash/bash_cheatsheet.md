@@ -1609,4 +1609,17 @@ ${script_dir%/*}
 This method does **not** work for sourced scripts.  
 The `$0` argument changes to reflect the script calling it.  
 
+## rmdir
+The `rmdir` command deletes a directory *only* if the directory is empty.  
+This is safer than `rm -r`, because it will not delete directories that still contain files.  
+```bash
+# Delete the `delete` directory
+rmdir ~/dir/to/delete
+# Delete all of the parent directories too (as long as they're empty)
+rmdir -p ~/dirs/to/delete
+```
+* `-p`: Delete each parent directory as well.  
+* `-v`: Output every directory that is processed.  
+
+
 
