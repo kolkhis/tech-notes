@@ -1530,6 +1530,25 @@ echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells
 chsh -s "$(brew --prefix)/bin/bash"
 ```
 
+## Changing the Hostname of a System
+* Change the hostname of a system with `hostnamectl`.  
+  ```bash
+  sudo hostnamectl set-hostname new-hostname
+  ```
+
+* Then, update the `/etc/hosts` file.  
+  Change any entries of the old hostname with the new one.  
+
+* Either reboot the system or restart the `network` and `systemd-hostnamed` services.  
+  ```bash
+  sudo reboot
+  # or
+  sudo systemctl restart network
+  sudo systemctl restart systemd-hostnamed
+  ```
+
+
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
