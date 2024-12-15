@@ -1621,5 +1621,9 @@ rmdir -p ~/dirs/to/delete
 * `-p`: Delete each parent directory as well.  
 * `-v`: Output every directory that is processed.  
 
+## BASH_REMATCH
+The `BASH_REMATCH` variable can be used inside scripts that utilize regular
+expressions.  
+
 
 
