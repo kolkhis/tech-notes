@@ -56,7 +56,8 @@ Optionally, you can add `-autoconnect` to connect to this server when `weechat` 
 
 ## Securely Store your OAuth Token (RECOMMENDED)
 
-You can utilize Weechat's secure encrypted storage for your Twitch token.  
+You can utilize Weechat's secure encrypted storage to lock your Twitch token behind a passphrase.  
+
 Use `/secure set` to set a "secure variable."  
 ```bash
 /secure set twitch_token oauth:YOUR_TOKEN
@@ -65,10 +66,18 @@ Once that's done, change the twitch `password` to read from this variable.
 ```bash
 /set irc.server.twitch.password "${sec.data.twitch_token}"
 ```
+
+Set your passphrase.
+```bash
+/set passphrase my passphrase here
+```
+* NOTE: If you don't set up a passphrase, the token will be stored in PLAIN TEXT in `~/.config/weechat/sec.conf`.  
+
 Then `/save`.  
 ```bash
 /save
 ```
+
 
 In your `irc.conf` (default `~/.config/weechat/irc.conf`), you should see this in
 the Twitch settings:
