@@ -708,7 +708,9 @@ It will not be available in other plays, even within the same playbook.
 ```
 
 ## Jinja2 Filters 
-Filter can be used on any variable using the pipe (`|`) character.  
+Also see [Ansible builtin filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins) and [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters).  
+
+Filters can be used on any variable using the pipe (`|`) character.  
 Syntax:
 ```bash
 "{{ variable | filter }}"
@@ -724,9 +726,6 @@ Common, useful filters:
     * `replace("hello", "goodbye")`: Replaces all instances of `hello` with `goodbye`.  
     * `replace("hello", "goodbye", 1)`: Replaces `1` instance of `hello` with `goodbye`.  
 
-* See [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
-
-See [Ansible Builtin Filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins)
 
 ## Prompt for Passwords
 
@@ -755,6 +754,8 @@ remote machine.
 * [Ansible Configuration](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
 * [Playbook Variables, Hostvars and Facts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html)
 * [Using Filters to Manipulate Data](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_filters.html)
+* [Ansible Builtin Filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins)
+* [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
 
 ### Practicing with Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
