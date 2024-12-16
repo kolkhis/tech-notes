@@ -1547,6 +1547,9 @@ chsh -s "$(brew --prefix)/bin/bash"
   sudo systemctl restart systemd-hostnamed
   ```
 
+## Stack Tracing
+Use `strace` to track the system calls that a program makes.  
+The output here is C code.  
 
 
 
