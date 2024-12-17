@@ -1,7 +1,7 @@
 
 ## Linux Cheatsheet
 
-Also see [the linux sysadmin cheatsheet](./sysadmin_command_cheatsheet.md).  
+Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).  
 
 ## Table of Contents
 * [Linux Cheatsheet](#linux-cheatsheet) 
@@ -37,11 +37,12 @@ who  # Shows who is logged into the system
 w    # More detailed version of 'who'
 last # Show the last users to log into the system (prints in reverse)
 cat /etc/*release  # Get information about the operating system
-cat /proc/cmdline  # Get the kernel command line arguments (boot parameters, boot image)
+cat /proc/cmdline  # Get the kernel command line arguments from the bootloader (boot parameters, boot image)
 ethtool  # Show info on the network interfaces
 ip a     # Show info on the network interfaces
 ip r     # Show the routing table (shows network gateway)
 ```
+
 
 
 
@@ -259,7 +260,7 @@ who                 # a less detailed version of ``
 
 * `iostat -d 1 5` : Monitors disks  
 
-
+---
 
 If you can ping localhost, you're listening all the way through your NIC
 
@@ -282,4 +283,19 @@ processes started by it, on systems that allow such control.
 
 ---
 
+## Analyze System Startup Parameters
+```bash
+cat /etc/*release  # Show the OS version
+uname -r  # Show the kernel version
+dmesg | head -15  # Show the first 15 lines of the kernel logs
+virt-what  # Show if the system is virtualized (may not be everywhere)
+dmidecode | grep -iE "virt|prod"  # Show 'virt' and 'prod' in the hardware info
+dmesg | less  # Everything the kernel did from the time it was first called
+lsmod  # Show loaded kernel modules
+```
+
+In `dmesg` you can see how system is running:
+```bash
+[3.148938] systemd[1]: systemd 245.4-4ubuntu3.18 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2 default-hierarchy=hybrid)
+```
 
