@@ -1551,6 +1551,12 @@ chsh -s "$(brew --prefix)/bin/bash"
 Use `strace` to track the system calls that a program makes.  
 The output here is C code.  
 
+## Suspending and Unsuspending your Terminal
+It's easy to accidentally hit `Control-S` in the terminal.  
+That's how it gets "suspended."  
+Everything you type when the terminal is suspended is buffered.  
+That means when you use `Control-Q` to resume the terminal, everything you typed
+will be sent to the shell.  
 
 
 ## Resources
