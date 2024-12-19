@@ -31,11 +31,12 @@ messages, authentication attempts, kernel events, and application-specific logs.
 * `/var/log/messages`:
     * Similar to `/var/log/syslog`, this file logs general system messages and service-related events.
     * Common on Red Hat-based distributions (e.g., CentOS, Fedora).
-  
-    * Example: Search for specific keywords (e.g., "error") in `/var/log/messages`:
-  ```bash
-  grep "error" /var/log/messages
-  ```
+      ```bash
+      grep "error" /var/log/messages  # Search for 'error' logs
+      head -n 20 /var/log/messages  # Timestamp here shows when the system booted up last
+      cat /var/log/messages | awk '{print $1,$2}' | uniq -c # Count the number of daily entries
+      ```
+
 
 * `/var/log/auth.log`:
     * Records all authentication attempts, including successful and failed logins, as well as `sudo` usage.
