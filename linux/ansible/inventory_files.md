@@ -217,4 +217,11 @@ ansible all -i hosts.ini --limit host2 -a "/bin/echo Hello, world."
 This will run `echo Hello, world` only on `host2` (as it's defined in `hosts.ini`).  
 
 
+## Ranges of IPs in Inventories
+You can specify a range of IP addresses in inventory files.  
+```bash
+[servers]
+192.168.200.[1:254]
+```
+
 
