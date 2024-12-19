@@ -5,6 +5,9 @@ You build a wall brick by brick.
 
 # Learning Resources  
 
+* List of cloud native tools for DevOps/SRE/Platform Engineers: 
+  [Cloud Native Landscape - landscape.cncf.io](https://landscape.cncf.io)
+
 * HTTP Requests 
     * [w3schools](https://www.w3schools.com/tags/ref_httpmethods.asp)  
 * Portswigger Web Security 
