@@ -142,6 +142,57 @@ In this case, it's an `int`, so the zero-value is `0`.
     * This function first tries to receive a value from channel `c` (which blocks until 
       `c` is closed), then calculates `i + v` and sends the result to the `out` channel.
 
+### WaitGroups
+Wait Groups are a concurrency mechanisms in Go used for coordinating the execution
+of multiple goroutines.  
+They let your program wait for a  collection of goroutines to finish before
+continuing. 
+
+WaitGroups should *only* be passed to functions as **pointers**.  
+
+WaitGroups are a part of the `sync` package.  
+
+A waitgroup essentially acts as a counter.  
+* You add to the counter when you start goroutines.
+* Each goroutine *signals* (or decrememnts the counter) when it completes.  
+* The program waits until the counter reaches zero before moving on.  
+* The goroutine should call the `Done()` method when it finishes.  
+  ```go
+  defer wg.Done()
+  ```
+
+#### `WaitGroup` Example
+Example of using a waitgroup to execute multiple goroutines:
+```go
+func worker(id int, wg *sync.WaitGroup) {  // Dereference the wg when it is received
+    defer wg.Done()
+    fmt.Printf("Starting job ID: %v\n", id)
+    // pretend to do some work
+    time.Sleep(2 * time.Second)
+
+    fmt.Printf("Job done: %v\n", id)
+}
+
+func main() {
+    var wg sync.WaitGroup
+
+    // Start 3 worker Goroutines
+    for i := 1; i < 3; i++ {
+        wg.Add(1)
+        go worker(i, &wg) // Pass it in as a pointer
+    }
+    wg.Wait() // Wait for all workers to finish
+    fmt.Println("All goroutines have finished~!")
+
+}
+```
+* `var wg sync.WaitGroup()`: Initialize the `WaitGroup` object.  
+* `wg.Add(1)`: Add to the goroutine counter when starting a goroutine.  
+* `go worker(i, &wg)`: Start a goroutine. Each goroutine receives a pointer to the `WaitGroup`.  
+* `defer wg.Done()`: Run the `wg.Done()` method at the **end** of the function.  
+* `wg.Wait()`: Block the execution of the rest of the program until the counter reaches `0`.  
+
+
 
 ### Receiving Results and Output
 ```go
