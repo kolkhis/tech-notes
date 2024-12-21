@@ -121,6 +121,23 @@ nmap -p 22,80,443 192.168.1.1
 ```
 This command scans ports 22, 80, and 443 on the host 192.168.1.1.  
 
+#### Scan a Range of IP addresses with nmap
+You can use nmap to map a network.  
+Mapping a network with nmap can look something like this:
+```bash
+nmap -sP 192.168.200.100-254  # Scan only 100-254
+nmap -sP 192.168.200.0/24  # Scan the whole range 1-254
+```
+The `-sP` (or `-sn`) option does not use a port scan. This only checks if the hosts are responding.  
+Say that command specified that three hosts were responding.  
+Run an aggressive scan on those three hosts:
+```bash
+nmap -A 192.168.200.101-103
+```
+This will perform an aggressive scan.
+Nmap will show what ports are open and guess what is running on those ports, and what OS the 
+host is likely running based on nmap's best guess.  
+
 
 ### `tcpdump`
 A network traffic analyzer or sniffer.  
