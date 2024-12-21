@@ -1,10 +1,12 @@
 
-# Heredocs / Here Documents  
+# Heredocs / Here Documents in Linux
+
+
 
 ## Table of Contents
-* [Heredocs in Linux](#heredocs-in-linux) 
-    * [Quickref](#quickref) 
-    * [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
+* [Heredoc Operators](#heredoc-operators) 
+* [Quickref](#quickref) 
+* [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
 * [Examples](#examples) 
     * [Basic Heredoc](#basic-heredoc) 
     * [Printing Literals](#printing-literals) 
@@ -16,13 +18,62 @@
 * [Using Heredocs with SSH](#using-heredocs-with-ssh) 
 
 
-## Heredocs in Linux  
-### Quickref
+## Heredoc Operators
+
+* `cat << limit_string`: [Basic heredoc](#basic-heredoc)
+    * Basic heredoc. Passes everything until the `limit_string` is repeated.  
+    * Note: Spaces are not allowed after the `limit_string`.  
+    * When the `limit_string` is unquoted, everything inside the heredoc (variable 
+      substitution, command substitution, and escape sequences) are enabled in the heredoc.  
+* `cat << 'limit_string'`: [Literal heredoc](#printing-literals)
+    * When the `limit_string` is quoted, nothing is expanded, and backslashes aren't interpreted as escape sequences.  
+    * Only the first `limit_string` needs to be quoted, not the one that ends the heredoc.  
+* `cat <<- limit_string`: [Remove tabs](#handling-tab-characters)
+    * Heredoc, but ignores leading **tabs** (not spaces) in the heredoc.  
+    * This can be combined with literal heredocs by quoting the `limit_string`
 
 
+* `cat <<< word`
+    * Here String. Redirects a single-line string as input.  
+        * This can only be a **single line**. 
+    * The `word` is expanded, anything except pathname expansion (aside from `~`, which is expanded).  
+    * This passes the expanded `word` as a single string to the command.  
+    * Herestrings do not use `limit_string`s.  
+    ```bash
+    ls -alh <<< "$(which ls)"
+    ```
+
+```bash
+cat << EOF
+This is a basic heredoc. 
+$USER will be expanded
+Current time: $(date) - will be evaluated
+EOF
+
+cat << 'EOF'
+	This is a literal heredoc.
+	$VARIABLE and $(command) are not expanded.
+EOF
+
+cat <<- 'EOF'
+	All leading TABS (not spaces) will be removed.
+	This is a literal heredoc.
+	$VARIABLE and $(command) are not expanded.
+EOF
+
+
+cat <<- 'EOF' >> outfile.sh
+	printf 'This is a literal heredoc.\n'
+	printf 'This literal output will be put in "outfile.sh"\n'
+	printf 'All leading TABS (not spaces) will be removed.\n'
+	printf '$VARIABLE and $(command) are not expanded.\n'
+EOF
+```
+
+## Quickref
 * Use a Heredoc as a multi-line string literal. (see [this page](https://ioflood.com/blog/bash-multiline-string/))
 ```bash
-cat >> my_script.sh << 'EOF'
+cat >>- my_script.sh << 'EOF'
     #!/bin/bash
     # my_script.sh
     printf "This is a multi-line string.\n"
@@ -34,6 +85,7 @@ cat >> my_script.sh << 'EOF'
 
 EOF
 ```
+
 This will make (or append to) the file `my_script.sh`, and will contain
 the code in the heredoc:
 ```bash
@@ -71,7 +123,7 @@ EOF
 
 
 
-### Basic Principles of Here Documents  
+## Basic Principles of Here Documents  
 You can use here documents on the command line and in scripts.  
 Heredocs can shove standard input(`stdin`) into a command  
 from within a script.  
@@ -93,9 +145,9 @@ limit_string
 
 * `<<`: The redirection operator.  
 * `limit_string`: This is a label.  
-    * It can be whatever you like as long as it doesn't appear 
-      in the list of data you're redirecting into the command.  
-    * It is used to mark the end of the text, data, and variables list.  
+    * It can be whatever you like as long as it doesn't appear in the content of the heredoc.  
+    * It is used to mark the end of the heredoc (text, data, and variables list).  
+    * There can be NO whitespace after the `limit_string`s, neither the first nor second.  
 
 * Data List: A list of data to be fed to the command.  
     * It can contain commands, text, and variables.  
@@ -106,11 +158,11 @@ limit_string
 ### Basic Heredoc  
 ```bash  
 #!/bin/bash  
-cat << "_end_of_text"  
+cat << _end_of_text
 Your user name is: $(whoami)  
 Your current working directory is: $PWD  
 Your Bash version is: $BASH_VERSION  
-_end_of_text  
+_end_of_text
 ```
 The output of the `whoami` cmd will be printed, since it  
 was run in a subshell (command substitution).  
