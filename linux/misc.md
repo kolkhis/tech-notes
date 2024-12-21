@@ -1059,6 +1059,7 @@ Examples of using parameter transformation with positional parameters and arrays
 using the `^` and `@` operators:  
 ```bash  
 # Positional parameters example  
+# You can set positional parameters using `set -- "var1" "var2"` etc.
 set -- "hello" "world"  
 echo "${@^}"   # Each positional parameter capitalized: "Hello World"  
 
