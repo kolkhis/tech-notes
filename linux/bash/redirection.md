@@ -58,7 +58,7 @@ A file descriptor is a number that refers to a file or a process.
 * `<&n`: Redirects input from file descriptor `n`.  
 * `>&n`: Redirects output to file descriptor `n`.  
 * `|`: Pipes the `stdout` of one command to the `stdin` of another command.  
-
+* `<<<`: Herestring. This treats the string after it as a file for `stdin`.  
 
 
 ## `stdin`, `stdout`, `stderr`  
@@ -230,8 +230,6 @@ So anything written to fd `3` will go to `stdout`.
 
 ## Additional Information  
 
-
-
 ### Why `sed 's/foo/bar/' file >file` Doesn't Work  
 
 This is a common error.  
@@ -276,7 +274,7 @@ command 2>&1 1>/dev/null | grep 'error'
 ```
 This filters `stderr` for 'error', and discards `stdout`.  
   
-The `stderr` is redirected to `stdout`, which is then piped to `grep`, while  
+The `stderr` is redirected to `stdout`, which is then piped to `grep`, while 
 original `stdout` is discarded.  
 So, `stderr` effectively replaces `stdout`, and `grep` only receives `stderr`.  
 
@@ -304,7 +302,7 @@ Redirects `stdout` to `outputfile`, useful for logging or output capture. `1` is
 implied.  
 
 
------------------------------  
+---
 
 
 
@@ -325,6 +323,15 @@ cat < file.txt > file2.txt # reads stdin for `cat` from file.txt, redirects stdo
 
 cat < <(find . -name 'file.txt')    # Uses process substitution. Reads stdin for `cat`
                                     # from the output of the process substitution `<()` 
+
+# Loop over lines in a file
+# Redirect a file to the read command to loop over it
+while read -r line; do echo "Current line: $line"; done < file.txt 
+# Redirect the output of a command to the read command with process substitution
+while read -r line; do echo "Current line: $line"; done < <(ls -alh) 
+
+# Redirect the output of a command to the read command with a herestring and subshell
+while read -r line; do echo "Current line: $line"; done <<< $(ls -alh)
 ```
 
 
