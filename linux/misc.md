@@ -532,7 +532,15 @@ list=$(find . -name *.py); for n in ${#list}; do  echo $list[$n]; done
 while read -r linevar; do  
     echo "Current item:"; echo $linevar;  
 done <file  
+# or
+while read -r line; do
+    echo "Current item: $line"; 
+done < <(ls -alh)
 ```
+These both loop over an array.  
+In this case, it's looping over the lines in a file.  
+The first example uses an actual file, the second example uses process substitution
+to take the output of a command and treat it like a file.  
 
 or:  
 ```bash  
