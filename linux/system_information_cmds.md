@@ -41,6 +41,11 @@ cat /proc/cmdline  # Get the kernel command line arguments from the bootloader (
 ethtool  # Show info on the network interfaces
 ip a     # Show info on the network interfaces
 ip r     # Show the routing table (shows network gateway)
+
+# Show when the system was rebooted
+who -b       # Show when the system booted last
+uptime -s    # Show when the system was booted last, different format from who -b
+dmesg | head # Show the logs from the time of system boot. Shows the time.  
 ```
 
 
