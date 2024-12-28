@@ -165,7 +165,6 @@ Nameswitch. Defines the order of name resolution (e.g., local files, DNS, NIS).
 
 
 ## Services and Processes
-
 ### `/etc/ssh/sshd_config`
 Configures the SSH server, including allowed auth methods and security settings.
 
@@ -234,12 +233,12 @@ dmesg -l
 ```
 
 ## Package Management Files
-
 ### `/etc/apt/sources.list` (Debian)
 Package repos for `apt`.  
 
 ### `/etc/yum.repos.d/*.repo` (RedHat)
 Configuration files for `yum`/`dnf` repositories.  
+Specific packages can be excluded in`/etc/yum.conf` or `/etc/dnf/dnf.conf`.  
 
 ### `/var/log/dnf.log` (or `/var/log/yum.log`) (RedHat)
 Logs package installation and updates.  
