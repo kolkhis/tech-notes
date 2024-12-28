@@ -180,8 +180,8 @@ This resets the `admin` user account's password to `admin` (the default).
   ```
 
 * Make a Loki config file in the directory `/opt/loki/loki-local-config.yaml`.  
-    * See [local loki config file](./loki-promtail-grafana/loki-local-config-example.yaml).  
-    * See the [loki.service file](./loki-promtail-grafana/example-loki.service) that should be at `/etc/systemd/system/loki.service`
+    * See [local loki config file](./configuration_and_service_files/loki-local-config-example.yaml).  
+    * See the [loki.service file](./configuration_and_service_files/example-loki.service) that should be at `/etc/systemd/system/loki.service`
     * Once the service file is there, do a `daemon-reload` and enable Loki.  
       ```bash  
       sudo systemctl daemon-reload  
@@ -190,7 +190,7 @@ This resets the `admin` user account's password to `admin` (the default).
       sudo systemctl status loki 
       ps -ef | grep -i 'loki'  
       ```
-  
+
 Default port for Loki is `3100`.  
 
 ### Linking Loki to Grafana  
@@ -218,8 +218,8 @@ Configure Promtail to push logs from `/var/log/auth.log` and `/var/log/syslog` o
   ```
 
 * You'll also need a config file here `/opt/promtail/promtail-local-config.yaml`.  
-    * See [example config](./loki-promtail-grafana/promtail-local-config-example.yaml).  
-    * See the [promtail.service file](./loki-promtail-grafana/example-promtail.service) file that should be  
+    * See [example config](./configuration_and_service_files/promtail-local-config-example.yaml).  
+    * See the [promtail.service file](./configuration_and_service_files/example-promtail.service) file that should be  
       copied to `/etc/systemd/system/promtail.service`.  
 
 * Once the service file is there, do a `daemon-reload` and start `promtail`.  
