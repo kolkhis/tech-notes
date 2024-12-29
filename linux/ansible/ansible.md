@@ -9,7 +9,6 @@ Inside the Playbooks, you use [modules](#modules) to define how Ansible will com
 
 ---
 
-
 Also see:  
 * [Collections](./collections_in_ansible.md)
 * [Conditionals](./conditionals_in_ansible.md)
@@ -18,6 +17,17 @@ Also see:
 * [Inventory Files](./inventory_files.md)
 * [Misc. Ansible Notes](./misc_ansible.md)
 * [Setting up Ansible](./setting_up_ansible.md)
+
+---
+
+
+## Other Ansible Tools
+* AWX: A web UI and orchestration platform for Ansible with an API.  
+    * [AWX Github](https://github.com/ansible/awx)
+* AAP: Ansible automation platform 
+    * [AAP from RedHat](https://www.redhat.com/en/technologies/management/ansible)
+* Ansible Tower: A GUI framework accessible from a browser or a REST API 
+    * [Ansible Tower Docs](https://docs.ansible.com/ansible-tower/latest/html/userguide/overview.html)
 
 
 ## Table of Contents
@@ -741,6 +751,18 @@ ansible-playbook example_playbook.yml -K
 Use the `-k` (lowercase) option to prompt for the password needed to connect to the
 remote machine.  
 
+## Patching Servers with Ansible
+Remember: Always check if all hosts are up by doing a pre-check.
+
+You can use a wildcard `*` in the `package` module for your package manager.
+```yaml
+- name: patch servers
+  ansible.builtin.package:
+    name: '*'
+    state: present
+```
+
+
 
 
 ## Resources  
@@ -756,6 +778,8 @@ remote machine.
 * [Using Filters to Manipulate Data](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_filters.html)
 * [Ansible Builtin Filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins)
 * [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
+
+
 
 ### Practicing with Ansible  
 [Vagrant](https://www.vagrantup.com/) is a tool that allows us to create virtual machines.  
