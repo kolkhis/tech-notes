@@ -24,7 +24,6 @@ You can define your own variables, and use built-in special variables.
 
 
 ## Builtin Ansible Variables
-
 Ansible has a number of builtin variables that you can use.  
 
 
@@ -32,6 +31,8 @@ Ansible has a number of builtin variables that you can use.
 Ansible has a builtin "facts" variable (`ansible_facts`) that gathers information about the remote
 systems it runs on.  
 These facts are available to use in playbooks.  
+
+You can set facts for ansible in `/etc/ansible/facts.d`.  
 
 It's a dictionary, and can be accessed like any other variable.  
 ```yaml
