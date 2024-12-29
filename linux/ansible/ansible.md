@@ -756,12 +756,43 @@ Remember: Always check if all hosts are up by doing a pre-check.
 
 You can use a wildcard `*` in the `package` module for your package manager.
 ```yaml
-- name: patch servers
+- name: Update packages
   ansible.builtin.package:
     name: '*'
-    state: present
+    state: latest
 ```
 
+An example (from het_tanis) to temporarily remove excludes from `yum.conf`.  
+```yaml
+- name: Back up the original yum.conf
+  copy:
+    src: /etc/yum.conf
+    dest: /etc/yum.conf.{{ansible_date_time.date}}
+
+- name: Ensure that exclude is not there so patching completes
+  ansible.builtin.lineinfile:
+    path: /etc/yum.conf
+    regexp: '^exclude'
+    line: "#exclude"
+
+- name: Patch all servers to most current version of installed software
+  yum:
+    name: "*"
+    state: latest
+
+- name: Restore original yum.conf
+  copy:
+    src: /etc/yum.conf.{{ansible_date_time.date}}
+    dest: /etc/yum.conf
+```
+
+Patching servers can sometimes break things. Check these things:  
+* Always check that `/var/cache` has enough space.  
+* `rpm` database may be broken.  
+    * `rpmdb --rebuilddb`  
+Use jinja templates to generate reports.  
+
+---
 
 
 
