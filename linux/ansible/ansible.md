@@ -119,6 +119,7 @@ Playbook-level keys:
 * `hosts: webserver`: Specifies the target machine or group of machines where the play will run.  
     * `webserver`: Refers to a group defined in the `inventory.yml` file.  
 * `become: yes`: Indicates that the tasks in the play should run with elevated privileges.  
+    * Some consider it better form to use `true` or `false` instead of `yes` or `no`.  
 * `tasks:`: Defines the set of actions to perform on the target hosts.  
     * Tasks are the core of a playbook.  
 
