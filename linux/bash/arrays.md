@@ -214,4 +214,48 @@ Exit Status:
 Returns success unless an invalid option is given or ARRAY is readonly or
 not an indexed array.
 
+## Associative Arrays (Dictionaries)
+Bash supports the use of associative arrays, or dictionaries, with key/value pairs.  
+
+### Creating an Associative Array in Bash
+You need to declare a dictionary with `declare -A array_name`.  
+```bash
+declare -A PORTS
+PORTS=(
+    [SSH]="22"
+    [HTTP]="80"
+)
+```
+The brackets `[]` in the keys are mandatory.  
+The keys inside the brackets don't have to be quoted, but they can be.  
+
+### Using Associative Arrays
+Access single values with their keys:
+```bash
+printf "SSH port: %s\n" "${PORTS['SSH']}"
+```
+
+To access all the values of the dictionary:
+```bash
+printf "%s\n" "${PORTS[@]}"
+# output:
+# 22
+# 80
+```
+Calling `[@]` as the index will pull only the values.  
+
+To access the keys or indices of the dictionary:
+```bash
+printf "%s\n" "${!PORTS[@]}"
+```
+Using `!` before the dictionary name tells it to pull only the keys.  
+When doing this on normal arrays, it will output the indices (`0, 1, 2`, etc).  
+
+To loop over a dictionary and access both keys and values:
+```bash
+for idx in "${!PORTS[@]}"; do
+    printf "Port for %s: %s\n" "$idx" "${PORTS[$idx]}"
+done
+```
+
 
