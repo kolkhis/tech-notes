@@ -233,6 +233,8 @@ The keys inside the brackets don't have to be quoted, but they can be.
 Access single values with their keys:
 ```bash
 printf "SSH port: %s\n" "${PORTS['SSH']}"
+# output:
+# SSH port: 22
 ```
 
 To access all the values of the dictionary:
@@ -247,14 +249,44 @@ Calling `[@]` as the index will pull only the values.
 To access the keys or indices of the dictionary:
 ```bash
 printf "%s\n" "${!PORTS[@]}"
+# output:
+# SSH
+# HTTP
 ```
-Using `!` before the dictionary name tells it to pull only the keys.  
+Using `!` before the dictionary name tells it to use only the keys.  
 When doing this on normal arrays, it will output the indices (`0, 1, 2`, etc).  
 
 To loop over a dictionary and access both keys and values:
 ```bash
 for idx in "${!PORTS[@]}"; do
     printf "Port for %s: %s\n" "$idx" "${PORTS[$idx]}"
+done
+# output:
+# Port for SSH: 22
+# Port for HTTP: 80
+```
+
+### Parameter Transformations on Dictionaries
+You can only **directly** do parameter transformations on **values** of dictionaries, not keys.  
+Transform values individually:  
+```bash
+printf "Ports quoted: %s\n" "${PORTS[@]@Q}"
+# Ports quoted: '22'
+# Ports quoted: '80'
+```
+Adding `@Q` to `[@]` will quote all the values individually.  
+If you want to combine all values into one string, use `[*]` instead of `[@]`.  
+
+
+If you tried to do the same for the keys:
+```bash
+printf "Port names quoted: %s\n" "${!PORTS[@]@Q}" # error
+```
+You'd get an error.  
+However, you can get around this by using a `for` loop:
+```bash
+for idx in "${!PORTS[@]}"; do
+    printf "Key quoted: %s\n" "${idx@Q}"
 done
 ```
 
