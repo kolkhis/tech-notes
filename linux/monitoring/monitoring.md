@@ -146,6 +146,8 @@ Specifically for log aggregation, processing, and storage:
   ss -ntulp | grep 3000  
   ```
 
+Default port for Grafana is `3000`.
+
 * Check that the external Web UI is available.  
   Open a browser and go to the machine's IP on port `3000`.  
   ```bash  
@@ -232,6 +234,8 @@ Configure Promtail to push logs from `/var/log/auth.log` and `/var/log/syslog` o
   ```
 
 
+
+
 ## Grafana Dashboard Templates  
 Grafana has dashboard templates that allow you to quickly set up a dashboard for a  
 service.  
@@ -273,6 +277,7 @@ It'll look like:
 bBInHhXJ8z6VOz4kbyr_mrvl25AWk__8HxzTkyGl33AMZlYXVp8kHui0SDhbLUC9w5aVJY_O3GY3pp6qaPSmXA==  
 ```
 
+Default port for `InfluxDB2` is `8086`.  
 
 ## Setting up Telegraf 
 
