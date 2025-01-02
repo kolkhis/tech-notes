@@ -267,6 +267,7 @@ done
 ```
 
 ### Parameter Transformations on Dictionaries
+
 You can only **directly** do parameter transformations on **values** of dictionaries, not keys.  
 Transform values individually:  
 ```bash
@@ -276,7 +277,6 @@ printf "Ports quoted: %s\n" "${PORTS[@]@Q}"
 ```
 Adding `@Q` to `[@]` will quote all the values individually.  
 If you want to combine all values into one string, use `[*]` instead of `[@]`.  
-
 
 If you tried to do the same for the keys:
 ```bash
@@ -288,6 +288,11 @@ However, you can get around this by using a `for` loop:
 for idx in "${!PORTS[@]}"; do
     printf "Key quoted: %s\n" "${idx@Q}"
 done
+# output:
+# Key quoted: 'SSH'
+# Key quoted: 'HTTP'
 ```
+
+###### See [parameter transformation](./parameter_transformation.md) for a full list of options.  
 
 
