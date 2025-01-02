@@ -1,6 +1,7 @@
 
 # Arrays in Bash  
 
+
 ## Table of Contents
 * [Declaring an Array in Bash](#declaring-an-array-in-bash) 
 * [Defining an Array in Bash](#defining-an-array-in-bash) 
@@ -13,7 +14,17 @@
 * [Get the Index of an Element in an Array](#get-the-index-of-an-element-in-an-array) 
 * [Looping over an Array in Bash](#looping-over-an-array-in-bash) 
 * [Quickref](#quickref) 
-    * [List-like Arrays & String Manipulation/Slicing](#list-like-arrays-&-string-manipulation/slicing) 
+    * [List-like Arrays & String Manipulation/Slicing](#list-like-arrays--string-manipulationslicing) 
+* [Using `mapfile`](#using-mapfile) 
+    * [`mapfile` Examples](#mapfile-examples) 
+        * [Using `mapfile` to read file contents into an array](#using-mapfile-to-read-file-contents-into-an-array) 
+        * [Using `mapfile` with a custom delimiter](#using-mapfile-with-a-custom-delimiter) 
+        * [Processing `MAPFILE` Lines with a Callback](#processing-mapfile-lines-with-a-callback) 
+* [Associative Arrays (Dictionaries)](#associative-arrays-dictionaries) 
+    * [Creating an Associative Array in Bash](#creating-an-associative-array-in-bash) 
+    * [Using Associative Arrays](#using-associative-arrays) 
+    * [Parameter Transformations on Dictionaries](#parameter-transformations-on-dictionaries) 
+
 
 ## Declaring an Array in Bash  
 
@@ -185,34 +196,91 @@ done
 
 ## Using `mapfile` 
 ```bash
-mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array]
+mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array_name]
 ```
 Read lines from the standard input into an indexed array variable.
 
-Read lines from the standard input into the indexed array variable ARRAY, or from 
+Read lines from the standard input into the indexed array variable `array_name`, or from 
 file descriptor FD if the -u option is supplied.
 
-The variable `MAPFILE` is the default `ARRAY`.
+The variable `MAPFILE` is the default `array_name`.
 
 Options:
-* `-d delim`: Use `DELIM` to terminate lines, instead of newline
-* `-n count`: Copy at most `COUNT` lines.  If `COUNT` is 0, all lines are copied
-* `-O origin`: Begin assigning to `ARRAY` at index `ORIGIN`.  The default index is 0.  
-* `-s count`: Discard the first `COUNT` lines read
-* `-t`: Remove a trailing `DELIM` from each line read (default newline)
-* `-u fd`: Read lines from file descriptor FD instead of the standard input
+* `-d delim`: Use `DELIM` to terminate lines, instead of a newline.  
+* `-n count`: Copy at most `COUNT` lines.  If `COUNT` is `0`, all lines are copied
+* `-O origin`: Begin assigning to `array_name` at index `ORIGIN`.  The default index is 0.  
+* `-s count`: Discard (skip) the first `COUNT` lines read
+* `-t`: Remove a trailing `DELIM` from each line read (default is newline).  
+* `-u fd`: Read lines from the file descriptor `fd` instead of `stdin`.  
 * `-C callback`: Evaluate `CALLBACK` each time `QUANTUM` lines are read
 * `-c quantum`: Specify the number of lines read between each call to `CALLBACK`
 
 Arguments:
-* `ARRAY`     Array variable name to use for file data
+* `array_name`: Array variable name to use for file data
 
 If not supplied with an explicit origin, mapfile will 
-clear `ARRAY` before assigning to it.
+clear `array_name` before assigning to it.
 
 Exit Status:
 Returns success unless an invalid option is given or ARRAY is readonly or
 not an indexed array.
+
+---
+### `mapfile` Examples
+
+#### Using `mapfile` to read file contents into an array:
+* You have a file called `lines.txt`:
+  ```plaintext
+  line one
+  line 2
+  line 3.
+  ```
+* Pass this file (as `stdin`) to the `mapfile` command:
+  ```bash
+  mapfile -t my_array < lines.txt
+  ```
+    * `-t`: This will remove any trailing newlines from each line.  
+* The `my_array` variable now contains the lines of the file.  
+  ```bash
+  echo "${my_array[0]}"  # line one
+  echo "${my_array[1]}"  # line 2
+  echo "${my_array[2]}"  # line 3.
+  ```
+
+---
+
+#### Using `mapfile` with a custom delimiter:
+* You can specify a delimiter with `-d`.
+  ```bash
+  echo "apples;oranges;bananas;" | mapfile -d ';' -t fruits
+  ```
+    * `-t` here removes the semicolons.  
+* Access the elements in the array:
+  ```bash
+  echo "${fruits[0]}"  # apples
+  echo "${fruits[1]}"  # oranges
+  echo "${fruits[2]}"  # bananas
+  ```
+
+#### Processing `MAPFILE` Lines with a Callback
+Using `-C`, you can specify a callback to process text.  
+```bash
+callback_function() {
+    echo "Line index: $1"
+    echo "Line content: $2"
+}
+echo -e "one;two;three;" | mapfile -d ';' -C callback_function -c 1 -t
+```
+* `-d ';'`: This sets the delimiter as a semicolon.  
+* `-C callback_function`: Sets the callback function to use.  
+    * This passes both the index and the contents of the current line for each call 
+      (e.g., `$1 == 0` on the first call).  
+    * `$1`: The index of the line (starting from zero).  
+    * `$2`: The contents of the line itself.  
+* `-c 1`: Says to execute the callback function on every single line.  
+    * If you don't specify a count, it will default to `5000`.  
+* Since no `array_name` was specified, the array is saved into the `MAPFILE` variable.  
+
 
 ## Associative Arrays (Dictionaries)
 Bash supports the use of associative arrays, or dictionaries, with key/value pairs.  
