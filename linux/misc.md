@@ -1540,6 +1540,8 @@ chsh -s "$(brew --prefix)/bin/bash"
 ```
 
 ## Changing the Hostname of a System
+Change hostname:
+
 * Change the hostname of a system with `hostnamectl`.  
   ```bash
   sudo hostnamectl set-hostname new-hostname
