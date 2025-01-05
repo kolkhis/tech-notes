@@ -1056,6 +1056,7 @@ done
 ```
 
 ## Getting Options and Arguments  
+Argument parsing can be done manually:
 ```bash  
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do 
     case $1 in  
@@ -1077,6 +1078,7 @@ if [[ "$1" == '--' ]]; then
     shift;  
 fi  
 ```
+Or, you can use `getopt`/`getopts`.  
 
 
 ## Options  
