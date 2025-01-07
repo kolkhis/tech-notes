@@ -225,7 +225,7 @@ This `-M do` makes sure the packet does not get fragmented.
 * `-M`: This option sets the path MTU discovery mode, which controls how the `ping` 
   command deals with IP fragmentation.  
 
-
+### MTU (Maximum Transmission Unit)
 MTU stands for **Maximum Transmission Unit**, which is the largest size of a packet 
 that can be sent over a network link *without fragmentation*.  
 * The MTU for a network interface can be found using `ifconfig` or `ip`:  
