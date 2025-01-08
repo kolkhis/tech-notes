@@ -5,6 +5,14 @@ You build a wall brick by brick.
 
 # Learning Resources  
 
+## Table of Contents
+* [Topics](#topics) 
+* [Certifications](#certifications) 
+* [Some certs](#some-certs) 
+    * [GENERAL](#general) 
+    * [HANDS-ON](#hands-on) 
+    * [ACADEMIC](#academic) 
+
 * List of cloud native tools for DevOps/SRE/Platform Engineers: 
   [Cloud Native Landscape - landscape.cncf.io](https://landscape.cncf.io)
 
