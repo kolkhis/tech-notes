@@ -24,8 +24,8 @@ If you only understand basic up, down, left, and right cursor movements then vi 
 
 vi has 26 "marks" and 26 "registers." A mark is set to any cursor location using the m command. Each mark is designated by a single lower case letter.
 Thus ma sets the 'a' mark to the current location, and mz sets the 'z' mark. You can move to the line containing a mark using the ' (single quote) command.
-Thus 'a moves to the beginning of the line containing the 'a' mark. You can move to the precise location of any mark using the ` (backquote) command.
-Thus  `z will move directly to the exact location of the 'z' mark.
+Thus 'a moves to the beginning of the line containing the 'a' mark. You can move to the precise location of any mark using the \` (backquote) command.
+Thus  \`z will move directly to the exact location of the 'z' mark.
 
 Because these are "movements" they can also be used as subjects for other "statements."
 
@@ -36,7 +36,7 @@ four marks in 15 years of using vi; one creates one's own conventions regarding
 how marks and registers are used by macros that don't disturb one's interactive context).
 
 Then we go to the other end of our desired text; we can start at either end, it doesn't matter.
-Then we can simply use d`a to cut or y`a to copy.
+Then we can simply use d\`a to cut or y\`a to copy.
 Thus the whole process has a 5 keystrokes overhead (six if we started in "insert" mode and needed to Esc out command mode).
 Once we've cut or copied then pasting in a copy is a single keystroke: p.
 
@@ -55,7 +55,7 @@ Searching forwards or backwards are movements in vi.
 Thus they can also be used as "subjects" in our "statements.
 " So I can use d/foo to cut from the current line to the next line containing the string "foo" and y?bar to copy 
 from the current line to the most recent (previous) line containing "bar.
-" If I don't want whole lines I can still use the search movements (as statements of their own), drop my mark(s) and use the  `x commands as described previously.
+" If I don't want whole lines I can still use the search movements (as statements of their own), drop my mark(s) and use the  \`x commands as described previously.
 
 In addition to "verbs" and "subjects" vi also has "objects" (in the grammatical sense of the term).
 So far I've only described the use of the anonymous register.
