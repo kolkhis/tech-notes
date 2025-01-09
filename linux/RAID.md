@@ -70,7 +70,7 @@ To create a RAID array, the general command syntax is
 sudo mdadm  --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc  
 ```
 * `--create`: Specifies that you're creating a new RAID array.  
-* `--/dev/md0`: The name of the new RAID device. It will live under `/dev/`.  
+* `/dev/md0`: The name of the new RAID device. It will live under `/dev/`.  
 * `--level=1`: Specifies the RAID level. In this instance, RAID 1 (mirroring).  
 * `--raid-devices=2`: Specifies that the RAID array will consist of 2 devices.  
 * `/dev/sdb /dev/sdc`: The physical disks that will be used for the RAID array.  
@@ -116,6 +116,35 @@ theory, provide up to 200 MB/s.
 With four disks, it could scale up to 400 MB/s, assuming no bottlenecks exist 
 elsewhere (like the disk controller or the interface).  
 
+## Removing a RAID Array
+You can remove a RAID array to convert devices given to RAID back to normal ones:
+
+* Stop the RAID device and remove it:
+  ```bash
+  sudo mdadm --stop /dev/md0    # Stop the device
+  sudo mdadm --remove /dev/md0  # Remove the device
+  ```
+
+* Zero out the "superblocks".
+  ```bash
+  # Specify whichever disks need to be cleared
+  sudo mdadm --zero-superblock /dev/sdb /dev/sdc
+  ```
+    * This is to clear the metadata from the individual devices that
+      were part of the RAID array.  
+    * This make sure there are no labels that will confuse the OS into thinking it's 
+      still a RAID device.  
+    * You can also do this with `dd` if you want.  
+      ```bash
+      sudo dd if=/dev/zero of=/dev/sdb bs=1024K count=10
+      ```
+
+Optionally, check `/etc/mdadm/mdadm.conf` and remove the entry.  
+
+* Verify that the RAID device was removed:
+  ```bash
+  cat /proc/mdstat
+  ```
 
 
 
