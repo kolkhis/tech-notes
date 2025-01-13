@@ -245,6 +245,7 @@ who                 # a less detailed version of ``
         * `/dev/sda1`  
 
 * `lsblk`: Show storage devices (block devices) in a tree.  
+    * `lsblk -f`: Show the filesystems that are on each block device (if any).  
 * `blkid`: Show block device attributes (UUIDs, labels, etc.)
     * `blkid /dev/vda1`  
     * `blkid /dev/sda2`  
