@@ -160,6 +160,7 @@ find . -type f -exec my_script '{}' +
 More in [Permission Searching](#Permission-Searching).  
 ###### Note: the `-perm` argument supports both octal notation and symbolic notation (`u=x`, '755' etc)
 Overview:  
+Examples of checking for files with owner write and group write permissions:
 ```bash  
 find . -perm 220       # Match if ONLY the given permissions are there. (exact match)  
 find . -perm -220      # Match if given perms are there. Can have more perms. (match if perms exist)  
@@ -169,13 +170,22 @@ find . -writable       # Checks that 'w' is present for current user
 find . -executable     # Checks that 'x' is present for current user  
 find . \! -executable  # Checks that 'x' is absent for current user  
 ```
+
+The symbolic notation equivalents of those examples:
+```bash
+find . -perm g=w,o=w    # Must have only the permissions given.  
+find . -perm -g=w,o=w   # All given permissions must exist. May have other perms.  
+find . -perm /g=w,o=w   # At least one of the permissions must exist.  
+```
+
 #### Conditional Search Examples:  
-* Search for files that are executable but not readable:  
+* Search for files in `/sbin` that are executable but not readable:  
 ```bash  
 find /sbin /usr/sbin -executable \! -readable -print  
 ```
-* Search for files with read and write permission for their owner, and group, but  
-which other users can read but not write to.  
+
+* Search for files in the current directory with read and write permission for their 
+  owner, and group, but other users can read but not write to.  
 ```bash  
 find . -perm 664  
 ```
