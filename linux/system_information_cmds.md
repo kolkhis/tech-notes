@@ -94,7 +94,8 @@ rpm -ivh package.rpm  # Install an .rpm package manually
 
 ### Process Management
 ```bash
-ps aux     # View all processes
+ps aux     # View all processes (BSD style)
+ps u 1     # View the process with PID 1
 top        # Interactive process viewer
 htop       # Enhanced interactive process viewer (often pre-installed)
 kill PID   # Kill a process by PID
@@ -195,13 +196,38 @@ ps aux                  # Different notation, shows all processes (also memory a
 pidstat 1 5             # Show process resource CPU Usage.  Check which processes are executing on the processor
 pidstat --human 1 5     # Human-readable format.  
 ```
+
 The different between `ps -ef` and `ps aux`:  
 * `ps -ef` shows the PPIDs of processes (parent process ID), `ps aux` doesn't.  
+    * `-e`: List `-e`very process.  
+        * Displays all prcesses running on the system regardless of the user.  
+    * `-f`: Display in `-f`ull-format listing.  
+        * Includes additional details (PPID, start time).  
     * This is `System V` style.  
+
 * `ps aux` shows CPU and Memory usage of processes, `ps -ef` doesn't.  
+    * `a`: Stands for **"all"**.  
+        * Shows processes from all users, not just the current user.  
+        * Includes background processes that are associated with a terminal.
+    * `u`: Displays the output in a `u`ser-oriented format.  
+        * Includes user information and additional details (CPU/memory usage, and the command that ran the process)
+    * `x`: Includes processes not attached to a controlling terminal.  
+        * Lists daemon processes and background jobs.  
+        * TODO: If `a` shows `all` processes (background) then how is `x` different?
     * This is `BSD` style.  
 
-ps aux vs ps -ef
+Main differences:
+* `ps aux` does not display the PPID.  
+* `ps -ef` does not display CPU/memory usage of the processes. Also, it includes processes from all users but does not explicitly show detached terminal processes.  
+
+#### Listing Files and Ports Opened by Processes
+Either use `ps -ef` or `ps aux` to show the PID of the process in question.  
+Then, use `lsof -p` to show files that are in use by that processes.  
+```bash
+ps -ef  # Find a process
+lsof -p $PID  # Show what files are being used by the process
+ss -ntulp | grep $PID  # Show what ports are being used by the process
+```
 
 #### Kernel
 ```bash
