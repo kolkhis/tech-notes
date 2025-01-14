@@ -229,6 +229,14 @@ lsof -p $PID  # Show what files are being used by the process
 ss -ntulp | grep $PID  # Show what ports are being used by the process
 ```
 
+Or, you can show files open by processes *other* than the given `PID` by using the
+`^` negate operator:
+```bash
+lsof -p ^$PID
+lsof -p ^17221
+```
+This will show open files that are not opened by the given process.  
+
 #### Kernel
 ```bash
 uname -a            # Check kernel/OS  
