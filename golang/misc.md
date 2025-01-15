@@ -216,3 +216,54 @@ Go modules are the biggest pain point of Go.
 `go mod tidy` doesn't do what it's supposed to do. 
 Managing dependencies sometimes needs to be done manually in a `go.mod` file.  
 
+## Creating a New Project in Go
+
+```bash
+go mod init github.com/kolkhis/<name>
+```
+This makes a new `go.mod` file and shows the Go version.  
+
+This is a popular naming convention for modules since GitHub is essentially the
+package manager for Go.  
+
+
+If you were going to install this program:
+```bash
+go install github.com/kolkhis/<name>@latest
+```
+
+## Misc
+
+* How you structure the project will depend on what kind of project it is (cmd or pkg).  
+
+---
+
+* You can't use the walrus operator in the global scope, only inside functions.  
+
+---
+
+* It's safer to default to private (non-exported), so you're not committed to maintaining it.
+
+---
+
+* You **cannot** export anything from `main`.  
+
+---
+
+* `testdata` is special directory that is not recursed during compilation.  
+
+---
+
+```bash
+go get -u  # Download dependencies
+```
+
+---
+
+The `COMP_LINE` environment variable is set when bash is doing completion.  
+
+To enable self-completion:  
+```bash
+complete -C 'script-name' script-name
+```
+
