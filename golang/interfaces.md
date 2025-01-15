@@ -156,16 +156,17 @@ type ReadWriter interface {
       between different types at runtime.  
 ```go  
 func doSomething(i interface{}) {
-    switch v := i.(type) {
+    switch v := i.(type) {  // .(type) can *only* be used in type switches
         case int:  
             fmt.Println("Int", v)  
         case string:  
                 fmt.Println("String", v)  
         default:  
-                    fmt.Println("Unknown Type")  
+                fmt.Println("Unknown Type")  
     }
 }
 ```
+Using `.(type)` anywhere other than a type switch or type assertion will result in an error
 
 ---
 
