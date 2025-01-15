@@ -1,9 +1,4 @@
-
-
-# Learn Go Week 2
-
-Default to writing packages.
-
+# Testing and Types in Go
 
 ## Go Types
 Go is a strongly typed language.
@@ -28,15 +23,18 @@ fmt.Println("Hello, "+ name +".") // Usage
 
 ### Types
 Variables in Go can be `const` or `var`.
+Types can include `int`, `float`, `string`, etc.  
 
-#### Strings
-Strings in Go are immutable.
+Strings in Go are typically immutable.
 
-##### Concatenation
+You can include a `[]` before the type name to indicate a slice (array reference) of
+the given type. (also see [slices](./slices.md))
+e.g.,
 ```go
-name = "Rob"
-fmt.Println("Hello, "+ name +".")
+var mySlice []int
 ```
+This declares a slice
+
 
 ## Imports
 You can import packages with an alias, like `import strings as s` in Python
@@ -45,9 +43,13 @@ import f "fmt"
 ```
 This imports `"fmt"` as `f`.
 
+
+## Using `go work`
 `go work init`
 Creates a file called `go.work`
+
 It's going to tell the local version of go how to resolve dependencies LOCALLY.
+
 `go work init`
 `go work use .`
 This makes the project use the current directory to resolve dependencies.
@@ -58,6 +60,8 @@ This makes the project use the current directory to resolve dependencies.
 Sometimes people also "Declare" functions before defining them.
 Functions that take arguments must have their expected types.
 If multiple variables share a type, the type can be declared after those variables.
+
+Return value types also must be specified after specifying parameters.  
 ```go
 func Hello(first, last string) {
     fmt.Printf("Hello, %v %v", first, last)
@@ -66,12 +70,20 @@ func Hello(first, last string) {
 func Greet(first string, last string) {
     fmt.Printf("Hello, %v %v", first, last)
 }
+
+// A function with a return value (of type string)
+func MakeGreeting(first string, last string) string {
+	greeting := fmt.Sprintf("Hello, %v %v", first, last)
+	return greeting
+}
 ```
-Go has LOCALLY-SCOPED variables.
-Functions have their own scope.
+Go has LOCALLY-SCOPED variables.  
+Functions have their own scope.  
 
 If I have a variable that I want all the function in a file to use, 
-You need to add the varible under the import statements.
+You need to add the varible under the import statements (in the global scope).
+Globally scoped variables cannot use the walrus operator.  
+
 They MUST be declared AND assigned at the same time.
 ```go
 import "fmt"

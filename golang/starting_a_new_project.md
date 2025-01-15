@@ -1,21 +1,19 @@
-# Learn Go - Week 1  
+# Starting a project in Go
 
-> Go is the industry standard for writing code in Kubernetes and Cloud Native.  
->   - Rob, 2023
+Go is considered the industry standard for writing code in Kubernetes and Cloud Native. (per Rob, 2023)
 
 
 ## Table of Contents
-* [Learn Go - Week 1](#learn-go---week-1) 
-* [Possible Editors for Go](#possible-editors-for-go) 
+* [Getting Help](#getting-help) 
 * [Go and Git](#go-and-git) 
 * [Downloading the Go Source Code](#downloading-the-go-source-code) 
 * [Starting a Go Project](#starting-a-go-project) 
     * [Command Projects](#command-projects) 
-    * [Modules](#modules) 
-    * [Package Projects](#package-projects) 
+    * [Library Projects](#library-projects) 
+* [Basic Directory Structure](#basic-directory-structure) 
 * [Writing a Package](#writing-a-package) 
 * [Internal Packages](#internal-packages) 
-    * [How to export for certain files only (making it "internal" to a module)](#how-to-export-for-certain-files-only-making-it-"internal"-to-a-module) 
+    * [How to export for certain files only (making it "internal" to a module)](#how-to-export-for-certain-files-only-making-it-internal-to-a-module) 
     * [Running a Package](#running-a-package) 
 * [Vendor Code Instead of Using External Dependencies](#vendor-code-instead-of-using-external-dependencies) 
 * [Building Executables for Other Operating Systems](#building-executables-for-other-operating-systems) 
@@ -36,22 +34,25 @@
     * [Interpret (`go run`)](#interpret-go-run) 
     * [Compile (`go build`)](#compile-go-build) 
         * [Compiling](#compiling) 
-* [Resources](#resources) 
     * [main.go notes from writing a command.](#maingo-notes-from-writing-a-command) 
+* [Resources](#resources) 
 
 
 
 
 Reading the Go documentation and the Go stdlib is the best way to learn Go.  
 
-
-## Possible Editors for Go  
-
-* `vim-go` from the terminal  
-* `Goland` - Popular Go IDE.  
-* `vsc*de` -  ??  
-
-
+## Getting Help
+Getting help with Go commands from the command line is easy with `go help`.  
+```bash
+go help 
+go help <cmd>
+```
+`<cmd>` can be any of the go commands. 
+```bash
+go help install
+go help mod
+```
 
 ## Go and Git  
 Go is integrated with Git, in that it uses Git and GitHub as a package manager.  
@@ -67,58 +68,90 @@ get_go_source_code(){
 }
 ```
 
-
-
 ## Starting a Go Project  
-Every single project starts with:
+
+Every single project starts with `go mod init`:
 ```bash
-go mod init github.com/Kolkhis/go-week1  
+go mod init github.com/Kolkhis/learn-go
 ```
 The last argument will be the GitHub repo of your new project.  
-
-Once the mod is created, you need to answer the following question:  
-* Am I writing a package, or am I writing a command?  
-
-### Command Projects:  
-Specifically means you have a `main()` function.  
-* Some people use the naming convention `main.go` if they're writing a command.  
+This will generate a `go.mod` file with the name of your project.  
 
 
-### Modules  
+This is a popular naming convention for modules since GitHub is essentially the
+package manager for Go.  
 
-* Module 
-    * Having a `go.mod` file dictates that it is a module.
-    * Will primarily be in a repo managed by git.
+---
 
-### Package Projects:
-Packages (seaparate from Modules) are used as external libraries.  
+All Go projects are called "modules."  
+Anything with a `go.mod` file is a module.  
 
-* Some people use the naming convention of `lib.go` if 
-  they're writing a package/module.  
+---
+
+A module can be either a command or a library (also called a package).
+Once the module is created, you need to answer the following question:  
+* Am I writing a library, or am I writing a command?  
+This will determine how you structure your project.  
+
+### Command Modules
+Specifically means you have a `main()` function and a `main` package.  
+
+Typically your `main.go` file would go in `cmd/learn-go/main.go` (where `learn-go` is
+the project name).  
+
+
+### Library Modules
+Libraries (also called packages) are used as external libraries.  
+
+A library is designed to be imported and used in another project, exports reusable
+functions, types, interfaces, etc.
+
+It has no `main()` function and is not meant to be run directly.  
+
+Most of the code here will go in the `pkg/project-name` directory.  
+
+* Some people use the naming convention of `lib.go` if they're writing a package/module.  
 * These projects usually *won't* have a `main()` function in its main file.  
 
-* You can make your package run like a command with a `./cmd/package_name/main.go` file.  
+* You can make your package run like a command with a `./cmd/package_name/main.go` file, but this is kind of an anti-pattern.  
     * This will essentially be its own command "project" that uses the package you're writing.
 
-* Most of the Go code you'll write will be packages.  
-
+## Basic Directory Structure
+The best practice for Go project structure:  
+```bash
+project/
+├── cmd/
+│   └── project-name/
+│       └── main.go   # Entry point for the "project-name" command
+│
+├── internal/         # Non-exported application logic
+│   └── somepackage/
+│       └── file.go
+│
+├── pkg/              # Reusable exported code
+│   ├── somepkg/
+│   └── someotherpkg/
+├── go.mod
+└── go.sum
+```
 
 ## Writing a Package  
 * Naming a package `util` is a **big anti-pattern** in the Go world.  
 Use a name that "makes sense" to what the code does.  
 
-Go to your project directory (in my case, `~/learn_go/week1/`)  
+Go to your project directory  
 ```bash  
-mkdir -p cmd/greet  
-nvim cmd/greet/main.go  
+mkdir -p ./cmd/greet  
+vim cmd/greet/main.go  
 ```
 With `vim-go` will automatically populate this file with `package main` and `func main()`.  
 
 This will be the file that acts as the command.  
 
 Now, in your project directory, if your Go code is named `main.go`, change it to another name.  
-`go-week1.go` in my case.  
+`greet.go` in this case.  
 Inside that file, you can export functions by capitalizing the first letter of the function name.  
+
 ```go  
 package main  
 import "fmt"  
@@ -127,7 +160,8 @@ func Greet(){
 }
 ```
 This exports the function.  
-Rob's personal opinion: Every single function should be exported (internally)  
+
+It's generally not a bad idea to export most functions internally (using the `internal` directory).  
 
 
 ## Internal Packages  
@@ -137,6 +171,7 @@ How to hide those functions in a way that does not break code:
 * Make a Go file in the `internal/` directory or any of its subdirectories.  
 * Put anything you want to stay internal there.  
 * Done.  
+
 You can export everything in these files and use them throughout your project, and they will be  
 inaccessible to other people who use your package.  
 ```bash  
@@ -331,19 +366,25 @@ This is going to be covered down the line.
 
 
 ## Environment Variables  
-* It's recommended to set `GOBIN`; rob has it in `$HOME/.local/bin/`
-    * `export GOBIN="$HOME/.local/bin/"`
-    * This is where `go build` will put the compiled binary.  
+* It's recommended to set `GOBIN`.  
+    * This is where `go build` or `go install` will put the compiled binary.  
+      ```bash
+      export GOBIN="$HOME/.local/bin/"
+      ```
     * This will install any `go build` binaries into your PATH.  
 
 * It's also recommended to set `CGO_ENABLED=0` 
-    * `export CGO_ENABLED=0`
     * This avoids writing things with C dependencies, to keep cross-platform  
       compile compatibility.  
+      ```bash
+      export CGO_ENABLED=0
+      ```
 
-* `GOPRIVATE` allows you to not pull down the repos from the internet.
-    * `export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"`
-    * It will force Go to look at it in GitHub.  
+* `GOPRIVATE` allows you to disable pulling down the repos from the internet.
+    * This will force Go to look at libraries in GitHub instead of downloading them.  
+      ```bash
+      export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
+      ```
 
 
 
@@ -357,28 +398,27 @@ Go allows you to write inline C code
 To install Go code remotely with a URL:  
 ```bash
 go install github.com/asdf/package
+# or
+go install github.com/asdf/package@latest
 ```
 
 ## Automatic Running  
 ### Interpret (`go run`)
 This will use interpreted mode to run your Go code on every change.  
 ```bash
-entr -c bash "clear; go run main.go" <<< main.go
+entr -c bash "go run main.go" <<< main.go  # Using a herestring
 # or, for POSIX Compatibility:
-entr -c bash "clear; go run main.go" < <(main.go)
+entr -c bash "go run main.go" < <(find . -name 'main.go') # Using process substitution
 ```
 
 ### Compile (`go build`)
-This will re-compile and run the compiled binary on every change.  
-```bash
-entr -c bash "clear; go build; ./go-week1" < <(main.go)
-```
-
-* Be careful when using this as it will overwrite your existing binary.
+Be careful when using `go build` for testing. It will overwrite your existing binary.
 To avoid this, use the `-o` option:  
 ```bash
-entr -c bash "clear; go build -o testbin; ./testbin" < <(main.go)
+entr -c bash -c "go build -o testbin; ./testbin" < <(ls main.go)
 ```
+This will re-compile and run the compiled binary on every change.  
+
 
 #### Compiling  
 
@@ -386,28 +426,6 @@ Go code will not compile if there are unused lines: vars, imports, etc
 
 `makefiles` are dumb and frowned upon. Don't make `make` files.  
 * `build.sh` or `build.ssh` are fine.  
-
-Hyperfine: A benchmarker tool. `sudo apt install hyperfine`
-
-
-## Resources  
-* Go 101 (book)  
-* Effective Go  
-* How to write Go code  
-* tourGo  
-* Source code of Go  
-* Go review comments?  
-* EBNF Programming language specification  
-* The Go source code  
-* EBNF specification for the Go Standard Library  
-* Go Slack mailing list  
-
-Always use resources that are:  
-1. Online
-1. Free
-1. Resourced by the Go community  
-
-
 
 
 
@@ -457,4 +475,26 @@ func main() {
     fmt.Println("Hello,Friend 3.")  // prints to stdout  
 }
 ```
+
+## Resources  
+* Go 101 (book)  
+* Effective Go  
+* How to write Go code  
+* tourGo  
+* Source code of Go  
+* Go review comments?  
+* EBNF Programming language specification  
+* The Go source code  
+* EBNF specification for the Go Standard Library  
+* Go Slack mailing list  
+
+Always use resources that are:  
+1. Online
+1. Free
+1. Resourced by the Go community  
+
+
+
+
+Hyperfine: A benchmarker tool. `sudo apt install hyperfine`
 
