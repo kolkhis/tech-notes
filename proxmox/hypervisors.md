@@ -47,17 +47,14 @@ The vNIC and vSwitch are the two components that connect a VM to the network.
 * vRAM: Logical allocation of RAM to a VM.  
 
 
-
-### 
-
-
-
 Typically, you'll probably want 2 gigs of RAM for every 1 processor.  
 
 
-### Overcommitment
-Even inside VMs, we have unused resources. Overcommitment is the idea that we can
-allocate more than we actually have.  Some people don't do more than a 3:1 ratio.  
+## Overcommitment
+Even inside VMs, we have unused resources.  
+Overcommitment is the idea that we can allocate more resources than we actually have.  
+
+Some people don't do more than a 3:1 ratio.  
 
 
 
