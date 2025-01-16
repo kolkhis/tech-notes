@@ -1,6 +1,11 @@
 
 # Reading and Writing to Files in Go
 
+## Table of Contents
+* [Reading a File](#reading-a-file) 
+* [Reading a file line by line with Go](#reading-a-file-line-by-line-with-go) 
+* [Creating Files in Go](#creating-files-in-go) 
+
 ## Reading a File
 The standard way to read from a file is with the `os.Open` function.
 ```go
@@ -111,6 +116,80 @@ func write(fileName string, text string) error {
 }
 ```
 
+## Creating a File in Go
+Use `os.Create` to create a new regular file in Go.  
+```go
+func main() {
+    path := "/home/kolkhis/somefile.txt"
+    os.Create(path)
+}
+```
+There is no path expansion by default in Go.  
 
+So you can't use `~` to represent `$HOME` here.  
 
+You'll have to get the user's home directory via the `$HOME` environment variable.  
+```go
+func main() {
+    newFilePath := os.Getenv(`HOME`)+"/.config/somefile.txt"
+    os.Create(newFilePath)
+}
+```
+* `os.Getenv(`HOME`)`: Resolves the the environment variable `HOME` for the current user.
+    * e.g., `/home/kolkhis`
+* `+"/.config/somefile.txt`: Concatenates the rest of the string to the `newFilePath` variable.  
+
+## Creating a Directory in Go
+To create a single directory, use `os.Mkdir`.
+```go
+func main() {
+    newDirPath := os.Getenv(`HOME`)+"/.config/somedir"
+    os.Mkdir(newDirPath, 0755)
+    os.Mkdir(newDirPath, os.FileMode(0755))
+}
+```
+* `newDirPath`: The path to the directory.  
+    * `/home/kolkhis/.config/somedir`
+* `0755`: The permission bits to set for the directory, in octal format.  
+    * The constant `fs.ModePerm` is just `0777` (octal).  
+    * The constant `os.ModePerm` is `511` (`0777` equivalent in decimal format).  
+
+If you wanna create multiple directories (i.e., `mkdir -p`) use `os.MkdirAll`:
+```go
+func main() {
+    newDirPath := os.Getenv(`HOME`)+"/.config/somedir/someotherdir"
+    os.MkdirAll(path, 0755)
+}
+```
+This will create any directories that don't exist on the way to the target directory.  
+
+## Checking if a File Exists
+Using the `os.Stat` function will allow you to check for the existence of a file,
+as well as gather more information about the file if you need to.  
+```go
+func main() {
+    filePath := "/home/kolkhis/.config/somedir"
+    fileInfo, err := os.Stat(filePath)
+    if err != nil {
+        fmt.Println("The file does not exist.")
+    } else {
+        fmt.Printf("The file exists!")
+    }
+}
+```
+
+### Checking if a file is a directory
+You can use the object returned from `os.Stat` to check if a file is
+a directory by using the `.IsDir()` method.  
+```go
+func main() {
+    filePath := "/home/kolkhis/.config/somedir"
+    fileInfo, err := os.Stat(filePath)
+    if err != nil {
+        fmt.Println("The file does not exist.")
+    } else if fileInfo.IsDir() {
+        fmt.Printf("The file exists and is a directory!")
+    }
+}
+```
 
