@@ -3,6 +3,7 @@
 
 Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).  
 
+
 ## Table of Contents
 * [Linux Cheatsheet](#linux-cheatsheet) 
 * [General Information about the System](#general-information-about-the-system) 
@@ -21,10 +22,19 @@ Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).
     * [vmstat](#vmstat) 
     * [Check which version of linux is running](#check-which-version-of-linux-is-running) 
     * [nproc](#nproc) 
-    * [Get System Information](#get-system-information) 
-* [Disk Information](#disk-information) 
+    * [Getting Resource Usage Information](#getting-resource-usage-information) 
+        * [Processes](#processes) 
+        * [Listing Files and Ports Opened by Processes](#listing-files-and-ports-opened-by-processes) 
+        * [Kernel](#kernel) 
+        * [Uptime](#uptime) 
+        * [Memory, CPU, Disk, and Network Usage](#memory-cpu-disk-and-network-usage) 
+        * [Software Packages](#software-packages) 
+* [Disk and Device Information](#disk-and-device-information) 
 * [Logging and Monitoring](#logging-and-monitoring) 
 * [Limiting resources](#limiting-resources) 
+* [Analyze System Startup Parameters](#analyze-system-startup-parameters) 
+* [Tracking Down a Service](#tracking-down-a-service) 
+* [Verifying File Integrity](#verifying-file-integrity) 
 
 
 ## General Information about the System
