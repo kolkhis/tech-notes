@@ -334,8 +334,32 @@ dmesg | less  # Everything the kernel did from the time it was first called
 lsmod  # Show loaded kernel modules
 ```
 
-In `dmesg` you can see how system is running:
+In `dmesg` you can see how system is running (all the things it was compiled with):
 ```bash
 [3.148938] systemd[1]: systemd 245.4-4ubuntu3.18 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2 default-hierarchy=hybrid)
 ```
+
+Show all kernel modules with `lsmod`.  
+
+
+## Tracking Down a Service
+Using `sshd` in this example.  
+```bash
+systemctl cat ssh # View unit file
+
+systemctl status sshd
+# See PID
+ss -ntulp | grep $PID
+systemd-analyze critical-chain sshd.service
+```
+
+## Verifying File Integrity
+Make sure files across servers are the same by using a hash/checksum.  
+You can use any of the hashing commands (as long as you use the same one each time):
+```bash
+cksum /etc/services
+md5sum /etc/services
+sha256sum /etc/services
+```
+
 
