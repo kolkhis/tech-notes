@@ -349,6 +349,23 @@ empty_slice = empty_slice[:cap(empty_slice)]
 ---
 
 
+## Removing an Element from a Slice
+There are a couple of ways to do this.  
+
+
+
+### Keeping the Slice in Order
+One way to do this while keeping the slice in order is to use `append` and "slice" the slice.  
+You can use `append` to re-write the slice without the undesired element.  
+```go
+newSlice := append(oldSlice[:i], oldSlice[i+1:]...)
+```
+* `oldSlice[:i]`: Grab everything up to the undesired element.  
+* `oldSlice[:i+1]...`: Grab everything after the undesired element.  
+    * The `...` is the variadic operator. In this case, it expands all the elements.  
+
+
+
 
 
 
