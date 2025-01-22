@@ -422,6 +422,7 @@ username ALL=(ALL:ALL) ALL
     * The third `ALL` represents the commands the user can run with sudo.  
         * `ALL` means they can run any command with sudo.  
 
+After adding this, the account needs to be relogged in order for the changes to take effect.  
 This will give a user full sudo access.  
 
 ---
