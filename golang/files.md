@@ -81,10 +81,34 @@ This reads the file `input.txt` line by line.
 1. At the end of the function, `file.Close()` will be called.
 
 
-## Creating Files in Go
+## Creating a File in Go
+Use `os.Create` to create a new regular file in Go.  
+```go
+func main() {
+    path := "/home/kolkhis/somefile.txt"
+    os.Create(path)
+}
+```
+There is no path expansion by default in Go.  
+
+So you can't use `~` to represent `$HOME` here.  
+
+You'll have to get the user's home directory via the `$HOME` environment variable.  
+```go
+func main() {
+    newFilePath := os.Getenv(`HOME`)+"/.config/somefile.txt"
+    os.Create(newFilePath)
+}
+```
+* `os.Getenv(`HOME`)`: Resolves the the environment variable `HOME` for the current user.
+    * e.g., `/home/kolkhis`
+* `+"/.config/somefile.txt`: Concatenates the rest of the string to the `newFilePath` variable.  
+
+
+### Example: Creating a New File in Go
 
 Creating files is pretty much the same as opening existing files.  
-But, instead of `os.Open()`, we use `os.Create()`.  
+But, instead of `os.Open()`, we can use `os.Create()`.  
 
 ```go
 package main
@@ -116,28 +140,6 @@ func write(fileName string, text string) error {
 }
 ```
 
-## Creating a File in Go
-Use `os.Create` to create a new regular file in Go.  
-```go
-func main() {
-    path := "/home/kolkhis/somefile.txt"
-    os.Create(path)
-}
-```
-There is no path expansion by default in Go.  
-
-So you can't use `~` to represent `$HOME` here.  
-
-You'll have to get the user's home directory via the `$HOME` environment variable.  
-```go
-func main() {
-    newFilePath := os.Getenv(`HOME`)+"/.config/somefile.txt"
-    os.Create(newFilePath)
-}
-```
-* `os.Getenv(`HOME`)`: Resolves the the environment variable `HOME` for the current user.
-    * e.g., `/home/kolkhis`
-* `+"/.config/somefile.txt`: Concatenates the rest of the string to the `newFilePath` variable.  
 
 ## Creating a Directory in Go
 To create a single directory, use `os.Mkdir`.
@@ -192,4 +194,13 @@ func main() {
     }
 }
 ```
+
+
+
+## `os.NewFile()`
+You can use the `os.NewFile` function to create a new `os.File` object.  
+You need to provide a file descriptor when doing this.  
+
+You could provide `1` (`stdout`) as the `fd`, and when calling `.Write()` on that
+file, the contents of that file will be written to the terminal.  
 
