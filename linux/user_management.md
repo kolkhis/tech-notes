@@ -394,11 +394,66 @@ sudo cp /etc/shadow /etc/shadow.bak
 sudo cp /etc/group /etc/group.bak
 ```
 
+## Manually Adding a User to Sudoers
+
+If there's [no `sudo` group on the system](#creating-the-sudo-group) (default on 
+a clean rocky installation), then you may need to manually add a user to the `sudoers` 
+file.  
+
+Add a user to sudoers by modifying the `/etc/sudoers` file.  
+Use the `visudo` command to edit this file (this is the recommended way to do it).  
+```bash
+visudo
+```
+
+Add a rule in this file in the format:
+```bash
+username ALL=(ALL:ALL) ALL
+```
+* `username`: The username of the user that the rule will apply to.  
+* `ALL=`: Defines where the rule applies.
+    * `ALL` means it applies to any host (for multi-host environments).  
+* `(ALL:ALL) ALL`:
+    * The first `ALL` refers to the user list.
+        * This means the user can run commands as any user.  
+    * The second `ALL` refers to the group list.  
+        * This means the user can run commands as any group.  
+    * The third `ALL` represents the commands the user can run with sudo.  
+        * `ALL` means they can run any command with sudo.  
+
+This will give a user full sudo access.  
+
+---
+
+### Limiting a User's Sudo Access
+You can specify commands that a user is allowed to run with `sudo`, which will
+effectively limit a user's sudo access.   
+Do this in the `/etc/sudoers` file.  
+```bash
+john ALL=(ALL:ALL) /bin/systemctl restart apache2, /bin/systemctl restart mysql
+```
+This will only allow the user `john` to run the two commands specified:
+```bash
+systemctl restart apache2
+systemctl restart mysql
+```
+
+## Creating the sudo group
+You can create the `sudo` group on the system, if it doesn't exist, specified by a `%` before the name.  
+```bash
+%groupname ALL=(ALL:ALL) ALL
+```
+* `%`: Specifies that the rule applies to a group instead of a specific user.  
+Then you can add a user to the group with `usermod`.  
+```bash
+usermod -aG groupname username
+```
 
 
 ## Resources
 * [User mangement on Linux (GeeksForGeeks)](https://www.geeksforgeeks.org/user-management-in-linux/)
 * [Finding User Info (hostingmate)](https://hostingmate.net/web-hosting/12-ways-to-find-user-account-info-and-login-details-in-linux/)
+
 
 
 
