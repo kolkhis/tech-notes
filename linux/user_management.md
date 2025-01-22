@@ -40,6 +40,7 @@ Commands for user management:
 | `useradd`  | Creates a new user or update default user information
 | `userdel`  | Deletes a user account and related files
 | `usermod`  | Modifies a user account
+| `groupadd` | Adds a group to the system
 | `addgroup` | Adds a group to the system
 | `delgroup` | Removes a group from the system
 | `passwd`   | Changes user password
