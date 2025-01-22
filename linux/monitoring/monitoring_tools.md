@@ -280,6 +280,15 @@ bBInHhXJ8z6VOz4kbyr_mrvl25AWk__8HxzTkyGl33AMZlYXVp8kHui0SDhbLUC9w5aVJY_O3GY3pp6q
 Default port for `InfluxDB2` is `8086`.  
 
 ## Setting up Telegraf 
+Telegraf is a very versatile tool that allows you to both collect data and send it places.  
+Often paired with InfluxDB.  
+It has four main functions:  
+* Input
+* Output
+* Process
+* Aggregation
+
+Telegraf can send its output to many different platforms: InfluxDB / Azure Monitor / Google Cloud PubSub / Cloudwatch / elasticsearch / graphite,  etc etc
 
 ```bash  
 # Get the key  
