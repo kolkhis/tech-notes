@@ -1,5 +1,26 @@
 # Project - K8s Cluster using HAProxy Load Balancer and Keepalived
 
+## Table of Contents
+* [Set up the Environment](#set-up-the-environment) 
+    * [Spin up VMs](#spin-up-vms) 
+    * [Install K8s](#install-k8s) 
+    * [Initialize k8s Cluster](#initialize-k8s-cluster) 
+    * [Install a CNI plugin (flannel)](#install-a-cni-plugin-flannel) 
+    * [Join the Worker Nodes](#join-the-worker-nodes) 
+    * [Deploy a Test App](#deploy-a-test-app) 
+    * [Check which NodePort was Assigned](#check-which-nodeport-was-assigned) 
+* [Set up two HAProxy Nodes](#set-up-two-haproxy-nodes) 
+    * [Configure HAProxy](#configure-haproxy) 
+* [Set up Keepalived for a Virtual IP (VIP)](#set-up-keepalived-for-a-virtual-ip-vip) 
+    * [Install Keepalived on the HAProxy Nodes](#install-keepalived-on-the-haproxy-nodes) 
+    * [Configure Keepalived](#configure-keepalived) 
+        * [First HAProxy Node's Keepalived Configuration](#first-haproxy-nodes-keepalived-configuration) 
+        * [Second HAProxy Node's Keepalived Configuration](#second-haproxy-nodes-keepalived-configuration) 
+    * [Start/Restart Keepalived](#startrestart-keepalived) 
+* [Test the Virtual IP and Failover](#test-the-virtual-ip-and-failover) 
+* [tl;dr](#tldr) 
+* [Misc Notes](#misc-notes) 
+
 
 Feats:
 - Multi-node k8s cluster (1+ control, 2+ workers)
@@ -7,18 +28,40 @@ Feats:
 - Keepalived will run on both HAProxy VMs to manage a shared Virtual IP (VIP)
     - This will allow both HAProxy VMs to have the same IP
 
+---
 
-## Set up the Environment
+Maybe:
+- SSL certs with Let's Encrypt
+
+
+## Set up the k8s Environment
 ### Spin up VMs
 Three to start:
 * `control-node1`
 * `worker-node1`
 * `worker-node2`
 
+To scale, you'd just create more worker nodes.  
+
+The HAProxy nodes are separate.  
+* `haproxy-lb1`
+* `haproxy-lb2`
+
+Add more load balancers to scale if more redundancy is needed.  
+
+
+---
+
+In a prod-like HA setup, the load balancers (HAProxy) typically run on separate hosts
+from the worker nodes.  
+If a worker node crashes or is busy, you don't want that to bring down the load
+balancer.  
+Dedicated load balancer VMs are easier to manage, configure, or reboot without
+affecting the worker pods.  
+With Keepalived, you want 2 distinct machines to have a failover mechanism for HA.  
+
 ### Install K8s
 We need `kubeadm`, `kubelet`, `kubectl` on each node.  
-
-
 
 
 ### Initialize k8s Cluster
@@ -28,7 +71,7 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
 ---
-
+More info:  
 When you run `kubeadm init`, you use the `--pod-network-cidr` flag to specify the IP
 address range for pods in the cluster.  
 * `10.244.0.0/16` defines a network range from `10.244.0.0` up to `10.244.255.255`
@@ -38,9 +81,18 @@ address range for pods in the cluster.
 plugins like Flannel.  
 You can technically pick another private range but most Flannel docs uses `10.244.0.0/16`.  
 
+---
 
 ### Install a CNI plugin (flannel)
 
+
+```bash
+kubectl apply -f \
+    https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+```
+
+---
+More info:  
 A CNI plugin is responsible for setting up network interfaces in Linux containers and 
 assigning IP addresses to those containers.  
 
@@ -54,12 +106,6 @@ It helps by providing the network overlay so that each pod gets its own unique I
 address within the `10.244.0.0/24` range.  
 Without a CNI plugin, pods wouldn't be able to communicate across node boundaries seamlessly.  
 
----
-
-```bash
-kubectl apply -f \
-    https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-```
 
 ### Join the Worker Nodes
 
@@ -73,7 +119,7 @@ kubeadm join ...
 * [next](#deploy-a-test-app)
 
 ---
-
+More info:  
 When initializing k8s with `kubeadm init`, near the end it prints instructions that
 look something like:
 ```bash
@@ -101,12 +147,10 @@ kubectl create deployment nginx-demo --image=nginx:stable
 kubectl scale deployment nginx-demo --replicas=2
 kubectl expose deployment nginx-demo --type=NodePort --port=80
 ```
-<!-- TODO: So, This creates a `deployment`, and then scales it out to... 2 pods? 2 nodes? Or
-how does that work? --> 
 
 ---
 
-What these are doing:
+What these commands are doing:
 * `kubectl create deployment nginx-demo`: Creates a `deployment` resource in k8s
   named `nginx-demo`.  
     * By default it uses the `nginx` image from DockerHub unless you specify another
@@ -122,6 +166,7 @@ What these are doing:
     * This service listens on port 80 ***internally*** (the target port on the
       container) and exposes it on a high port on each node (the NodePort).  
     * This allows you to access the `nginx-demo` Pods from outside the cluster.  
+
 
 
 ### Check which NodePort was Assigned
