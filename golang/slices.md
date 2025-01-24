@@ -365,7 +365,60 @@ newSlice := append(oldSlice[:i], oldSlice[i+1:]...)
     * The `...` is the variadic operator. In this case, it expands all the elements.  
 
 
+## Looping over a Slice
+Since `for` is the only looping mechanism in go, you'd use a `for` loop.  
 
+### Looping Using `range`
+Using `range` with a slice with return an enumerated iterator for the slice, almost equivalent to python's `enumerate(list)` fn.  
+Use this method if you don't need to modify the elements of the slice.  
+Ex:
+```go
+for idx, task := range tl.Tasks {
+    output := task.formatTaskOutput()
+    fmt.Println(output)
+}
+```
+The `idx, task` values are the index along with **a copy of** the item in the slice at that index.  
+If you try to use the `task` variable to modify the actual item inside the slice,
+it won't work since it's just a copy.  
+
+---
+
+If you need to modify the slice itself, access the slice using the `idx`.  
+
+```go
+for idx := range tl.Tasks {
+    tl.Tasks[idx].Complete = true
+}
+```
+If you don't need to access the elements of the slice, you can omit the 2nd variable
+definition to the left of the `:=`, and just use `idx :=`.  
+Or, you can use an underscore to discard it:
+```go
+for idx, _ := range tl.Tasks {
+    ...
+}
+```
+
+
+### Using C-Style Loops
+You can also use a C-style loop with the `len()` function:
+```go
+for i := 0; i < len(tl.Tasks); i++ {
+    tl.Tasks[i].Complete = true
+}
+```
+
+```go
+func (tl *TaskList) TaskExists(id int) bool {
+	for _, t := range tl.Tasks {
+		if t.Id == id {
+			return true
+		}
+	}
+	return false
+}
+```
 
 
 
