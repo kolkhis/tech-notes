@@ -1,12 +1,61 @@
-
 # Customizing Your Terminal  
 
 ## Table of Contents
-* [Customizing Your Terminal](#customizing-your-terminal) 
+* [Config Files](#config-files) 
+    * [`~/.bashrc`](#bashrc) 
+    * [`/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)](#etcprofile-and-bashlogout-system-wide-bashrc) 
 * [Colors](#colors) 
 * [Customizing Your Prompt](#customizing-your-prompt) 
     * [Modify the PS1 Environment Variable](#modify-the-ps1-environment-variable) 
     * [Modifying the PS2 Environment Variable](#modifying-the-ps2-environment-variable) 
+
+
+## Config Files
+The main file to edit to customize the terminal is `~/.bashrc`.  
+This will be run on every interactive login shell (for the specific user).  
+
+
+If you want to customize a certain thing for all users, there are some global files
+you can edit.  
+
+
+### `~/.bashrc`
+This is the runtime configuration file for bash, and it will be executed every time a
+new interactive shell is loaded.  
+Put any valid bash/sh code in here and it will be executed when bash starts interactively.  
+
+### `/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)
+The `/etc/profile` file is loaded on every single instance of bash, whether it's a
+login/interactive shell or not.  
+It's basically a system-wide `.bashrc` file.  
+
+If `/etc/profile` exists, it will read/execute this first, before any other config files.  
+Then bash will look for `~/.bash_profile`, `~/.bash_login`, and `~/.profile`.  
+The first one of these found will be read/executed, and the rest will be ignored.  
+
+The `~/.bash_logout` file will be read/executed every time a shell exits (with the
+`exit` builtin), whether it's a login/interactive shell or non-interactive shell.  
+
+---
+
+So the order in which bash loads config files:
+* Non-interactive
+    - `/etc/profile` (always)
+    - First one found (in this order):
+        - `~/.bash_profile`
+        - `~/.bash_login`
+        - `~/.profile`
+    - `~/.bash_logout` when the shell `exit`s.  
+
+* Interactive shell
+    - `/etc/profile` (always)
+    - `/etc/bash.bashrc` (always)
+    - First one found (in this order):
+        - `~/.bash_profile`
+        - `~/.bash_login`
+        - `~/.profile`
+    - `~/.bashrc`
+    - `~/.bash_logout` when the shell `exit`s.  
 
 
 ## Colors
@@ -75,5 +124,6 @@ user@server $ command "argument" \
 > "The > is the ${PS2} environment variable"  
 ```
 In this instance, `PS2="> "`.  
+
 
 

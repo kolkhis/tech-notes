@@ -53,6 +53,43 @@
 
 ## System Configuration and User Management
 
+### `/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)
+The `/etc/profile` file is loaded on every single instance of bash, whether it's a
+login/interactive shell or not.  
+It's basically a system-wide `.bashrc` file.  
+
+If `/etc/profile` exists, it will read/execute this first, before any other config files.  
+Then bash will look for `~/.bash_profile`, `~/.bash_login`, and `~/.profile`.  
+The first one of these found will be read/executed, and the rest will be ignored.  
+
+The `~/.bash_logout` file will be read/executed every time a shell exits (with the
+`exit` builtin), whether it's a login/interactive shell or non-interactive shell.  
+
+---
+
+So the order in which bash loads config files:
+* Non-interactive
+    - `/etc/profile` (always)
+    - First one found (in this order):
+        - `~/.bash_profile`
+        - `~/.bash_login`
+        - `~/.profile`
+    - `~/.bash_logout` when the shell `exit`s.  
+
+* Interactive shell
+    - `/etc/profile` (always)
+    - `/etc/bash.bashrc` (always)
+    - First one found (in this order):
+        - `~/.bash_profile`
+        - `~/.bash_login`
+        - `~/.profile`
+    - `~/.bashrc`
+    - `~/.bash_logout` when the shell `exit`s.  
+
+
+
+
+
 ### `/etc/passwd`
 Each line in the `/etc/passwd` file represents a user account.  
 The format of each line in `/etc/passwd` is as follows:  
@@ -93,6 +130,7 @@ Contains default files that are copied to a new user's home directory when it's 
 
 ### `/etc/sudoers` and `/etc/sudoers.d/`
 Config files for managing sudo permissions.  
+
 
 ## Logs and Auditing
 
