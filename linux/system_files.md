@@ -131,6 +131,32 @@ Contains default files that are copied to a new user's home directory when it's 
 ### `/etc/sudoers` and `/etc/sudoers.d/`
 Config files for managing sudo permissions.  
 
+Each line in this file is a rule specifying who is allowed to do sudo stuff on the
+system.  
+
+Add a rule for a user in this file in the format:
+```bash
+# username host=(user:group) commands
+username ALL=(ALL:ALL) ALL
+```
+* `username`: The username of the user that the rule will apply to.  
+* `ALL=`: Defines where the rule applies.
+    * `ALL` means it applies to any host (for multi-host environments).  
+* `(ALL:ALL) ALL`:
+    * The first `ALL` refers to the user list.
+        * This means the user can run commands as any user.  
+    * The second `ALL` refers to the group list.  
+        * This means the user can run commands as any group.  
+    * The third `ALL` represents the commands the user can run with sudo.  
+        * `ALL` means they can run any command with sudo.  
+        * This can be a comma separated list of specific commands.  
+
+Add a rule for a group the same way, except prepend a `%` to the name (without a space).  
+```bash
+%groupname ALL=(ALL:ALL) ALL
+```
+
+
 
 ## Logs and Auditing
 
@@ -283,6 +309,10 @@ Logs package installation and updates.
 
 
 
+
+## Other
+* `/etc/services`: Shows all the default ports for different services.  
+* `/etc/protocols`: Shows the different types of internet protocols.  
 
 
 
