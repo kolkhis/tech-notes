@@ -11,8 +11,6 @@
     * [BAD GO CODE (if/else if chains)](#bad-go-code-ifelse-if-chains) 
     * [GOOD GO CODE (swich case)](#good-go-code-swich-case) 
     * [Type Switch](#type-switch) 
-* [Types](#types) 
-* [Printing Lines](#printing-lines) 
 
 ## Managing Modules
 Can have multiple modules within a single Git repository.
@@ -192,20 +190,3 @@ switch v := myvar.(type) {  // .(type) can only be used in type switches and typ
 }
 ```
 
-## Types
-Go is a STRICTLY TYPED language.
-
-In most projects BEGINNERS work on, types probably don't matter all that much.
-Simple projects, it's fine to write code however you want. Using types could be too complex.
-
-When you're working on something to maintain and scale, types are important.
-If it's something you might still be working on in 5 years, where there are
-parts of code you haven't looked at in a while, it makes sense to have types.
-
-One of the most important things about writing code is making it self-documenting. 
-If you can see the type, you know so much more about what it's supposed to represent.
-
-
-## Printing Lines
-* `println` - Prints to stderr
-* `fmt.Println` - Prints to stdout

@@ -5,7 +5,9 @@ Golang is a popular language for platform engineering.
 Writing CLI tools, web services, middleware, APIs, etc., are common use cases.  
 
 
+
 ## Table of Contents
+* [Printing Lines](#printing-lines) 
 * [The Defer Keyword](#the-defer-keyword) 
 * [File Structure for `main.go`](#file-structure-for-maingo) 
 * [Zero Values (Zero Initialization)](#zero-values-zero-initialization) 
@@ -16,11 +18,19 @@ Writing CLI tools, web services, middleware, APIs, etc., are common use cases.
     * [Closing a Channel](#closing-a-channel) 
 * [Goroutines](#goroutines) 
     * [Launching a Goroutine](#launching-a-goroutine) 
+    * [WaitGroups](#waitgroups) 
+        * [`WaitGroup` Example](#waitgroup-example) 
     * [Receiving Results and Output](#receiving-results-and-output) 
 * [Import Statement](#import-statement) 
 * [Pain Point](#pain-point) 
+* [Creating a New Project in Go](#creating-a-new-project-in-go) 
+* [Misc](#misc) 
 
 
+
+## Printing Lines
+* `println`: Prints to stderr
+* `fmt.Println`: Prints to stdout
 
 
 ## The Defer Keyword
