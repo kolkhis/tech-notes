@@ -451,6 +451,26 @@ Then you can add a user to the group with `usermod`.
 usermod -aG groupname username
 ```
 
+## Getting a User's ID and Group ID 
+* To get the UID of a user, use `id -u`
+  ```bash
+  # get a user's UID
+  id -u [user]
+  ```
+    * The `[user]` argument is optional, if you don't specify a user it'll use the 
+      current user account.  
+
+* To get the group ID of a user, use `id -g`:
+  ```bash
+  # get a user's GID
+  id -g [user]
+  ```
+
+Alternatively, you can look in `/etc/passwd`.
+```bash
+cat /etc/passwd | grep -i 'username'
+```
+
 
 ## Resources
 * [User mangement on Linux (GeeksForGeeks)](https://www.geeksforgeeks.org/user-management-in-linux/)
