@@ -119,6 +119,12 @@ mount -t ext4 /dev/xvdc1 /directory
 This uses an existing partition (`/dev/xvdc1`), formats it with the `ext4` format,
 and mounts it to the directory `/directory`
 
+#### `mount -a`
+Using `mount -a` reads all entries in `/etc/fstab` and makes sure everything is
+mounted where it should be.  
+
+If you have an entry in `/etc/fstab` but the filesystem isn't mounted, instead of
+rebooting you can just use `mount -a`.  
 
 ### `umount`
 Unmount a file system.  
