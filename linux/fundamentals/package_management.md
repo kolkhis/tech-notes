@@ -4,11 +4,92 @@
 
 
 | Command    | Description  
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------  
+| ---| ---
 | `dpkg`     | The `dpkg` is a tool to install, build, remove and manage debian packages. The primary, user-friendly front-end for `dpkg` is `apt`
 | `apt`      | `apt` provides a high-level command line interface for the package management system  
+| `yum`      | Yum is the older package management tools used on RedHat family systems.  
+| `dnf`      | dnf is the newer package management tools used on RedHat family systems.  
+| `rpm`      | rpm is the RedHat equivalent to `dpkg`, used to find and manage packages
 | `aptitude` | `aptitude` is an alternative to `apt` and is a high-level package manager  
 | `snap`     | Install, configure, refresh and remove `snap` packages. Snaps enable the secure distribution of the latest apps.  
 | `gem`      | `gem` is the front-end to RubyGems, the standard package manager for ruby  
 | `pip`      | Python package manager  
 | `git`      | Git is a revision control system commonly used to store source code for application or tools for easier development  
+
+
+
+## Package Management on Debian-based systems
+Debian-based systems (Ubuntu, Mint, etc.) use `apt` with `dpkg` for package management.    
+```bash  
+apt update          # Update package lists  
+apt upgrade         # Upgrade all packages to their newest versions
+apt install package # Install a package  
+apt remove package  # Remove a package  
+dpkg -i package.deb # Install a .deb package manually  
+dpkg -r package     # Remove a package  
+dpkg -l             # List all installed packages  
+dpkg -l | grep -i package_name  # Find out if a package is installed
+```
+
+
+
+
+## Package Management in RedHat-based systems 
+RedHat family systems (Rocky, CentOS, Fedora, etc.) use `dnf` and `rpm` for package management.  
+```bash  
+# Package updates and installations
+dnf update                      # Update all packages to the latest available versions  
+dnf upgrade                     # Upgrade installed packages, replacing old versions  
+dnf install package             # Install a package  
+dnf remove package              # Remove a package  
+dnf reinstall package           # Reinstall a package  
+dnf downgrade package           # Downgrade a package to an earlier version  
+
+# Searching and querying
+dnf search package              # Search for a package in repositories  
+dnf info package                # Get detailed information about a package  
+dnf list installed              # List all installed packages  
+dnf list available              # List available packages in the enabled repos  
+dnf list package                # Show details about a specific package  
+
+# Managing repositories
+dnf repolist                    # List enabled repositories  
+dnf repolist all                # Show all available repositories  
+dnf config-manager --enable repo_id   # Enable a repository  
+dnf config-manager --disable repo_id  # Disable a repository  
+
+# Cleaning up package cache
+dnf clean all                   # Clean all cached data  
+dnf autoremove                  # Remove unneeded dependencies  
+
+# Working with .rpm files
+rpm -ivh package.rpm            # Install an .rpm package manually  
+rpm -Uvh package.rpm            # Upgrade an installed .rpm package  
+rpm -e package                  # Remove a package  
+rpm -qa                         # List all installed packages  
+rpm -q package                  # Check if a package is installed  
+rpm -ql package                 # List files installed by a package  
+rpm -qc package                 # List configuration files of a package  
+
+# Dependency and package verification
+dnf deplist package             # Show package dependencies  
+rpm -V package                  # Verify installed package integrity  
+
+# Transaction history and rollback
+dnf history                     # Show transaction history with their transaction IDs
+dnf history info transaction_id # Show details of a specific transaction  
+dnf history undo transaction_id # Rollback a transaction  
+
+# Group operations
+dnf group list                  # List available package groups  
+dnf group install "group-name"  # Install a package group  
+dnf group remove "group-name"   # Remove a package group  
+
+# Older systems with yum
+yum update              # Update packages  
+yum install package     # Install a package  
+yum remove package      # Remove a package  
+rpm -ivh package.rpm    # Install an .rpm package manually  
+rpm -qa                 # List all installed packages  
+```
+

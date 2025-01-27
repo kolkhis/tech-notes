@@ -848,11 +848,60 @@ dpkg -l  # List all installed packages
 
 #### For **Red Hat-based systems** (like CentOS, Fedora):  
 ```bash  
-yum update  # Update packages  
-yum install package  # Install a package  
-yum remove package  # Remove a package  
-rpm -ivh package.rpm  # Install an .rpm package manually  
-rpm -qa  # List all installed packages  
+# Package updates and installations
+dnf update                    # Update all packages to the latest available versions  
+dnf upgrade                   # Upgrade installed packages, replacing old versions  
+dnf install package            # Install a package  
+dnf remove package             # Remove a package  
+dnf reinstall package          # Reinstall a package  
+dnf downgrade package          # Downgrade a package to an earlier version  
+
+# Searching and querying
+dnf search package             # Search for a package in repositories  
+dnf info package               # Get detailed information about a package  
+dnf list installed              # List all installed packages  
+dnf list available              # List available packages in the enabled repos  
+dnf list package                # Show details about a specific package  
+
+# Managing repositories
+dnf repolist                    # List enabled repositories  
+dnf repolist all                 # Show all available repositories  
+dnf config-manager --enable repo_id   # Enable a repository  
+dnf config-manager --disable repo_id  # Disable a repository  
+
+# Cleaning up package cache
+dnf clean all                   # Clean all cached data  
+dnf autoremove                   # Remove unneeded dependencies  
+
+# Working with .rpm files
+rpm -ivh package.rpm             # Install an .rpm package manually  
+rpm -Uvh package.rpm             # Upgrade an installed .rpm package  
+rpm -e package                   # Remove a package  
+rpm -qa                          # List all installed packages  
+rpm -q package                   # Check if a package is installed  
+rpm -ql package                  # List files installed by a package  
+rpm -qc package                  # List configuration files of a package  
+
+# Dependency and package verification
+dnf deplist package              # Show package dependencies  
+rpm -V package                   # Verify installed package integrity  
+
+# Transaction history and rollback
+dnf history                      # Show transaction history  
+dnf history info transaction_id  # Show details of a specific transaction  
+dnf history undo transaction_id  # Rollback a transaction  
+
+# Group operations
+dnf group list                     # List available package groups  
+dnf group install "group-name"     # Install a package group  
+dnf group remove "group-name"      # Remove a package group  
+
+# Older systems with yum
+yum update              # Update packages  
+yum install package     # Install a package  
+yum remove package      # Remove a package  
+rpm -ivh package.rpm    # Install an .rpm package manually  
+rpm -qa                 # List all installed packages  
 ```
 
 
