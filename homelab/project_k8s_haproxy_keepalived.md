@@ -33,6 +33,20 @@ Feats:
 Maybe:
 - SSL certs with Let's Encrypt
 
+## Overview
+Minimum of 5 VMs
+- 1 k8s control node
+- 2 k8s worker nodes
+- 2 haproxy load balancer nodes (running a VIP with keepalived)
+
+
+We'll need to install these tools on all of the nodes:
+* `kubeadm`: the command to bootstrap the cluster.
+* `kubelet`: the component that runs on all of the machines in your cluster and does 
+  things like starting pods and containers.
+* `kubectl`: the command line util to talk to your cluster.
+
+
 
 ## Set up the k8s Environment
 ### Spin up VMs
@@ -63,6 +77,129 @@ With Keepalived, you want 2 distinct machines to have a failover mechanism for H
 ### Install K8s
 We need `kubeadm`, `kubelet`, `kubectl` on each node.  
 
+### K8s install with package managers
+#### Install k8s on Rocky/RedHat-based
+[docs](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
+```bash
+# disable swap (required for k8s)
+sudo swapoff -a
+sed -i '/swap/d' /etc/fstab  # Permanently disable swap
+
+# make sure deps exist
+sudo dnf install -y yum-utils device-mapper-persistent-data lvm2
+
+# Add k8s repository
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el9-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+
+# install k8s components
+sudo dnf install -y kubelet kubeadm kubectl
+
+# start the kubelet service
+sudo systemctl enable --now kubelet
+
+# configure sysctl settings (kernel modules)  
+# Add a file in /etc/modules-load.d/ that specifies what kernel modules k8s needs 
+# the br_netfilter module allows the network bridge traffic to be passed through iptables.
+# required by some CNIs (flannel) and others that rely on bridge networking
+# also used when working with Kube-proxy
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+# use modprobe to add the `br_netfilter` Linux Kernel Module without needing a reboot
+sudo modprobe br_netfilter
+
+# /etc/sysctl.d/ stores config files for persistent kernel settings.  
+# This allows bridged ipv4 and ipv6 packets to be processed by iptables.  
+# Required for CNIs that rely on Linux bridges. 
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+# This modifies the kernel runtime parameters on the fly, and loads everything in the sysctl.d/*.conf files
+sudo sysctl --system
+```
+
+#### Install k8s on Ubuntu/Debian-based
+[docs](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
+```bash
+# disable swap (required for k8s)
+sudo swapoff -a
+sed -i '/swap/d' /etc/fstab
+
+# install deps
+sudo apt update
+sudo apt install -y apt-transport-https ca-certificates curl gnupg
+
+# add k8s repo
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring
+
+# overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
+
+# install k8s components
+sudo apt update
+sudo apt install -y kubelet kubeadm kubectl
+
+# enable the kubelet service
+sudo systemctl enable --now kubelet
+
+# configure sysctl settings  
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+# add the `br_netfilter` Linux Kernel Module
+sudo modprobe br_netfilter
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+sudo sysctl --system
+```
+
+#### Next Steps for both RedHat and Debian
+Verify the installtion
+```bash
+kubeadm version
+kubelet --version
+kubectl version --client
+
+# Generate bash completion script for kubectl 
+kubectl completion bash
+# enable kubectl autocompletion in .bashrc (requires `bash-completion`)
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+
+# if you have an alias for kubectl, you can extend the compltion to work with the alias
+echo 'alias k=kubectl' >> ~/.bashrc
+echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
+```
+
+* Initialize the cluster (done later).  
+
+### Set up `kubeconfig`
+```bash
+mkdir -p "$HOME/.kube"
+sudo cp /etc/kubernetes/admin.conf "$HOME/.kube/config"
+sudo chown $(id -u):$(id -g) "$HOME/.kube/config"
+```
+
+
+
 
 ### Initialize k8s Cluster
 Initialize the k8s cluster on `control-node1`.  
@@ -84,24 +221,29 @@ You can technically pick another private range but most Flannel docs uses `10.24
 ---
 
 ### Install a CNI plugin (flannel)
-
+The CNI needs to be installed on all of the nodes that are running kubernetes.  
 
 ```bash
 kubectl apply -f \
     https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
+Or, if you want to use Calico:
+```bash
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+```
+
 ---
 More info:  
-A CNI plugin is responsible for setting up network interfaces in Linux containers and 
+A CNI plugin is in charge of setting up network interfaces in Linux containers and 
 assigning IP addresses to those containers.  
 
 In k8s, when pods come online the CNI plugin automatically creates network interfaces
-and routes inside each node, as well as ensures that all pods can communicate with
-each other (even across nodes) without requiring NAT.  
+and routes inside each node, and ensures that all pods can communicate with
+each other (even across different k8s nodes) without needing NAT.  
 
-Flannel is one of the CNI plugin options. Some others are Calico, Weave Net, Cilium,
-etc.  
+Flannel is one of the CNI plugin options. Some others are Calico, Weave Net, Cilium, etc.  
+
 It helps by providing the network overlay so that each pod gets its own unique IP
 address within the `10.244.0.0/24` range.  
 Without a CNI plugin, pods wouldn't be able to communicate across node boundaries seamlessly.  
@@ -233,7 +375,7 @@ backend k8s_backend
 ```
 * `frontend`: Receives incoming requests on port 80.  
 * `backend`: Sends the requests to the kubernetes nodes on the NodePort.  
-(change IP addresses accordingly)
+(change IP addresses accordingly)  
 
 Then restart HAProxy
 ```bash
@@ -366,3 +508,44 @@ At this point, the `haproxy-lb1` *should* hold the Virtual IP `192.168.1.250` (o
 - In HAProxy you can enable the `stats` page to monitor traffic and do node healthchecks.  
 - Make sure the NICs on HAProxy servers have static IP addresses so the VIP stays in
   the same subnet
+
+* kubevip
+
+* Cloudflare to get into cluster  
+    * Cloudflare zero trust 
+* Traefik proxy
+* Authentik SSO (internal authentication)
+
+---
+
+* nfs storage (csi-driver for synology)
+
+---
+
+* `kubectl convert`: A plugin for kubectl which allows you to convert manifests
+  between different api versions. 
+    * Install with:
+      ```bash
+      # download the latest release
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl-convert"
+
+      # Optional: validate the binary
+      # download the cksum
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl-convert"
+      # check it
+      echo "$(cat kubectl-convert.sha256) kubectl-convert" | sha256sum --check
+
+      # install kubectl-convert
+      sudo install -o root -g root -m 0755 kubectl-convert /usr/local/bin/kubectl-convert
+      # verify installation
+      kubectl convert --help
+
+      # clean up installation files
+      rm kubectl-convert kubectl-convert.sha256
+      ```
+
+## Resources
+* [Installing `kubeadm`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+* [Installing `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
+* [Installing all 3 `kube` tools](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl)
+
