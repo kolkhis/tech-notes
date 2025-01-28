@@ -1,5 +1,10 @@
 # GNU Privacy Guard (GPG)
 
+GPG (GNU Privary Guard) implements the PGP (Pretty Good Privacy) standard.  
+It's used to encrypt and decrypt data.  
+It's also used for integrity validation for security.  
+
+
 ## Table of Contents
 * [Generating a New GPG Key](#generating-a-new-gpg-key) 
 * [Exporting the Public Key](#exporting-the-public-key) 
@@ -10,20 +15,37 @@
     * [Using GPG Agent](#using-gpg-agent) 
     * [GPG in Different Environments](#gpg-in-different-environments) 
 
+
+## Installing GPG
+GPG is usually already pre-installed on most major Linux distros.  
+
+If you need to update or install GPG, you can use your package manager.  
+Install the `gnupg` package.  
+```bash
+# Debian-based:
+sudo apt-get update && sudo apt-get install gnupg
+# RedHat-based:
+dnf install gnupg
+```
+
+
 ## Generating a New GPG Key
+Generate a new GPG key pair (public/private key pair).  
 
 1. Run the command to generate a new key:  
     ```bash  
     gpg --full-generate-key  
     ```
 2. Specify the type. RSA (default) is good. 
-3. Specify key size (4096)  
-4. Enter when key will expire   
+3. Specify key size (4096 is recommended).    
+4. Specify an expiration date for the key.  
     * This is optional. You can leave it blank if you don't want the key to expire.  
-5. Verify  
+5. Confirm.  
 6. Enter your user info 
     * **Note**: Use the email associated with your Github account to use with Github. 
 7. Set a password
+
+
 
 ## Exporting the Public Key
 
