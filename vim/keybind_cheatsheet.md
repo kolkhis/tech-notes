@@ -52,6 +52,10 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
     * Uses the system default handler, by calling `vim.ui.open()`.
     * Returns (doesn't show) an error message on failure.
 * `gue` will lowercase all characters from the cursor to the end of the word.
+* `<C-a>`: Increment the number under the cursor.  
+    * `g<C-a>` (visual): Increment the first number on each line in the selected area.  
+* `<C-x>`: Decrement the number under the cursor.  
+    * `g<C-x>` (visual): Decrement the first number on each line in the selected area.  
 
 
 ## Making Custom Keybindings  
