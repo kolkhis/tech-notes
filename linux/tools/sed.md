@@ -3,12 +3,14 @@
 The `sed` tool is a hallmark in Linux systems.  
 It's used to manipulate text using regular expressions.  
 
+
 ## Table of Contents
 * [Common Options](#common-options) 
 * [Edit a file in-place](#edit-a-file-in-place) 
 * [Matching a Line, then Performing a Substitution](#matching-a-line-then-performing-a-substitution) 
 * [Editing from Stdout with Pipes](#editing-from-stdout-with-pipes) 
 * [Capture Groups](#capture-groups) 
+* [Different Commands](#different-commands) 
 
 
 ## Common Options
@@ -39,6 +41,15 @@ sudo sed -i 's/old/new/g' /etc/fstab
 You can perform substitutions on a file that only match a specific line.  
 The first pattern started with `/` will match a line.  
 Then you can specify `s/` to start a substitution.  
+
+Basic syntax:
+```bash
+sed -i '/pattern/s/old/new/' file.txt
+```
+* `'/pattern/s/old/new/`: Replace `old` with `new`, ONLY on lines that match `pattern`.  
+
+---
+
 ```bash
 sed -i -E '/find this/s/find/change/g' somefile.txt
 ```
@@ -79,3 +90,27 @@ cat somefile.txt | sed -E 's/(old)/\1new/g'
 # oldnew
 # oldnew
 ```
+
+## Different Commands
+The most popular command used in `sed` is the `s` (substitute) command.  
+```bash
+sed -i '/pattern/s/old/new' file.txt
+```
+* This will replace `old` with `new` on any lines that match `pattern`.  
+
+But you can use other commands, like `d` (delete) to remove lines or `c` to change lines.  
+
+### Delete Whole Lines
+```bash
+sed -i '/pattern/d' file.txt
+```
+* `'/pattern/d'` This will delete any lines that match the pattern.  
+
+### Change Whole Lines
+To change a whole line that matches a pattern:
+```bash
+sed -i '/pattern/c New text for the line' file.txt
+```
+* This will match the line containing `pattern`, delete that line, then add the text
+  that comes after `c`.  
+* Any whitespace between the `c` and the start of the text will not be used.  
