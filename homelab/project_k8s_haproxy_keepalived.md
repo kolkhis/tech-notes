@@ -30,8 +30,28 @@ Feats:
 
 ---
 
-Maybe:
-- SSL certs with Let's Encrypt
+TODO:
+- Add more Control Plane nodes (2 more?) for real HA
+- Ingress controller 
+    - `Traefix`, `Nginx`, `HAProxy Ingress`
+- K8s API Server load balancing
+    - HAProxy only balances traffic to worker nodes via NodePort
+    - Set up HAProxy to handle PAI server traffic (`kube-apiserver`)
+    - Add an HAproxy frontend for the k8s api server (`6443`) and point it to control nodes
+- Add SSL termination
+    - SSL certs with Let's Encrypt
+- Add storage and Persistent Volumes (PVs) 
+    - NFS storage (CSI driver for Synology)
+
+Consider:
+- Kube-VIP v. Keepalived?
+- Cloudflare / Zero Trust
+
+Deps:
+- A container runtime interface (CRI)
+    - Containerd
+    - CRI-O
+
 
 ## Overview
 Minimum of 5 VMs
@@ -66,12 +86,10 @@ Add more load balancers to scale if more redundancy is needed.
 
 ---
 
-In a prod-like HA setup, the load balancers (HAProxy) typically run on separate hosts
-from the worker nodes.  
-If a worker node crashes or is busy, you don't want that to bring down the load
-balancer.  
-Dedicated load balancer VMs are easier to manage, configure, or reboot without
-affecting the worker pods.  
+In a prod-like HA setup, the load balancers (HAProxy) typically run on separate hosts from the worker nodes.  
+If a worker node crashes or is busy, you don't want that to bring down the load balancer.  
+Dedicated load balancer VMs are easier to manage/configure/reboot without affecting 
+the worker pods.  
 With Keepalived, you want 2 distinct machines to have a failover mechanism for HA.  
 
 ### Install K8s
@@ -85,6 +103,13 @@ We need `kubeadm`, `kubelet`, `kubectl` on each node.
 sudo swapoff -a
 sed -i '/swap/d' /etc/fstab  # Permanently disable swap
 
+# set selinux to permissive
+if [[ $(getenforce | tr '[:upper:]' '[:lower:]') == enforcing ]]; then
+    sudo setenforce 0
+    sudo sed -i -E 's/^(SELINUX=)enforcing$/\1permissive/' /etc/selinux/config
+fi
+
+
 # make sure deps exist
 sudo dnf install -y yum-utils device-mapper-persistent-data lvm2
 
@@ -92,11 +117,11 @@ sudo dnf install -y yum-utils device-mapper-persistent-data lvm2
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el9-x86_64
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.32/rpm
 enabled=1
 gpgcheck=1
 repo_gpgcheck=0
-gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
 EOF
 
 
@@ -106,28 +131,105 @@ sudo dnf install -y kubelet kubeadm kubectl
 # start the kubelet service
 sudo systemctl enable --now kubelet
 
+##################### Configuration ####################
 # configure sysctl settings (kernel modules)  
-# Add a file in /etc/modules-load.d/ that specifies what kernel modules k8s needs 
+# Add a file in /etc/modules-load.d/ that specifies what kernel modules k8s needs.
 # the br_netfilter module allows the network bridge traffic to be passed through iptables.
 # required by some CNIs (flannel) and others that rely on bridge networking
 # also used when working with Kube-proxy
+# The overlay module enables OverlayFS, which is used to manage container layers.
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
+overlay
 EOF
 
-# use modprobe to add the `br_netfilter` Linux Kernel Module without needing a reboot
+# use modprobe to add the `br_netfilter` and `overlay` Linux Kernel Modules without needing a reboot
 sudo modprobe br_netfilter
+sudo modprobe overlay
 
 # /etc/sysctl.d/ stores config files for persistent kernel settings.  
 # This allows bridged ipv4 and ipv6 packets to be processed by iptables.  
 # Required for CNIs that rely on Linux bridges. 
+# Also enable IP forwarding
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
 EOF
 
 # This modifies the kernel runtime parameters on the fly, and loads everything in the sysctl.d/*.conf files
 sudo sysctl --system
+
+# open necessary ports in firewalld
+if [[ $(sudo systemctl is-active firewalld) == 'active' ]]; then
+    printf "Opening necessary ports in firewalld.\n"
+    case $(hostname) in 
+        *control*|*master*)
+            sudo firewall-cmd --permanent --add-port={6443,2379,2380,10250,10251,10252,10257,10259,179}/tcp
+            sudo firewall-cmd --permanent --add-port=4789/udp
+            sudo firewall-cmd --reload
+            ;;
+        *worker*)
+            sudo firewall-cmd --permanent --add-port={179,10250,30000-32767}/tcp
+            sudo firewall-cmd --permanent --add-port=4789/udp
+            sudo firewall-cmd --reload
+            ;;
+        *)
+    esac
+fi
+
+# Install containerd
+printf "Adding the Docker-ce repository for containerd.\n"
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+sudo dnf install -y containerd.io
+
+```
+##### Firewalld Rules
+* Calico: Uses `BGP` (Port `179/tcp`)
+* Flannel: Uses VXLAN (Port `4789/udp`)
+    * Flannel can also use `8472/udp` for other backend modes (`host-gw`, `IPIP`),
+      but VXLAN is the default.  
+
+The ports being opened:
+- Control Node Only
+    - `6443/tcp`: Kubernetes API server (control plane)
+    - `2379-2380/tcp`: `etcd` database communication
+    - `10251/tcp`: KLube-scheduler
+    - `10257/tcp`: `kube-apiserver` authentication webhook
+    - `10259/tcp`: `kube-controller` authentication webhook
+- Control+Worker
+    - `179/tcp`: BGP (for Calico networking, not needed with Flannel) 
+    - `4789/udp`: VXLAN (Overlay networking, used by Flannel and Calico)
+    - `10250/tcp`: Kubelet API (for node communication)
+* Worker Nodes Only
+    - `30000-32767/tcp`: NodePort Services (worker nodes)
+
+```
+179/tcp
+2379/tcp
+2380/tcp
+6443/tcp
+10250/tcp
+10251/tcp
+10252/tcp
+10257/tcp
+10259/tcp
+4789/udp
+```
+
+Masquerading:
+* `firewall-cmd --add-masquerade --permanent`
+    * Adds a `MASQUERADE` rule to `iptables` (used by firewalld)
+    * Ensures that packets exiting the node can use the node's external IP.  
+
+---
+
+Verification:
+```bash
+# verify iptables rules allow inter-node traffic
+sudo iptables -L -n -v | grep MASQUERADE
+# if flannel isn't working, maybe try forwarding explicitly
+sudo iptables -P FORWARD ACCEPT
 ```
 
 #### Install k8s on Ubuntu/Debian-based
@@ -159,10 +261,12 @@ sudo systemctl enable --now kubelet
 # configure sysctl settings  
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
+overlay
 EOF
 
-# add the `br_netfilter` Linux Kernel Module
+# add the `br_netfilter`/`overlay` Linux Kernel Modules
 sudo modprobe br_netfilter
+sudo modprobe overlay
 
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -188,6 +292,8 @@ echo 'source <(kubectl completion bash)' >> ~/.bashrc
 echo 'alias k=kubectl' >> ~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
 ```
+
+
 
 * Initialize the cluster (done later).  
 
@@ -262,8 +368,8 @@ kubeadm join ...
 
 ---
 More info:  
-When initializing k8s with `kubeadm init`, near the end it prints instructions that
-look something like:
+When initializing k8s with `kubeadm init`, near the end it prints join instructions.  
+
 ```bash
 kubeadm join 192.168.4.50:6443 --token abcdef.0123456789abcdef \
     --discovery-token-ca-cert-hash sha256:abcdef123456789
