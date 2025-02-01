@@ -2,7 +2,6 @@
 
 # Linux Command Cheatsheet  
 
-
 ## Table of Contents
 * [CLI Tools to Become Familiar With](#cli-tools-to-become-familiar-with) 
 * [Tools to Check Out for Networking/Admin](#tools-to-check-out-for-networkingadmin) 
@@ -120,7 +119,7 @@
     * [Show IP Address of the current machine](#show-ip-address-of-the-current-machine) 
 * [Get the Full Path of the Current Script](#get-the-full-path-of-the-current-script) 
 * [rmdir](#rmdir) 
-* [BASH_REMATCH](#bashrematch) 
+* [BASH_REMATCH](#bash_rematch) 
 
 
 ## CLI Tools to Become Familiar With  
@@ -1014,6 +1013,12 @@ sed
 `diff` - Compare two files line by line  
 `comm` - Compare two sorted files line by line  
 `sort` - Sort a file line by line, write to stdout  
+
+- `sort -k 4`: Sort by column (column 4 here).  
+```bash
+ps aux | sort -k 4
+ps -eo lstart,cmd,pid,ppid
+```
 
 
 ## Loops  
