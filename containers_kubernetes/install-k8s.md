@@ -120,6 +120,7 @@ This is for k8s v1.32.
 ```bash
 # disable swap (required for k8s)
 sudo swapoff -a
+# delete the line in /etc/fstab that contains 'swap'
 sed -i '/swap/d' /etc/fstab
 
 # install deps
@@ -180,6 +181,14 @@ echo 'source <(kubectl completion bash)' >> ~/.bashrc
 # if you have an alias for kubectl, you can extend the compltion to work with the alias
 echo 'alias k=kubectl' >> ~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
+
+
+	    # cat <<- 'EOF' >> ~/.bashrc
+            # source <(kubectl completion bash)
+            # alias k=kubectl
+            # complete -o default -F __start_kubectl k
+		# EOF
+
 ```
 
 
