@@ -230,6 +230,12 @@ Main differences:
 * `ps aux` does not display the PPID.  
 * `ps -ef` does not display CPU/memory usage of the processes. Also, it includes processes from all users but does not explicitly show detached terminal processes.  
 
+
+You can also define what information is printed with `-eo`:
+```bash
+ps -eo lstart,cmd,pid,ppid
+```
+
 #### Listing Files and Ports Opened by Processes
 Either use `ps -ef` or `ps aux` to show the PID of the process in question.  
 Then, use `lsof -p` to show files that are in use by that processes.  
