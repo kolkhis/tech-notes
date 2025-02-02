@@ -2,8 +2,6 @@
 Network storage is different from Direct-Attached Storage (DAS), which is local-only 
 storage only accessible to one machine.  
 
-
-
 ## Table of Contents
 * [Types of Network Storage](#types-of-network-storage) 
     * [Network-Attached Storage (NAS)](#network-attached-storage-nas) 
@@ -16,9 +14,7 @@ storage only accessible to one machine.
     * [Features of an NFS DCNAS Volume](#features-of-an-nfs-dcnas-volume) 
     * [Common Use Cases](#common-use-cases) 
     * [DCNAS Platforms](#dcnas-platforms) 
-    * [Setting up an NFS DCNAS Volume](#setting-up-an-nfs-dcnas-volume) 
-
-
+    * [Mounting an NFS DCNAS Volume](#mounting-an-nfs-dcnas-volume) 
 
 ## Types of Network Storage
 
