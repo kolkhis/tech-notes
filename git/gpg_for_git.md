@@ -1,6 +1,15 @@
 # GPG for Git  
 For more information on just GPG, see `../linux/tools/gpg.md`
 
+## Table of Contents
+* [Adding a GPG Key to Github](#adding-a-gpg-key-to-github) 
+    * [Generate a New GPG Key](#generate-a-new-gpg-key) 
+    * [Add the New GPG Key to Github](#add-the-new-gpg-key-to-github) 
+* [Signing Commits with GPG](#signing-commits-with-gpg) 
+* [Plain GPG Protected Credential Helper](#plain-gpg-protected-credential-helper) 
+    * [Using GPG for Github Authentication](#using-gpg-for-github-authentication) 
+* [Setting up a GPG Agent](#setting-up-a-gpg-agent) 
+
 ## Adding a GPG Key to Github  
 
 ### Generate a New GPG Key  
@@ -45,8 +54,8 @@ First, you'll need to generate a GPG key before you can add it to Github.
     * On Github, go to Profile -> Settings -> SSH and GPG keys.  
     * Select "Add GPG Key", and paste your public key.  
 
-## Signing Commits with GPG  
 
+## Signing Commits with GPG  
 1. Configure Git to use your GPG key.  
     * Set your `signingkey` in your `.gitconfig`:  
       ```bash  
@@ -72,5 +81,31 @@ You have to set up a credential helper and then set up a password manager.
   ```bash  
   pass init <Your-Key-ID>  
   ```
+
+## Setting up a GPG Agent
+By default, GPG requires a passphrase every time you use it (e.g., to sign a commit).  
+You're able to cache the passphrase by using `gpg-agent`.  
+To enable caching, set up `gpg-agent` by adding a few entries into `~/.gnupg/gpg-agent.conf`:  
+```bash
+mkdir ~/.gnupg
+echo "default-cache-ttl 600" >> ~/.gnupg/gpg-agent.conf
+echo "max-cache-ttl 7200" >> ~/.gnupg/gpg-agent.conf
+```
+* `default-cache-ttl 600`: Caches the passphrase for 10 minutes.  
+* `max-cache-ttl 7200`: Maximum cache duration of 2 hours.  
+
+Restart the GPG agent:
+```bash
+gpgconf --kill gpg-agent
+gpgconf --launch gpg-agent
+```
+
+---
+If you're using GPG to sign Git commits, make sure Git is using `gpg-agent` by adding
+an entry into `~/.bashrc`:
+```bash
+export GPG_TTY=$(tty)
+```
+Reload bash with `exec bash -l` or `source ~/.bashrc` and you're set.  
 
 
