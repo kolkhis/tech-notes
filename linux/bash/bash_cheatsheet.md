@@ -1636,5 +1636,65 @@ rmdir -p ~/dirs/to/delete
 The `BASH_REMATCH` variable can be used inside scripts that utilize regular
 expressions.  
 
+This is an array in which Bash stores any regex matches made with the `=~` operator.  
+```bash
+if [[ $SOMEVAR =~ \w+ ]]; then
+    echo "${BASH_REMATCH[0]}"
+fi
+```
 
+The `BASH_REMATCH` Array:
+- After a successful regex match, Bash stores the results in an array named `BASH_REMATCH`.
+- `BASH_REMATCH[0]` contains the entire substring that matched the regex.
+- `BASH_REMATCH[1]`, `BASH_REMATCH[2]`, etc. contain the captured submatches from
+  parenthesized groups in the order they appear.
+- `BASH_REMATCH` is overwritten after each regex match.
+- If there are no parentheses (capture groups), only the full match (`BASH_REMATCH[0]`) is stored.
+- Bash uses Extended Regular Expressions (ERE) by default, so you generally don’t
+  need to escape metacharacters as you would in Basic Regular Expressions (BREs).
+
+- The regex operator (`=~`) only returns the first match.
+    * Bash doesn't have a built-in mechanism for global matching like some other languages.
+
+
+### Bash Regex Examples with `BASH_REMATCH`
+```bash
+#!/bin/bash
+# Example 1: Basic Regex Match with a Single Capture Group
+# This example matches the word "World" in the string and captures it.
+input_string="Hello, World!"
+if [[ $input_string =~ (World) ]]; then
+    echo "Full match: ${BASH_REMATCH[0]}"    # Entire substring that matched (i.e., "World")
+    echo "Captured group 1: ${BASH_REMATCH[1]}"  # Content of the first capture group
+fi
+
+echo "-------------------------------------------"
+
+# ---------------------------------------------------------------------------
+# Example 2: Regex Match with Multiple Capture Groups
+#
+# This example extracts a username and an ID number from a formatted string.
+input_string2="User: alice, ID: 007"
+if [[ $input_string2 =~ User:\ ([a-zA-Z]+),\ ID:\ ([0-9]+) ]]; then
+    echo "Full match: ${BASH_REMATCH[0]}"  # Entire matched portion ("User: alice, ID: 007")
+    echo "Username: ${BASH_REMATCH[1]}"    # First capture group (letters for the username)
+    echo "User ID: ${BASH_REMATCH[2]}"     # Second capture group (digits for the ID)
+fi
+
+echo "-------------------------------------------"
+
+# ---------------------------------------------------------------------------
+# Example 3: Iterating Over Multiple Matches in a String
+#
+# Bash’s regex matching with BASH_REMATCH only captures the first match.
+# To process all words in a string, you can use a loop that repeatedly extracts the first match.
+text="one two three"
+while [[ $text =~ ([^[:space:]]+) ]]; do
+    echo "Found word: ${BASH_REMATCH[1]}"  # Captures a single word (non-space characters)
+
+    # Remove the matched word and any following space from the text.
+    text=${text#*"${BASH_REMATCH[1]}"}     # Remove the part up to and including the matched word
+    text=${text#" "}                       # Remove leading space (if present)
+done
+```
 
