@@ -368,7 +368,7 @@ kubeadm join ...
 
 ---
 More info:  
-When initializing k8s with `kubeadm init`, near the end it prints join instructions.  
+When initializing k8s with `kubeadm init`, near the end it prints instructions on how to join worker nodes with the control node.  
 
 ```bash
 kubeadm join 192.168.4.50:6443 --token abcdef.0123456789abcdef \
