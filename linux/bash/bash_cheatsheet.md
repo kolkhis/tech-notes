@@ -1646,6 +1646,7 @@ fi
 The `BASH_REMATCH` Array:
 - After a successful regex match, Bash stores the results in an array named `BASH_REMATCH`.
 - `BASH_REMATCH[0]` contains the entire substring that matched the regex.
+    - This is the only element that is set without capture groups.  
 - `BASH_REMATCH[1]`, `BASH_REMATCH[2]`, etc. contain the captured submatches from
   parenthesized groups in the order they appear.
 - `BASH_REMATCH` is overwritten after each regex match.
