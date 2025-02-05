@@ -327,3 +327,30 @@ GPG uses `.kbx` files (keybox files) and `.asc` files (ASCII-armored files).
 * Sign files: `gpg --armor --sign file.txt`
 * Verify signatures: `gpg --verify file.txt.asc`
 
+## Setting up a GPG Agent
+By default, GPG requires a passphrase every time you use it (e.g., to sign a commit).  
+You're able to cache the passphrase by using `gpg-agent`.  
+To enable caching, set up `gpg-agent` by adding a few entries into `~/.gnupg/gpg-agent.conf`:  
+```bash
+mkdir ~/.gnupg
+echo "default-cache-ttl 600" >> ~/.gnupg/gpg-agent.conf
+echo "max-cache-ttl 7200" >> ~/.gnupg/gpg-agent.conf
+```
+* `default-cache-ttl 600`: Caches the passphrase for 10 minutes.  
+* `max-cache-ttl 7200`: Maximum cache duration of 2 hours.  
+
+Restart the GPG agent:
+```bash
+gpgconf --kill gpg-agent
+gpgconf --launch gpg-agent
+```
+
+---
+If you're using GPG to sign Git commits, make sure Git is using `gpg-agent` by adding
+an entry into `~/.bashrc`:
+```bash
+export GPG_TTY=$(tty)
+```
+Reload bash with `exec bash -l` or `source ~/.bashrc` and you're set.  
+
+
