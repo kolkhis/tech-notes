@@ -1618,6 +1618,41 @@ Everything you type when the terminal is suspended is buffered.
 That means when you use `Control-Q` to resume the terminal, everything you typed
 will be sent to the shell.  
 
+## IFS (Internal Field Separator)
+
+`IFS`: The Internal Field Separator.
+This is a variable that's used for handling word splitting after expansion.  
+It's also used to split lines into words with the `read` builtin command.
+
+The default value of the `IFS` variable is `<space><tab><newline>`.
+
+E.g., when `$*` is called, the `IFS` variable is used to check how to join all the
+arguments together. It uses the first value of the `IFS`, which is a space by default.  
+
+### Using IFS to Manipulate how Data is Joined
+Take the script:
+```bash
+#!/bin/bash
+printf "%s\n" "$*"
+```
+This just prints all the arguments to the script joined into one string.  
+
+Call the script with `./script hello world` and you get:  
+```plaintext
+hello world
+```
+
+Change the script to unset `IFS`:
+```bash
+#!/bin/bash
+IFS=
+printf "%s\n" "$*"
+```
+Call the script the same way again. The output changes:  
+```plaintext
+helloworld
+```
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
