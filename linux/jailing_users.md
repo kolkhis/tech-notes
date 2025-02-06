@@ -3,6 +3,16 @@
 When a user enters your system via SSH, you may not want them to have full access to
 everything.  
 
+## Table of Contents
+* [sshd_config](#sshd_config) 
+* [Setting up the Chroot Directory](#setting-up-the-chroot-directory) 
+* [Setting Login Shell as a Script](#setting-login-shell-as-a-script) 
+* [Jailed Programs](#jailed-programs) 
+* [How to Build a Chroot Jail](#how-to-build-a-chroot-jail) 
+    * [Setting up the Chroot Jail](#setting-up-the-chroot-jail) 
+    * [Populating the Jail](#populating-the-jail) 
+* [Example: Jail users with a Script](#example-jail-users-with-a-script) 
+
 ## sshd_config
 You can specify rules for when a user SSH's into your box in `/etc/sshd_config`:
 ```bash
@@ -113,4 +123,7 @@ fi
     - `-p "Type where yo uwant to go:`: The prompt that the user will see.  
     - `-t 5`: Timeout after 5 seconds.  
     - `RESPONSE`: Save the user's input into a variable with this name.  
+
+## Resources
+* [Chroot Jail ProLUG Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
 
