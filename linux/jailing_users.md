@@ -90,3 +90,27 @@ done
 
 * SSH requires the file(s) `/dev/random`/`/dev/urandom`.  
     * If the jailed process needs SSH, make sure these are available.  
+
+
+## Example: Jail users with a Script
+
+You can specify a script as a user's login shell, rather than /bin/bash.  
+You can run a script when a user logs in, and then shut them down if they don't type
+something in a certain amount of time.  
+
+Ex:
+```bash
+#!/bin/bash
+read -r -p "Type where you want to go: " -t 5 RESPONSE
+if [[ -z $RESPONSE ]]; then
+    printf "Goodbye!\n"
+else
+    printf "Travelling to %s\n" "${RESPONSE}"
+fi
+```
+* `read -r -p "Type where you want to go: " -t 5 RESPONSE`:
+    - `-r` Sanitizes input - doesn't allow escaped chars.  
+    - `-p "Type where yo uwant to go:`: The prompt that the user will see.  
+    - `-t 5`: Timeout after 5 seconds.  
+    - `RESPONSE`: Save the user's input into a variable with this name.  
+
