@@ -114,3 +114,11 @@ sed -i '/pattern/c New text for the line' file.txt
 * This will match the line containing `pattern`, delete that line, then add the text
   that comes after `c`.  
 * Any whitespace between the `c` and the start of the text will not be used.  
+
+
+## Case-insensitive Matching
+The Linux version of `sed` allows for case insensitive matching with the `i` flag at
+the end of the pattern.  
+```bash
+sed -i 's/sometxt/replacement/i' file.txt
+```
