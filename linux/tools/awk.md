@@ -536,7 +536,30 @@ journalctl -u ssh |
 ```
 
 
+## Looping over a Single Line
+Use a `for` loop to loop over a single line when piping through `awk`:
+```bash
+echo "$thing" | awk -F '[ =]' '{
+    for(i=1; i< NF; i++) 
+    if($i == "ansible_host") print $(i+1) }'
+```
+* `-F '[ =]`: Use **either** a space or equals sign as the field separator.  
 
+
+### Example: Extracting the Node IP from an Ansible Host file
+```bash
+while read -r l; do
+# E.g., Extracting the node IP from an ansible host file:
+    NODE=$(printf "%s" "$l" | awk -F '[ =]' '{ for(i=1; i< NF; i++) if($i == "ansible_host") print $(i+1) }')
+done < ./hosts
+```
+* `-F '[ =]`: Use **either** a space or equals sign as the field separator.  
+* `{ for (i=1; i<NF; i++)`: 
+    - The `{` opens the main block meaning it will start processing the input. 
+    - `for(i=1; i<NF; i++)`: A C-style loop that will go from `1` to the number of
+      fields there are (separated by either spaces or `=`).  
+* `if($i == "ansible_host")`: Checks if the current field (held at `$i`) is `"ansible_host"`.  
+    * `print $(i+1)`: Print the field right after `"ansible_host"`.  
 
 ## Using Awk as an Interpreter
  
