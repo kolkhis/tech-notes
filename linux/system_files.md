@@ -309,10 +309,85 @@ Logs package installation and updates.
 
 
 
+## Files in `/proc`
+
+The purpose of each of these Files in `/proc`:
+```bash
+# System Hardware and Memory
+/proc/fb # Framebuffer device (graphics display)
+/proc/dma  # Active Direct Memory access (DMA) channels used by device
+/proc/iomem  # Memory map of devices and system memory regions. Use for debugging memory-mapped devices
+/proc/ioports # List of I/O ports used by system devices (serial ports, PCI devices, etc)
+/proc/meminfo  # Detailed info on memory usage (incl. free, total, cached memory)
+/proc/mtrr     # Memory Type Range Registers (MTRRs) used for CPU cache optimizations
+/proc/vmallocinfo   # Details about memory allocated via `vmalloc()`. Helps with debugging memory usage.  
+/proc/pagetypeinfo  # Memory allocation and fragmentation details at the page level
+/proc/buddyinfo   # Memory fragmentation and allocation by the buddy system allocator
+/proc/zoneinfo    # Detailed memory stats for each NUMA zone (RAM region)
+/proc/kpagecount  # Number of references (users) for each physical memory page
+/proc/kpageflags  # Flags associated with each memory page (e.g., free, allocated, swap)
+/proc/kpagecgroup # Cgroup related memory usage stats for each apge
+
+
+# CPU and Performance Monitoring
+/proc/cpuinfo    # Detailed CPU information, including model, cores, cache size, and flags.
+/proc/loadavg    # System load averages over 1, 5, and 15 minutes, plus running processes.
+/proc/stat       # Overall system statistics, including CPU usage, interrupts, and context switches.
+/proc/vmstat     # Virtual memory statistics (page faults, swap usage, I/O operations).
+/proc/schedstat  # Scheduler statistics for CPU task scheduling performance.
+
+
+# Storage & Swap
+/proc/swaps       # Information about active swap spaces.
+/proc/diskstats   # Statistics for each disk device (reads, writes, I/O time, etc.).
+/proc/partitions  # Information about detected partitions.
+
+
+# Kernel & System Information
+/proc/modules           # List of currently loaded kernel modules (drivers).
+/proc/version           # Kernel version, build date, and compiler used.
+/proc/version_signature # More detailed kernel version information (used by some distros).
+/proc/cmdline           # Kernel boot parameters (passed by bootloader).
+/proc/kcore             # A virtual file representing the entire system memory (use with gdb for kernel debugging).
+/proc/filesystems   # List of supported filesystems in the kernel.
+/proc/execdomains   # Execution domain support (for different binary formats).
+/proc/sysrq-trigger # Allows manually triggering a SysRq key function (e.g., force kernel panic, reboot).
+/proc/bootconfig    # Kernel boot configuration settings.
+
+
+# Security & Encryption
+/proc/crypto     # List of available cryptographic ciphers supported by the kernel.
+/proc/keys       # Shows currently loaded kernel keys (used in authentication, encryption).
+/proc/key-users  # Statistics about kernel key usage per user.
+
+
+# Process & Locking Mechanisms
+/proc/locks          # Active file locks on the system (used by flock and advisory locking).
+/proc/softirqs       # Soft interrupt statistics (used in networking, disk I/O).
+/proc/interrupts     # Statistics on hardware interrupts, including CPU usage per IRQ.
+/proc/timer_list     # List of active kernel timers (for debugging time-based operations).
+
+
+# System Services & Containers
+/proc/cgroups    # Lists active cgroups (control groups for resource management).
+/proc/mdstat     # Status of RAID arrays managed by mdadm.
+
+
+# Logging & Debugging
+/proc/kmsg       # Kernel log messages (similar to dmesg).
+/proc/consoles   # Active console devices (e.g., tty, serial console).
+/proc/kallsyms   # Kernel symbols table (used for debugging, similar to System.map).
+
+
+# Miscellaneous
+/proc/misc       # Miscellaneous character devices.
+/proc/uptime     # System uptime (first value) and idle time (second value).
+```
 
 ## Other
 * `/etc/services`: Shows all the default ports for different services.  
 * `/etc/protocols`: Shows the different types of internet protocols.  
+
 
 
 
