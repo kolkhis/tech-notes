@@ -361,6 +361,38 @@ done
 # Key quoted: 'HTTP'
 ```
 
+## Check if an Element Exists in an Array
+You'll have to use a loop or associative array if you want to check if an element
+exists in an array.  
+
+### Using an Associate Array to Check if Element Exists
+This is the faster method.  
+```bash
+# Create the array
+declare -A COMPLETED
+something="Let's check for this"
+# Add something to the array
+COMPLETED[something]=true
+if "${COMPLETED[something]}"; then
+    printf "element exists\n"
+else
+    printf "Element doesn't exist\n"
+fi
+```
+
+### Using a Loop to Check if Element Exists
+Slower but still works.  
+```bash
+for item in "${ARRAY[@]}"; do
+    if [[ $item == "the thing you're checking for" ]]; then
+        printf "Element exists\n"
+    else
+        printf "Element doesn't exist\n"
+    fi
+done
+```
+
 ###### See [parameter transformation](./parameter_transformation.md) for a full list of options.  
+
 
 
