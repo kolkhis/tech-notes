@@ -12,6 +12,7 @@ You build a wall brick by brick.
     * [GENERAL](#general) 
     * [HANDS-ON](#hands-on) 
     * [ACADEMIC](#academic) 
+    * [6 Certs you can get for free](#6-certs-you-can-get-for-free) 
 
 * List of cloud native tools for DevOps/SRE/Platform Engineers: 
   [Cloud Native Landscape - landscape.cncf.io](https://landscape.cncf.io)
@@ -120,3 +121,20 @@ Career:
     * CISSP 
     * CCSP
 
+
+### 6 Certs you can get for free:
+
+* API Lifecycle and Security - https://apiacademy.learnupon.com/ 
+    - and our study guide: https://discord.com/channels/611027490848374811/726261850223935568/971198030076313629
+* Gremlin Chaos Engineering - https://www.gremlin.com/community/tutorials/chaos-engineering-the-history-principles-and-practice
+* Six Sigma White Belt - https://www.sixsigmacouncil.org/six-sigma-white-belt-certification/
+* Lean Six Sigma White Belt - https://www.sixsigmacouncil.org/lean-six-sigma-white-belt-certification/
+* IPv6 - https://ipv6.he.net/certification/
+* Certified in Cybersecurity by ISC2 (First 1 million free) - https://www.isc2.org/certifications/cc
+
+Data certs you can get for free 
+
+* Cassandra - https://www.datastax.com/dev/certifications , complete the course sequence and you get a voucher
+* mongodb - https://learn.mongodb.com/pages/mongodb-associate-developer-exam  
+    - This one has a caveat.
+    - You can get a free cert if you're a student/teacher and complete a learning path.
