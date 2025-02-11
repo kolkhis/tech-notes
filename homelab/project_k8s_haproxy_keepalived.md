@@ -297,13 +297,6 @@ echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
 
 * Initialize the cluster (done later).  
 
-### Set up `kubeconfig`
-```bash
-mkdir -p "$HOME/.kube"
-sudo cp /etc/kubernetes/admin.conf "$HOME/.kube/config"
-sudo chown $(id -u):$(id -g) "$HOME/.kube/config"
-```
-
 
 
 
@@ -320,18 +313,24 @@ address range for pods in the cluster.
 * `10.244.0.0/16` defines a network range from `10.244.0.0` up to `10.244.255.255`
 * Typically choose a private, non-routable IP range to avoid conflicts with external
   networks.  
-`10.244.0.0/16` is a common default used by certain Container Network Interface (CNI)
-plugins like Flannel.  
-You can technically pick another private range but most Flannel docs uses `10.244.0.0/16`.  
+* `10.244.0.0/16` is a common default used by certain Container Network Interface (CNI)
+  plugins like Flannel.  
+    * You can technically pick another private range but most Flannel docs uses `10.244.0.0/16`.  
+---
 
+### Set up `kubeconfig`
+```bash
+mkdir -p "$HOME/.kube"
+sudo cp /etc/kubernetes/admin.conf "$HOME/.kube/config"
+sudo chown $(id -u):$(id -g) "$HOME/.kube/config"
+```
 ---
 
 ### Install a CNI plugin (flannel)
 The CNI needs to be installed on all of the nodes that are running kubernetes.  
 
 ```bash
-kubectl apply -f \
-    https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 
 Or, if you want to use Calico:
@@ -612,8 +611,7 @@ At this point, the `haproxy-lb1` *should* hold the Virtual IP `192.168.1.250` (o
   the transport layer is closed normally
 
 - In HAProxy you can enable the `stats` page to monitor traffic and do node healthchecks.  
-- Make sure the NICs on HAProxy servers have static IP addresses so the VIP stays in
-  the same subnet
+- Make sure the NICs on HAProxy servers have static IP addresses so the VIP stays in the same subnet.  
 
 * kubevip
 
@@ -650,8 +648,109 @@ At this point, the `haproxy-lb1` *should* hold the Virtual IP `192.168.1.250` (o
       rm kubectl-convert kubectl-convert.sha256
       ```
 
+## Porting to Cilium
+Cilium is more robust, and more complicated.  
+Until now I've planned on using Flannel, but I'm going to use Cilium 
+
+### Cilium Ports / Firewalld rules
+VXLAN Mode:
+* UDP port 8472 - VXLAN overlay networking
+
+Geneve mode:
+* UDP port 6081 - Geneve overlay networking
+
+---
+If encryption is enabled with Cilium:
+* IPsec: firewalld needs to allow Encapsulating Security Payload (ESP) traffic.  
+* WireGuard: UDP port `51871` is used for firewall encryption
+
+```bash
+# allow icmp for pinging
+sudo firewall-cmd --permanent --add-icmp-block-inversion
+
+# allow tcp port 4240 for cilium-health
+sudo firewall-cmd --permanent --add-port=4240/tcp
+
+# if using VXLAN
+sudo firewall-cmd --permanent --add-port=8472/udp
+
+# if using Geneve Mode
+sudo firewall-cmd --permanent --add-port=6081/udp
+
+# if using wireguard encryption
+sudo firewall-cmd --permanent --add-port=51871/udp
+
+# reload firewalld to apply
+sudo firewall-cmd --reload
+```
+
+
+### Install Cilium
+```bash
+# reset the cluster if re-installing
+kubeadm reset -f
+# reinitialize
+kubeadm init --pod-network-cidr=10.244.0.0/16
+```
+* Cilium doesn't require a `--pod-network-cidr` flag but if the cluster was already
+  initialized with it, Cilium can still work
+
+All nodes will need the Cilium CLI installed.  
+```bash
+# install Cilium CLI
+curl -LO https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz
+tar -xzvf cilium-linux-amd64.tar.gz
+sudo mv cilium /usr/local/bin
+```
+
+### Deploy Cilium in k8s
+```bash
+cilium install
+# if running kube-proxy replacement
+cilium install --set kubeProxyReplacement=strict
+# verify installation
+cilium status
+```
+
+### Enable Hubble for Monitoring
+This is optional. But, you generally want to be able to monitor stuff.  
+```bash
+cilium hubble enable
+cilium hubble ui
+```
+Check Hubble's status:
+```bash
+cilium hubble status
+```
+
+
+### Restart Worker Nodes (if already joined)
+If worker nodes are already joined, restart them to make sure theyu use Cilium as
+their CNI
+```bash
+systemctl restart kubelet
+```
+
+### Verify Cilium is running
+Check if it's installed and running correctly:
+```bash
+kubectl get pods -n kube-system | grep -i cilium
+```
+
+It should show multiple pods running called `cilium-*`
+
+
+### Test network connectivity
+Run a cilium network test to verify pod communication
+```bash
+cilium connectivity test
+cilium-health status --probe
+```
+
+
 ## Resources
 * [Installing `kubeadm`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 * [Installing `kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
 * [Installing all 3 `kube` tools](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl)
-
+* [Installing k8s with CRI-O and Cilium on Rocky](https://blog.andreev.it/2023/10/install-kubernetes-with-cri-o-and-cilium-on-rocky-linux-9/)
+[Cilium CLI releases](https://github.com/cilium/cilium-cli/releases/)
