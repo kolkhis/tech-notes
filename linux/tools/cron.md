@@ -1,8 +1,4 @@
-
-
 # Automation on Linux Using Cron
-
-
 
 ## Table of Contents
 * [Quickref](#quickref) 
@@ -35,9 +31,6 @@ Cron is a job scheduler daemon in Unix/Linux operating systems.
 It allows you to run scripts, commands, and other software at scheduled times and intervals.
 
 The term "cron" comes from the Greek word "chronos," meaning "time."
-
-
-
 
 
 ### Basic Terms
@@ -175,7 +168,7 @@ SHELL=/bin/sh
 #PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Example of job definition:
-# .--------------- Minute (0 - 59)
+# .--------------- Minute (1 - 59)
 # | .------------- Hour (0 - 23)
 # | |  .---------- Day of month (1 - 31)
 # | | | .--------- Month (1 - 12) OR jan,feb,mar,apr, etc.
@@ -198,7 +191,15 @@ The entries:
 * The third entry runs at `06:47` every Sunday (`7`).  
 * The fourth entry runs at `06:52` on the `1`st day of every month.  
 
+### The `/etc/cron.allow`/`/etc/cron.deny` files
+* `cron.allow`: If this file exists, only the users specified in this file are allowed 
+   to use `crontab`.  
+    - Specify one user per line.  
+* `cron.deny`: If this file exists, any users specified are denied access to `crontab`.  
+    - Specify one user per line.  
 
+If both of the files exist, the `cron.allow` file rules will take precendence 
+and `cron.deny` rules are not enforced.  
 
 
 
