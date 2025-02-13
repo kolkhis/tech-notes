@@ -2,6 +2,20 @@
 # 2023 Beginner Boost - Week 17
 
 
+
+## Table of Contents
+* [Basic Programming](#basic-programming) 
+    * [Carriage Return / Line Feed](#carriage-return--line-feed) 
+    * [Arguments / Variables](#arguments--variables) 
+        * [QUOTE YOUR VARIABLES](#quote-your-variables) 
+        * [Injection](#injection) 
+    * [Passing Data and Variables Into a Script From Outside](#passing-data-and-variables-into-a-script-from-outside) 
+        * [Standard for getting named variables](#standard-for-getting-named-variables) 
+    * [Talking about weekly coding sessions](#talking-about-weekly-coding-sessions) 
+    * [Job Security](#job-security) 
+* [USE THIS OFTEN](#use-this-often) 
+
+
 ## Basic Programming
 
 Specifically, procedural programming
@@ -41,7 +55,7 @@ git remote add origin git@github.com:kolkhis/<repo-name>.git
 
 
 
-#### Carriage Return / Line Feed
+### Carriage Return / Line Feed
 Carriage Return moves the char back to the beginning of line.
 Line Feed creates a new line and moves to it.
 
