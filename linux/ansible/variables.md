@@ -39,6 +39,27 @@ my_var: "This is the value of the variable"
 some_number: 2
 ```
 
+## Host Variables
+You can assign variables to specific hosts inside the inventory file.  
+Using `ini` format:
+```ini
+[servers]
+host1 ansible_host=192.168.4.44 host_specific_variable="This will be available to host1"
+host1 ansible_host=192.168.4.45 host_specific_variable="This will be available to host2"
+```
+
+Using `yaml` format:
+```yml
+servers:
+  hosts:
+    host1:
+      ansible_host: 192.168.4.44
+      host_specific_variable: "This will be available for host1"
+    host1:
+      ansible_host: 192.168.4.44
+      host_specific_variable: "This will be available for host1"
+```
+
 
 ## Builtin Ansible Variables
 Ansible has a number of builtin variables that you can use.  
