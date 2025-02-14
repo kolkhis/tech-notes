@@ -181,3 +181,54 @@ myproject/
 ```
 
 
+## Basic Role Usage
+- Create a directory called `roles`:  
+  ```bash
+  mkdir roles
+  cd roles
+  ```
+
+- Then initialize a role:  
+  ```bash
+  ansible-galaxy init <role_name>
+  ```
+  Then a bunch of directories are created.  
+  This can be overwhelming at first but if you just need to run tasks then you only need look at the `tasks` directory.  
+
+- Look in the `<role_name>/tasks/` directory for a file called `main.yml`.  
+  Put any tasks you want to run in that file.  
+
+- Then, in your playbook:
+  ```yaml
+  - name: Name of the playbook
+    hosts: your-hosts
+    roles:
+      - role_name
+  ```
+  All the tasks in that `main.yml` file should be run.  
+
+If you need to use variables, templates, etc., there are other directories where you put those (like `<role_name>/vars` for variables).  
+
+
+## Using Variables to Assign Roles Dynamically
+
+If you want to assign roles dynamically based on host variables, you can do:
+```yaml
+- name: Apply roles based on host variables
+  hosts: all
+  roles:
+    - "{{ assigned_roles }}"
+```
+
+Then, in your inventory:
+```ini
+[web_servers]
+web1 ansible_host=192.168.1.10 assigned_roles=["webserver_role"]
+web2 ansible_host=192.168.1.11 assigned_roles=["webserver_role"]
+
+[db_servers]
+db1 ansible_host=192.168.1.20 assigned_roles=["database_role"]
+db2 ansible_host=192.168.1.21 assigned_roles=["database_role"]
+```
+* The `assigned_roles` variable will be used to determine which roles to run on each given host.  
+
