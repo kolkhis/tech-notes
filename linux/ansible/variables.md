@@ -6,8 +6,11 @@ You can define your own variables, and use built-in special variables.
 
 
 ## Table of Contents
+* [Variables with Roles](#variables-with-roles) 
 * [Builtin Ansible Variables](#builtin-ansible-variables) 
-    * [Ansible Facts](#ansible-facts) 
+    * [Ansible Facts (`ansible_facts`)](#ansible-facts-ansible_facts) 
+    * [Hostvars (`hostvars`)](#hostvars-hostvars) 
+        * [Accessing `hostvars` for a given host](#accessing-hostvars-for-a-given-host) 
     * [Magic Variables](#magic-variables) 
         * [General Execution Context Variables](#general-execution-context-variables) 
         * [Inventory and Host Context Variables](#inventory-and-host-context-variables) 
@@ -19,8 +22,22 @@ You can define your own variables, and use built-in special variables.
     * [File and Path Variables](#file-and-path-variables) 
         * [Task Utility Variable](#task-utility-variable) 
         * [Deprecated Variables](#deprecated-variables) 
-    * [Examples for Clarity](#examples-for-clarity) 
 * [Resources](#resources) 
+
+
+
+## Variables with Roles
+Specify variables to use inside roles in the `role-name/vars/main.yml` file.  
+
+When defining variables inside a role (`roles/role_name/vars/main.yml`), those
+variables will **only** be available inside the role itself. They will not be
+accesible in a playbook that calls that roll.
+
+```yaml
+# roles/role-name/vars/main.yml
+my_var: "This is the value of the variable"
+some_number: 2
+```
 
 
 ## Builtin Ansible Variables

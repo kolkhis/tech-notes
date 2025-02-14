@@ -232,3 +232,31 @@ db2 ansible_host=192.168.1.21 assigned_roles=["database_role"]
 ```
 * The `assigned_roles` variable will be used to determine which roles to run on each given host.  
 
+
+## Variables with Roles
+Specify variables to use inside roles in the `role-name/vars/main.yml` file.  
+
+When defining variables inside a role (`roles/role_name/vars/main.yml`), those
+variables will **only** be available inside the role itself. They will not be
+accesible in a playbook that calls that roll.
+
+If you need to access variables inside the main playbook, use `set_fact` or define
+the variable in either the inventory, the playbook `vars` section, or a role default.  
+
+
+Example `vars/main.yml`:
+```yaml
+# roles/role-name/vars/main.yml
+my_var: "This is the value of the variable"
+some_number: 2
+```
+
+These vars will then be available anywhere inside the role `role-name`:  
+- `tasks/`
+- `handlers/`
+- `templates/`
+- `files/`
+- `meta/`
+
+
+
