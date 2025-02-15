@@ -56,7 +56,8 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
     * `g<C-a>` (visual): Increment the first number on each line in the selected area.  
 * `<C-x>`: Decrement the number under the cursor.  
     * `g<C-x>` (visual): Decrement the first number on each line in the selected area.  
-
+* `[I`: Show all the lines in the file that contain the word under the cursor.  
+* `]m`: Go to the next braces - `{ }`
 
 ## Making Custom Keybindings  
 >###### *:h map-precedence*  
@@ -65,19 +66,19 @@ into the Ex Command Line (for example, `:.,.+4` for a 4-line paragraph).
 
 
 ### Mapping Modes  
-| Command mode:  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
-|----------------|------|-----|-----|-----|-----|-----|------|------|
-| [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
-| n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |
-| [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |
-| i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |
-| c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |
-| v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |
-| x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |
-| s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |
-| o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |
-| t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |
-| l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |
+|  Command mode:   | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
+|------------------|------|-----|-----|-----|-----|-----|------|------|
+| `[nore]map`      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
+| `[nore]map!`     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |
+| `n[nore]map`     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |
+| `i[nore]map`     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |
+| `c[nore]map`     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |
+| `v[nore]map`     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |
+| `x[nore]map`     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |
+| `s[nore]map`     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |
+| `o[nore]map`     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |
+| `t[nore]map`     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |
+| `l[nore]map`     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |
 
 The `l` mode (Lang / Language Argument Mode) is used when using 
 an 'input method editor' (IME) for non-english characters.  
@@ -183,6 +184,7 @@ Using `CTRL-O` does the same thing after performing an action.
 
 ## Insert Mode  
 
+* `CTRL-T`: Indent the current line  
 * `CTRL-D`: Unindent the current line  
 * `CTRL-W`: Delete the previous word  
 * `CTRL-U`: Delete all the text entered on the current line  
@@ -190,10 +192,11 @@ Using `CTRL-O` does the same thing after performing an action.
     * If you didn't enter any text, it deletes the whole line.  
 * `CTRL-Y`: Insert the character **above** the cursor.  
 
+
 ### Insert Mode Completion  
 * `CTRL-X {mode}`: enter `CTRL-X` sub mode (omni-completion)  
     * `i_CTRL-X_index`
-
+* `CTRL-N`: Pick the first available completion from the current buffer.  
 
 
 ---  
