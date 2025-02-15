@@ -2,19 +2,21 @@
 # Installing Hashicorp Terraform
 
 
+
 ## Table of Contents
-* [Installing Hashicorp Terraform](#installing-hashicorp-terraform) 
 * [Setup the hashicorp repositories](#setup-the-hashicorp-repositories) 
     * [Install dependencies](#install-dependencies) 
     * [Install the HashiCorp GPG key](#install-the-hashicorp-gpg-key) 
-    * [Verify the key's fingerprint](#verify-the-key's-fingerprint) 
+    * [Verify the key's fingerprint](#verify-the-keys-fingerprint) 
     * [Add the official HashiCorp repository to your system.](#add-the-official-hashicorp-repository-to-your-system) 
     * [Install Terraform from the Hashicorp Repository](#install-terraform-from-the-hashicorp-repository) 
 * [Do some basic checks to see that it is correctly setup.](#do-some-basic-checks-to-see-that-it-is-correctly-setup) 
 
 
+## Terraform Installation
 
-## Setup the hashicorp repositories
+### Debian-based Install
+#### Setup the hashicorp repositories (debian-based)
 
 Your team has determined they need Terraform to test in their Dev environment.
 Setup the Hashicorp repo on Ubuntu and then install Terraform.
@@ -29,24 +31,22 @@ Hint:
 
 ---
 
-### Install dependencies:
-* gnupg
-* software-properties-common
-* curl
+#### Install dependencies:
+* `gnupg`
+* `software-properties-common`
+* `curl`
 
 ```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 ```
 
-### Install the HashiCorp GPG key:
+#### Install the HashiCorp GPG key:
 
 ```bash
-wget -O- https://apt.releases.hashicorp.com/gpg | \
-gpg --dearmor | \
-sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
 ```
 
-### Verify the key's fingerprint:
+#### Verify the key's fingerprint:
 ```bash
 gpg --no-default-keyring \
 --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
@@ -65,7 +65,7 @@ sub   rsa4096 XXXX-XX-XX [E]
 
 ---
 
-### Add the official HashiCorp repository to your system. 
+#### Add the official HashiCorp repository to your system. 
 Add the official HashiCorp repository to your system:
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
@@ -90,7 +90,6 @@ sudo apt-get install terraform
 
 ## Do some basic checks to see that it is correctly setup.
 
-Goals:
 1. Check where the system installed Terraform.  
 2. Check Terraform functionality.  
 
@@ -110,8 +109,3 @@ Make sure you look at some of the capabilities you have with Terraform.
 ```bash
 terraform -help plan
 ```
-
-If you've gotten output back, you've installed Terraform and are ready to go with future labs.
-
-
-
