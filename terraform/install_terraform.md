@@ -109,3 +109,28 @@ Make sure you look at some of the capabilities you have with Terraform.
 ```bash
 terraform -help plan
 ```
+
+### RHEL-based install
+#### Using Yum
+Install dependencies:
+```bash
+sudo yum install -y yum-utils
+```
+
+Add the yum repository:
+```bash
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+```
+
+Install terraform:
+```bash
+sudo yum -y install terraform
+```
+
+#### Using DNF
+
+```bash
+curl https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
+```
+
+
