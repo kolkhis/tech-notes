@@ -93,3 +93,20 @@ rpm -ivh package.rpm    # Install an .rpm package manually
 rpm -qa                 # List all installed packages  
 ```
 
+
+## Find When a Package was Installed
+You can find out when a package was installed on a system using the system's
+package manager.  
+
+* For Debian-based systems:
+  ```bash
+  apt list --installed package_name
+  ```
+
+* For RedHat-based systems:
+  ```bash
+  rpm -qi package_name | grep -i 'install'
+  # or, with yum:
+  yum history list package_name
+  ```
+
