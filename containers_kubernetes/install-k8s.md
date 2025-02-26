@@ -26,6 +26,20 @@ The new repos are at `pkgs.k8s.io`.
     * [Set up `kubeconfig`](#set-up-kubeconfig) 
 * [Resources](#resources) 
 
+## tl;dr
+- Disable swap
+- Install deps
+    * `sudo apt install -y apt-transport-https ca-certificates curl gnupg`
+    * `sudo dnf install -y yum-utils device-mapper-persistent-data lvm2`
+- Add the `overlay` and `br_netfilter` kernel modules
+    - `/etc/modules-load.d/k8s.conf`
+    - Reload with `modprobe br_netfilter` and `modprobe overlay`
+- Configure iptables to allow network bridging for both ipv4 and ipv6 as well as ip forwarding
+    - `/etc/sysctl.d/k8s.conf`
+    - Reload kernel modules with `sysctl --system`
+- Add `apt` or `dnf` repositories
+- Install `kubelet`, `kubectl`, `kubeadm`
+
 
 ## Manually Installing K8s Binaries
 
