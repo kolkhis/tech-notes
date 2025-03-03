@@ -48,7 +48,7 @@ This assumes the branch was deleted in the `origin` remote.
 #### Prune deleted local branches
 If you've ever switched to the branch before, it might still exist in the Git reflog.  
 ```bash
-git reflog --expire=now --all
+git reflog expire --expire=now --all
 git gc --prune=now
 ```
 * `git reflog --expire=now --all`: 
