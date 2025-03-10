@@ -1,16 +1,22 @@
 
 # Installing Hashicorp Terraform
 
-
-
 ## Table of Contents
-* [Setup the hashicorp repositories](#setup-the-hashicorp-repositories) 
-    * [Install dependencies](#install-dependencies) 
-    * [Install the HashiCorp GPG key](#install-the-hashicorp-gpg-key) 
-    * [Verify the key's fingerprint](#verify-the-keys-fingerprint) 
-    * [Add the official HashiCorp repository to your system.](#add-the-official-hashicorp-repository-to-your-system) 
+* [Terraform Installation](#terraform-installation) 
+    * [Debian-based Install](#debian-based-install) 
+        * [Setup the hashicorp repositories (debian-based)](#setup-the-hashicorp-repositories-debian-based) 
+        * [Install dependencies](#install-dependencies) 
+        * [Install the HashiCorp GPG key](#install-the-hashicorp-gpg-key) 
+        * [Verify the key's fingerprint](#verify-the-keys-fingerprint) 
+        * [Add the official HashiCorp repository to your system.](#add-the-official-hashicorp-repository-to-your-system) 
     * [Install Terraform from the Hashicorp Repository](#install-terraform-from-the-hashicorp-repository) 
 * [Do some basic checks to see that it is correctly setup.](#do-some-basic-checks-to-see-that-it-is-correctly-setup) 
+    * [RHEL-based install](#rhel-based-install) 
+        * [Using Yum](#using-yum) 
+        * [Using DNF](#using-dnf) 
+* [tl;dr](#tldr) 
+    * [Debian](#debian) 
+* [Resources](#resources) 
 
 
 ## Terraform Installation
