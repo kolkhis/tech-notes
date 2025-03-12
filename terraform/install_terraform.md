@@ -1,5 +1,7 @@
-
 # Installing Hashicorp Terraform
+
+These notes were sourced from [het_tanis' Killercoda lab](https://killercoda.com/het-tanis/course/Hashicorp-Labs)
+and the [Hashicorp Terraform documentation](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).  
 
 ## Table of Contents
 * [Terraform Installation](#terraform-installation) 
@@ -22,18 +24,9 @@
 ## Terraform Installation
 
 ### Debian-based Install
-#### Setup the hashicorp repositories (debian-based)
+#### Setup the hashicorp repositories (Debian-based)
 
-Your team has determined they need Terraform to test in their Dev environment.
-Setup the Hashicorp repo on Ubuntu and then install Terraform.
-
-Goals
-1. Configure the Hashicorp repo.
-2. Install Terraform on the server.  
-
-Hint:  
 * See [the docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
-
 
 ---
 
