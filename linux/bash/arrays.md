@@ -395,4 +395,26 @@ done
 ###### See [parameter transformation](./parameter_transformation.md) for a full list of options.  
 
 
+## Getting a List of Files in an Array
+One way to get a list of files into an array is using the `read` command along with
+process substitution.  
+
+Declare the array variable.  
+```bash
+declare -a FILES
+```
+
+Then use `read` with a process substitution:
+```bash
+IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md')
+```
+- `IFS=$'\n'`: Set `IFS` to newline. This is how it will split the elements.
+    - If the elements are space-delimited, you can set `IFS` to a space, which is the
+      default.  
+- `read -r -d '' -a FILES`: 
+    - `read -r`: Handle escape sequences properly.  
+    - `-d ''`: The delimiter for the array - set to a blank string.  
+    - `-a FILES`: Save in the the `FILES` array.  
+- `< <(find . -name '*.md')`: Directing a process substitution to get the list of files.  
+
 
