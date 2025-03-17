@@ -414,6 +414,8 @@ IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md')
 - `read -r -d '' -a FILES`: 
     - `read -r`: Handle escape sequences properly.  
     - `-d ''`: The delimiter for the array - set to a blank string.  
+        - This makes it read to EOF instead of the first newline. 
+        - Without this you'd only get the first filename.  
     - `-a FILES`: Save in the the `FILES` array.  
 - `< <(find . -name '*.md')`: Directing a process substitution to get the list of files.  
 
