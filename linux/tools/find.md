@@ -614,4 +614,13 @@ find . -perm -a+r -perm /a+w \! -perm /a+x
 * Access Time: Use `ls --time=atime -lt` to list files with access times.  
 * Change Time: Use `ls --time=ctime -lt` to list files with change times.  
 
+## Best Practice: Using `-print0`
+For "maximum safety," it's recommended to use `-print0` when finding files with `find`.  
+This is used to make sure filenames with spaces or newlines don't break.  
+
+E.g., reading a list of files into an array variable:
+```bash
+IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md' -print0)
+```
+The `-print0`
 
