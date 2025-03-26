@@ -123,6 +123,7 @@ Append text to lines by using the `a` command with `sed`:
 ```bash
 sed -i '/pattern/a Text to append' file.txt
 ```
+The end of each `a` command inserts a newline.
 
 E.g., if you wanted to use `sed` to append text to the end of a file:
 ```bash
@@ -132,6 +133,27 @@ sed -i "\$a This text will go at the end of the file"
     - Necessary with double quotes.
 - If you were to use `$` as the `pattern`, it would append text to the end of every
   line instead of the EOF.
+
+### Inserting Text
+Opposite of appending, you can insert text above a given line.  
+
+Ex: insert text above a line: 
+```bash
+sed -i '/pattern/i This text will go above the line containing the pattern' file.txt
+```
+
+Without specifying a `pattern`, the `i` command will insert text above **every** line
+in the stream.  
+
+`sed` inserts a newline at the end of each `i` command. 
+
+### Append Text from a File
+You can use `sed`'s `r` command to append text to a file from another file.  
+
+Ex, to append the contents of `file2.txt` to `file.txt`:
+```bash
+sed -i 'r file2.txt' file.txt
+```
 
 
 ## Case-insensitive Matching
