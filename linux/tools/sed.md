@@ -11,6 +11,9 @@ It's used to manipulate text using regular expressions.
 * [Editing from Stdout with Pipes](#editing-from-stdout-with-pipes) 
 * [Capture Groups](#capture-groups) 
 * [Different Commands](#different-commands) 
+    * [Delete Whole Lines](#delete-whole-lines) 
+    * [Change Whole Lines](#change-whole-lines) 
+* [Case-insensitive Matching](#case-insensitive-matching) 
 
 
 ## Common Options
@@ -114,6 +117,21 @@ sed -i '/pattern/c New text for the line' file.txt
 * This will match the line containing `pattern`, delete that line, then add the text
   that comes after `c`.  
 * Any whitespace between the `c` and the start of the text will not be used.  
+
+### Append Text to Lines
+Append text to lines by using the `a` command with `sed`:
+```bash
+sed -i '/pattern/a Text to append' file.txt
+```
+
+E.g., if you wanted to use `sed` to append text to the end of a file:
+```bash
+sed -i "\$a This text will go at the end of the file"
+```
+- The `$` is escaped so that it is not read as a variable. 
+    - Necessary with double quotes.
+- If you were to use `$` as the `pattern`, it would append text to the end of every
+  line instead of the EOF.
 
 
 ## Case-insensitive Matching
