@@ -127,10 +127,14 @@ The end of each `a` command inserts a newline.
 
 E.g., if you wanted to use `sed` to append text to the end of a file:
 ```bash
-sed -i "\$a This text will go at the end of the file"
+sed -i "\$a This text will go at the end of the file" file.txt
 ```
 - The `$` is escaped so that it is not read as a variable. 
     - Necessary with double quotes.
+    - If using single quotes, the `\` is not needed.
+      ```bash
+      sed -i '$a This t5ext will go at the end of the file' file.txt
+      ```
 - If you were to use `$` as the `pattern`, it would append text to the end of every
   line instead of the EOF.
 
