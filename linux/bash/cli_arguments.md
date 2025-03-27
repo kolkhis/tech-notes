@@ -165,6 +165,9 @@ Does this also set `$OPTARG` to the option that was given?
 
 ---
 #### Leading Colon
+Starting your `optstring` with a colon will suppress default error messages, and it
+will disable default error handling for missing arguments.  
+
 ```bash
 getopts ":hf:v" opt
 ```
@@ -176,7 +179,7 @@ The first colon in this string tells `getopts` to let us handle errors ourselves
 When an unknown option is given, `OPTARG` will hold the option letter, and the `opt`
 variable will be `?`.
 
-#### `getopts` Example: Unknown Option
+#### `getopts` Example: Unknown Option (`?` case)
 ---
 With a leading colon:
 ```bash
@@ -194,8 +197,15 @@ case "$opt" in
         printf "Unknown option: -%s\n" "$OPTARG"
         ;;
 ```
+---
 
-#### `getopts` Example: Missing Argument for a Valid Option
+Without a leading colon, the behavior is mostly the same.  
+It's still handled with the `?` case, but the only difference is it will also print 
+an error message.  
+
+
+#### `getopts` Example: Missing Argument for a Valid Option (`:` case)
+---
 With a leading colon:
 ```bash
 getopts ":f:h" opt
