@@ -136,13 +136,17 @@ done
 A case switch is used in a `while` loop with `getopts`.  
 There are 2 special cases that need to be accounted for:
 1. `\?)`: This case catches unknown/invalid options.
+    - This will always be triggered whenever invalid options are given, whether you have
+      disabled error reporting (leading colon) or not.
 2. `:)`: This is only triggered when both:
-    - You have a leading colon in the optstring (e.g., `":f:h"`)
+    - You have disabled error reporting with a leading colon in the optstring (e.g., `":f:h"`)
     - A required argument is missing.
       E.g.,:
       ```bash
+      getopts ":f:h" opt
       ./script -f  # Missing filename
       ```
+      This will trigger the `:` case.
 
 ### `getopts` Leading Colon vs No Leading Colon
 Using a leading colon in the `optstring` with `getopts` disables builtin errors.  
@@ -152,11 +156,11 @@ improperly.
 
 ---
 #### No Leading Colon
-- Without the leading colon `:`, if an unspecified/unknown option is 
+- Without the leading colon `:`, if an unknown option is 
   passed (not in `optstring`, like `-z`), `getopts` will:
     - Print an error message to `stderr`
     - Set `$opt` to `?`
-    - Set `$OPTARG` to the unknown option that was given
+    - Set `$OPTARG` to the unknown option that was given (`z`)
 - If a required **argument** is missing (liked `":f:"` in `optstring`, `./script -f` called 
   but no argument was given), it will:
     - Print an error message to `stderr`
