@@ -3,6 +3,7 @@
 Certain files can go into a `.github/` directory inside a repository to affect how
 GitHub works with the repo.  
 
+<https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file>
 
 ## Code Owners
 * `CODEOWNERS`: Specify specific files for users. Users will be automatically added
