@@ -61,6 +61,65 @@ The primary roles of `systemd`:
     * Uses a dependency-based service control system, allowing ordered and conditional starts of services.
 
 
+## Creating a Systemd Service (Service Files)
+Service files (or "Unit Files") are what defines a systemd service.  
+Systemd services go in the `/etc/systemd/system/` directory.  
+These service files contain the instructions and conditions for the service to start.
+
+An example service file:
+```ini
+[Unit]
+Description=The Service Name
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/path/to/executable
+User=pi
+Environment=DISPLAY=:0
+Restart=always
+
+[Install]
+WantedBy=graphical.target
+```
+* `[Unit]`: This section contains directives about when and how this service should start, 
+  and if it should wait for other services.
+    - `Description=`: A short description of the service
+    - `After=network-online.target`: Wait until the network is up.
+    - `Wants=network-online.target`: Try to bring the network up if it's not.
+* `[Service]`: This is the main configuration section for how the service runs.
+    - 
+
+### Service File Section Entries
+- The `[Unit]` section has some common directives:
+    - `Description=`: A short description of the service
+    - `After=`: Make sure this service starts *after* the listed targets/services.
+        - This does not guarantee that the service will start *only* if the
+          dependency is active, it's just a startup order.
+    - `Wants=`: Similar to `Requires=`, but softer. If the wanted service fails to
+      start, this one will continue.
+
+- `[Service]`: Main config section for the service:
+    * `ExecStart=`: The full command to run to start the service.
+    * `ExecStop=`: (Optional) Command to run to stop the service.
+    * `ExecReload=`: (Optional) Command to reload the service without stopping it.
+    * `User=`: User account that the service will run as. (Good security practice to avoid running as root if possible)
+    * `Group=`: (Optional) Group the service will run as.
+    * `Environment=`: Set environment variables for the service.
+    * `Restart=`: Defines what to do if the service crashes. Common values: no, on-failure, always.
+    * `RestartSec=`: How many seconds to wait before restarting the service.
+    * `WorkingDirectory=`: Directory to set as the working directory.
+    * `StandardOutput= / StandardError=`: Controls log o
+
+- `[Install]`: Used when you enable the service (so it starts at boot). Tells systemd
+  which **target** (boot stage) the service should be linked to.
+    * `WantedBy=`: Specify which target the service should be enabled under.
+        - This is commonly `multi-user.target` or `graphical.target`
+            - `graphical.target`: After the graphical environment is loaded.
+            - `multi-user.target`: Equivalent of "runlevel 3" - System is up,
+              networking is online, no GUI.
+    * `RequiredBy=`: Stronger version of `WantedBy=`. If this service fails, the
+      dependent target will fail too.
 
 
 ## Useful `systemd` commands
