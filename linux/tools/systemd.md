@@ -88,7 +88,7 @@ WantedBy=graphical.target
     - `After=network-online.target`: Wait until the network is up.
     - `Wants=network-online.target`: Try to bring the network up if it's not.
 * `[Service]`: This is the main configuration section for how the service runs.
-    - 
+    - `Environment=DISPLAY=:0`: Required so Firefox knows to use the Pi's display.
 
 ### Service File Section Entries
 - The `[Unit]` section has some common directives:
