@@ -130,13 +130,14 @@ WantedBy=graphical.target
 ```bash
 systemctl list-units --state=failed
 ```
-`systemctl --failed` is good shorthand for this.  
+* Lists units (services) that failed to start.  
+* `systemctl --failed` is good shorthand for this.  
 
 
 ```bash
 systemctl cat ssh
 ```
-This will show you the configuration (unit file) used for the ssh service.
+* This will show you the configuration (unit file) used for the ssh service.
 
 ```bash
 cd /etc/systemd/system && ls
