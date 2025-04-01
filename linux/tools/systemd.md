@@ -123,30 +123,48 @@ WantedBy=graphical.target
 
 
 ## Useful `systemd` commands
+- Note: `systemctl` is not the same as `sysctl` - `sysctl` is used for controlling
+  kernel parameters, `systemctl` is used for controlling system processes.  
+
+
 ```bash
 systemctl list-units --state=failed
 ```
 `systemctl --failed` is good shorthand for this.  
 
 
-* `systemctl cat ssh`
-This will show you the configuration used for the ssh service.
+```bash
+systemctl cat ssh
+```
+This will show you the configuration (unit file) used for the ssh service.
 
-* `cd /etc/systemd/system && ls`
-This is the directory where systemd stores its service files.
-You can find `target` files, `service` files, and `socket` files.
+```bash
+cd /etc/systemd/system && ls
+```
+* This is the directory where systemd stores its service files.
+  You can find `target` files, `service` files, and `socket` files.
 
-It will specify `target.wants/` and `service.wants/` directories, as well as 
-`service.requires/` directories. These are the directories where systemd will look for
-the configuration files for the services that it is managing.
+  It will specify `target.wants/` and `service.wants/` directories, as well as 
+  `service.requires/` directories. These are the directories where systemd will look for
+  the configuration files for the services that it is managing.
 
 ```bash
 systemd-analyze --help
 ```
-This will output all of the different arguments and commands that
-you can use with `systemd-analyze`.
+* This will output all of the different arguments and commands that
+  you can use with `systemd-analyze`.
 
-* `systemctl is-enabled ssh`: Shows whether or not a service is enabled.  
+
+```bash
+systemctl is-active ssh
+```
+* Shows if a service is active or not.  
+
+```bash
+systemctl is-enabled ssh
+```
+* Shows whether or not a service is enabled.  
+
 
 ## Maniuplating Services with `systemctl` 
 
