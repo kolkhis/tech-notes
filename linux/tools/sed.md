@@ -166,3 +166,53 @@ the end of the pattern.
 ```bash
 sed -i 's/sometxt/replacement/i' file.txt
 ```
+
+## Range Commands
+Using the `,` command specifies a range command.  
+```bash
+sed '/start pattern/,/end pattern/...'
+```
+* `/start pattern`: The start pattern. The range will start here.
+* `/,/`: Indicates a range, `sed` will expect an end pattern.  
+* `end pattern/`: The end pattern.
+* `...`: The command to run on the range.  
+    - This can be a single command (e.g., `s/`) or a block of commands (`{ ... }`)
+    - This command will only apply to the range instead of the whole input stream.
+
+
+### Range Example: Finding the First Empty Line after a Pattern
+
+Say you want to insert a link under a markdown header, but not directly below it --
+at the first empty line that appears after that markdown header.  
+
+`sed` doesn't support lookaheads since it doesn't have a full regex engine like
+Perl (no `(?=foo)` lookaheads). But, range patterns can be used to accomplish this.
+
+```bash
+sed -i '/^## Pattern/,/^$/ {/^$/ a\
+New line goes here.
+}' file.md
+```
+* `/^## Pattern/`: Start matching from this pattern.
+* `/,/`: Indicates the start of a range pattern (start pattern).  
+    - From the start pattern (`## Pattern`) to the next pattern.
+* `/^$/`: The ending pattern. Match ends here.
+    - Matches a blank line.
+
+* `/ {/^$/ a\ }`: When inside the range, if the current line is blank (`/^$/`), 
+  use `a\` to append text below that blank line.
+    * The `{` opens a block of commands. The `a\` command appends the given text only 
+      when a blank line is found inside the range.
+    * The closing `}` always needs to go on a new line.
+
+
+That example puts the new line *under* the blank line, which is probably not what you
+want.  
+To insert the new line *above* the blank line, use `i` instead of `a`:
+```bash
+sed -i '/^## Pattern/,/^$/ {/^$/ i New line goes here 
+}' file.md
+```
+* This does the same thing as above, but instead puts the line above instead of
+  below.  
+
