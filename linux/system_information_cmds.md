@@ -176,6 +176,18 @@ systemctl disable service # Disable a service from starting on boot
 ### vmstat
 `vmstat` is a command that shows you the status of the virtual memory and CPU usage of your system.
 
+### mpstat
+`mpstat` is a command that shows statistics related to processors/CPUs.
+```bash
+mpstat 1 5      # Show stats every second, 5 times
+mpstat -o JSON  # Output in json
+mpstat -P ALL   # Output stats about a specific processor or set or processors
+mpstat -P 0,1,2 # Output stats for processors 0, 1, and 2
+mpstat -u       # Output CPU utilization in percentage
+mpstat -I CPU   # Report interrupt stats (interrupt received per second) from /proc/interrupts
+```
+
+
 ### Check which version of linux is running
 The command to check which version of Linux is running:
 ```bash
