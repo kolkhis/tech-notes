@@ -27,11 +27,27 @@ The `man` page recomands `perldoc`. This is a separate package that will need to
 installed. 
 ```bash
 sudo apt-get install -y perl-doc
+man perldoc
 ```
 
 For runtime options/flags:
 ```bash
 perldoc perlrun
+```
+
+To get help with a perl function, use `perldoc -f func`:
+```bash
+perldoc -f chomp
+```
+
+For perl variables, use `perldoc -v var`
+```bash
+perldoc -v ARGV
+```
+
+For perl modules, use `perldoc -m module`
+```bash
+perldoc -m data
 ```
 
 ## Running Perl
@@ -54,7 +70,8 @@ Use the `-E` flag to run the commands to enable some of the pro core features (i
 ```bash
 perl -E 'print "Hello, world\n"'
 # Hello, world
-perl -E 'say "Hello, world\n"'
+perl -E 'say "Hello, world"'
+# Hello, world
 ```
 `say` automatically adds a newline at the end of a string.
 Does not work with `-e`, because features are not enabled with `-e`.  
@@ -67,6 +84,17 @@ perl -E 'while(<>) { say uc $_ }'
 * `while(<>)` reads from STDIN
 * `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
 This will wait for user input and print it back in uppercase.
+
+## Accessing Variables
+
+```perl
+$days               # the simple scalar value "days"
+$days[28]           # the 29th element of array @days
+$days{'Feb'}        # the 'Feb' value from hash %days
+$#days              # the last index of array @days
+@days[$#days]       # the last element of array @days
+```
+
 
 ## Scalar Variables
 In perl, anything that is a single unit of data is a `scalar` value.  
