@@ -407,6 +407,10 @@ Declare the array variable.
 declare -a FILES
 ```
 
+Then, use either `read` or `mapfile` to get the output of a `find` command.  
+* It should be noted that during my testing of these two methods, I found `mapfile` to
+  be significantly slower than `read` for this purpose.  
+
 ### Filename Array Using `read`
 Then use `read` with a process substitution:
 ```bash
