@@ -49,6 +49,15 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
 
 ---
 
+The difference between `$ARGV[n]` and `@ARGV` comes from how variables are accessed in Perl:
+* `@ARGV`: Refers to the entire array. i.e., all the command-line arguments.
+* `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
+* `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
+  arguments or stdin when used in scalar context. 
+    - This will hold the filename that is currently being processed if there are
+      multiple files.  
+
+
 ### Advanced/Less Common Special Vars
 - `$^I`: Stores the in-place edit extension (used with the `-i` flag).  
     * Like using `sed -i.bak`, perl supports the same thing.  
