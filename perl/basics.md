@@ -1,12 +1,15 @@
 # Perl Basics
 
 ## Table of Contents
+* [Getting Help](#getting-help) 
 * [Running Perl](#running-perl) 
-* [Scalar Variables](#scalar-variables) 
+* [Variables](#variables) 
+    * [Scalar Variables](#scalar-variables) 
     * [Examples of Scalars in Perl](#examples-of-scalars-in-perl) 
-    * [Scalar Operations](#scalar-operations) 
-    * [Scalar Context vs List Context](#scalar-context-vs-list-context) 
-        * [Scalar Context](#scalar-context) 
+        * [Scalar Operations](#scalar-operations) 
+    * [Accessing Variables](#accessing-variables) 
+* [Scalar Context vs List Context with Arrays](#scalar-context-vs-list-context-with-arrays) 
+    * [Scalar Context](#scalar-context) 
         * [List Context](#list-context) 
 * [Perl File Structure](#perl-file-structure) 
 * [Pragmas](#pragmas) 
@@ -19,6 +22,7 @@
 * [Accessing Command Line Arguments](#accessing-command-line-arguments) 
 * [Command Line Options](#command-line-options) 
 * [BEGIN and END Blocks](#begin-and-end-blocks) 
+* [File Operations](#file-operations) 
 * [Resources](#resources) 
 
 ## Getting Help
@@ -353,9 +357,14 @@ sub file_exists {
 ```
 
 ## Using Arrays in Perl
-Arrays are generally accessed by using `@` (the whole array) or `$` to get a single value.  
+Also see [arrays.md](./arrays.md).  
 
-Perl can have arrays that are simply references to an array, and not actually arrays themselves.  
+Arrays are generally accessed by using `@` (the whole array, or "array context") or 
+with `$` ("scalar context") to get a single value.  
+
+Perl can have arrays that are simply references to an array, and not actually arrays 
+themselves, using the syntax `\@array_name`. This creates a reference to the array
+`@array_name`.  
 
 
 ## Using `Data::Dumper` to Print Data
@@ -388,6 +397,8 @@ print "Remaining arguments: ", Dumper(\@ARGV);
     * `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
     * `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
       arguments or stdin when used in scalar context. 
+        - This will hold the filename that is currently being processed if there are
+          multiple files.  
 
 Accessing elements in arrays:
 * `$` = Single value (scalar).
@@ -425,7 +436,7 @@ Then at the command line:
 
 ## Accessing Command Line Arguments
 You can access CLI arguments from a script in a couple different ways.
-* `$ARGV`: An array that holds all the CLI arguments.  
+* `@ARGV`: An array that holds all the CLI arguments.  
     * Stands for "Argument Vector."
     * Using `$ARGV[0]` will not modify the `@ARGV` array.  
 * `shift`: Command that **removes and returns** the first element from `@ARGV`.  
@@ -481,7 +492,7 @@ Some CLI arguments for perl:
           die "Tainted input detected.\n"
       }
       ```
-  
+
 ## BEGIN and END Blocks
 Like `awk`, `perl` has a `BEGIN` and `END` block.  
 Anything inside the `BEGIN` block will run once, before the main code block starts execution.  
@@ -512,70 +523,6 @@ perl -ne 'END { print $t } @w = /(\w+)/g; $t += @w' file.txt
     * `@w`: In scalar context, gives the number of elements in the array (words).  
     * `$t` holds the total number of words across all lines.  
 * `file.txt`: The input file.  
-
----
-
-## File Operations
-You can open files with the `open` function:
-```perl
-open my $fh, '<', 'file.txt' or die $!; 
-```
-- `open`: Builtin perl function to open a file.
-    - `my $fh`: Defines `$fh` as a file handle. Like a pointer to the opened file.
-        - The `my` keyword makes it lexically scoped (only available in that block)
-    - `'<'`: Open in read-only mode.
-        - `<`: Read
-        - `>`: Write (truncate/overwrite)
-        - `+<`: Read and Write
-        - `>>`: Append
-    - `'file.txt'`: The file to open
-    - `or die $!;`: If `open` fails, this will terminate the script and print the
-      system error msg from `$!`.
-
-Close files with the `close` function, passing the file handle as an argument:
-```perl
-close $fh;
-```
-Always close files when you're done with them!
-It's a good practice to free up system resources.  
-If you forget to close, Perl may close it automatically when the script ends.
-But, in long-term running scripts, not closing the file can cause **file descriptor leaks**. 
-
----
-
-When you have opened a file and assigned a file handle, you can read from the file
-using the **diamond operator** (`<>`).
-
-You can use `while (<$fh>)` to loop over the lines of the file:
-```perl
-open my $fh, '<', 'file.txt' or die $!;
-while (<$fh>) {
-    print "$_";
-}
-close $fh;
-```
-This is the idiomatic way to loop over a file's lines.  
-
----
-
-If you want, you can also save the line into a variable to use in the `while` loop:
-```perl
-open my $fh, '<', 'file.txt' or die $!;
-while (my $line = <$fh>) {
-    print $line;
-}
-close $fh;
-```
-Do this if you want to make the variable name clear, or if you're working with 
-multiple filehandles in the same scope and don't want to rely on `$_`.  
-
----
-
-File operation workflow:
-```bash
-Open -> Assign FileHandle -> Read from filehandle using `<>` -> close filehandle
-```
-
 
 ---
 
