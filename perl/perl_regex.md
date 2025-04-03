@@ -24,6 +24,7 @@ You can reference capture groups (much like `sed`) with variables:
 
 
 ## Lookahead Matching
+
 ### Positive Lookahead
 Using `(?=pattern)` is a positive lookahead.  
 It matches a position only if it is followed by `pattern`, but it does not consume 
@@ -46,6 +47,16 @@ if ($text =~ /foo(?!\d+)/) {
 ```
 
 ## Lookbehind Matching
+Lookbehinds are very useful.  
+But:
+- They must have a fixed width.
+- That means they can not use multis.  
+```regex
+/(?<=abc)\d+/  # Good because 'abc' is fixed width
+/(?<=a+)\d+/   # Not allowed, because 'a+' is variable width
+```
+This is different from other regex engines (Python, .NET) which allow
+variable-width lookbehinds.  
 
 ### Positive Lookbehind
 The `(?<=pattern)` token is a positive lookbehind.  
