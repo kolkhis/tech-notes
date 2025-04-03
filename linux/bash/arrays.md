@@ -1,6 +1,4 @@
-
 # Arrays in Bash  
-
 
 ## Table of Contents
 * [Declaring an Array in Bash](#declaring-an-array-in-bash) 
@@ -24,6 +22,12 @@
     * [Creating an Associative Array in Bash](#creating-an-associative-array-in-bash) 
     * [Using Associative Arrays](#using-associative-arrays) 
     * [Parameter Transformations on Dictionaries](#parameter-transformations-on-dictionaries) 
+* [Check if an Element Exists in an Array](#check-if-an-element-exists-in-an-array) 
+    * [Using an Associate Array to Check if Element Exists](#using-an-associate-array-to-check-if-element-exists) 
+    * [Using a Loop to Check if Element Exists](#using-a-loop-to-check-if-element-exists) 
+* [Getting a List of Files in an Array](#getting-a-list-of-files-in-an-array) 
+    * [Filename Array Using `read`](#filename-array-using-read) 
+    * [Filename Array Using `mapfile`](#filename-array-using-mapfile) 
 
 
 ## Declaring an Array in Bash  
@@ -196,12 +200,11 @@ done
 
 ## Using `mapfile` 
 ```bash
-mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array_name]
+mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [ARRAY_NAME]
 ```
-Read lines from the standard input into an indexed array variable.
 
 Read lines from the standard input into the indexed array variable `array_name`, or from 
-file descriptor FD if the -u option is supplied.
+file descriptor `FD` if the `-u` option is given.
 
 The variable `MAPFILE` is the default `array_name`.
 
@@ -404,6 +407,7 @@ Declare the array variable.
 declare -a FILES
 ```
 
+### Filename Array Using `read`
 Then use `read` with a process substitution:
 ```bash
 IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md')
@@ -418,5 +422,23 @@ IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md')
         - Without this you'd only get the first filename.  
     - `-a FILES`: Save in the the `FILES` array.  
 - `< <(find . -name '*.md')`: Directing a process substitution to get the list of files.  
+
+### Filename Array Using `mapfile`
+This method uses `mapfile`, and it's friendlier to filenames that contain newlines or
+spaces.  
+```bash
+declare -a FILES
+mapfile -d '' -t FILES < <(find . -name '*.md' -print0)
+for FILE in "${FILES[@]}"; do
+    printf "File: %s\n" "$FILE"
+done
+```
+- `mapfile`: Reads input and indexes it into an array.  
+  - `-d ''`: Use a null character to delimit strings.
+    - This is necessary since `-print0` separates the filenames with a NULL byte (`\0`).  
+  - `-t`: Strips the trailing delimiters (NULL bytes) from files before storing them.  
+  - `FILES`: The array name.  
+  
+
 
 
