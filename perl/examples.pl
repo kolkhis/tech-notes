@@ -34,8 +34,10 @@ print "Full list of arguments with Dumper:\n", Dumper(\@ARGV), "\n\n";
 
 print "Home dir: $ENV{HOME}\n"; # Access environment variables
 
+### Counting the words in a file
 my $t = 0;
 # if passing a file, this will loop over each line
+# i.e., `perl examples.pl file1.txt`
 while (<>) {  
     my @w = /(\w+)/g;
     $t += @w;
@@ -43,4 +45,7 @@ while (<>) {
 }
 print "Word count: $t\n";
 
+
+
+# exit code
 1;
