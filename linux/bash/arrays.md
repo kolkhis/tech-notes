@@ -443,6 +443,29 @@ done
   - `-t`: Strips the trailing delimiters (NULL bytes) from files before storing them.  
   - `FILES`: The array name.  
   
+### Filename Array with `read` and a `while` loop
+The `-print0` can be used with `read`, but it requires directing the `find` output to 
+a `while` loop.  
+```bash
+find /home/kolkhis/notes -name '*.md' -print0 | while IFS= read -r -d '' FILE; do
+    printf "File: %s\n" "$FILE"
+done
+```
+The downside of this is that it doesn't save the filenames into an array. Since it's
+using a pipe `|` for the `while` loop, any modification made to `FILES` will be done
+in a subshell and won't be reflected in the rest of the script.  
+
+So that's probably not what you want to do.  
+
+The solution:
+```bash
+while IFS= read -r -d '' FILE; do
+    FILES+=("$FILE")
+    printf "Added file.\n"
+done < <(find /home/kolkhis/notes -name '*.md' -print0)
+```
+You could use a process substitution as input to the while loop, then append each 
+file individually into the array.  
 
 
 
