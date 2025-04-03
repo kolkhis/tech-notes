@@ -82,23 +82,36 @@ You can specify the type of regex used with `-regextype` (`find -regextype help`
 ## tl;dr: Examples  
 ##### Examples start on line 1147 of [man find](`man://find 1147`)
 
-### Skipping directories (Omitting directories)  
-Skip directories with `find`:
-* To **SKIP** the directory `./src/emacs` and print all other files found:  
-```bash  
-find . -path ./src/emacs -prune -o -print  
-```
-* Skip the contents of any `.git` folders, and search for `*.py` files
-```bash
-find . -path ".git" -prune -o -path "./*.py" -print
-find . -path ".git" -prune -o -name "*.py" -print
-```
-* Exclude **multiple** directories by using `-o`(r) inside escaped parentheses: `\(  \)`
-```bash
-find . -type d \( -path ./dir1 -o -path ./dir2 -o -path ./dir3 \) -prune -o -name '*.txt' -print
-```
+### Skipping directories (Omitting directories) with `-prune`
+The `-prune` option tells `find`: "if the file is a directory, don't descend into it."  
+This allows you to skip over the contents of a specific directory.  
 
-#### If `-prune` doesn't work use an Operator instead:
+Skip directories with `find`:
+* To **SKIP** a directory and print all other files found:  
+  ```bash  
+  find . -path ./src/emacs -prune -o -print  # skip the ./src/emacs dir
+  find . -name '.git' -prune -o -print       # skip the .git dir
+  ```
+  So, here, we're using `find` to specifically search for the directory we want to
+  skip, then using `-prune` to say "don't descend into this directory."  
+  Then, we're using an `OR` operator (`-o`) to `-print` any files that *don't* match
+  the pattern.  
+
+* Skip the contents of any `.git` folders, and search for `*.py` files
+  ```bash
+  find . -path ".git" -prune -o -path "./*.py" -print
+  find . -path ".git" -prune -o -name "*.py" -print
+  ```
+
+* Exclude **multiple** directories by using the `OR` operator `-o` inside escaped parentheses: `\(  \)`
+  ```bash
+  find . -type d \( -path ./dir1 -o -path ./dir2 -o -path ./dir3 \) -prune -o -name '*.txt' -print
+  ```
+    - This evaluates everything in the parentheses first, and then does a `-prune` on
+      all the directories found there. Then, it says `-o -name '*.txt' -print` (or, with
+      file extension `.txt`, print the output).  
+
+#### If `-prune` doesn't work, use an Operator instead:
 Use the `-not` operator:
 ```bash
 find -name "*.md" -not -path "./directory/*"
@@ -614,13 +627,51 @@ find . -perm -a+r -perm /a+w \! -perm /a+x
 * Access Time: Use `ls --time=atime -lt` to list files with access times.  
 * Change Time: Use `ls --time=ctime -lt` to list files with change times.  
 
-## Best Practice: Using `-print0`
+## "Best Practice": Using `-print0`
 For "maximum safety," it's recommended to use `-print0` when finding files with `find`.  
+This requires the use of `mapfile` instead of `read` when reading the filenames into
+an array.  
 This is used to make sure filenames with spaces or newlines don't break.  
 
 E.g., reading a list of files into an array variable:
 ```bash
-IFS=$'\n' read -r -d '' -a FILES < <(find . -name '*.md' -print0)
+declare -a FILES
+mapfile -d '' -t FILES < <(find . -name '*.md' -print0)
 ```
-The `-print0`
+- `mapfile`: Reads input and indexes it into an array.  
+  - `-d ''`: Use a null character to delimit strings (items in the array).
+    - This is necessary since `-print0` separates the filenames with a NULL byte (`\0`).  
+  - `-t`: Strips the trailing delimiters (NULL bytes) from files before storing them.  
+  - `FILES`: The array name.  
+  
+
+The `-print0` ends each filename with a NULL byte instead of a newline.  
+So that's why we need to split on `\0` (with `-d ''`).  
+
+
+## `find` with `-printf`
+Using `-printf` allows for some extended control over what, and how, you see output.  
+The `-printf` option doesn't add newlines to the end.  
+This interprets escapes `\` and `%` directives.  
+
+This can also be used to format the output by padding with spaces or aligning text.  
+- E.g., field widths and precision, just like in C.
+
+Escapes and directives can be found at `man://find +710`.  
+
+Printf Directives can be used to find *information* about the file as well, like
+permissions, modification times, the files' dirnames, etc..  
+Some useful directives:
+- `%a` will output the file's `atime` (last accessed time - `ctime()` in C).  
+    - `%Ak` (where `k` is a C `strftime` format) will print the access time in that
+      format. 
+- `%c`: Last metadata OR content change time.  
+- `%t`: Last modification time.
+    - `%Tk` (where `k` is a C `strftime` format)
+- `%m`: Octal permission bits.
+- `%M`: Symbolic permission bits.
+- `%b` will show the amount of disk space used for the file.  
+- `%h`: The leading directories of the file's name (all but the actual filename).  
+- And many more.
+
 
