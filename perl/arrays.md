@@ -108,6 +108,21 @@ foreach my $line (@first_5) {
 }
 ```
 
+---
+
+#### One-liner File Slurp with UTF-8
+```perl
+use strict;
+use warnings;
+use utf8;
+use open ':std', ':encoding(UTF-8)';
+
+my $filename = 'file.txt';
+open my $fh, '<', $filename or die $!;
+my $contents = do { local $/; <$fh> }; # Slurp entire file into one scalar
+close $fh;
+```
+
 ### Reading a List of Filenames into an Array
 If you wanted to read a list of filenames into an array, you could use a 
 
@@ -116,6 +131,7 @@ If you wanted to read a list of filenames into an array, you could use a
 In perl, associative arrays (or dictionaries) are called "hashes."  
 A hash is denoted by a percent sign (`%`).  
 ```perl
+# declare a hash variable
 my %hash;
 ```
 
