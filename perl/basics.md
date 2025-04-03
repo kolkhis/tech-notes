@@ -85,18 +85,38 @@ perl -E 'while(<>) { say uc $_ }'
 * `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
 This will wait for user input and print it back in uppercase.
 
-## Accessing Variables
 
+
+
+## Variables
+Types of variables in perl are:
+- Scalar
+- Array
+- Hash
+
+Every variable type has its own namespace, along with some non-variable identifiers.  
+Basically meaning, you can use the same name for a scalar variable and an array
+variable and they won't conflict.  
 ```perl
-$days               # the simple scalar value "days"
-$days[28]           # the 29th element of array @days
-$days{'Feb'}        # the 'Feb' value from hash %days
-$#days              # the last index of array @days
-@days[$#days]       # the last element of array @days
+my @var = (1, 2, 3);
+my $var = "Hello, world.";
+print "@var\n";
+# 1 2 3
+print "$var\n"
+# Hello, world.
 ```
 
+Not "technically" variables, but the same rule applies to these:
+- Handles
+    - File Handle
+    - Directory Handle  
+- Subroutine names
+- Format names
+- Labels
 
-## Scalar Variables
+Just because you *can* doesn't mean you *should*.  
+
+### Scalar Variables
 In perl, anything that is a single unit of data is a `scalar` value.  
 That unit of data could be a string, number, or reference.  
 Scalars are represented with the dollar `$` sign prefix.  
@@ -127,7 +147,7 @@ print $array_ref->[0];     # outputs: 1
 
 ---
 
-### Scalar Operations
+#### Scalar Operations
 ---
 
 * Scalars can holds numbers and perform mathmatical operations.  
@@ -164,6 +184,21 @@ print $array_ref->[0];     # outputs: 1
   print "Number of colors: $count\n"; 
   ```
 
+### Accessing Variables
+
+From `perldoc -m data`:
+```perl
+$days               # the simple scalar value "days"
+$days[28]           # the 29th element of array @days
+$days{'Feb'}        # the 'Feb' value from hash %days
+$#days              # the last index of array @days
+@days[$#days]       # the last element of array @days
+@days               # ($days[0], $days[1],... $days[n])
+@days[3,4,5]        # same as ($days[3],$days[4],$days[5])
+@days{'a','c'}      # same as ($days{'a'},$days{'c'})
+%days               # (key1, val1, key2, val2 ...)
+```
+
 ## Scalar Context vs List Context with Arrays
 In perl, context determines how expressions are evaluated.  
 Scalars are always evaluated in scalar context, but arrays/hashes are a little
@@ -184,8 +219,9 @@ Using `$count` as the variable, with `$`, sets the context as scalar.
 ---
 
 #### List Context
-In list context, if an operation or function is expected to return a list of values,
-it operates in list context.  
+If an operation or function is expected to return a list of values, it operates in 
+list context.  
+
 Example:
 ```perl
 my @arr = (1, 2, 3);
@@ -347,9 +383,11 @@ print "Remaining arguments: ", Dumper(\@ARGV);
       the contents of the array.  
 
 
-* The difference between `$ARGV` and `@ARGV` comes from how variables are accessed in Perl:
+* The difference between `$ARGV[n]` and `@ARGV` comes from how variables are accessed in Perl:
     * `@ARGV`: Refers to the entire array. I.e., all the command-line arguments.
     * `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
+    * `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
+      arguments or stdin when used in scalar context. 
 
 Accessing elements in arrays:
 * `$` = Single value (scalar).
@@ -485,9 +523,11 @@ open my $fh, '<', 'file.txt' or die $!;
 - `open`: Builtin perl function to open a file.
     - `my $fh`: Defines `$fh` as a file handle. Like a pointer to the opened file.
         - The `my` keyword makes it lexically scoped (only available in that block)
-    - `'<'`: Open in read-only mode. Other options:
-        - `'>'`: Write (overwrite)
-        - `'>>'`: Append
+    - `'<'`: Open in read-only mode.
+        - `<`: Read
+        - `>`: Write (truncate/overwrite)
+        - `+<`: Read and Write
+        - `>>`: Append
     - `'file.txt'`: The file to open
     - `or die $!;`: If `open` fails, this will terminate the script and print the
       system error msg from `$!`.
