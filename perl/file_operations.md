@@ -72,6 +72,53 @@ File operation workflow:
 Open -> Assign FileHandle -> Read from filehandle using `<>` -> close filehandle
 ```
 
+#### Slurping a Whole File
+To read the contents of a file into a single scalar variable, undefine 
+the `$/` variable (input record separator) before reading from the file handle:
+
+```perl
+open(my $fh, '<', 'file.txt') or die "Couldn't open file: $!";
+undef $/;
+my $contents = <$fh>;
+close $fh;
+
+print $contents;
+```
+
+In bash it would be something like:
+```bash
+contents=$(<file.txt)
+printf "%s\n" "$contents"
+```
+
+---
+
+### Writing to Files
+Writing to files requires `open`ing the file first, then you can `print` into it.  
+
+To truncate (overwrite) a file, open with the `>` mode. 
+```perl
+open(my $fh, '>', 'output.txt') or die $!;
+print $fh "Hello, world.\n";
+close $fh;
+```
+- `print $fh "...";`: The `print` function can take a filehandle as an argument.  
+    - The output of the print statement will be directed to that filehandle.  
+
+To append to the file, open with the `>>` mode.  
+```perl
+open(my $fh, '>>', 'output.txt') or die $!;
+print $fh "Hello, world.\n";
+close $fh;
+```
+
+In bash, this is equivalent to:
+```bash
+printf "Hello, world.\n" > output.txt
+printf "Hello, world.\n" >> output.txt
+```
+
+
 ## Reading Filenames from a Directory
 There are specific perl directory functions to help with this kind of thing.  
 - `opendir`
@@ -96,15 +143,216 @@ foreach my $f (@files) {
 ---
 
 ### Excluding `.` and `..`
-Use a `grep` to exclude the `.` (current) and `..` (parent) directories.  
+* Use a `grep` to exclude the `.` (current) and `..` (parent) directories.  
+  ```perl
+  my $dir_name = '/home/kolkhis/notes';
+  openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
+  my @files = grep { $_ ne '.' && $_ ne '..' } readdir($dir);
+  closedir($dir);
+  
+  foreach my $f (@files) {
+      print "File: $f\n";
+  }
+  ```
+  Using `grep { ... } readdir($dir)` filters out unwanted entries.  
+  It accepts the `ne` (not equal) function for conditionals.  
+  
+* Just add a `-f` check in the `grep` to only get regular files.
+  ```perl
+  my $dir_name = '/home/kolkhis/notes';
+  openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
+  my @files = grep {
+      $_ ne '.' && $_ ne '..' && -f $_
+  } readdir($dir);
+  closedir($dir);
+  
+  foreach my $f (@files) {
+      print "File: $f\n";
+  }
+  ```
+  This has some limitations though. It will only print the filenames, so if the
+  script isn't being run in `$dir_name`, it may break.  
+
+  If we just used `"$dir_name/$_"`, it would break on Windows and not be
+  cross-platform.  
+
+  We can fix that with `File::Spec` (or `Path::Tiny`).  
+
+---
+
+### Getting Regular Files Only with `File::Spec`
+`File::Spec` is a perl module.
 ```perl
 my $dir_name = '/home/kolkhis/notes';
 openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
-my @files = grep { $_ ne '.' && $_ ne '..' } readdir($dir);
+my @files = grep {
+    $_ ne '.' && $_ ne '..' && -f File::Spec->catfile($dir_name, $_)
+} readdir($dir);
 closedir($dir);
 
 foreach my $f (@files) {
     print "File: $f\n";
 }
 ```
+* `File::Spec->catfile($dir_name, $_)`: 
+    - Safely joins the directory path and filename regardless of OS.  
+    - So instead of `"$dir_name/$_"`, we use `catfile`.
+* `-f`: Tests if the path is a regular file. Skips directories, pipes, symlinks, etc. 
+    - Just like bash. 
+
+### Getting Regular Files Only with `Path::Tiny`
+`File::Spec` is great, but `Path::Tiny` is more "ergonomic."  
+`Path::Tiny` is an official CPAN module. It's not in the Perl core but it's common in 
+modern Perl codebases.  
+Using this module abstracts away all of the lower level things like `opendir` and
+`closedir`.  
+```perl
+use Path::Tiny;
+
+my $dir = path("/home/kolkhis/notes"); # The `path` function from `Path::Tiny`
+my @files = $dir->children(qr/\.md$/); # All the .md files
+
+foreach my $file (@files) {
+    print "File: $file\n";
+}
+```
+- The `path()` function returns a `dir` object.  
+- This `dir` object has a method `children()`.
+    - `qr/`: The `qr` means "quote regex." It compiles regex as an object.
+      ```perl
+      my $regex = qr/\.md$/;
+      ```
+      You can pass that object around or use it like a regular regex. It's like
+      `r'...'` in Python.
+    - Inside `children(qr/\.md$/);`, it's filtering filenames with `.md` file
+      extensions. 
+
+This is more platform agnostic. It handles the platform differences (slashes,
+symlinks, etc.) more cleanly.  
+
+
+## File Test Operations (File Conditionals)
+Perl and Bash have a lot in common. This is true for file tests as well.  
+Perl supports a lot of conditionals that Bash has for checking the state of files
+(e.g., `-f $FILE`).  
+
+A list of Perl file test operators (and their bash equivalents):
+* `-f`: Is a regular file   
+    - `[[ -f "$file" ]]`
+* `-d`: Is a directory  
+    - `[[ -d "$dir" ]]`
+* `-e`: Exists  
+    - `[[ -e "$path" ]]`
+* `-s`:  Size > 0    
+    - `[[ -s "$file" ]]`
+* `-r`, `-w`, `-x`: Readable / writable / executable   
+    - Same as Bash
+* `-z`: Size is zero
+    * `[[ -z "$file" ]]`
+    * `[[ ! -s "$file" ]]`
+* `-l`: Is a symlink 
+    * `[[ -L "$file" ]]`
+
+An example:
+```perl
+if (-d $path) {
+    print "$path is a directory\n";
+}
+```
+
+## Recursive Directory Traversal (like `find`)
+You can use `File::Find` to emulate the behavior of the `find` command:
+```perl
+use File::Find;
+
+find(sub{
+    return unless -f;  # only regular files
+    print "Found file: $File::Find::name\n";
+
+}, '/some/directory');
+```
+The `File::Find::find` function takes a submodule as an argument (a perl function).  
+
+- TODO: `File::Find` also supports `-exec` functionality.
+
+The bash equivalent:
+```bash
+find /some/directory -type f
+```
+
+
+## Modifying File Permissions (`chmod`, `chown`, `utime`)
+Perl has direct functions like bash to do these things:
+
+```bash
+chmod 0755, 'script.pl';
+```
+Though Perl allows you to leave out parentheses for function calls like Bash, it's
+usually better to use them (avoids ambiguity).  
+```perl
+chmod(0755, 'script.pl');
+chown($uid, $gid, 'file.txt');
+utime($atime, $mtime, 'file.txt');
+```
+
+In bash, this would be:
+```bash
+chmod 755 script.pl
+chown user:group file.txt
+touch -t 202201010000 file.txt
+```
+
+## Temporary Files
+You can create temporary files with `File::Temp`.  
+```perl
+use File::Temp qw/tempfile/; # qw = a list of quoted words. same as ('tempfile')
+
+my ($fh, $filename) = tempfile(); 
+print $fh "Hello!\n";
+close $fh;
+print "File written to $filename\n"
+```
+- `use File::Temp qw/tempfile/;`: The `qw` stands for "quote words." It's a perl shortcut for
+  space-separatesd strings.
+    - So this is the same as `('tempfile')`.
+    - `File::Temp` is passing a list of symbols to import. So using `qw/tempfile/;`
+      only imports the `tempfile()` function from the module. 
+
+## File Locks (`flock`)
+For safe concurrent writing, you can implement file locks with `flock()`.  
+File locking prevents multiple processes from writing to the same file at the same
+time (i.e., avoiding race conditions or corruption).  
+- It's like a mutex but for files
+- If one process locks a file, others have to wait (or fail) if they try to lock it too.  
+```perl
+open(my $fh, '>>', 'shared.log') or die $!;
+flock($fh, 2) or die "Can't lock: $!";
+print $fh "Some log entry\n";
+close($fh); 
+```
+- `flock($fh, 2)`: Lock the file with an exclusive lock (write lock).  
+- The 2 means "Exclusive Lock". There are others:
+  | Number | Constant  | Meaning |
+  |--------|-----------|---------|
+  |   1    | `LOCK_SH` | Shared Lock (read)
+  |   2    | `LOCK_EX` | Exclusive Lock (write)
+  |   8    | `LOCK_NB` | Non-blocking
+
+If you'd rather use the constants, you can do that -- it's probably more readable. 
+```perl
+flock($fh, LOCK_EX)
+```
+
+In bash, this would be:
+```bash
+flock -x log.lock -c 'echo "Some log entry" >> shared.log'
+```
+This says:
+* Lock the file `log.lock` exclusively (`-x`)
+* Then run the command (`-c '...'`)
+* While that command runs, the lock is held
+* Other processes trying to `flock log.lock` will wait
+
+This prevents two scripts from writing to `shared.log` at the same time.  
+
 
