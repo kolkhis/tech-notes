@@ -72,4 +72,39 @@ File operation workflow:
 Open -> Assign FileHandle -> Read from filehandle using `<>` -> close filehandle
 ```
 
+## Reading Filenames from a Directory
+There are specific perl directory functions to help with this kind of thing.  
+- `opendir`
+- `closedir`
+- `readdir`
+
+Ex, opening the `notes` directory and reading the filenames inside:
+```perl
+my $dir_name = '/home/kolkhis/notes';
+openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
+my @files = readdir($dir);
+closedir($dir);
+
+foreach my $f (@files) {
+    print "File: $f\n";
+}
+```
+* `opendir()` opens a directory and returns a directory handle.
+* `readdir()` reads all filenames in the directory into an array.
+* `closedir()` closes the directory handle.
+
+---
+
+### Excluding `.` and `..`
+Use a `grep` to exclude the `.` (current) and `..` (parent) directories.  
+```perl
+my $dir_name = '/home/kolkhis/notes';
+openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
+my @files = grep { $_ ne '.' && $_ ne '..' } readdir($dir);
+closedir($dir);
+
+foreach my $f (@files) {
+    print "File: $f\n";
+}
+```
 
