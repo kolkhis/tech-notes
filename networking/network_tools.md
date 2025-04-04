@@ -22,6 +22,15 @@
 
 ---
 
+### `cat /etc/resolv.conf`
+This file contains the DNS rules for the system.  
+This is symlinked to `/run/systemd/resolve/stub-resolv.conf` on some systems.  
+You shouldn't edit this file directly.  
+
+Using `resolvectl status` will display details about the uplink DNS servers that
+are currently in use.  
+
+
 ### `ping`
 Sends ICMP ECHO_REQUEST packets to network hosts.  
 It's commonly used to check if a host is reachable across an IP network.  
