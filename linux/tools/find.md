@@ -403,54 +403,51 @@ For testing the timestamps on files:
 
 
 ## Performing Actions on Files Using `find`
+There are several "actions" you can specify when using `find`.  
+These actions will determine how the found files will be handled.  
+- `-print` (default): Outputs the file names separated by newlines.
+- `-print0`: Outputs the file names separated by NULL bytes.  
+    - This is generally considered safer since funky filenames won't break
+      things.  
+- `-printf <format>`: Format print. Doesn't add a newline like `-print`.  
+    - Useful for listing extended data about the file (atime, mtime, users, etc.).  
+    - Field widths/precision same as `printf()` in C.  
+    - Many of the fields are printed as `%s` rather than `%d`
+    - The `-` flag does work (it forces fields to be left-aligned).  
+- `-fprint <file>`: Same as `-print`, but instead output to `<file>`
+- `-fprint0 <file>`: Same as `-print0`, but instead output to `<file>`
+- `-fprintf <file>`: Same as `-printf`, but instead output to `<file>`
 
-* `-ls`: True; list current file in ls -dils format on standard output.  
+- `-ls`: List found files just like `ls -dils`.  
+- `-fls <file>`: Like `-ls` but write to `<file>`, just like `-fprint`.
 
-* `-delete`: Delete files; true if removal succeeded.  
+- `-prune`: If the file is a directory, don't descend into it.  
+    - If `-depth` is specified, `-prune` is ignored.
+- `-delete`: Delete found files.
+    - This implies `-depth`. So using `-prune` with `-delete` is not effective.
+- `-exec {} \;`: Execute a command on the file.  
+    - The `'{}'` expands to the current filename. This is optional.
+- `-execdir {} \;`: Like `-exec`, but the command run from the directory containing 
+  the file.  
+- `-ok command \;`: Like `-exec` but asks the user first.
+- `-okdir command \;`: Like `-execdir` but asks the user first.
+- `-quit`: Just quits.
 
-* `-exec command ;`: Execute command;  true if 0 status is returned.  
-* `-exec command {} +`: This variant of the `-exec` action runs the specified `command` on the 
-                selected files, BUT:  
-    * The command line is built by appending each selected 
-      file name at the end; 
-    * The total number of invocations of the command will be 
-      much less than the number of matched files.  
+---
 
-* `-ok command ;`: Like -exec but ask the user first.  
+* `-exec command {} +`: Like `-exec` but runs the specified `command` on **all** of 
+  the files as arguments to the one command.
+    * Works by appending each selected file name at the end. 
+    * The number of invocations of the command will be much less than the number of 
+      matched files.  
 
-* `-execdir command {} \;`: Like  -exec,  but the specified command is run from the subdirectory containing the matched file, which is not normally the directory in which you started find.  
-* `-execdir command {} +`: Same as above, but with `-exec cmd {} +`
-* `-okdir command ;`:  
-              Like -execdir but ask the user first in the same way as for -ok.  
+* `-execdir command {} +`: Same as `-execdir`, but with `-exec cmd {} +`
 
 
-* `-print` True; print the full file name on the standard output, followed by a newline.:  
-
-* `-fls file`: True; like -ls but write to file like -fprint.  
-
-* `-fprint file`: True; print the full file name into file file.  
-
-* `-print0`: True; print the full file name on the standard output, followed by a  null character (instead of the newline character that -print uses).  
-* `-fprint0 file`: True;  like -print0 but write to file like -fprint.  
-
-* `-fprintf file format`: True;  like -printf but write to file like -fprint.  
-
-* `-printf format`: True; print format on the standard output, interpreting `\' escapes and `%' directives.  
-    * Field widths and precisions can be specified as with the `printf(3)` C function.  
-    * many of the fields are printed as `%s` rather than `%d`
-    * the `-` flag does work (it forces fields to be left-aligned).  
-    * Unlike `-print`, `-printf` does not add a newline at the end of the string.  
-    * The escapes and directives are in: `:Man find /-printf format`
-
-* `-prune` True; if the file is a directory, do not descend into it.  
-    * If  `-depth`  is given,  then `-prune`  has no effect.  
-    * You cannot usefully use `-prune` and `-delete` together.  
-    To **SKIP** the directory `./src/emacs` and print all other files found:  
-    ```bash  
-    find . -path ./src/emacs -prune -o -print  
-    ```
-
-* `-quit`: Exit immediately (with return value zero if no errors have occurred).  
+Using `-prune` to **skip** the directory `./src/emacs` and print all other files found:
+```bash  
+find . -path ./src/emacs -prune -o -print  
+```
 
 
 ## Operators For Multiple Conditions
@@ -673,5 +670,4 @@ Some useful directives:
 - `%b` will show the amount of disk space used for the file.  
 - `%h`: The leading directories of the file's name (all but the actual filename).  
 - And many more.
-
 
