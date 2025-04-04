@@ -29,6 +29,24 @@ A list of useful network commands and how to use them.
 
 ## Commands
 
+### `tcpdump`
+Use tcpdump to dump all the packets that are coming through a network interface.  
+Capture all packets on an interface.
+```bash
+tcpdump -i eth0
+tcpdump -i enp0s31f6
+```
+
+
+### `cat /etc/resolv.conf`
+This file contains the DNS rules for the system.  
+This is symlinked to `/run/systemd/resolve/stub-resolv.conf` on some systems.  
+You shouldn't edit this file directly.  
+
+Using `resolvectl status` will display details about the uplink DNS servers that
+are currently in use.  
+
+
 ### `ip`
 Replaces `ifconfig`, `route`, `netstat`, and more.
 It's a versatile command for network interface and routing configurations.
