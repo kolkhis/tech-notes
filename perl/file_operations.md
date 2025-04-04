@@ -355,4 +355,18 @@ This says:
 
 This prevents two scripts from writing to `shared.log` at the same time.  
 
+## Combining Bash and Perl to Read Filenames
+If using `File::Find` is not to your liking, you can use `qx` (or backticks) to
+execute a shell command (`find`).  
+```perl
+my @names;
+@names = qx(find /home/kolkhis/notes -name '*.md');
+chomp(@names); # get rid of the newlines at the end
+foreach my $n (@names) {
+    -f $n && print "Regular file: $n\n";
+}
+```
+If you don't use `chomp(@names);` then the files will contain newlines, and `-f` will
+not work on them.  
+
 
