@@ -526,6 +526,42 @@ perl -ne 'END { print $t } @w = /(\w+)/g; $t += @w' file.txt
 
 ---
 
+## Using Subshells in Perl
+Subshells are a thing in perl. You can capture the output of shell commands.  
+
+In order to achieve the same result as `$(...)` (bash) in perl, you can do one of two
+things:
+- Wrap a shell command in backticks(``` `cmd` ```)
+- Use the [`qx` operator](./operators.md) (`qx/cmd/` or `qx(cmd)`)
+
+Then save the output to a variable.  
+
+This is idiotmatic, core Perl and doesn't rely on external packages.  
+
+Example:
+```perl
+my $hostname = qx(hostname)
+```
+This will save the literal output of the command `hostname`.  
+Since the output is literal, it will contain the newline at the end.  
+To get rid of the trailing newline, use `chomp()`:
+```perl
+chomp($hostname);
+```
+This will modify it in-place to get rid of the trailing newline.  
+
+
+## Error Handling
+In perl, we can use the `or` operator along with the `die` function to handle errors.
+```perl
+open(my $fh, '<', 'file.txt') or die $!;
+```
+- This attempts to open the file `file.txt` in readonly mode.  
+- If it fails, it will trigger the `or` (since the exit code of the `open` will be non-zero).
+- `die` will exit with an error message. 
+- `$!` holds the last error message that the program encountered.  
+
+
 ## Resources
 * [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
 
