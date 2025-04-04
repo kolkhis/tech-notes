@@ -21,6 +21,8 @@ open my $fh, '<', 'file.txt' or die $!;
         - `>`: Write (truncate/overwrite)
         - `+<`: Read and Write
         - `>>`: Append
+        - `-|`: Open a filehandle to read from an Input Stream (for use with shell commands)
+        - `|-`: Open a filehandle to write to an Output Stream (for use with shell commands)
     - `'file.txt'`: The file to open
     - `or die $!;`: If `open` fails, this will terminate the script and print the
       system error msg from `$!`.
@@ -369,4 +371,38 @@ foreach my $n (@names) {
 If you don't use `chomp(@names);` then the files will contain newlines, and `-f` will
 not work on them.  
 
+## Reading from a Piped Input Stream
+You can utilize the `open` function with the `-|` operator to indicate a piped input
+stream.  
+```perl
+open(my $fh, '-|', 'find /home/kolkhis/notes -name "*.md"') or die $!;
+while (my $filename = <$fh> ) {
+    chomp($filename);  # Get rid of the newline
+    print "File: $filename\n";
+}
+close $fh;
+```
+The `-|` opens a pipe for reading the output of a command.  
+
+This runs the `find` command in a subprocess and produces a filehandle to read from
+its `stdout`.  
+
+You can also utilize `open` to write output to pipes.  
+
+## Writing to a Piped Output Stream
+You can also utilize `open` with the `|-` operator to specify that you want to write
+to a pipe.  
+```perl
+open(my $fh, '|-', 'tee output.log') or die $!;
+print $fh "Hello!\n";
+close $fh;
+```
+This will open a filehandle that pipes out to the command `tee output.log`.  
+
+You can also specify `tee -a` to append to the file instead:
+```bash
+open(my $fh, '|-', 'tee -a output.log') or die $!;
+print $fh "Hello again!\n";
+close $fh;
+```
 
