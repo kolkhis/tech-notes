@@ -3,6 +3,19 @@ Arrays in perl are usually denoted with the `@` symbol.
 For instance, a default array is `@ARGV`, which is the argument vector. It holds all
 the command line arguments passed to the script.  
 
+Associative arrays, called "Hashes" in Perl, are denoted with the `%` symbol.  
+
+## Table of Contents
+* [Accessing Variables in Arrays](#accessing-variables-in-arrays) 
+* [Reading Data into an Array](#reading-data-into-an-array) 
+    * [Reading Lines from a File](#reading-lines-from-a-file) 
+    * [Other ways to read in lines from a file](#other-ways-to-read-in-lines-from-a-file) 
+* [Array Operations](#array-operations) 
+        * [One-liner File Slurp with UTF-8](#one-liner-file-slurp-with-utf-8) 
+    * [Reading a List of Filenames into an Array](#reading-a-list-of-filenames-into-an-array) 
+* [Hashes (Associative Arrays)](#hashes-associative-arrays) 
+
+
 ## Accessing Variables in Arrays
 Each element of an array is usually a scalar value (a single unit of data).  
 
@@ -110,7 +123,7 @@ foreach my $line (@first_5) {
 
 ---
 
-#### One-liner File Slurp with UTF-8
+### One-liner File Slurp with UTF-8
 ```perl
 use strict;
 use warnings;
@@ -118,7 +131,7 @@ use utf8;
 use open ':std', ':encoding(UTF-8)';
 
 my $filename = 'file.txt';
-open my $fh, '<', $filename or die $!;
+open(my $fh, '<', $filename) or die $!;
 my $contents = do { local $/; <$fh> }; # Slurp entire file into one scalar
 close $fh;
 ```
@@ -129,9 +142,95 @@ If you wanted to read a list of filenames into an array, you could use a
 
 ## Hashes (Associative Arrays)
 In perl, associative arrays (or dictionaries) are called "hashes."  
+
+### Declaring and Defining Hashes
 A hash is denoted by a percent sign (`%`).  
 ```perl
 # declare a hash variable
-my %hash;
+my %fruits;
 ```
+A hash uses parentheses when defining the values.  
+
+The values in a hash are mapped with `=>` (rather than `:` or `=` in other langs).  
+```perl
+# define a hash variable
+my %fruits = (
+    apple => 'red',
+    banana => 'yellow',
+);
+```
+
+The left side is auto-quoted, but you can use strings as keys:
+```perl
+my %fruits = (
+    "apple" => "red",
+    "banana" => "yellow",
+);
+```
+
+The `=>` is just Perl syntactic sugar for `,`.  
+<!-- TODO: Does this mean that mapping values with `,` is a thing? like: -->
+<!-- ```perl -->
+<!-- my %fruits = ( -->
+<!--     "apple", "red", -->
+<!--     "banana", "yellow", -->
+<!-- ); -->
+<!-- ``` -->
+<!-- ? Also what other things can I use for keys and values? -->
+
+### Adding, Modifying, and Accessing Hash Values
+When accessing hash values, use braces `{ ... }` (not brackets `[ ... ]` like other
+languages).  
+
+- Access a value in a hash:
+  ```perl
+  my $color = $fruits{'apple'};
+  ```
+
+- Adding/modifying values in a hash
+  ```perl
+  $fruits{"grape"} = "purple";
+  ```
+
+### Checking for Existence in a Hash
+Perl made this simple.  
+Check for the existence of an element in a hash using the `exists` function:
+```perl
+if (exists $fruits{"banana"}) {
+    print "Banana is in the hash!\n";
+}
+```
+
+### Deeleting a Key in a Hash
+Perl also made this simple.  
+Use the `delete` function to delete an element from a hash:  
+```perl
+delete $fruits{"banana"};
+```
+
+### Looping over a Hash
+There are a couple of ways to iterate over a hash in Perl.  
+- Using `keys` with a `foreach` loop
+- Using `each` with a `while` loop (more modern/efficient)
+    - This method avoids looking up values manually.
+
+#### `keys`
+The `keys` function can used to iterate over a hash's keys in a `foreach` loop.  
+```perl
+foreach my $fruit (keys %fruits) {
+    print "A $fruit has the color: $fruits{$fruit}\n";
+}
+```
+
+#### `each`
+The `each` function is more like Python in that it will read both the keys and the
+values to loop over.  
+```perl
+while (my ($fruit, $color) = each %fruits) {
+    print "A $fruit has the color: $color\n";
+}
+```
+
+### Sorting a Hash by Key or Value
+
 
