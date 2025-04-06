@@ -209,6 +209,11 @@ Scalars are always evaluated in scalar context, but arrays/hashes are a little
 different.  
 You set the context by using the prefix `$` or `@` for scalar and list respectively.  
 
+If we wanted to force array context for a scalar variable:
+```perl
+my ($string) = @list;
+```
+
 ### Scalar Context
 In scalar context, if an operation or function is expected to return a singel value,
 it operates in a scalar context.  
@@ -332,6 +337,8 @@ The parentheses in `($name)` says you want to assign the first value from the li
 
 Without the parentheses, perl would not treat the right-hand side as a list.
 It would assign `$name` to the number of elements in the `@_` list.  
+
+So, using parentheses in the variable assignment forces **array context**.  
 
 
 ### Returning values from subroutines
