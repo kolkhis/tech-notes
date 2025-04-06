@@ -310,5 +310,15 @@ my %h2 = ( 'key', 'value' );  # same thing
 foreach my $k (sort { $hash{$a} cmp $hash{$b} } keys %hash) {
     print "$k => $hash{$k}\n";
 }
+
+# Hashes can store all types of scalars
+my %stuff = (
+    name    => "Kolkhis",
+    score   => 42,
+    colors  => ['red', 'green'],        # Array reference, technically a scalar
+    nested  => { admin => 1 },          # Hash reference, technically a scalar
+    action  => sub { print "Hello\n" }, # Code reference, technically a scalar
+);
 ```
+
 
