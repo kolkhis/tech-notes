@@ -160,7 +160,7 @@ my %fruits = (
 );
 ```
 
-The left side is auto-quoted, but you can use strings as keys:
+The left side is auto-quoted with `=>`, but you can use strings as keys:
 ```perl
 my %fruits = (
     "apple" => "red",
@@ -168,15 +168,45 @@ my %fruits = (
 );
 ```
 
-The `=>` is just Perl syntactic sugar for `,`.  
-<!-- TODO: Does this mean that mapping values with `,` is a thing? like: -->
-<!-- ```perl -->
-<!-- my %fruits = ( -->
-<!--     "apple", "red", -->
-<!--     "banana", "yellow", -->
-<!-- ); -->
-<!-- ``` -->
-<!-- ? Also what other things can I use for keys and values? -->
+The `=>` is just Perl syntactic sugar for `,`. So you could technically just use `,`
+instead of `=>`, but it's far less readable and doesn't auto-quote the left side.  
+
+### Keys and Values
+
+Only scalars can be used as keys. Perl will stringify any numbers that are used as keys.  
+Keys can **not** be arrays, hashes, or references.  
+
+For values, anything scalar can be used: strings, numbers, references (arrays, hashes, code).  
+So this is totally valid:
+```perl
+my %stuff = (
+    name    => "Kolkhis",
+    score   => 42,
+    colors  => ['red', 'green'],        # Array reference
+    nested  => { admin => 1 },          # Hash reference
+    action  => sub { print "Hello\n" }, # Code reference
+);
+```
+
+So any of these can be values:
+* `@array`: an array (list context)
+* `%hash`: a hash
+* `\@array`: a scalar reference to that array
+* `\%hash`: a scalar reference to that hash
+
+So when you do this:
+```perl
+colors => ['red', 'green'],
+nested => { admin => 1 },
+```
+
+You're assigning array and hash *references*, which are scalars under the hood:
+
+* `['red', 'green']` is a reference to an anonymous array, so it's a scalar.
+* `{ admin => 1 }` is a reference to an anonymous hash, so it's a scalar. 
+
+Doing it this way, you can store arrays, hashes, or even code in a hash as references.
+
 
 ### Adding, Modifying, and Accessing Hash Values
 When accessing hash values, use braces `{ ... }` (not brackets `[ ... ]` like other
@@ -185,6 +215,10 @@ languages).
 - Access a value in a hash:
   ```perl
   my $color = $fruits{'apple'};
+  ```
+  You can also access multiple values at once:
+  ```perl
+  my @colors = $fruits{'apple', 'banana'};
   ```
 
 - Adding/modifying values in a hash
@@ -232,5 +266,49 @@ while (my ($fruit, $color) = each %fruits) {
 ```
 
 ### Sorting a Hash by Key or Value
+To sort a hash by its keys, combine `keys` with the `sort` function:
+```perl
+foreach my $fruit (sort keys %fruits) {
+    print "A $fruit has the color: $color\n";
+}
+```
 
+To sort by value, it's a little more verbose, and uses the `cmp` (string comparison
+operator) along with the special `$a` and `$b` vars from `sort`.  
+```perl
+foreach my $fruit (sort { $fruits{$a} cmd $fruits{$b} } keys %fruits) {
+    print "$fruit => $fruits{$fruit}\n";
+}
+```
+- `keys %fruits`: Returns a list of all keys (`"apple"`, `"banana"`, ...)
+- `sort { ... }`: Sorts that list using a custom comparison block.  
+    - `sort { ... } LIST`: The braces are a code block (an anonmymous subroutine)
+      that perl uses to compare to elements at a time. 
+- `$a` and `$b`: Special variables used by `sort` to compare two elements.  
+- `fruits{$a}` and `$fruits{$b}`: Uses those special vars uto look up the values of
+  the keys
+- `cmp`: String comparison operator.
+    - Returns `-1` if left is less than right (lexographically)
+    - Returns `0` if equal
+    - Returns `1` if greater (lexographically)
+    - It's the string version of `<=>` (spaceship operator), which is for comparing numbers.  
+
+So this sorts by value, alphabetically.  
+
+
+
+### Hash tl;dr:
+```perl
+# Hash declaration: either `=>` or `,` works
+my %h1 = ( key => 'value' );
+my %h2 = ( 'key', 'value' );  # same thing
+
+# Keys are strings or numbers (scalars)
+# Values can be any scalar, including references
+
+# Sorting by value
+foreach my $k (sort { $hash{$a} cmp $hash{$b} } keys %hash) {
+    print "$k => $hash{$k}\n";
+}
+```
 
