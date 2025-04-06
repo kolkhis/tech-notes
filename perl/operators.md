@@ -21,6 +21,7 @@ The slashes can be another delimiter of your choice.
   ```perl
   qq/this is "a" string\n/
   ```
+
 - `qx//`: Run a shell command. 
   ```perl
   qx/ls -alh/
@@ -32,7 +33,6 @@ The slashes can be another delimiter of your choice.
       my $out = qx/hostname/;    # qx operator
       my $out = qx(hostname);    # same, easier with shell pipes
       ```
-
     - Use `qx()` when your shell command includes quotes, pipes, etc:
       ```perl
       my $out = qx(echo "hello" | tr a-z A-Z);
@@ -42,10 +42,12 @@ The slashes can be another delimiter of your choice.
   ```perl
   qw/red green blue/  # ("red", "green", "blue")
   ```
+
 - `qr//`: Compiled regular expression.
   ```perl
   qr/^\d+$/
   ```
+
 - `m//`: Regex match. 
   ```perl
   if ($str =~ m/abc/) { ... }
@@ -106,7 +108,6 @@ my $quote = q/He said, 'hello.'/;     # Single-quoted, no interpolation
 my $quote2 = qq/He said, "$name!"/;   # Double-quoted, with variables
 
 my @colors = qw/red green blue/;      # List of words
-
 ```
 
 ---
@@ -133,4 +134,18 @@ $line =~ tr/a-z/A-Z/; # Transliterate lowercase to uppercase
 | `s/foo/bar/`     | `${var//foo/bar}` or `sed`     | Mutates the string |
 | `tr/a-z/A-Z/`    | `tr a-z A-Z`                   | Mutates string (like `tr`) |
 | `@list = qw/.../`| `("a" "b" "c")`                | Word list, like Bash arrays |
+
+
+## String Operators
+
+### String Comparison Operator (`cmp`)
+The operator `cmp`, short for "compare", compares two strings lexographically
+(alphabetically).  
+
+- `cmp`: String comparison operator. It determines which is "greater"
+  lexographically.  
+    - Returns `-1` if left is less than right (lexographically)
+    - Returns `0` if equal
+    - Returns `1` if greater (lexographically)
+    - It's the string version of `<=>` (spaceship operator), which is for comparing numbers.  
 
