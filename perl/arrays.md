@@ -226,6 +226,90 @@ languages).
   $fruits{"grape"} = "purple";
   ```
 
+---
+
+### Accessing References in Hashes
+Since hashes support storing references to arrays, subroutines, and other hashes, you
+need a way to access those values as well.  
+
+If you need to access a hash value that's a reference (e.g., an array, a hash, or a
+submodule), you will need to dereference it first.  
+There are two main ways to do this:
+- `->`: Dereference with this operator.  
+    - Usually called the "arrow operator" or "method/dereference" operator.  
+    - It serves two purposes:
+        - Dereferences a reference (array, hash, or code) and accesses a memeber. 
+          ```perl
+          $hashref->{key};   # dereference a hashref
+          $arrayref->[0];    # dereference an arrayref
+          $coderef->();      # dereference and call a coderef
+          ```
+        - Also calls methods on objects (in OOPerl).  
+- `${ ... }`: Dereference a reference by using this syntax.  
+    - This is usually called **manual dereferencing** or scalar dereferencing syntax.  
+    - This method is less common in modern perl (5.10+) but still valid and sometimes
+      necessary (clarity/edge cases).  
+      ```perl
+      ${ $hashref }{key};    # manually dereference a hashref
+      @{ $arrayref };        # dereference to an array
+      &{ $coderef }();       # dereference and call a coderef
+      ```
+
+
+```perl
+# Hashes can store all types of scalars
+my %stuff = (
+    name    => "Kolkhis",
+    score   => 42,
+    colors  => ['red', 'green'],        # Anonymous Array reference, technically a scalar
+    nested  => { admin => 1 },          # Anonymous Hash reference, technically a scalar
+    action  => sub { print "Hello\n" }, # Anonymous Code reference, technically a scalar
+);
+
+my %otherstuff = (
+    stuff => \%stuff,  # Store reference to the `%stuff` hash
+    some_code => sub { print "Hi!\n"; },
+);
+
+# Access the `%stuff` hash through the `%otherstuff` hash
+print "name: $otherstuff{stuff}->{name}\n";
+print "is admin: $otherstuff{stuff}->{nested}->{admin}\n";
+print "The color red: $otherstuff{stuff}->{colors}[0]\n";
+
+my $red = ${ $otherstuff{stuff} }{colors}[0];
+my $green = ${ $otherstuff{stuff} }{colors}[1];
+
+# Call the code in `some_code` (arrow style)
+$otherstuff{some_code}->();
+
+# Call the code in `some_code` (manual style)
+${ $otherstuff{some_code} }();
+
+# Call the code in `action` (arrow style)
+$otherstuff{stuff}->{action}->();
+
+# Call the code in `action` (manual style)
+# the `&{ ... }` syntax dereferences a coderef
+&{ ${ $otherstuff{stuff} }{action} }();
+
+# Mixed:
+${ $otherstuff{stuff} }{action}->();
+```
+
+
+#### tl;dr: Accessing References
+```perl
+my $colors  = ['red', 'green'];        # arrayref
+my $nested  = { admin => 1 };          # hashref
+my $action  = sub { print "hi" };      # coderef
+
+# You access them like this:
+print $colors->[0];        # arrayref dereferenced
+print $nested->{admin};    # hashref dereferenced
+$action->();               # coderef called
+```
+
+
 ### Checking for Existence in a Hash
 Perl made this simple.  
 Check for the existence of an element in a hash using the `exists` function:
@@ -235,7 +319,7 @@ if (exists $fruits{"banana"}) {
 }
 ```
 
-### Deeleting a Key in a Hash
+### Deleting a Key in a Hash
 Perl also made this simple.  
 Use the `delete` function to delete an element from a hash:  
 ```perl
@@ -315,10 +399,38 @@ foreach my $k (sort { $hash{$a} cmp $hash{$b} } keys %hash) {
 my %stuff = (
     name    => "Kolkhis",
     score   => 42,
-    colors  => ['red', 'green'],        # Array reference, technically a scalar
-    nested  => { admin => 1 },          # Hash reference, technically a scalar
-    action  => sub { print "Hello\n" }, # Code reference, technically a scalar
+    colors  => ['red', 'green'],        # Anonymous Array reference, technically a scalar
+    nested  => { admin => 1 },          # Anonymous Hash reference, technically a scalar
+    action  => sub { print "Hello\n" }, # Anonymous Code reference, technically a scalar
+);
+
+# Adding a reference to an existing hash
+my %otherstuff = (
+    stuff => \%stuff,
 );
 ```
+
+Access the hash that was referenced in the `%otherstuff` hash by dereferencing it
+with `->`:
+```perl
+# access the elements of %stuff with the `->` syntax
+print "Name: $otherstuff{stuff}->{name}\n";
+```
+
+
+Another way to dereference it (`${ reference }{key}`):
+```perl
+# access via manual dereferencing 
+print "Name: ${ $otherstuff{stuff} }{name}"
+```
+* `$otherstuff{stuff}`: Returns a referene to the `%stuff` hash.
+* `->{name}` dereferences the `stuff` hash and accesses the `name` key.
+
+
+| Expression |  Meaning 
+|-|-
+| `$hash{key}`              |  Regular hash access
+| `$hash{key}->{subkey}`    |  Access nested hash reference (clean way)
+| `${ $hash{key} }{subkey}` |  Same, manual deref (no arrow syntax)
 
 
