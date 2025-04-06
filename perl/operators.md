@@ -149,3 +149,96 @@ The operator `cmp`, short for "compare", compares two strings lexographically
     - Returns `1` if greater (lexographically)
     - It's the string version of `<=>` (spaceship operator), which is for comparing numbers.  
 
+## References
+Perl supports the use of references.  
+You'll mostly only need to use references
+Referencing is done mainly on arrays, hashes, and code (subroutines).  
+
+Shorthand for these references are:
+- arrayref
+- hashref
+- coderef
+
+### Referencing
+Creating a reference in Perl is simple.  
+You just need to add a backslash before the variable to create a reference:
+```perl
+my @arr = (1, 2, 3);
+my $arr_ref = \@arr;
+```
+Now you have an array reference.  
+
+### Dereferencing
+There are two ways to dereference in Perl:
+
+- `->`: The array operator. Prefer this method.  
+    - Usually called the "arrow operator" or "method/dereference" operator.  
+    - It serves two purposes:
+        - Dereferences a reference (array, hash, or code) and accesses a memeber. 
+          ```perl
+          $hashref->{key};   # dereference a hashref
+          $arrayref->[0];    # dereference an arrayref
+          $coderef->();      # dereference and call a coderef
+          ```
+        - Also calls methods on objects (in OOPerl).  
+
+* Sigil (`@{}`/`${}`/`&{}`) syntax (or "manual dereferencing"). Not as easy or readable as `->`.  
+    - `&{ ... }` syntax dereferences a **coderef**
+    - `@{ ... }` syntax dereferences a **arrayref**
+    - `%{ ... }` syntax dereferences a **hashref**
+    - `${ ... }` syntax dereferences a **scalarref**
+    - If you're just trying to access one element of an array or hash reference, the
+      `${ ... }` syntax is *usually* what you want to use, since it's probably a
+      scalar.
+
+
+The table below shows how to use sigil syntax to dereference different types of
+references:
+| Ref Type | Sigil Syntax | Meaning
+|-|-|-
+| Array     | `@{ $arrayref }`    | Dereference to full array
+| Hash      | `%{ $hashref }`     | Dereference to full hash
+| Code      | `&{ $coderef }()`   | Dereference and Call the subroutine
+| Scalar    | `${ $scalarref }`   | Dereference scalar
+| Array el  | `${ $arrayref }[0]` | Dereference, then access index
+| Hash val  | `${ $hashref }{a}`  | Dereference, then access key
+
+Or, more condensed:
+| Sigil |   Used for |  Example
+|-|-|-
+| `$`   | Scalars    |  `${ $ref }`, `${ $ref }[0]`
+| `@`   | Arrays     |  `@{ $ref }`
+| `%`   | Hashes     |  `%{ $ref }`
+| `&`   | Subroutines (code) | `&{ $ref }()`
+
+
+
+
+When dereferencing code to run, you simply add `()` to call the code.  
+
+```perl
+# Create a hash
+my %stuff = (
+    name    => "Kolkhis",
+    score   => 42,
+    colors  => ['red', 'green'],        # Anonymous Array reference, technically a scalar
+    nested  => { admin => 1 },          # Anonymous Hash reference, technically a scalar
+    action  => sub { print "Hello\n" }, # Anonymous Code reference, technically a scalar
+);
+
+# Create another hash, nest the first one in it
+my %otherstuff = (
+    stuff => \%stuff,  # Store reference to the `%stuff` hash
+    some_code => sub { print "Hi!\n"; },
+);
+
+# Call the code in `some_code` (arrow style)
+$otherstuff{some_code}->();
+
+# Call the code in `action` (arrow style)
+$otherstuff{stuff}->{action}->();
+
+# Call the code in `action` (sigil style / manual dereferencing)
+&{ ${ $otherstuff{stuff} }{action} }();
+```
+
