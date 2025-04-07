@@ -7,7 +7,7 @@
 
 ## The `shift` Command  
 
-Processing CLI arguments is best done using the `switch` command.  
+Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.  
 * The `shift` command will remove the first argument from the list.  
 * This will mean the **next** argument is now in `$1`.  
 * All the remaining arguments will be shifted from `$n` to `$n-1`.  
@@ -29,10 +29,12 @@ Processing CLI arguments is best done using the `switch` command.
 2. Use the regex comparison operator `=~` to check if the argument starts with a dash `-`.  
     * ```bash  
         while [[ "$1" =~ ^- ]];  
+      ```
 
 3. Check that the argument isn't `--` on its own.  
     * ```bash  
         while [[ "$1" =~ ^- && ! "$1" == "--" ]];  
+      ```
     * The `--` flag is used to indicate that all the arguments have been given.
 
 4. If it does, use a `switch`/`case` to handle the flag  
@@ -42,6 +44,7 @@ Processing CLI arguments is best done using the `switch` command.
                 (-v | -version)  
                     printf "%s" "$version";  
                     ;;  
+      ```
 
 5. Use `shift` to pop the argument off the argument list.  
     * This will mean the **next** argument is now in `$1`.  
