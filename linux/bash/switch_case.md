@@ -128,7 +128,7 @@ case ${name,,} in
 
 A POSIX-compliant way to do this:  
 ```sh  
-lname=$(printf "$name" | tr '[:upper:]' '[:lower:]')  
+lname=$(printf "%s" "$name" | tr '[:upper:]' '[:lower:]')  
 case $lname in  
 ```
 
