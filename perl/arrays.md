@@ -123,6 +123,30 @@ foreach my $line (@first_5) {
 
 ---
 
+### Getting the Length of an Array
+Get the length of an array (or hash) using the `scalar` function (not the `length()` function).  
+```perl
+# Array size:
+scalar(@array);
+
+# The number of items in a hash:
+scalar(keys %hash);
+```
+This forces the `@array` or `keys %hash` list into scalar context, which always
+returns the number of elements.  
+
+---
+
+Why not use `length()`?  
+
+The `length()` function works on strings, and forces the arguments passed to it into
+scalar context.
+So, when a list is passed in, it's forced into scalar context (returning the number 
+of elements), and the result is a single number.  
+It will resolve to `length(n)`, and `n` will be the string length of the number of 
+elements.
+
+
 ### One-liner File Slurp with UTF-8
 ```perl
 use strict;
