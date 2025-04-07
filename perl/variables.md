@@ -1,6 +1,24 @@
-
 # Special Variables
 Special variables in perl are sometimes called "sigil variables" or "punctuation variables."
+
+
+## Table of Contents
+* [List of Special Variables](#list-of-special-variables) 
+    * [Advanced/Less Common Special Vars](#advancedless-common-special-vars) 
+* [`$/` and `$\`](#-and-) 
+    * [`$/` - Input Record Separator](#---input-record-separator) 
+        * [`$/` (Input Record Separator) Examples](#-input-record-separator-examples) 
+    * [`$\` - Output Record Separator](#---output-record-separator) 
+        * [`$\` (Output Record Separator) Examples](#-output-record-separator-examples) 
+* [Practical Usage Examples](#practical-usage-examples) 
+    * [Print the Current Line Number](#print-the-current-line-number) 
+    * [Using Environment Variables](#using-environment-variables) 
+    * [Showing the Last Error](#showing-the-last-error) 
+    * [Auto-flushing Output with `$|`](#auto-flushing-output-with-) 
+* [Memorize These](#memorize-these) 
+* [Perl Special Variable Cheatsheet](#perl-special-variable-cheatsheet) 
+
+
 
 ## List of Special Variables
 - `$_`: Default variable. Holds the current line when processing text or the
@@ -29,8 +47,7 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
       While reading `file1.md`, `$ARGV` will the `"file1.md"`, etc..
 
 - `$!`: Last system error message.  
-    - Like `strerror(errno)`
-        <!-- TODO: What language is `strerror(errno)` from? -->
+    - Like `strerror(errno)` in C. 
     - E.g.: `die "Error: $!"`
 - `$^O`: Operating system name. 
     - `linux`, `darwin`, `MSWin32`, etc.  
@@ -98,9 +115,6 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
       print "@arr\n";  # Outputs: 1, 2, 3
       ```
 
-
-<!-- TODO: Please give some more information on these variables. Their use cases, some examples, etc. -->
-
 ## `$/` and `$\`
 These can be changed to modify input/output behavior:
 | Variable | Behavior |
@@ -161,6 +175,18 @@ while (<$fh>) {
 close $fh;
 ```
 
+### `$\` - Output Record Separator
+The `$\` variable is the output record separator.  
+This variable controls what will happen at the end of any output statements (`print`,
+`say`, etc.).  
+
+For instance, setting `$/ = "\n";` will append a newline to the end of all `print`
+calls.  
+
+The default value of this variable is nothing `""`.  
+
+This is useful for formatting data (e.g., `$/ = ",";` for formatting data into CSV).  
+
 #### `$\` (Output Record Separator) Examples
 
 Perl will append the contents of the `$\` variable to every single `print`
@@ -188,6 +214,16 @@ print "Item3";
 
 ---
 
+If you wanted to format output as CSV, you can set `$/` to `,`:
+```perl
+$\ = ",";
+print "Item1";
+print "Item2";
+print "Item3";
+# Item1,Item2,Item3
+```
+
+---
 
 
 
@@ -261,7 +297,7 @@ With `$| = 1`, the text is immediately flushed and visible on the screen without
 | `$!`     | Last system error message. |
 | `$^O`    | Operating system name (`linux`, `darwin`, `MSWin32`, etc.). |
 | `$ENV{VAR}` | Access shell environment variables. |
-| `$|`     | **Autoflush** output buffer (`1` = no buffering, `0` = default buffering). |
+| `$\|`     | **Autoflush** output buffer (`1` = no buffering, `0` = default buffering). |
 | `$&`     | Entire matched string from the last regex match. |
 | `$1`, `$2`, etc. | Capture groups in regex. |
 | `$^I`    | In-place edit extension (for `-i` flag). | `perl -pi.bak -e 's/foo/bar/' file.txt` |
@@ -269,3 +305,98 @@ With `$| = 1`, the text is immediately flushed and visible on the screen without
 | `$/`     | Input record separator (default: `\n`). | `undef $/;` reads entire file at once. |
 | `$"`     | Array element separator when interpolated. | Default: `" "` |
 | `$\`     | Output record separator. | Example: `$\ = "\n"; print "Hello";` adds newline after every `print`. |
+
+
+## Regular Variables
+Variables have three typical data types in Perl, indicated by their [sigil](#sigils):
+- `$var`: Scalars
+- `@var`: Arrays
+- `%var`: Hashes
+
+Everything is basically a string or a number.  
+
+## Variable Contexts
+Variables act differently when they're in different "contexts."  
+
+There are four *main* contexts, which defines what perl wants:
+- Scalar: Perl wants a single value.  
+- List: A list of values.  
+- Void: Throwaway result.  
+- Boolean: True/false evaluation.  
+
+
+Another way to look at it:  
+Context is how Perl decides what kind of value it wants from an expression.  
+* A single value: scalar context
+* A list of values: list context
+* A boolean test: boolean context (a special case of scalar)
+* A void context: the value is thrown away
+
+```perl
+$x = @array;            # Scalar context (returns number of elements)
+@x = split /,/, $str;   # List context (returns full list)
+split /,/, $str;        # Void context (result ignored)
+if (@array) { ... };    # Boolean context (true if array is non-empty)
+```
+
+---
+
+There are other types of contexts, but the four main ones are what we usually care
+about. 
+Another one worth mentioning is reference context.  
+Reference context is used when coercing into a reference (`\@array`, `\%hash`, etc.).  
+
+
+### Scalar Context
+When using the `$var = ...` syntax, this is known as **scalar context**.
+```perl
+my $count = @array;  # @array is in scalar context → returns length
+```
+
+### List Context
+When perl expects a list of values, it's list context.  
+E.g., using `@var = ...`, this is **list** context.  
+
+List context is used when assigning to arrays, list assignments, `foreach` loops,
+function arguments, and when returning a list.  
+```perl
+print join(", ", @items);  # join gets a list context
+
+sub names { return ("alice", "bob"); }
+my @n = names();  # names() in list context
+```
+
+You can assign scalars from list context by using parentheses. For instance, to
+assign the first element of an array to a scalar:
+```perl
+my ($first_name) = @name_list;
+# or to grab the first two elements:
+my ($first_name, $second_name) = @name_list;
+```
+The right hand side is still in list context. This just grabs the first few elements.  
+
+
+### Void Context
+Void context is used when the result of an expression is ignored.  
+```perl
+split(/ /, $sentence);  # Return value is discarded
+```
+
+### Boolean Context
+Boolean context is used when evaluating truthiness, like with `if` statements:
+```perl
+if (@items) { ... }; # true if array is not empty
+```
+
+## Sigils
+Sigils are what come before variables to define what kind of variable they are.  
+
+| Sigil |   Used for |
+|-|-
+| `$`   | Scalars    |
+| `@`   | Arrays     |
+| `%`   | Hashes     |
+| `&`   | Subroutines (code) |
+
+
+
