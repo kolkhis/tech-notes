@@ -47,7 +47,7 @@ done
 
 ```bash
 counter=0
-while [[ counter < 10 ]]; do
+while [[ $counter < 10 ]]; do
     printf "Counter: %d\n" "$counter"
     counter++
 done
