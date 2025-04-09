@@ -38,14 +38,6 @@ tcpdump -i enp0s31f6
 ```
 
 
-### `cat /etc/resolv.conf`
-This file contains the DNS rules for the system.  
-This is symlinked to `/run/systemd/resolve/stub-resolv.conf` on some systems.  
-You shouldn't edit this file directly.  
-
-Using `resolvectl status` will display details about the uplink DNS servers that
-are currently in use.  
-
 
 ### `ip`
 Replaces `ifconfig`, `route`, `netstat`, and more.
@@ -214,4 +206,53 @@ iperf3 -c 192.168.4.11 -u -n 20G
   files or exploring HTTP APIs.  
     * `netcat` is invaluable for more low-level TCP/UDP network testing or transferring data.
 
+
+## Files
+
+### `cat /etc/resolv.conf`
+This file contains the DNS rules for the system.  
+This is symlinked to `/run/systemd/resolve/stub-resolv.conf` on some systems.  
+You shouldn't edit this file directly.  
+
+Using `resolvectl status` will display details about the uplink DNS servers that
+are currently in use.  
+
+### `/etc/nsswitch.conf`
+- <https://www.man7.org/linux/man-pages/man5/nsswitch.conf.5.html>
+
+Contains the configuration for the Name Switch Service.  
+
+This file is responsible for determining the order in which
+sources are used to resolve names and look up information, such as:
+- Hostname resolution
+- User and group information (`passwd`, `group`)
+- Authentication mechanisms
+- Network service entries, etc.  
+
+The Name Switch Service specifies the order in which name service databases are 
+queried for certain information, like user accounts and hostnames.
+
+It allows the system to determine where to look for this information: local files, 
+DNS (Domain Name System), or network services like NIS and LDAP.
+
+- The first column in this file is the database name.  
+* The next columns specify service specifications.
+- `files`, `db`, `systemd`, `sss`, `nis`
+- Optional actions to perform if a result is obtained from the previous service.
+
+---
+
+Example from a rocky linux box:
+```ini
+passwd:     files sss systemd
+group:      files sss systemd
+netgroup:   sss files
+automount:  sss files
+services:   sss files
+```
+Each entry follows the same kind of procedure:
+- `passwd:   files sss systemd`
+    - `files` Says to look in `/etc/passwd` for user account info first
+    - `sss`: Then query the SSSD (System Security Services Daemon), typically used with LDAP or FreeIPA
+    - `systemd`: Finally check the systemd user database (for runtime or transient user accounts)
 
