@@ -81,4 +81,15 @@ Then everything you `require`d in `lua/kolkhis/init.lua` will be loaded.
 ### `~/.config/nvim/after/plugin/`
 Anything in this directory will be automatically loaded *after* everything else.   
 
+## Run Config Files from a Different Location
+
+Set the `$NVIM_APPNAME` variable to the location that you want nvim to look for
+config files.  
+```bash
+export NVIM_APPNAME='/home/kolkhis/test-nvim-config'
+```
+The directory structure of this directory should be the same as
+`$XDG_CONFIG_HOME/nvim`, but will allow you to switch to a different configuration.   
+Useful for testing.  
+
 
