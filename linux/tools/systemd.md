@@ -66,6 +66,11 @@ Service files (or "Unit Files") are what defines a systemd service.
 Systemd services go in the `/etc/systemd/system/` directory.  
 These service files contain the instructions and conditions for the service to start.
 
+The `/usr/lib/systemd/system/` directory also holds system service files (but
+use `/etc/systemd/system/` when adding new ones).
+
+
+
 An example service file:
 ```ini
 [Unit]
@@ -120,10 +125,6 @@ WantedBy=graphical.target
               networking is online, no GUI.
     * `RequiredBy=`: Stronger version of `WantedBy=`. If this service fails, the
       dependent target will fail too.
-
-
-This directory also holds system service files (use `/etc/systemd/system/` when adding):
-- `/usr/lib/systemd/system/`
 
 
 ## Useful `systemd` commands
