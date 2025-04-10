@@ -38,6 +38,16 @@ The command line tool for controlling `firewalld` is `firewall-cmd`.
   firewall-cmd --list-all-zones  # lists all the zones, and if they have anything assigned to them
   ```
 
+* List active zones nad what network interface they're attached to:
+  ```bash
+  firewall-cmd --get-active-zones 
+  ```
+
+* Check the configuration files for a specific zone:
+  ```bash
+  vi $(firewall-cmd --permanent --path-zone=public) # open config for the 'public' zone in vi
+  ```
+
 * Expose a port in `firewalld`:
   ```bash
   # make temp changes
@@ -102,6 +112,15 @@ firewall-cmd --reload
   use the same call with and without the `--permanent` flag.  
 
 * Each rule must specify what kind of packets are allowed through the port (`tcp`/`udp`).  
+
+---
+
+If you want to add a port only for a specific zone, you can specify the `--zone`:
+```bash
+firewall-cmd --permanent --zone=public --add-port=8080/tcp
+firewall-cmd --permanent --zone=public --add-port=8080/udp
+firewall-cmd --reload
+```
 
 ### Removing Ports
 This works in the same way as adding ports, but use the `--remove-port` option
