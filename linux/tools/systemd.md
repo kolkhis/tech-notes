@@ -122,6 +122,10 @@ WantedBy=graphical.target
       dependent target will fail too.
 
 
+This directory also holds system service files (use `/etc/systemd/system/` when adding):
+- `/usr/lib/systemd/system/`
+
+
 ## Useful `systemd` commands
 - Note: `systemctl` is not the same as `sysctl` - `sysctl` is used for controlling
   kernel parameters, `systemctl` is used for controlling system processes.  
