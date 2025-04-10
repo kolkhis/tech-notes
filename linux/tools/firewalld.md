@@ -5,6 +5,8 @@ Linux, RHEL).
 
 Firewalld utilizes `iptables`.  
 
+Configuration for services and zones are stored in XML files in `/usr/lib/firewalld/`.  
+
 
 ## Controlling Firewalld
 The command line tool for controlling `firewalld` is `firewall-cmd`.  
@@ -71,7 +73,18 @@ The command line tool for controlling `firewalld` is `firewall-cmd`.
   firewall-cmd --reload     
   ```
 
-* Add a 'masquerade'
+* Expose a service in `firewalld`:
+  ```bash
+  firwall-cmd --add-service=prometheus-node-exporter
+  ```
+  This must be a "supported service."  
+  To get a list of 'supported' services to use with `--add-service`:  
+  ```bash
+  firewall-cmd --get-services
+  ```
+
+
+* Add a 'masquerade' rule:
   ```bash
   firewall-cmd --add-masquerade --permanent
   firewall-cmd --reload     
@@ -143,5 +156,14 @@ firewall-cmd --reload
 ## Working with Services
 <!-- TODO: Finish this section -->
 
+
+## Checking Service Rules for Firewalld
+Configuration for services and zones are stored in XML files in `/usr/lib/firewalld/`.  
+
+You can view how `firewalld` stores rules in XML, and modify them if need be.  
+To check the configuration for a service (`node_exporter`):
+```bash
+cat /usr/lib/firewalld/services/prometheus-node-exporter.xml
+```
 
 
