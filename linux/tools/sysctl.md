@@ -5,6 +5,10 @@ The `sysctl` tool is used to manage kernel runtime parameters.
 It works with parameters located under `/proc/sys`, and changes made via `sysctl` 
 are **immediate but not persistent** unless written to a config file.
 
+## Table of Contents
+* [Basic Usage](#basic-usage) 
+* [Config Files](#config-files) 
+    * [`sysctl` Priority Order](#sysctl-priority-order) 
 
 ## Basic Usage
 * View all kernel runtime parameters as they're currently set:
@@ -57,5 +61,16 @@ settings are stored:
 
 
 
+### `sysctl` Priority Order
+When kernel paremeters are loaded in, either on boot or with `sysctl --system`, it
+looks for files in this order:
+* `/etc/sysctl.d/*.conf`
+* `/run/sysctl.d/*.conf`
+* `/usr/local/lib/sysctl.d/*.conf`
+* `/usr/lib/sysctl.d/*.conf`
+* `/lib/sysctl.d/*.conf`
+* `/etc/sysctl.conf`
 
+Once a file has been loaded, any other files with the same name will be ignored. 
+Since files in `/etc/sysctl.d` are loaded first, this is where we put our settings.  
 
