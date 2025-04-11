@@ -2,21 +2,180 @@
 
 You can extend the default bash autocompletion (or tab completion) in Bash.
 
+## Writing a Completion Script
+
+The process for writing bash completions utilizes `compgen` and `complete` (bash
+builtins).
+Important variables in this process:
+- `COMP_WORDS`
+- `COMP_CWORD`
+
+
+```bash
+_my_tool_completions() {
+    local cur
+    local prev
+    local words
+    local cword
+    _init_completion -n = || return
+    case "${prev}" in
+        mytool)
+            printf "The base command 'mytool'"
+            COMPREPLY=( $(compgen -W "start stop status restart help" -- "$cur") )
+            return
+            ;;
+        --mode)
+            COMPREPLY=( $(compgen -W "verbose quiet debug" -- "$cur") )
+            return
+            ;;
+    esac
+
+    case "${cur}" in
+        -*)
+            COMPREPLY=( $(compgen -W "--help --version --mode" -- "$cur") )
+            return
+            ;;
+    esac
+}
+
+# then register it as the completion function for 'mytool'
+complete -F _my_tool_completions mytool
+
+# then source this script to have it take effect
+```
+Test it by sourcing the file and trying completions with the command.  
+Make it permanent by putting it in a file in `/etc/bash_completion.d` (or source it
+in `.bashrc`).  
+
+- `_init_completion`: Sets up common variables to use when writing a completion function.  
+    - `-n =`: Don't split completion on `=` (like when you do `--option=value`)
+    - When called it populates the variables:
+        - `cur`: The word currently being typed (the partial input that's already there)
+        - `prev`: The previous word.
+        - `words`: All the words in the command line so far.
+        - `cword`: The index of the current word.  
+
+- `compgen -W "start stop status" -- "$cur"`: 
+    - `-W`: Generates completion options based on the words given (a space-delimited list of possible completions).    
+    - `-- "$cur"`: The partial input the user typed so far. This filters results.  
+- `COMPREPLY`: An array of results to show
+    - Use this to return suggestions.  
+
+
+### Using `compgen`
+Depending on the flags given to `compgen`, you can specify what it looks for when
+offering completions.  
+
+- `-W "list of words"`: Generate completions from the space-delimited list of words given as a single string.  
+- `-f`: Use filenames for completions.
+- `-d`: Use directory names for completions.
+- `-A command`: Use all available command names in `PATH` for completions.  
+- `-A function`: Use all defined shell function names for completions.  
+- `-A alias`: Use all the aliase names currently set for completions.  
+
+Some examples:
+```bash
+compgen -f -- "$cur"  # Complete filenames
+compgen -d -- "$cur"  # Complete directories
+compgen -A function -- "$cur"   # Complete shell functions
+compgen -A command -- "$cur"    # Complete commands in PATH
+```
+
+### Using `complete`
+You use `complete` to specify what should be used for completions for a given
+command.  
+
+- `complete -F func_name mycmd`: Use the function `func_name` to generate completions for `mycmd`.  
+- `complete -C command mycmd`: Use the command `command` to generate completions for `mycmd`.  
+    - This is usually used for binary programs, not shell functions.  
+- `complete -W wordlist mycmd`: Use the `wordlist` (static list of words) for completions.  
+- `complete -A action mycmd`: Specifies a completion "action."  Actions can be:
+    - `command`: Command names from the `PATH`.  
+    - `file`: File names.  
+    - `directory`: Directory names.  
+    - `user`: Usernames from `/etc/passwd`.  
+    - `host`: Hostnames from `/etc/hosts`.  
+    - `group`: Group names from `/etc/groups`.  
+- `complete ... mycmd -P prefix`: Add a prefix to every possible completion. Used with other options.
+  ```bash
+  complete -W "prod dev stage" -P "--env=" mycmd 
+  ```
+- `complete ... mycmd -S suffix`: Add a suffix to every possible completion. Used with other options.  
+  ```bash
+  complete -W "backup deploy" -S ".sh" mycmd 
+  ```
+
+You can use `-P` and `-S` together, too:
+```bash
+complete -W "alpha beta gamma" -P "--mode=" -S ";" mycmd
+```
+Tab-completing `mycmd --mode=` gives:
+* `--mode=alpha;`
+* `--mode=beta;`
+* `--mode=gamma;`
+
+
+
+### Using `_init_completion`
+This is a helper function that defines some variables that are used in generating
+completions.  
+
+* `_init_completion -n =`: Don't split completion on `=` (like when you do `--option=value`)
+
+When `_init_completion` is called, it populates the variables:
+- `cur`: The word currently being typed (the partial input that's already there)
+- `prev`: The previous word.
+- `words`: All the words in the command line so far.
+- `cword`: The index of the current word.  
+- An example: 
+  ```bash
+  mytool deploy --env pr[TAB]
+  # cur="pr"
+  # prev="--env"
+  # words=(mytool deploy --env pr)
+  # cword=3
+  ```
+  These are set automatically *only* with `_init_completion`.  
+
+---
+
+If you **don't** want to use `_init_completion`, there are other ways to do this.  
+Without using `_init_completion`, these variables are made available by the shell:  
+* `COMP_WORDS`: An array of all words typed so far.
+* `COMP_CWORD`: Index of the word being completed.
+* `COMP_LINE`: The full command line as a single string.
+* `COMP_POINT`: Cursor position within COMP_LINE.
+
+The `$cur` and `$prev` variables aren't predefined, but you can define them by 
+using `COMP_WORDS` with `COMP_CWORD`:
+```bash
+cur="${COMP_WORDS[COMP_CWORD]}"
+prev="${COMP_WORDS[COMP_CWORD-1]}"
+```
+
+
 ## Where to put completions
 
-##### From `/usr/share/doc/bash-completion/README.Debian`:
-bash-completion for Debian
---------------------------
+To make bash completions permanent, add them to a file in `/etc/bash_completion.d/`.  
 
-Completions are kept in `/usr/share/bash-completion/completions`.
+Ex: `/etc/bash_completion.d/some_tool`
 
-If a package installs its completion files under `/etc/bash_completion.d/`,
-bash-completion is still able to use them, but bash-completion itself does
-not install any files under that directory.
+---
 
-If you are a package maintainer, you are encouraged to use
-`dh_bash-completion(1)`, which will take care of installing third-party
-completions into the appropriate directory.
+### Completions for Packages
 
--- David Paleino `<dapal@debian.org>` Sun, 10 Apr 2011 15:33:19 +0200
--- Gabriel F. T. Gomes `<gabriel@inconstante.net.br>` Mon, 12 Feb 2018 21:46:42 -0200
+If you're making a package (`.deb` or otherwise), the completions should 
+go in `/usr/share/bash-completion/completions` (per convention). Putting them in
+`/etc/bash_completion.d` will still work.
+
+The `bash-completion` package itself will never use the `/etc/bash_completion.d`
+directory.  
+
+
+For making Debian packages, you can use `dh_bash-completion` (a debhelper program) to
+install completions. 
+```bash
+man dh_bash-completion
+```
+File should be `debian/package.bash-completion`.  
+
