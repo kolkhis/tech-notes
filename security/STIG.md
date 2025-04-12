@@ -4,7 +4,7 @@ STIGs (Secure Technical Implementation Guides) are a set of security standards t
 come from DISA (the US Department of Information Systems Agency).  
 
 STIGs are viewed with the STIG Viewer, which can be downloaded here: 
-- STIG Viewer Downloads: <https://public.cyber.mil/stigs/srg-stig-tools/>
+* STIG Viewer Downloads: <https://public.cyber.mil/stigs/srg-stig-tools/>
 * STIG Downloads: <https://public.cyber.mil/stigs/downloads/>
 
 
