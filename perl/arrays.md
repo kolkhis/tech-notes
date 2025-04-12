@@ -457,4 +457,45 @@ print "Name: ${ $otherstuff{stuff} }{name}"
 | `$hash{key}->{subkey}`    |  Access nested hash reference (clean way)
 | `${ $hash{key} }{subkey}` |  Same, manual deref (no arrow syntax)
 
+## Example of Accessing Arrays in a Hash
+
+Let's say we have a hash:
+
+```perl
+my %unit_resources = (
+    1 => [],
+    2 => [],
+    3 => [],
+    4 => [],
+    5 => [],
+    '' => [],
+);
+```
+This has keys `1` through `5`, and an additional empty key.  
+Each of these keys corresponds to an array reference.  
+
+We can access the array reference:
+```perl
+print "$unit_resources{$unit}";
+```
+But this will only access the reference.  
+So we need to dereference it using "sigil syntax" (`@{ ... }`):  
+```perl
+print "@{ $unit_resources{$unit} }";
+```
+This accesses the actual array that holds the values.
+
+So now we can append items to this array.  
+```perl
+push(@{ $final_resources{1} }, "https://example.com");
+```
+
+Now, the hash looks like this:
+```perl
+my %unit_resources = (
+    1 => ['https://exmple.com'],
+    2 => [],
+    ...
+```
+
 
