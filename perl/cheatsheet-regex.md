@@ -24,7 +24,7 @@
 
 ---
 
-##  Quantifiers
+## Quantifiers
 | Pattern     | Meaning                       |
 |-------------|-------------------------------|
 | `*`         | `0` or more                   |
@@ -33,22 +33,22 @@
 | `{n}`       | Exactly `n`                   |
 | `{n,}`      | `n` or more                   |
 | `{n,m}`     | Between `n` and `m`           |
-| BAD: `{,m}` | (Invalid in Perl!)            |
+| BAD: `{,m}` | (Invalid in Perl)             |
 
 **Non-greedy** versions: add `?`  
 Examples: `.*?`, `.+?`, `{1,5}?`
 
 ---
 
-##  Regex Modifiers
+## Regex Modifiers
 Modifiers come at the end of the pattern, after the last `/`, or whatever delimiter
 is being used.  
-| Modifier | Meaning                                |
+| Modifier | Meaning                                 |
 |----------|-----------------------------------------|
 | `/i`     | Case-insensitive                        |
 | `/g`     | Global match                            |
 | `/m`     | Multiline (changes `^`/`$` behavior)    |
-| `/s`     | "Single line" — `.` matches newlines    |
+| `/s`     | "Single line" -- `.` matches newlines   |
 | `/x`     | Free-spacing mode (whitespace ignored)  |
 | `/u`     | Unicode semantics (essential for `\p{}`)|
 
@@ -66,9 +66,9 @@ is being used.
 
 ---
 
-## Special Syntax
+## Perl-Specific Special Syntax
 | Syntax         | Meaning                            |
-|----------------|-------------------------------------|
+|----------------|------------------------------------|
 | `( ... )`      | Capturing group                    |
 | `(?: ... )`    | Non-capturing group                |
 | `(?= ... )`    | Positive lookahead                 |
@@ -76,5 +76,4 @@ is being used.
 | `(?<= ... )`   | Positive lookbehind                |
 | `(?<! ... )`   | Negative lookbehind                |
 | `$1`, `$2`...  | Capture group values in Perl       |
-
 
