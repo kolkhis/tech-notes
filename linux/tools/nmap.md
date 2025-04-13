@@ -68,6 +68,53 @@ nmap -O --osscan-guess 192.168.1.1
 * `--osscan-guess`: Guess OS more aggressively
 
 
+### Scanning Open Ports on a System
+Using `nmap` by itself (`nmap <target>`) will scan the most common 1000 ports.  
+Nmap can scan single ports, port ranges, and all ports.  
+
+- Scan all ports (`-p-`): 
+  ```bash
+  nmap -p- example.com
+  ```
+
+- Scan the most common 100 ports (fast scan):
+  ```bash
+  nmap -F example.com
+  ```
+
+- Scan a single port:
+  ```bash
+  nmap -p 80 example.com
+  ```
+  Shows the port number, the protocol (TCP or UDP), the state, and the service
+  related to that port.  
+
+- Scan multiple ports by separating with commas:
+  ```bash
+  nmap -p 80,8080,22 example.com
+  ```
+
+- Scan a range of ports:
+  ```bash
+  nmap -p 80-8080 example.com
+  ```
+  This will scan all ports from `80` to `8080` (8k ports).  
+  You can also combine this with commas to specify multiple ranges.  
+  ```bash
+  nmap -p 80-8080,22,33-43
+  ```
+
+
+An example:
+```bash
+nmap -p- -T4 --open -Pn -vvv 10.10.11.174 -oN output.txt
+```
+* `-T4`: Sets the "timing template" to 4 for faster execution.
+* `--open`: Only show open (or possibly open) ports
+* `-Pn`: No ping. Skips nmap discovery stage. 
+* `-vvv`: Level 3 verbosity.  
+* `-oN`: Normal output, outputs to file (`output.txt`).
+
 
 
 
