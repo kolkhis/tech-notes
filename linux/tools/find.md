@@ -659,6 +659,9 @@ Escapes and directives can be found at `man://find +710`.
 Printf Directives can be used to find *information* about the file as well, like
 permissions, modification times, the files' dirnames, etc..  
 Some useful directives:
+- `%f`: Get the basename of the files. Like running `basename $file` on each file.  
+- `%s`: Size of the file in bytes.
+
 - `%a` will output the file's `atime` (last accessed time - `ctime()` in C).  
     - `%Ak` (where `k` is a C `strftime` format) will print the access time in that
       format. 
