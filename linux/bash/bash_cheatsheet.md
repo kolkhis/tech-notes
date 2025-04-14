@@ -1699,3 +1699,33 @@ while [[ $text =~ ([^[:space:]]+) ]]; do
 done
 ```
 
+## Command Hashing
+When you run a command, Bash remembers (caches) the path to speed up subsequent
+calls.  
+
+You can see if something is hashed by using the `type` command:
+```bash
+type duck
+# duck is hashed (/usr/bin/duck)
+```
+If the file is renamed or moved, Bash keeps using the old path.  
+
+You can reload a command hash with `hash -d`:
+```bash
+hash -d duck  # Unhash a single command
+```
+* `-d`: Delete
+* This removes `duck` from Bash's command hash table.  
+* The next time you run `duck`, it'll be re-resolved via `$PATH`.  
+
+Or, clear **all** command hashes with `hash -r`.  
+```bash
+hash -r
+```
+* `-r`: Reset.
+* This wipes the entire hash table.  
+* Use this if you're renamed or moved a bunch of commands or installed new software.
+
+Hashes are reloaded when you start a new shell, but this gets around needing to do
+that.  
+
