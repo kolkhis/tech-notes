@@ -1708,6 +1708,10 @@ You can see if something is hashed by using the `type` command:
 type duck
 # duck is hashed (/usr/bin/duck)
 ```
+Or just run the `hash` command by itself:
+```bash
+hash  # Display all hashed commands
+```
 If the file is renamed or moved, Bash keeps using the old path.  
 
 You can reload a command hash with `hash -d`:
