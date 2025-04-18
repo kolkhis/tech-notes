@@ -202,6 +202,51 @@ If both of the files exist, the `cron.allow` file rules will take precendence
 and `cron.deny` rules are not enforced.  
 
 
+## Adding a Cron Job from a Script
+You can pipe the current crontab with a new line into `crontab -` to programmatically 
+add a cron job without overwriting existing ones.
+
+A simple example:
+```bash
+(crontab -l 2>/dev/null; printf "* * * * * printf 'This will be added to the crontab\n'\n") | crontab -
+```
+- `( ... )`: A subshell command group. The combined output of all the commands is 
+  passed through the pipe.  
+    - This would also work with a brace command group (`{ ... }`).
+- `crontab -l 2>/dev/null`: List the current user's crontab.
+    - Redirect stderr so there's no output if there is not crontab for the user.  
+- `printf "..."`: Print the new line to add to the crontab.
+    - `* * * * * printf`: This cron job runs every minute.  
+- `| crontab -`: Load the crontab passed to it via stdin.  
+
+
+This uses a command group subshell `( ... )`, which takes the current 
+crontab (`crontab -l`), and appends a new line to it (`printf ...`).  
+The output of this command group is shared, so the entire output will be piped to
+`crontab -`, which reads the standard input and loads it as the new crontab.  
+
+* This replaces the current crontab with the new output. So you need to include
+  existing entries with `crontab -l` if you want to keep them.  
+
+* Make sure to avoid duplicate entries by grepping first.  
+
+
+A more complex example, this function will add the script it is in as a cron job to
+run at 2AM every day.  
+```bash
+setup-cron-job(){
+    local CRON_ENTRY
+    if ! crontab -l | grep -i "${BASH_SOURCE[0]}" > /dev/null 2>&1; then
+        printf "Setting up cron job.\n"
+        CRON_ENTRY="0 2 * * * $(realpath "${BASH_SOURCE[0]}") >> $(realpath "$LOGFILE") 2>&1"
+        (crontab -l 2>/dev/null; printf "%s\n" "$CRON_ENTRY") | crontab - || {
+            printf >&2 "ERROR: Failed to add cron job!\n" && return 1
+        }
+        printf "Successfully added cron job\n"
+    fi
+    return 0
+}
+```
 
 
 
