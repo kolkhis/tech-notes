@@ -1,36 +1,52 @@
-
-
 # `ssh-copy-id`
 
 This command makes it easy to set up key-based authentication for SSH.  
 It copies your local public key into the remote server's `authorized_keys` file.  
 
 ## Using `ssh-copy-id`
-You'll need to have password authentication enabled on the remote server.  
+If the remote server is both configured for password auth AND public key auth, you
+can simply use `ssh-copy-id` the same way you'd do a normal `ssh`:
+```bash
+ssh-copy-id user@server  
+# Enter password, and you're good
 
-This is enabled by default but if you want to check:  
+ssh user@server  # Will let you in if configured properly
+```
+This will copy over your key into the `authorized_keys` file for the specified user 
+on the remote host.
+
+
+If you need to set up the environment, see [setting up public key auth](#setting-up-public-key-auth) below.  
+
+### Setting up Public Key Auth
+
+You'll need to have password authentication enabled on the remote server
+to use `ssh-copy-id` for the first time.   
+
+Password auth is usually enabled by default, but if you want to check:  
 * Check this in `/etc/ssh/sshd_config` (on the remote server):
   ```bash
-  cat /etc/ssh/sshd_config | grep 'PasswordAuthentication'
+  grep 'PasswordAuthentication' /etc/ssh/sshd_config
   # or
-  cat /etc/ssh/sshd_config | grep 'AuthenticationMethods'
+  grep 'AuthenticationMethods' /etc/ssh/sshd_config
   ```
-    * If `PasswordAuthentication` commented out (with a `#`), it will be enabled by default.  
+    * If `PasswordAuthentication` is commented out (with a `#`), it will be enabled by default.  
     * If `AuthentcationMethods` is only set to `publickey`, password authentication will be disabled.  
 
 
 * You'll also need `PubkeyAuthentication` enabled on the remote server in order to 
-  use key authentication after running the command.
+  use key authentication after running `ssh-copy-id`.
   ```bash
-  cat /etc/ssh/sshd_config | grep -i 'PubkeyAuthentication'
-  cat /etc/ssh/sshd_config | grep -i 'AuthenticationMethods'
+  grep -i 'PubkeyAuthentication' /etc/ssh/sshd_config
+  grep -i 'AuthenticationMethods' /etc/ssh/sshd_config
   ```
     * If `PubkeyAuthentcation` is commented out, it will be disabled by default, and
       you need to uncomment it.  
     * If `AuthenticationMethods` is set (not commented out), it needs to include `publickey`.  
 
 
-Any changes to `sshd_confi` will require a restart of the SSH service.  
+Any changes to `sshd_config` will require a restart of the SSH service to take
+effect.  
 ```bash
 sudo systemctl restart ssh
 ```
@@ -55,7 +71,7 @@ You'll need a local public and private SSH key. See [ssh-keygen](./ssh_keygen.md
   ssh user@hostname
   ```
 
-### Using `ssh-copy-id` Example 
+### Example of Using `ssh-copy-id` 
 ```bash
 # Check your local public key
 cat ~/.ssh/id_ed25519.pub
@@ -101,10 +117,5 @@ Step by step:
 ~/.ssh/id_ed25519_sk
 ~/.ssh/id_dsa
 ```
-
-
-
-
-
 
 
