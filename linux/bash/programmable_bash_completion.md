@@ -58,6 +58,7 @@ in `.bashrc`).
 - `compgen -W "start stop status" -- "$cur"`: 
     - `-W`: Generates completion options based on the words given (a space-delimited list of possible completions).    
     - `-- "$cur"`: The partial input the user typed so far. This filters results.  
+
 - `COMPREPLY`: An array of results to show
     - Use this to return suggestions.  
 
@@ -85,22 +86,28 @@ compgen -A command -- "$cur"    # Complete commands in PATH
 You use `complete` to specify what should be used for completions for a given
 command.  
 
-- `complete -F func_name mycmd`: Use the function `func_name` to generate completions for `mycmd`.  
+- `complete -F func_name mycmd`: Use the function `func_name` to generate completions 
+  for `mycmd`.  
 - `complete -C command mycmd`: Use the command `command` to generate completions for `mycmd`.  
     - This is usually used for binary programs, not shell functions.  
 - `complete -W wordlist mycmd`: Use the `wordlist` (static list of words) for completions.  
-- `complete -A action mycmd`: Specifies a completion "action."  Actions can be:
+- `complete -A action mycmd`: Specifies a completion "action."   
+  The `action` can be:
     - `command`: Command names from the `PATH`.  
     - `file`: File names.  
     - `directory`: Directory names.  
     - `user`: Usernames from `/etc/passwd`.  
     - `host`: Hostnames from `/etc/hosts`.  
     - `group`: Group names from `/etc/groups`.  
-- `complete ... mycmd -P prefix`: Add a prefix to every possible completion. Used with other options.
+
+- `complete ... mycmd -P prefix`: Add a prefix to every possible completion.  
+   Used with other options.
   ```bash
   complete -W "prod dev stage" -P "--env=" mycmd 
   ```
-- `complete ... mycmd -S suffix`: Add a suffix to every possible completion. Used with other options.  
+
+- `complete ... mycmd -S suffix`: Add a suffix to every possible completion. 
+   Used with other options.  
   ```bash
   complete -W "backup deploy" -S ".sh" mycmd 
   ```
@@ -109,7 +116,7 @@ You can use `-P` and `-S` together, too:
 ```bash
 complete -W "alpha beta gamma" -P "--mode=" -S ";" mycmd
 ```
-Tab-completing `mycmd --mode=` gives:
+With this example, tab-completing `mycmd --mode=` gives:
 * `--mode=alpha;`
 * `--mode=beta;`
 * `--mode=gamma;`
@@ -139,7 +146,10 @@ When `_init_completion` is called, it populates the variables:
 
 ---
 
-If you **don't** want to use `_init_completion`, there are other ways to do this.  
+### Manual Variable Assignments (no `_init_completion`)
+If you **don't** want to use `_init_completion`, there are other ways to do get the
+values you need in order to produce completions.  
+
 Without using `_init_completion`, these variables are made available by the shell:  
 * `COMP_WORDS`: An array of all words typed so far.
 * `COMP_CWORD`: Index of the word being completed.
@@ -156,7 +166,10 @@ prev="${COMP_WORDS[COMP_CWORD-1]}"
 
 ## Where to put completions
 
-To make bash completions permanent, add them to a file in `/etc/bash_completion.d/`.  
+To make bash completions permanent, add them to a file in `/etc/bash_completion.d/`
+
+Or, if you just want the completion available to your user account, add them to your
+`.bashrc` or other runtime config files.  
 
 Ex: `/etc/bash_completion.d/some_tool`
 
@@ -164,9 +177,9 @@ Ex: `/etc/bash_completion.d/some_tool`
 
 ### Completions for Packages
 
-If you're making a package (`.deb` or otherwise), the completions should 
-go in `/usr/share/bash-completion/completions` (per convention). Putting them in
-`/etc/bash_completion.d` will still work.
+If you're making a package (`.deb` or otherwise), completions should go
+in `/usr/share/bash-completion/completions`.  
+This is just a convention. Putting them in `/etc/bash_completion.d` will still work.
 
 The `bash-completion` package itself will never use the `/etc/bash_completion.d`
 directory.  
