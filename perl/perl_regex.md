@@ -233,3 +233,29 @@ my $date_re = qr/(\d{4})-(\d{2})-(\d{2})/;
 "2025-04-07" =~ /$date_re/;
 ```
 
+## Perl-Specific Regex Grouping Syntax
+The syntax specific to Perl usually starts with a group `(...)`.  
+
+If there is a question mark at the start of the group `(?...)`, then it is a
+**non-capturing** group. These won't be stored in `$1`, `$2`, etc.  
+
+- `( ... )`: This is a [capture group](#capture-groups)
+- `(?: ... )`: A non-capturing group with no extra functionality.  
+- `(?= ... )`: Positive lookahead. See [positive lookaheads](#positive-lookahead).  
+- `(?! ... )`: Negative lookahead. See [negative lookaheads](#negative-lookahead).  
+- `(?<= ... )`: Positive lookbehind. See [positive lookbehinds](#positive-lookbehind).  
+- `(?<! ... )`: Negative lookbehind. See [negative lookbehinds](#negative-lookbehind).  
+
+
+Formatted as a table:
+| Syntax         | Meaning                            |
+|----------------|------------------------------------|
+| `( ... )`      | Capturing group                    |
+| `(?: ... )`    | Non-capturing group                |
+| `(?= ... )`    | Positive lookahead                 |
+| `(?! ... )`    | Negative lookahead                 |
+| `(?<= ... )`   | Positive lookbehind                |
+| `(?<! ... )`   | Negative lookbehind                |
+| `$1`, `$2`...  | Capture group values in Perl       |
+
+
