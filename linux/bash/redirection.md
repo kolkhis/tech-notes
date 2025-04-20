@@ -148,25 +148,27 @@ This effectively silences `stderr` for `cmd`.
 
 
 ## Order of Redirection  
+<!-- order of redirection, redirection order, redirect order, ordering redirects order of redirects -->
 While it doesn't matter where the redirections appears on the command line, their  
 order does matter.  
 The order matters because redirections are processed from left to right.  
 To redirect both `stdout` and `stderr` to a file:  
 ```bash  
-cmd >file 2>&1  
+cmd > file 2>&1  
 ```
 This ensures `stderr` is redirected to where `stdout` is currently directed (i.e., `file`).  
 
 
 
 ## Using `exec` for Redirection  
+<!-- redirect whole file, redirect entire file, redirect with exec, exec redirection, logging -->  
 
 In Bash the `exec` built-in replaces the shell with the specified program.  
 `exec` also allow us to manipulate the file descriptors.  
-  
+
 If you don't specify a program, the redirection after `exec` modifies the 
 standard file descriptors of the current shell.  
- 
+
 Since all commands inherit the file descriptors from the shell,  
 all output of the commands will also inherit the redirection.  
 
@@ -191,7 +193,7 @@ exec 2>error_file
       defaults to `1` (`stdout`).  
 
 Before running this, errors will be sent to `stderr`.  
- 
+
 All the the errors sent to `stderr` by the commands *after* the `exec 2>error_file` will 
 go to the `error_file`.  
 just as if you had the command in a script  
@@ -210,12 +212,10 @@ This will redirect both `stdout` and `stderr` to `/tmp/all_output.log`.
 * `exec >`: Redirects `stdout` - in this case, to a file.  
 * `2>&1`: Redirects `stderr` to `stdout`. 
 
-
 ---  
 
-
 ## Duplicating File Descriptors  
-###### Search terms: copy file descriptors, clone file descriptors, duplicate file descriptors  
+<!-- redirect file descriptors, copy file descriptors, clone file descriptors, duplicate file descriptors dupe fd -->  
 You can create clones of file descriptors:  
 ```bash  
 exec 3>&1  
