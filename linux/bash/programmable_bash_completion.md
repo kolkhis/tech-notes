@@ -99,6 +99,7 @@ command.
     - `user`: Usernames from `/etc/passwd`.  
     - `host`: Hostnames from `/etc/hosts`.  
     - `group`: Group names from `/etc/groups`.  
+    - See full list at [actions supported by `complete -A`](#actions-supported-with-complete-a).  
 
 - `complete ... mycmd -P prefix`: Add a prefix to every possible completion.  
    Used with other options.
@@ -191,4 +192,45 @@ install completions.
 man dh_bash-completion
 ```
 File should be `debian/package.bash-completion`.  
+
+
+## Actions Supported with `complete -A`
+
+* `complete -A alias`: Alias names. 
+    - Same as `complete -a`.
+* `complete -A arrayvar`: Array variable names.
+* `complete -A binding`: Readline key binding names.
+* `complete -A builtin`: Names of shell builtins. 
+    - Same as `complete -b`.
+* `complete -A command`: Command names found in the `$PATH`. 
+    - Same as `complete -c`.
+* `complete -A directory`: Directory names. 
+    - Same as `complete -d`.
+* `complete -A disabled`: Names of disabled shell builtins.
+* `complete -A enabled`: Names of enabled shell builtins.
+* `complete -A export`: Names of `export`ed shell variables. 
+    - Same as `complete -e`.
+* `complete -A file`: File names. 
+    - Same as `complete -f`.
+* `complete -A function`: Names of shell functions.
+* `complete -A group`: Group names from `/etc/group`. 
+    - Same as `complete -g`.
+* `complete -A helptopic`: Help topics (supported by the `help` builtin).
+* `complete -A hostname`: Hostnames, as taken from the file specified by the HOSTFILE shell variable.
+* `complete -A job`: Job names, if job control is active. 
+    - Same as `complete -j`.
+* `complete -A keyword`: Shell reserved words. 
+    - Same as `complete -k`.
+* `complete -A running`: Names of running jobs (if job control is active).
+* `complete -A service`: Service names. 
+    - Same as `complete -s`.
+* `complete -A setopt`: Valid arguments for `set -o`.
+* `complete -A shopt`: Shell option names for `shopt`.
+* `complete -A signal`: Signal names (from `kill -l`).
+* `complete -A stopped`: Names of stopped jobs (if job control is active).
+* `complete -A user`: User names from `/etc/passwd`. 
+    - Same as `complete -u`.
+* `complete -A variable`: Names of all shell variables. 
+    - Same as `complete -v`.
+
 
