@@ -11,10 +11,23 @@ Associative arrays, called "Hashes" in Perl, are denoted with the `%` symbol.
     * [Reading Lines from a File](#reading-lines-from-a-file) 
     * [Other ways to read in lines from a file](#other-ways-to-read-in-lines-from-a-file) 
 * [Array Operations](#array-operations) 
-        * [One-liner File Slurp with UTF-8](#one-liner-file-slurp-with-utf-8) 
+    * [Getting the Length of an Array](#getting-the-length-of-an-array) 
+    * [One-liner File Slurp with UTF-8](#one-liner-file-slurp-with-utf-8) 
     * [Reading a List of Filenames into an Array](#reading-a-list-of-filenames-into-an-array) 
 * [Hashes (Associative Arrays)](#hashes-associative-arrays) 
-
+    * [Declaring and Defining Hashes](#declaring-and-defining-hashes) 
+    * [Keys and Values](#keys-and-values) 
+    * [Adding, Modifying, and Accessing Hash Values](#adding-modifying-and-accessing-hash-values) 
+    * [Accessing References in Hashes](#accessing-references-in-hashes) 
+        * [tl;dr: Accessing References](#tldr-accessing-references) 
+    * [Checking for Existence in a Hash](#checking-for-existence-in-a-hash) 
+    * [Deleting a Key in a Hash](#deleting-a-key-in-a-hash) 
+    * [Looping over a Hash](#looping-over-a-hash) 
+        * [`keys`](#keys) 
+        * [`each`](#each) 
+    * [Sorting a Hash by Key or Value](#sorting-a-hash-by-key-or-value) 
+    * [Hash tl;dr](#hash-tldr) 
+* [Example of Accessing Arrays in a Hash](#example-of-accessing-arrays-in-a-hash) 
 
 ## Accessing Variables in Arrays
 Each element of an array is usually a scalar value (a single unit of data).  
@@ -497,5 +510,4 @@ my %unit_resources = (
     2 => [],
     ...
 ```
-
 
