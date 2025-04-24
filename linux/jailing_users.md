@@ -124,6 +124,36 @@ fi
     - `-t 5`: Timeout after 5 seconds.  
     - `RESPONSE`: Save the user's input into a variable with this name.  
 
+## Using an `rbash` Jail
+The `rbash` (restricted bash) shell can be used to put very restrictive limits on
+what a user can and cannot do in a system.  
+
+It is a limited shell where users can't change directories, run certain
+commands, or modify environment variables.  
+It also doesn't allow the user to run any commands with slashes (e.g., `/usr/bin/id`).  
+
+- Set a user's shell to `rbash` in `/etc/passwd` or with `chsh`:
+  ```bash
+  chsh -s /bin/rbash username # change a user's shell to rbash
+  ```
+
+- Then create a safe directory of allowed commands.
+  ```bash
+  mkdir /home/username/bin
+  ln -s /bin/ls /home/username/bin/
+  ln -s /bin/cat /home/username/bin/
+  ```
+
+- You can then restrict the `PATH` and lock them in.  
+  ```bash
+  printf 'PATH=$HOME/bin' >> /home/username/.bash_profile
+  chmod 755 /home/username
+  chown username:username /home/username/.bash_profile
+  ```
+  Then the user is jailed to their home dir and is only able to run the
+  commands in `$HOME/bin`.  
+
 ## Resources
 * [Chroot Jail ProLUG Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
+
 
