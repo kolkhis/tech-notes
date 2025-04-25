@@ -1740,7 +1740,7 @@ A common fork bomb:
 ```bash
 :(){:|:&};:
 ```
-- `:()`: Start a function definition, literally named `:`.
+- `:()`: Start a function definition for a function literally named `:`.
 - `{ ... }`: The contents of the function.
     - `:|:`: Calls `:` (itself), then pipe it to `:` to call itself again.
     - `&`: Backgrounds the process.  
@@ -1758,12 +1758,60 @@ What happens here:
 To `fork` mean to create a new process (using the `fork()` syscall).  
 A fork bomb abuses `fork()` repeatedly and infinitely.  
 
+### Protecting Against Fork Bombs
+
+#### User Process Limit
 You can proctect against this with `ulimit -u` (max user processes).  
 - `ulimit -u 4096`: Prevent a fork bomb from destroying the whole system.  
     - Only the user account running the fork bomb would freeze.  
+    - Using `ulimit -u` is ***temporary***, it will only work for the current
+      shell session.  
+    - For a permament limit, use `/etc/security/limits.conf` (see 
+      [this section](#setting-a-permanent-process-limit-user-and-system-wide))
 
 Without a limit, the kernel gets overwhelmed and completely crashes or forces a
 reboot.  
+
+#### System-Wide Process Limit
+You can check the syste-wide process limit (`pid_max`) by looking in 
+`/proc/sys/kernel/pid_max`.  
+```bash
+cat /proc/sys/kernel/pid_max
+```
+The number here shows the max number of processes you can have **system-wide**.  
+
+---
+
+#### Setting a Permanent Process Limit (User and System-Wide)
+The correct place to set a process limit is in `/etc/security/limits.conf`.  
+Or, any file in `/etc/security/limits.d/`.  
+
+```bash
+sudo vi /etc/security/limits.conf
+```
+
+Add the lines:
+
+```bash
+username soft nproc 2048
+username hard nproc 4096
+```
+- `username`: The user account you want to limit.  
+- `soft`: Warning limit. User can change it temporarily lower.  
+    - Set to `2048` in this example.  
+- `hard`: Strict maxiumum, enforced by the system.  
+    - Set to `4096` in this example.  
+- `nproc`: Specify that you're writing a rule for number of processes.   
+
+
+#### `pid_max` Kernel Parameter
+If you *really* wanted to, you could change `pid_max` kernel parameter temporarily.  
+```bash
+sudo sysctl -w kernel.pid_max=65536
+```
+- `sysctl -w`: Write (set) a value.  
+
+This is temporary only unless you set it in `/etc/sysctl*`.  
 
 ### How a Fork Bomb Works
 A fork bomb works by exhausting system resources, primarily process table limits.  
