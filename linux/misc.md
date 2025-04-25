@@ -1729,6 +1729,64 @@ Call the script the same way again. The output changes:
 helloworld
 ```
 
+## Fork Bombs
+
+Forkbombs are malicious attacks that execute arbitrary code to use up system
+resources.  
+They generally work by calling themselves over and over (recursively) and spawning
+more and more useless processes that grow at an exponential rate.  
+
+A common fork bomb:
+```bash
+:(){:|:&};:
+```
+- `:()`: Start a function definition, literally named `:`.
+- `{ ... }`: The contents of the function.
+    - `:|:`: Calls `:` (itself), then pipe it to `:` to call itself again.
+    - `&`: Backgrounds the process.  
+- `;:`: End the function definition and then call the `:` function.  
+
+What happens here:
+- It calls itself twice (`:` and `:` again via the pipe).  
+- Backgrounds the *second* call (`&`).  
+- Runs the function.  
+- Each function call spawns two new copies of itself.
+- Those spawn two more...
+- Exponential growth happens **very** quickly.  
+- This exhausts system resources (mostly process table limits, maybe CPU/memory too).  
+
+To `fork` mean to create a new process (using the `fork()` syscall).  
+A fork bomb abuses `fork()` repeatedly and infinitely.  
+
+You can proctect against this with `ulimit -u` (max user processes).  
+- `ulimit -u 4096`: Prevent a fork bomb from destroying the whole system.  
+    - Only the user account running the fork bomb would freeze.  
+
+Without a limit, the kernel gets overwhelmed and completely crashes or forces a
+reboot.  
+
+### How a Fork Bomb Works
+A fork bomb works by exhausting system resources, primarily process table limits.  
+
+- Every time you run a process, it gets a "process descriptor."  
+- A process table stores the process descriptors.
+    - Each process table entry stores a `task_struct` (from Linux source code), which contains:  
+    - Process ID (PID)
+    - Parent process ID (PPID)
+    - User and Group IDs (UIG, GID)
+    - Open file handles
+    - Memory used
+    - State (running, sleeping, zombie, etc.)
+    - CPU time used
+    - And a lot more metadata.  
+- The process table is a limited size structure. The system can only ahve so
+  many processes at one time.  
+- Limits come from two places:
+    1. Kernel config: Hardcoded number of max processes the kernel can track.  
+    2. User limits: Soft/hard limits for each user account (controlled by
+       `ulimit -u`).  
+
+So without user limits, a fork bomb can take down a system.  
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
