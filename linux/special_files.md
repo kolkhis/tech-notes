@@ -14,7 +14,7 @@ descriptors, and character special files.
 ## Creating Special Files with `mknod`
 <!-- mknod special files make block device files block files -->
 The `mknod` command is used to create block special files, character special files,
-or FIFOs.  
+or pipes (FIFOs/named pipes).  
 
 The term "special file" on Linux/Unix means a file that can generate or receive data.  
 
@@ -25,13 +25,48 @@ mknod [OPTION]... NAME TYPE [MAJOR MINOR]
 - `NAME`: The path to the special file.  
 - `TYPE`: You can specify the `TYPE` of file:  
     - `p`: Pipe (FIFO) special file.  
+        - Not sure why you'd want to use this over `mkfifo`, but here we are.  
     - `b`: Block device special file. Requires major/minor numbers.  
     - `c`: Character special file. Requires major/minor numbers.  
 - `MAJOR`: Major device number (identifies the driver).  
 - `MINOR`: Minor device number (identifies the specific device handled by that driver).  
 
+Also see [Special File major and minor numbers](#special-file-major-and-minor-numbers).  
 
-### Major and Minor Numbers
+
+### Example: Creating a Null Device with `mknod`
+```bash
+ls -l /dev/null
+# crw-rw-rw- 1 root root 1, 3 Mar  4 13:38 /dev/null
+```
+You can see the major and minor numbers of `/dev/null` are `1` and `3` respectively.  
+We can use those to duplicate the file with `mknod`.  
+```bash
+sudo mknod /tmp/mynull c 1 3
+sudo chmod 666 /tmp/mynull
+```
+- This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
+- That matches the null device (`/dev/null`).  
+
+You can also save yourself the `chmod` and use the `-m` option:
+```bash
+sudo mknod -m 666 /tmp/mynull c 1 3
+```
+
+### `mknod` Options
+
+There are two main options/flags for `mknod`.  
+One for permissions, the other for SELinux contexts.  
+
+- `-m`/`--mode=`: Specify the `mode` (permissions) for the special file.  
+- `-Z`/`--context[=context]`: Specify the SELinux context for the special file.  
+    - If `-Z` is used, it adjusts the SELinux context to the
+      system default type for the destination file.  
+    - If the long option is used, but no context is given, it does the same as `-Z`.  
+    - If the long option is used and a context is given, it will set the context for
+      the file.  
+
+## Special File Major and Minor Numbers
 
 When specifying either a block or character special file with `mknod`, you need to 
 specify major and minor device numbers.  
@@ -70,17 +105,5 @@ This is a block device (`b`) with a major number of `8` (driver: `sd`), and a mi
 number of `0` (`/dev/sda`).  
 `/dev/sda1` would be minor number `1`.  
 
-### Creating a Null Device with `mknod`
-```bash
-ls -l /dev/null
-# crw-rw-rw- 1 root root 1, 3 Mar  4 13:38 /dev/null
-```
-You can see the major and minor numbers of `/dev/null` are `1` and `3` respectively.  
-We can use those to duplicate the file with `mknod`.  
-```bash
-sudo mknod /tmp/mynull c 1 3
-sudo chmod 666 /tmp/mynull
-```
-- This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
-- That matches the null device (`/dev/null`).  
+
 

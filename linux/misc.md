@@ -1905,6 +1905,11 @@ sudo chmod 666 /tmp/mynull
 - This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
 - That matches the null device (`/dev/null`).  
 
+You can also save yourself the `chmod` and use the `-m` option:
+```bash
+sudo mknod -m 666 /tmp/mynull c 1 3
+```
+
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
 * [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
