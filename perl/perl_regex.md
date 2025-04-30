@@ -259,3 +259,122 @@ Formatted as a table:
 | `$1`, `$2`...  | Capture group values in Perl       |
 
 
+## Substituting UTF-8/Unicode Characters with Perl
+Doing this from the command line, `sed` is a better tool for this job.
+
+You don't need to specify any special options with `sed`, you can just pass it
+whatever characters you want to substitute and it will perform.  
+
+If you're trying to substitute characters that aren't plain ASCII with Perl (like en 
+dash characters, or other characters from MS Word), you need to use more options than
+just `perl -pi -e`.  
+
+### Using Hex Codes
+You can set up Perl to use Hex codes instead of the actual unicode characters
+themselves.  
+Do this with `perl -CSDA -pi ...`:
+```bash
+declare EN_DASH="\x{2013}"      # –
+declare OPEN_QUOTE="\x{201C}"   # “
+declare CLOSE_QUOTE="\x{201D}"  # ”
+declare APOSTRAPHE="\x{2019}"   # ’
+
+declare -a FILES
+read -r -d '' -a FILES < <(find ./src/ -name 'u*' -type f)
+
+perl -CSDA -pi \
+    -e "use utf8;" \
+    -e "s/(${OPEN_QUOTE}|${CLOSE_QUOTE})/\"/g" \
+    -e "s/${EN_DASH}/-/g" \
+    -e "s/${APOSTRAPHE}/'/g" \
+    "${FILES[@]}"
+```
+- `\x{...}`: These are the hex escape codes for the characters.  
+    - If you try to use the characters themselves here, it won't work properly.  
+- `-CSDA`: Sets perl's I/O streams to UTF-8 instead of ascii (avoids byte confusion).  
+    - `perldoc perlrun`
+- `-e "use utf8;"`: Tells perl that the actual script code (`-e <code>`) should be UTF-8.  
+
+Then you can use UTF-8 special characters via hex codes in the commands.  
+
+---
+
+### Using Unicode Names
+Another (cleaner) way to do this is with Unicode Names.  
+```bash
+perl -CSDA -Mutf8 -Mopen=:std,:encoding\(UTF-8\) -pi -e '
+    use charnames ":full";  # Allow using Unicode names
+
+    s/\N{LEFT DOUBLE QUOTATION MARK}|\N{RIGHT DOUBLE QUOTATION MARK}/"/g;
+    s/\N{EN DASH}/-/g;
+    s/\N{RIGHT SINGLE QUOTATION MARK}/'\''/g;
+' "${FILES[@]}"
+```
+- `-M`: Specify a module or pragma to load and use with the code in `-e`.  
+    - `-Mutf8`: Specify the `utf8` pragma. Tells perl that the source file is UTF-8.  
+        - The `utf8` pragma and makes unicode characters work correctly.  
+    - `-Mopen=:std,:encoding\(UTF-8\)`: Loads the `open` pragma.  
+        - `:std`: Means "apply this setting to STDIN, STDOUT, and STDERR."  
+        - `:encoding\(UTF-8\)`: Sets the default I/O encoding to UTF-8.  
+        - This essentially makes STDIN/STDOUT use `UTF-8` automatically.  
+
+- `use charnames ":full";`: Loads the `charnames` perl pragma.  
+    - `:full`: Allows the use of full Unicode names.  
+    - Allows you to use unicode names (`\N{EN DASH}`).  
+    - `perldoc charnames`
+
+
+Using this method, you don't have to worry about weird `\x{}` hex codes.  
+
+
+---
+### Using the Characters Directly
+You can also just use the characters directly when using the options `-Mutf8` and
+`-Mopen=:std,:encoding\(UTF-8\)`.  
+
+Using the variables:
+```bash
+perl -CSDA -Mutf8 -Mopen=:std,:encoding\(UTF-8\) -pi -e "
+    s/[${OPEN_QUOTE}${CLOSE_QUOTE}]/\"/g;
+    s/$EN_DASH/-/g;
+    s/$APOSTRAPHE/'/g;
+" "${FILES[@]}"
+```
+
+Or, using the raw characters themselves:
+```bash
+perl -CSDA -Mutf8 -Mopen=:std,:encoding\(UTF-8\) -pi -e '
+    s/[“”]/"/g;  # Replace left/right double quotes with straight quote
+    s/–/-/g;     # Replace EN DASH with hyphen
+    s/’/'\''/g;  # Replace apostrophe
+' "${FILES[@]}"
+```
+
+### Using `sed`
+
+You could also just use `sed`.  
+```bash
+declare EN_DASH="–"
+declare OPEN_QUOTE='“'
+declare CLOSE_QUOTE='”'
+declare APOSTRAPHE="’"
+
+declare -a FILES
+read -r -d '' -a FILES < <(find ./src/ -name 'u*' -type f)
+
+sed -i \
+    -e "s/(${OPEN_QUOTE}|${CLOSE_QUOTE})/\"/g" \
+    -e "s/$EN_DASH/-/g" \
+    -e "s/$APOSTRAPHE/'/g" \
+    "${FILES[@]}"
+```
+
+
+## Resources
+- Unicode character resources
+    - <https://unicode.org/charts/>
+        - Punctuation chart: <https://unicode.org/charts/PDF/U2000.pdf>
+    - <https://www.compart.com/en/unicode/>
+        - [Mirrored Charsets](https://www.compart.com/en/unicode/mirrored)
+        - [Unicode HTML Entities](https://www.compart.com/en/unicode/html) (shows unicode identifiers) 
+
