@@ -301,6 +301,19 @@ Some common pragmas:
   open my $gh, '<', 'nonexistent.txt'; # dies if the file doesn't exist
   ```
 
+---
+
+You can specify what to load from a pragma by giving it an argument.  
+```perl
+use charnames ":full";
+```
+- `":full"`: This is a pragma argument, or "tag."  
+    - It's not normal Perl syntax, it's now certain pragmas (`open`, `charnames`,
+      `strict`, `warnings`) allow you to configure what they load or activate.  
+
+View the `perldoc` page for the pragma to see what tags you can specify and what they do.  
+
+
 ## Subroutines
 Functions in perl are called subroutines.  
 Subroutines are reusable blocks of code that perform a specific task.  
@@ -336,9 +349,14 @@ The parentheses in `($name)` says you want to assign the first value from the li
 `@_` to the variable.
 
 Without the parentheses, perl would not treat the right-hand side as a list.
-It would assign `$name` to the number of elements in the `@_` list.  
+It would assign `$name` to the number of elements in the `@_` list, since the right
+hand side is being evaluated in **scalar context** due to the left hand side being a
+scalar assignment.  
 
-So, using parentheses in the variable assignment forces **array context**.  
+So, using parentheses around the scalar variable assignment allows the RHS to be 
+evaluated in **array context** (sort of).  
+It's like a tuple assignment in Python. It will take the first argument from `@_`,
+and assign that to the scalar variable `$name`.  
 
 
 ### Returning values from subroutines
