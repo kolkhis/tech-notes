@@ -1836,6 +1836,76 @@ A fork bomb works by exhausting system resources, primarily process table limits
 
 So without user limits, a fork bomb can take down a system.  
 
+## Creating Special Files with `mknod`
+<!-- mknod special files make block device files block files -->
+The `mknod` command is used to create block special files, character special files,
+or FIFOs.  
+
+The term "special file" on Linux/Unix means a file that can generate or receive data.  
+
+Syntax:
+```bash
+mknod [OPTION]... NAME TYPE [MAJOR MINOR]
+```
+- `NAME`: The path to the special file.  
+- `TYPE`: You can specify the `TYPE` of file:  
+    - `p`: Pipe (FIFO) special file.  
+    - `b`: Block device special file. Requires major/minor numbers.  
+    - `c`: Character special file. Requires major/minor numbers.  
+- `MAJOR`: Major device number (identifies the driver).  
+- `MINOR`: Minor device number (identifies the specific device handled by that driver).  
+
+When specifying either a block or character special file, you need to specify major
+and minor device numbers.  
+
+* The `MAJOR` number tells the kernel which driver to use (e.g., the block driver).  
+    - This is like the "class" of device.  
+* The `MINOR` number tells the kernel which instance of the device the file refers to.  
+    - This is the "specific device in that class."
+
+For example:
+```bash
+ls -l /dev/sda
+# brw-rw---- 1 root disk 8, 0 Mar  4 13:38 /dev/sda
+```
+This is a block device (`b`) with a major number of `8` (driver: `sd`), and a minor
+number of `0` (`/dev/sda`).  
+`/dev/sda1` would be minor number `1`.  
+
+You can check major and minor numbers with `stat` or `ls -l`.  
+```bash
+stat /dev/sda
+```
+Output:
+```plaintxt
+  File: /dev/sda
+  Size: 0               Blocks: 0          IO Block: 4096   block special file
+Device: 5h/5d   Inode: 323         Links: 1     Device type: 8,0
+Access: (0660/brw-rw----)  Uid: (    0/    root)   Gid: (    6/    disk)
+Access: 2025-04-28 15:44:20.295315382 -0400
+Modify: 2025-03-04 13:38:48.603526535 -0500
+Change: 2025-03-04 13:38:48.603526535 -0500
+ Birth: -
+```
+You can see the `Device type: 8,0`.  
+This is the major and minor number.  
+
+
+### Creating a Null Device with `mknod`
+```bash
+ls -l /dev/null
+# crw-rw-rw- 1 root root 1, 3 Mar  4 13:38 /dev/null
+```
+You can see the major and minor numbers of `/dev/null` are `1` and `3` respectively.  
+We can use those to duplicate the file with `mknod`.  
+```bash
+sudo mknod /tmp/mynull c 1 3
+sudo chmod 666 /tmp/mynull
+```
+- This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
+- That matches the null device (`/dev/null`).  
+
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
+* [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
 
