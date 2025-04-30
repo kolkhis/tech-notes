@@ -258,5 +258,21 @@ These vars will then be available anywhere inside the role `role-name`:
 - `files/`
 - `meta/`
 
+## Conditionally Calling Roles
+
+You can set up conditions for roles in playbooks.  
+
+To do this, you specify a dictionary inline in the roles section.  
+```yaml
+roles:
+  - role1
+  - role2
+  - role3
+  - { role: role4, when: myvar | default(false) == true }
+  - role5
+```
+This specifies a condition for the role `role4`.  
+The `role4` role will only be run when the variable `myvar` is `true`. We're using
+a jinja2 filter to make it default to `false` if it's not defined.  
 
 
