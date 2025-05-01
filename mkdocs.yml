@@ -1,0 +1,6 @@
+site_name: Tech Notes by Kolkhis
+theme:
+  name: material
+
+nav:
+  - Home: index.md
