@@ -1,0 +1,56 @@
+#!/bin/bash
+
+declare -a FILES
+declare -a EXCLUDE_DIRS=(
+    "./docs"
+    "./venv"
+    "./.git"
+    "./.github"
+)
+
+create-mkdocs-yml() {
+    cat <<EOF | tee ./mkdocs.yml
+site_name: Tech Notes by Kolkhis
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Bash:
+      - Overview: linux/bash/misc.md
+      - Redirection: linux/bash/redirection.md
+  - Kubernetes:
+      - Pod Networking: kubernetes/pod-networking.md
+EOF
+}
+
+copy-to-docs() {
+    read -r -d '' -a FILES < <(
+        find . -maxdepth 1 -mindepth 1 #-type d #! -name "*.git" ! -name "*venv"
+    )
+
+    if ! [[ -d docs ]]; then
+        mkdir docs || { printf "Failed to create docs directory!\n"; }
+    fi
+
+    for FILE in "${FILES[@]}"; do
+        if [[ "${EXCLUDE_DIRS[*]}" =~ .*$FILE.* ]]; then
+            printf "Found exlusion directory: %s\n" "$FILE"
+            continue
+        fi
+        printf "DEBUG: Directory: %s\n" "$FILE"
+
+        # Recursive copying is copying symlinks
+        if [[ ! -h $FILE ]]; then
+            rsync -a --no-links "$FILE" ./docs
+            # cp -r "$FILE" ./docs
+        fi
+    done
+}
+
+create-mkdocs-yml
+copy-to-docs
+
+
+
+
