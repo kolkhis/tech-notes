@@ -1687,6 +1687,49 @@ Change hostname:
 Use `strace` to track the system calls that a program makes.  
 The output here is C code.  
 
+To see each of the syscalls a command makes, you can run the command directly after
+the `strace`/`strace [opts]`:
+
+```bash
+sudo strace -ffs320 mknod -m 666 /tmp/mynull c 1 3
+```
+- `-ff`: Also trace child processes as they're created by the traced process (spawned 
+         via `fork()`/`vfork()`).
+    * Combines `-f` and `--output-separately`.
+    * Essentially it   
+
+## Using `umask` to Set Permissions before Creating Files
+You can set the permissions a file should have *before* actually creating the file.  
+This can be done to prevent an attacker from potentially grabbing a readable file
+descriptor to a sensitive file (e.g., a private key file).  
+
+```bash
+umask 0 && mknod /tmp/mynull c 1 3
+```
+
+---
+
+The `umask` (user file-create mode mask) is a permission bitmask that restricts
+default permissions given to new files and directories.  
+
+When you create a file, the requested mode (like `0666`) is bitwise `AND`-ed with
+the **inverse** of the bitmask.  
+
+```bash
+actual_mode = requested_mode & ~umask
+```
+
+A common `umask` is `022`.  
+
+So if `requested_mode = 0666` and the `umask = 0022` (removes write for group and
+others): 
+```bash
+0666 & ~0022 = 0666 & 0755 = 0644
+# which gives:
+rw-r--r--
+```
+
+
 ## Suspending and Unsuspending your Terminal
 It's easy to accidentally hit `Control-S` in the terminal.  
 That's how it gets "suspended."  
