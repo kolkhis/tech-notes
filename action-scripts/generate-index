@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Generate the contents of the mkdocs.yml file, which indexes the site and formats how 
+# the files are displayed in the nav bar.  
+#
+# Ideally, this will run at build time and dynamically generate the `nav` section of
+# the mkdocs.yml file based on the structure of the notes.
+
+declare -a DIRS
+read -r -d '' -a DIRS < <(find . -maxdepth 1 -type d ! -name "*.git" ! -name "*venv")
+
+[[ ! -f ./mkdocs.yml ]] && touch mkdocs.yml && printf "Created mkdocs.yml\n"
+declare -a EXCLUDE_DIRS=(
+    ".git"
+    ".github"
+    "venv"
+    "."
+)
+
+declare SPACING='  '
+for DIR in "${DIRS[@]}"; do
+    # printf "  - %s" 
+    if [[ "${EXCLUDE_DIRS[*]}" =~ $DIR ]]; then
+        printf "Found exclusion directory: %s\n" "$DIR" && continue
+    fi
+    # [[ $DIR == '.' ]] && continue
+    DIRTITLE="$(printf "%s" "${DIR//.\//}" | perl -pi -e 's/[-_]/ /g')"
+    if ! grep -qi "${DIRTITLE^}" ./mkdocs.yml; then
+        printf "Adding directory: %s\n" "${DIRTITLE^}"
+        printf "  - %s:\n" "${DIRTITLE^}" >> ./mkdocs.yml
+    fi
+
+    # [[ ! -f "$DIR/index.md" ]] && touch "$DIR/index.md" && printf "Making landing page for dir: %s\n" "$DIR"
+
+    declare -a DIRFILES
+    read -r -d '' -a DIRFILES < <(find "$DIR" -mindepth 1 -maxdepth 1)
+    for FILE in "${DIRFILES[@]}"; do
+        if [[ -d $FILE ]]; then
+            printf "File is a directory. Recursing and adding to nav.\n"
+            :
+        fi
+        if [[ -f $FILE ]]; then
+            printf "Found regular file. Adding entry.\n"
+            SPACING='    '
+            printf "%s- %s: %s\n" "$SPACING" "$(basename "${FILE%%.*}")" "$FILE"
+        fi
+    done
+
+done
+
