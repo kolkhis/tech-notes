@@ -5,6 +5,8 @@
 #
 # Ideally, this will run at build time and dynamically generate the `nav` section of
 # the mkdocs.yml file based on the structure of the notes.
+#
+# To be run in the repo's root directory (e.g., ./actions-scripts/generate-index)
 
 declare -a DIRS
 read -r -d '' -a DIRS < <(find . -maxdepth 1 -type d ! -name "*.git" ! -name "*venv")
@@ -19,15 +21,14 @@ declare -a EXCLUDE_DIRS=(
 
 declare SPACING='  '
 for DIR in "${DIRS[@]}"; do
-    # printf "  - %s" 
     if [[ "${EXCLUDE_DIRS[*]}" =~ $DIR ]]; then
         printf "Found exclusion directory: %s\n" "$DIR" && continue
     fi
-    # [[ $DIR == '.' ]] && continue
+
     DIRTITLE="$(printf "%s" "${DIR//.\//}" | perl -pi -e 's/[-_]/ /g')"
-    if ! grep -qi "${DIRTITLE^}" ./mkdocs.yml; then
+    if ! grep -qi "${DIRTITLE}" ./mkdocs.yml; then
         printf "Adding directory: %s\n" "${DIRTITLE^}"
-        printf "  - %s:\n" "${DIRTITLE^}" >> ./mkdocs.yml
+        printf "  - %s:\n" "${DIRTITLE}" >> ./mkdocs.yml
     fi
 
     # [[ ! -f "$DIR/index.md" ]] && touch "$DIR/index.md" && printf "Making landing page for dir: %s\n" "$DIR"
@@ -39,10 +40,11 @@ for DIR in "${DIRS[@]}"; do
             printf "File is a directory. Recursing and adding to nav.\n"
             :
         fi
-        if [[ -f $FILE ]]; then
+        if [[ -f $FILE && ! -h $FILE ]]; then
             printf "Found regular file. Adding entry.\n"
             SPACING='    '
-            printf "%s- %s: %s\n" "$SPACING" "$(basename "${FILE%%.*}")" "$FILE"
+            ENTRY=$(printf "%s- %s: %s\n" "$SPACING" "$(basename "${FILE%%.*}")" "$FILE")
+            sed -i "/${DIRTITLE}/i $ENTRY" ./mkdocs.yml
         fi
     done
 
