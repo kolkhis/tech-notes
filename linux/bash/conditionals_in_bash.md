@@ -96,15 +96,15 @@ Standard file descriptors:
 ### File Descriptor Usage Example:  
 ```bash  
 if [[ -t 0 ]]; then  
-    echo "Standard Input is attached to a terminal."  
+    printf "Standard Input is attached to a terminal.\n"  
 else  
-    echo "Standard Input is not attached to a terminal."  
+    printf "Standard Input is not attached to a terminal.\n"  
 fi  
 
 if [[ -t 1 ]]; then  
-    echo "Standard Output is attached to a terminal."  
+    printf "Standard Output is attached to a terminal.\n"  
 else  
-    echo "Standard Output is not attached to a terminal."  
+    printf "Standard Output is not attached to a terminal.\n"  
 fi  
 ```
 
@@ -115,6 +115,7 @@ A name reference is a variable that *refers* to another variable.
 This is different from a normal variable assignment. 
 The name reference creates a kind of alias to the other variable.  
 A name reference is created using the `declare -n` command.  
+
 ### Name Reference Usage Example:  
 ```bash  
 declare -n ref=original  
