@@ -147,7 +147,7 @@ setfacl --modify user:john:rw specialfile  # Add an ACL permission to specialfil
 setfacl --remove user:john specialfile # Remove the ACL permissions for the user called john for specialfile file
 setfacl --modify group:mail:rx specialfile  # Add an ACL permission for the group called mail. The mail group should get permissions to read and execute specialfile file.
 setfacl --recursive --modify user:john:rwx collection/
-# Update ACL permissions for collection folder and all its contents, allowing the user john to read, write, and execute everything inside
+# Update ACL permissions for collection directory and all its contents, allowing the user john to read, write, and execute everything inside
 xfs_quota -x -c 'limit bsoft=100m bhard=500m john' /dev/vda1  # Edit disk quotas for the user called john. Set a soft limit of 100 megabytes and hard limit of 500 megabytes on /dev/vda1 partition
 ```
 

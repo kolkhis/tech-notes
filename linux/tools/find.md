@@ -97,7 +97,7 @@ Skip directories with `find`:
   Then, we're using an `OR` operator (`-o`) to `-print` any files that *don't* match
   the pattern.  
 
-* Skip the contents of any `.git` folders, and search for `*.py` files
+* Skip the contents of any `.git` directory, and search for `*.py` files
   ```bash
   find . -path ".git" -prune -o -path "./*.py" -print
   find . -path ".git" -prune -o -name "*.py" -print

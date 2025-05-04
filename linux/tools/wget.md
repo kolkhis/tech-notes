@@ -38,7 +38,7 @@ wget \
     - E.g., if an HTML file doesn't have a `.html` file extension, it will be
       added.
     - This is useful when serving locally, to avoid ambiguous MIME types.
-* `-P`:  Destination folder (`$CACHE_DIR`)
+* `-P`:  Destination directory (`$CACHE_DIR`)
 * `$URL`: The URL to download from.
 
 
