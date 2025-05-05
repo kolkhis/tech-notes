@@ -74,7 +74,9 @@ See [ANSI escape sequences](./ansi_control_sequences.md) for more details.
 
 Here is a list of 
 [special escape sequences](https://www.computerhope.com/unix/ubash.htm#prompting)  
-available for use in `PS1`:  
+available for use in `PS1`.  
+
+These can also be found in `man://bash`, `/^\s*PROMPTING`.
 
 |  Escape Sequence  |   What it Represents      
 |-------------------|---------------------------  
