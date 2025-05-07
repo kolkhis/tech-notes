@@ -38,7 +38,7 @@ messages, authentication attempts, kernel events, and application-specific logs.
       ```
 
 
-* `/var/log/auth.log`:
+* `/var/log/auth.log` (or `/var/log/secure` on RH):
     * Records all authentication attempts, including successful and failed logins, as well as `sudo` usage.
     * Useful for tracking user activity and detecting unauthorized access.
   
@@ -90,9 +90,9 @@ messages, authentication attempts, kernel events, and application-specific logs.
         * `/var/log/mysql/` for MySQL logs.
 
     * Example: View the Nginx access log:
-  ```bash
-  tail -f /var/log/nginx/access.log
-  ```
+      ```bash
+      tail -f /var/log/nginx/access.log
+      ```
 
 ## Working with Log Files
 
@@ -100,37 +100,37 @@ messages, authentication attempts, kernel events, and application-specific logs.
 To monitor logs in real-time, use the `tail -f` command, which continuously displays new entries as they are added.
 
 * Example:
-```bash
-tail -f /var/log/syslog
-```
+  ```bash
+  tail -f /var/log/syslog
+  ```
 
 ### Searching and Filtering Logs
 Use `grep` to search for specific keywords in logs.
 
 * Example: Search for errors in the kernel log:
-```bash
-grep -i "error" /var/log/kern.log
-```
+  ```bash
+  grep -i "error" /var/log/kern.log
+  ```
 
 ### Rotating Logs
 Log rotation manages log file sizes by archiving old logs and creating new ones.  
 This is handled by the `logrotate` utility, which is configured in `/etc/logrotate.conf` and `/etc/logrotate.d/`.
 
 * Example: Manually rotate logs:
-```bash
-sudo logrotate -f /etc/logrotate.conf
-```
+  ```bash
+  sudo logrotate -f /etc/logrotate.conf
+  ```
 
 ### Clearing Logs
 To free up space, you may occasionally want to clear specific logs.  
-Be cautious when doing this, as it removes valuable information.
+Only do this if you're sure you don't need the logs. There's no way to undo this.  
 
 * Example: Clear the contents of `syslog`:
-```bash
-sudo truncate -s 0 /var/log/syslog
-# or
-: > /var/log/syslog  # Clever way to truncate. : is a function with no output.
-```
+  ```bash
+  sudo truncate -s 0 /var/log/syslog
+  # or
+  : > /var/log/syslog  # Clever way to truncate. : is a function with no output.
+  ```
 
 ### Viewing Logs with `journalctl`
 On systems that use `systemd`, `journalctl` is the command for accessing the systemd journal, which consolidates logs from various sources, including boot messages, kernel messages, and application logs.
@@ -140,7 +140,9 @@ On systems that use `systemd`, `journalctl` is the command for accessing the sys
 journalctl -xe
 ```
 
-### Related Tips
+### Misc
 * Use log rotation (`logrotate`) to manage log file sizes and prevent logs from filling up disk space.
-* Consider implementing a centralized logging solution (e.g., `rsyslog` or `ELK Stack`) for scalable log management across multiple servers.
+* Implementing a centralized logging solution (e.g., `rsyslog` or `ELK Stack`) 
+  creates a scalable log management solution across multiple servers.
+    - Or, Loki + Promtail + Grafana is another stack that works just as well.  
 
