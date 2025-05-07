@@ -319,3 +319,77 @@ systemd-umount
 
 ---
 
+## `.timer` Files
+The `.timer` file can specify how often a service should run a particular thing.  
+
+An example `gh-backups.timer` file:
+```ini
+[Unit]
+Description=Run GH Backups Daily at 2AM
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+- `[Unit]`: This section just gives some info about the process.  
+- `[Timer]`: This is where we define the timer rules.  
+    - `OnCalendar=*-*-* 02:00:00`: Run every day at 2AM.  
+        - `*-*-*`: This is the syntax for "every day."  
+        - `02:00:00`: The 24-hour format for 2AM.  
+    - `Persistent=true`: Ensures it runs on boot if the system was off at 2AM.  
+
+Timer files count as their own services. So they will need to be enabled:
+```bash
+systemctl daemon-reexec
+systemctl daemon-reload
+sudo systemctl enable --now gh-backups.timer
+```
+- `systemctl daemon-reexec`: Re-executes the `systemd` manager.  
+    - This will "serialize" the manager state, re-execute the process, and
+      "deserialize" the state again.  
+    - Can be used as a heavy-weight `daemon-reload`. 
+- `systemctl daemon-reload`: Reloads all unit files.  
+    - Also re-runs all generators (`man://systemd.generator`).  
+    - Recreates the entire dependency tree.  
+
+> NOTE: The `[Timer]` section can **not** go in the `.service` file directly.  
+> `systemd` separates the concern of *what* to run (`.service`) and *when* to run it (`.timer`).  
+
+You **must** use a `.timer` unit to handle the scheduled execution.  
+You can't use `OnCalender=` or other time-based fields inside a `.service` unit.  
+
+This is by design and considered good practice. It allows you to trigger the service
+manually, and schedule it via a `.timer` file.  
+```bash
+systemctl start gh-backup.service       # Trigger manually
+systemctl enable --now gh-backup.timer  # Schedule it
+```
+
+## Environment Variables for Systemd Services
+You can set an `EnvironmentFile=` in the `[Service]` section to load environment
+variables for use in the service.  
+
+An example:
+```ini
+[Service]
+EnvironmentFile=/etc/gh-backups.env
+ExecStart=/usr/local/bin/gh-backup.sh
+```
+
+The `/etc/gh-backups.env` file might look like:  
+```bash
+GITHUB_USER_ORG=MyOrg
+GITHUB_TOKEN=ghp_xxx
+S3_BUCKET="s3://my-bucket-name"
+```
+Then the `gh-backup.sh` script won't need to source a `.env` file, since the
+variables will already be in the environment.  
+
+
+## Resources
+* [Systemd Service Files](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#)
+* [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html)
+
