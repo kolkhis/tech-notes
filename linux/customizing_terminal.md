@@ -114,6 +114,9 @@ export PS1="\[\e[38;5;20m\]\u:\h \$ \[\e[0m\]"
 ```
 See [ANSI control sequences](./ansi_control_sequences.md) for adding colors.
 
+* \w (The current working directory), uses the value of the `PROMPT_DIRTRIM`
+  variable.
+    - If set, it will use this number as the number of trailing directories to keep.  
 
 ### Modifying the PS2 Environment Variable  
 
