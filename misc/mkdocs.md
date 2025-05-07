@@ -16,6 +16,7 @@ MKDOCS_DIR='~/tech-notes'
    sudo apt-get install python3.10-venv  # to get the venv module
    sudo apt-get install python3.10-venv --fix-missing  # if install doesn't work
    python3 -m venv venv
+   . venv/bin/activate
    ```
 
 1. Install `mkdocs` and a theme for `mkdocs`.  
@@ -29,4 +30,16 @@ MKDOCS_DIR='~/tech-notes'
    cd tech-notes
    ```
 
-1. 
+1. Copy the contents of the notes into the
+
+
+## MkDocs Project Structure
+
+In the root of the repo, you need a `docs/` directory.  
+You also need a `mkdocs.yml` file in the repo root.  
+
+The directory structure of my notes directory is fine for mkdocs, but it all needs to
+be in the `docs/` directory instead of the root.  
+
+
+
