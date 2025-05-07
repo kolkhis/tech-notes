@@ -135,10 +135,30 @@ E.g., `[^abc]` will match everything except one of `abc`.
     * Using the caret `^` in a `set` only inverts the matches within the `set`.  
     * Using the caret `^` with the `-v` option will have the opposite effect.  
 
+### Output Only the Matched Parts of the Line
+You can effictively extract matched text without the use of capture groups 
+using `grep -o`.  
+
+For example, you can extract the paths from an `ldd` output:
+```bash
+ldd /bin/bash | grep -o '/[^ ]*'
+```
+This will filter out any lines that don't match the pattern, and output only the
+matched part of the lines.  
+The regex being used here:
+- `'/[^ ]*`: 
+    - `/`: Match starts with a forward slash.
+    - `[^ ]*`: Matches any non-space characters (match until the first space).  
+
+The output:
+```plaintext
+/lib/x86_64-linux-gnu/libtinfo.so.6
+/lib/x86_64-linux-gnu/libc.so.6
+/lib64/ld-linux-x86-64.so.2
+```
 
 
-
-## Exmaples  
+## Examples  
 
 ### Count Occurrences of a Word:  
 ```bash  
