@@ -385,8 +385,10 @@ GITHUB_USER_ORG=MyOrg
 GITHUB_TOKEN=ghp_xxx
 S3_BUCKET="s3://my-bucket-name"
 ```
-Then the `gh-backup.sh` script won't need to source a `.env` file, since the
-variables will already be in the environment.  
+You don't need to use `export` on these variables.  
+
+Using this method, the `gh-backup.sh` script won't need to source a `.env` file, 
+since the variables will already be in the environment.  
 
 
 ## Resources
