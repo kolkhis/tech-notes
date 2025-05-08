@@ -390,4 +390,17 @@ md5sum /etc/services
 sha256sum /etc/services
 ```
 
+## Check if a System Needs Reboot
+There are commands check if a system needs a reboot, which vary from distro to
+distro.  
+For instance, RedHat-based systems, the command is `needs-restarting` but is
+`needrestart` on Debian-based systems.  
+
+```bash
+sudo needs-restarting   # RedHat
+sudo needrestart        # Debian
+sudo zypper ps          # SUSE (list services that need restarting)
+```
+
+
 
