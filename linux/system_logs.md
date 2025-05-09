@@ -146,3 +146,39 @@ journalctl -xe
   creates a scalable log management solution across multiple servers.
     - Or, Loki + Promtail + Grafana is another stack that works just as well.  
 
+## Logging with Apache Kafka
+
+### About Kafka
+Put simply, Kafka is a logging tool that uses an event bus (or "message queue") to 
+store and expose messages.  
+
+It's a distributed event-streaming platform, and is specifically designed for
+creating high throughput data pipelines.  
+
+Kafka is known to be scalable. It acts as middleware between log producers and log
+ingesters. Kafka can ingest logs from various sources (applications, servers,
+databases, etc.) and process them, store them, and analyze them in real time.  
+
+Kafka is typically run on a dedicated VM or hardware.  
+
+---
+
+Kafka is a message broker that works with a message queue (or event bus).  
+* The message broker is not limited to just logs -- it can queue any sort of information.  
+
+
+### Setting up Kafka
+You can set up a Kafka server and write to it using the `kafkacat` tool (invoked 
+as `kcat`).  
+
+You can set up Kafka logs to be picked up by Promtail and sent to Loki.  
+It can also be integrated with other monitoring stacks.  
+
+
+TODO: Finish this section on setting up kafka
+
+
+### Kafka Resources
+- <https://www.redpanda.com/guides/kafka-use-cases-log-aggregation>
+- <https://www.crowdstrike.com/en-us/guides/kafka-logging/>
+- <https://killercoda.com/het-tanis/course/Linux-Labs/108-kafka-to-loki-logging>
