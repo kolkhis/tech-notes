@@ -1,6 +1,4 @@
-
-
-# Linux Command Cheatsheet  
+# Bash "Cheatsheet" (Info Dump)
 
 ## Table of Contents
 * [CLI Tools to Become Familiar With](#cli-tools-to-become-familiar-with) 
