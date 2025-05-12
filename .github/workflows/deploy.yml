@@ -24,7 +24,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
         run: pip install -U mkdocs mkdocs-material
@@ -32,7 +33,11 @@ jobs:
       - name: Set up directory structure
         run: ./action-scripts/format-dir-structure
 
-      - name: Serve MkDocs
+      - name: Set up directory structure
+        run: ./action-scripts/index-rewrite
+
+      - name: Build MkDocs
+        run: mkdocs build --strict
 
       - name: Setup Pages
         id: pages
@@ -41,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./tech-notes # ?
+          path: ./site
 
   deploy:
     environment:

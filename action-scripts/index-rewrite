@@ -1,0 +1,109 @@
+#!/bin/bash
+
+set -euo pipefail
+
+MKDOCS_FILE="./mkdocs.yml"
+DOCS_DIR="./docs"
+
+EXCLUDE_DIRS=(
+    "venv"
+    ".git"
+    ".github"
+    "."
+    "ai"
+    "proxmox"
+    "skilstak"
+    "skilstak/beginner_boost_week"
+    "pi"
+    "nix"
+    "api"
+    "killercoda"
+    "android"
+    "product_manager"
+    "security_architect"
+    "design"
+    "chatgpt_prompts"
+    "flipper"
+    "hax/htb"
+    "hax/thm"
+    "linux/mint"
+    "lfcs"
+    "linux/labs"
+    "linux/labs/linux"
+)
+
+generate_mkdocs_header() {
+    cat <<EOF
+site_name: Tech Notes by Kolkhis
+theme:
+  name: mkdocs
+
+features:
+  - navigation.sections
+  - navigation.expand
+  - toc.integrate
+
+nav:
+  - Home: index.md
+  - Notes:
+EOF
+}
+
+sanitize_title() {
+    # Lowercase, replace _ or - with spaces, capitalize
+    echo "$1" | sed -E 's/[-_]/ /g' | awk '{for(i=1;i<=NF;++i) $i=(substr($i,1,1)) substr($i,2)} 1'
+}
+
+generate_nav_entries() {
+    local base_dir="$1"
+    local indent="    "
+
+    # find "$base_dir" -type d | sort | 
+    while read -r dir; do
+        local rel_dir="${dir#./docs/}"
+        [[ -z "$rel_dir" || "$rel_dir" == "." ]] && continue
+        [[ "$dir" == "$base_dir" ]] && continue
+        [[ "${EXCLUDE_DIRS[*]}" =~ .*$dir.* ]] && continue
+
+        # Skip excluded dirs
+        for ex in "${EXCLUDE_DIRS[@]}"; do
+            [[ "$rel_dir" == "$ex" ]] && continue 2
+        done
+
+        local section_title
+        section_title=$(sanitize_title "$rel_dir")
+        # echo "${indent}- $section_title:"
+
+        local entries=()
+        while read -r file; do
+            local filename
+            filename=$(basename "$file")
+            [[ -z "$filename" ]] && continue
+
+            local title
+            title=$(sanitize_title "${filename%%.*}")
+            local relpath="${file#./docs/}"
+            [[ -z "$relpath" ]] && continue
+
+            entries+=("${indent}  - $title: $relpath")
+        done < <(find "$dir" -maxdepth 1 -type f -name "*.md" | sort)
+
+        if (( ${#entries[@]} > 0 )); then
+            echo "${indent}- $section_title:"
+            printf '%s\n' "${entries[@]}"
+        fi
+
+    done < <(find "$base_dir" -type d ! -path '*skilstak*' ! -path '*api/*' ! -path '*ai/*' | sort)
+}
+
+main() {
+    echo "Generating $MKDOCS_FILE..."
+    {
+        generate_mkdocs_header
+        generate_nav_entries "$DOCS_DIR"
+    } > "$MKDOCS_FILE"
+    echo "Done!"
+}
+
+main
+

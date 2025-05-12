@@ -8,10 +8,12 @@
 #
 # To be run in the repo's root directory (e.g., ./actions-scripts/generate-index)
 
+declare MKDOCS_FILE='./mkdocs.yml'
+
 declare -a DIRS
 read -r -d '' -a DIRS < <(find . -maxdepth 1 -type d ! -name "*.git" ! -name "*venv")
 
-[[ ! -f ./mkdocs.yml ]] && touch mkdocs.yml && printf "Created mkdocs.yml\n"
+[[ ! -f $MKDOCS_FILE ]] && touch mkdocs.yml && printf "Created mkdocs.yml\n"
 declare -a EXCLUDE_DIRS=(
     ".git"
     ".github"
@@ -26,9 +28,9 @@ for DIR in "${DIRS[@]}"; do
     fi
 
     DIRTITLE="$(printf "%s" "${DIR//.\//}" | perl -pi -e 's/[-_]/ /g')"
-    if ! grep -qi "${DIRTITLE}" ./mkdocs.yml; then
+    if ! grep -qi "${DIRTITLE}" $MKDOCS_FILE; then
         printf "Adding directory: %s\n" "${DIRTITLE^}"
-        printf "  - %s:\n" "${DIRTITLE}" >> ./mkdocs.yml
+        printf "  - %s:\n" "${DIRTITLE}" >> $MKDOCS_FILE
     fi
 
     # [[ ! -f "$DIR/index.md" ]] && touch "$DIR/index.md" && printf "Making landing page for dir: %s\n" "$DIR"
@@ -44,7 +46,7 @@ for DIR in "${DIRS[@]}"; do
             printf "Found regular file. Adding entry.\n"
             SPACING='    '
             ENTRY=$(printf "%s- %s: %s\n" "$SPACING" "$(basename "${FILE%%.*}")" "$FILE")
-            sed -i "/${DIRTITLE}/i $ENTRY" ./mkdocs.yml
+            ! grep -qi "$ENTRY" $MKDOCS_FILE && sed -i "/${DIRTITLE}/i $ENTRY" $MKDOCS_FILE
         fi
     done
 
