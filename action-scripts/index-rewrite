@@ -30,6 +30,7 @@ EXCLUDE_DIRS=(
     "lfcs"
     "linux/labs"
     "linux/labs/linux"
+    "aws/cloud_quest"
 )
 
 generate_mkdocs_header() {
