@@ -39,7 +39,15 @@ generate_mkdocs_header() {
 site_name: Tech Notes by Kolkhis
 repo_url: https://github.com/kolkhis/tech-notes
 theme:
-  name: mkdocs
+  name: material
+
+markdown_extensions:
+  - codehilite
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
 
 features:
   - navigation.sections
