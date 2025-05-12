@@ -17,7 +17,6 @@ jobs:
   build:
     name: Format and deploy mkdocs pages
     runs-on: ubuntu-latest
-    env:
     steps:
       - uses: actions/checkout@v4
 
