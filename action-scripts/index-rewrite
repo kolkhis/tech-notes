@@ -36,6 +36,7 @@ EXCLUDE_DIRS=(
 generate_mkdocs_header() {
     cat <<EOF
 site_name: Tech Notes by Kolkhis
+repo_url: https://github.com/kolkhis/tech-notes
 theme:
   name: mkdocs
 
@@ -51,7 +52,7 @@ EOF
 }
 
 sanitize_title() {
-    # Lowercase, replace _ or - with spaces, capitalize
+    # Lowercase, replace _ or - with spaces
     echo "$1" | sed -E 's/[-_]/ /g' | awk '{for(i=1;i<=NF;++i) $i=(substr($i,1,1)) substr($i,2)} 1'
 }
 
@@ -86,11 +87,12 @@ generate_nav_entries() {
             local relpath="${file#./docs/}"
             [[ -z "$relpath" ]] && continue
 
-            entries+=("${indent}  - $title: $relpath")
+            # entries+=("${indent}  - $title: $relpath")
+            entries+=("${indent}  - $relpath")
         done < <(find "$dir" -maxdepth 1 -type f -name "*.md" | sort)
 
         if (( ${#entries[@]} > 0 )); then
-            echo "${indent}- $section_title:"
+            printf "%s- %s:\n" "${indent}" "$section_title"
             printf '%s\n' "${entries[@]}"
         fi
 
