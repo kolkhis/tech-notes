@@ -30,6 +30,7 @@ EXCLUDE_DIRS=(
     "lfcs"
     "linux/labs"
     "linux/labs/linux"
+    "linux/labs/hashicorp"
     "aws/cloud_quest"
 )
 
