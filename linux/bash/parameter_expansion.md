@@ -1,6 +1,95 @@
+# Bash Parameter Expansion
+Parameter expansion is a way to modify variables in Bash.  
 
-# Bash Parameter Transformation  
-`man://bash 1500`
+Parameter expansions are used in braces (`${VAR...}`).  
+
+## Parameter Expansion (Slicing/Substitution)  
+
+Replace strings and variables in place with parameter expansion.  
+
+### Slicing  
+```bash  
+name="John"  
+echo "${name}"  
+echo "${name/J/j}"    #=> "john" (substitution)  
+echo "${name:0:2}"    #=> "Jo" (slicing)  
+echo "${name::2}"     #=> "Jo" (slicing)  
+echo "${name::-1}"    #=> "Joh" (slicing)  
+echo "${name:(-1)}"   #=> "n" (slicing from right)  
+echo "${name:(-2):1}" #=> "h" (slicing from right)  
+echo "${food:-Cake}"  #=> $food or "Cake"  
+length=2
+echo "${name:0:length}"  #=> "Jo"  
+# Cutting out the suffix  
+str="/path/to/foo.cpp"  
+echo "${str%.cpp}"    # /path/to/foo  
+echo "${str%.cpp}.o"  # /path/to/foo.o  
+echo "${str%/*}"      # /path/to  
+# Cutting out the prefix  
+echo "${str##*.}"     # cpp (extension)  
+echo "${str##*/}"     # foo.cpp (basepath)  
+# Cutting out the path, leaving the filename  
+echo "${str#*/}"      # path/to/foo.cpp  
+echo "${str##*/}"     # foo.cpp  
+
+echo "${str/foo/bar}" # /path/to/bar.cpp  
+
+str="Hello world"  
+echo "${str:6:5}"   # "world"  
+echo "${str: -5:5}"  # "world"  
+```
+
+### Substitution  
+```bash  
+${foo%suffix}       # Remove suffix  
+${foo#prefix}       # Remove prefix  
+
+${foo%%suffix}      # Remove long suffix  
+${foo/%suffix}      # Remove long suffix  
+
+${foo##prefix}      # Remove long prefix  
+${foo/#prefix}      # Remove long prefix  
+
+${foo/from/to}      # Replace first match  
+${foo//from/to}     # Replace all  
+
+${foo/%from/to}     # Replace suffix  
+${foo/#from/to}     # Replace prefix  
+
+src="/path/to/foo.cpp"  
+base=${src##*/}   #=> "foo.cpp" (basepath)  
+dir=${src%$base}  #=> "/path/to/" (dirpath)  
+```
+
+### Substrings  
+```bash  
+${foo:0:3}      # Substring (position, length)  
+${foo:(-3):3}   # Substring from the right  
+```
+
+### Getting the Length of a String/Variable  
+```bash  
+${#foo}        # Length of $foo  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Parameter Transformation
+`man://bash /^\s*Parameter\s*transformation`
 Parameter transformation is a subset of parameter expansion.  
 It's not generally compatible with POSIX shell.  
 Parameter transformation is a way to perform a transformation on a value before it is used.  
@@ -11,14 +100,7 @@ ${parameter@operator}
 ```
 Each operator is a single letter.  
 
-## Table of Contents
-* [Parameter Transformation Operators](#parameter-transformation-operators) 
-* [Multiple Parameter Transformation Operators](#multiple-parameter-transformation-operators) 
-* [Special Characters for Parameter Transformation](#special-characters-for-parameter-transformation) 
-    * [Table of Examples using Special Characters](#table-of-examples-using-special-characters) 
-* [Parameter Transformation Examples](#parameter-transformation-examples) 
-
-## Parameter Transformation Operators  
+### Parameter Transformation Operators  
 * `U`: Converts all lowercase letters in the value to uppercase.  
 * `u`: Capitalizes only the first letter of the value.  
 * `L`: Converts all uppercase letters in the value to lowercase.  
@@ -30,7 +112,7 @@ Each operator is a single letter.
 * `a`: Returns the variable's attribute flags (like `readonly`, `exported`).  
 
 
-## Multiple Parameter Transformation Operators  
+### Parameter Transformation on Arrays
 Just like using `$@` or `$*`, you can use parameter transformation on multiple 
 positional parameters or arguments at once by using `${@}` or `${*}`.  
 
@@ -58,7 +140,7 @@ and pathname expansion (turning wildcard characters like `*` into matching filen
 so the result could expand further into multiple words or paths.  
 
 
-## Special Characters for Parameter Transformation
+### Special Characters for Parameter Transformation
 Bash supports the use of `^` and `,` for making values uppercase/lowercase.  
 * `^`: Uppercase
 * `,`: Lowercase
@@ -94,7 +176,7 @@ ${*,,} # Lowercase all characters in the string
 * `${@^}` applies the uppercase transformation to each argument individually.  
 * `${*^}` treats all arguments as a single string and capitalizes only the first character of that combined string.  
 
-## Parameter Transformation Examples  
+### Parameter Transformation Examples  
 
 Parameter transformation on variables, arrays, and associative arrays:  
 ```bash  
@@ -175,6 +257,5 @@ echo "${@Q}"       # Quotes each argument individually, e.g., "'hello' 'world' '
 
 # Using ${*} with Q  
 echo "${*Q}"       # Quotes the entire combined string: "'hello world bash'"  
-
 ```
 
