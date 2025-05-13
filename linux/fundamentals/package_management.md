@@ -1,11 +1,9 @@
-
-
-# Package Management on Linux  
+# Package Management Cheatsheet for Linux  
 
 
 | Command    | Description  
 | ---| ---
-| `dpkg`     | The `dpkg` is a tool to install, build, remove and manage debian packages. The primary, user-friendly front-end for `dpkg` is `apt`
+| `dpkg`     | The `dpkg` is a tool to install, build, remove and manage debian packages. The primary, user-friendly front-end for `dpkg` is `apt`  
 | `apt`      | `apt` provides a high-level command line interface for the package management system  
 | `yum`      | Yum is the older package management tools used on RedHat family systems.  
 | `dnf`      | dnf is the newer package management tools used on RedHat family systems.  
@@ -98,12 +96,12 @@ rpm -qa                 # List all installed packages
 You can find out when a package was installed on a system using the system's
 package manager.  
 
-* For Debian-based systems:
+* For Debian-based systems:  
   ```bash
   apt list --installed package_name
   ```
 
-* For RedHat-based systems:
+* For RedHat-based systems:  
   ```bash
   rpm -qi package_name | grep -i 'install'
   # or, with yum:
