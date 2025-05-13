@@ -92,8 +92,9 @@ generate_nav_entries() {
             filename=$(basename "$file")
             [[ -z "$filename" ]] && continue
 
-            local title
-            title=$(sanitize_title "${filename%%.*}")
+            # Let mkdocs infer titles from headers
+            # local title
+            # title=$(sanitize_title "${filename%%.*}")
             local relpath="${file#./docs/}"
             [[ -z "$relpath" ]] && continue
 
@@ -102,7 +103,7 @@ generate_nav_entries() {
 
         if (( ${#ENTRIES[@]} > 0 )); then
             if grep -qi '/' <<< "$section_title"; then
-                # printf "Section is in a subdirectory.\n"
+                # Section is in a subdirectory.
                 section_title=$(perl -pe 's,/, - ,g' <<< "$section_title")
                 printf "%s  - %s:\n" "${indent}" "${section_title}"
                 printf '  %s\n' "${ENTRIES[@]}"

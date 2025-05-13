@@ -1,4 +1,7 @@
 *a.out
 __pycache__/
 *.pyc
+docs/
+venv/
+mkdocs.yml
 
