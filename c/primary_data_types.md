@@ -26,26 +26,26 @@ You can zero initialise a struct with an empty `{}` as of C23.
 - [Type Qualifiers](#type-qualifiers)
 - [Size and Range](#size-and-range)
 - [Standard Types in C](#standard-types-in-c)
-  - [Standard Integer Types](#standard-integer-types)
-    - [Signed](#signed)
-    - [Unsigned](#unsigned)
-  - [Standard Floating-Point Types](#standard-floating-point-types)
-  - [Character Type](#character-type)
-  - [`Bool` Type](#bool-type)
-  - [Void Type](#void-type)
+    - [Standard Integer Types](#standard-integer-types)
+        - [Signed](#signed)
+        - [Unsigned](#unsigned)
+    - [Standard Floating-Point Types](#standard-floating-point-types)
+    - [Character Type](#character-type)
+    - [`Bool` Type](#bool-type)
+    - [Void Type](#void-type)
 - [Floats vs Doubles](#floats-vs-doubles)
 - [Precise Types](#precise-types)
 - [Derived Data Types](#derived-data-types)
 - [Typedef](#typedef)
 - [Fixed-Width Integer Types](#fixed-width-integer-types)
-  - [Usage](#usage)
-  - [Signed Fixed-Width Integer Types](#signed-fixed-width-integer-types)
-  - [Unsigned Fixed-Width Integer Types](#unsigned-fixed-width-integer-types)
-  - [Minimum-Width Integer Types](#minimum-width-integer-types)
-  - [Fastest Minimum-Width Integer Types](#fastest-minimum-width-integer-types)
-  - [Pointer-Sized Integer Types](#pointer-sized-integer-types)
-  - [Maximum-Width Integer Types](#maximum-width-integer-types)
-  - [Best Practices for Fixed-Width Integer Types](#best-practices-for-fixed-width-integer-types)
+    - [Usage](#usage)
+    - [Signed Fixed-Width Integer Types](#signed-fixed-width-integer-types)
+    - [Unsigned Fixed-Width Integer Types](#unsigned-fixed-width-integer-types)
+    - [Minimum-Width Integer Types](#minimum-width-integer-types)
+    - [Fastest Minimum-Width Integer Types](#fastest-minimum-width-integer-types)
+    - [Pointer-Sized Integer Types](#pointer-sized-integer-types)
+    - [Maximum-Width Integer Types](#maximum-width-integer-types)
+    - [Best Practices for Fixed-Width Integer Types](#best-practices-for-fixed-width-integer-types)
 
 ## Type Qualifiers
 
@@ -92,6 +92,7 @@ The standard C integer types have two versions:
     - Range: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
 
 4.  `long long int` (`long long`):
+
     - Typical Size: 8 bytes (64 bits)
     - Range: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
 
@@ -151,11 +152,11 @@ The standard C integer types have two versions:
 ### `Bool` Type:
 
 - `bool`:
-  - Introduced in the C99 standard.
-  - Size: Implementation-defined, often 1 byte.
-  - Values: `true` (1) and `false` (0).
-  - To use `bool`, `#include <stdbool.h>` is required, which defines `bool` as  
-    a macro expanding to `_Bool`, a built-in type introduced in C99.
+    - Introduced in the C99 standard.
+    - Size: Implementation-defined, often 1 byte.
+    - Values: `true` (1) and `false` (0).
+    - To use `bool`, `#include <stdbool.h>` is required, which defines `bool` as  
+      a macro expanding to `_Bool`, a built-in type introduced in C99.
 
 ### Void Type:
 
@@ -163,11 +164,11 @@ The standard C integer types have two versions:
 Used for functions that do not return a value or as a generic pointer `void*`.
 
 - `void`:
-  - Does not represent any data type and thus does not have a size.
-  - Usage:
-    - As the return type of functions that do not return a value.
-    - As a generic pointer type (`void*`), which can point to any data type, but  
-      cannot be dereferenced without casting to another type first.
+    - Does not represent any data type and thus does not have a size.
+    - Usage:
+        - As the return type of functions that do not return a value.
+        - As a generic pointer type (`void*`), which can point to any data type, but  
+          cannot be dereferenced without casting to another type first.
 
 ## Floats vs Doubles
 
@@ -199,27 +200,27 @@ file, specifying exact widths.
 
 1. Pointers:
 
-   - Used to store memory addresses.
-   - Their type is defined by the type of data they point to, e.g., `int*` for a pointer to an integer.
+    - Used to store memory addresses.
+    - Their type is defined by the type of data they point to, e.g., `int*` for a pointer to an integer.
 
 2. Arrays:
 
-   - A collection of elements of the same type, stored contiguously in
-     memory.
-   - E.g., `int arr[10];` for an array of 10 integers.
+    - A collection of elements of the same type, stored contiguously in
+      memory.
+    - E.g., `int arr[10];` for an array of 10 integers.
 
 3. Structs (`struct`):
 
-   - A composite data type that groups variables of different types under a single name, e.g., structuring a student record with name, id, and GPA.
+    - A composite data type that groups variables of different types under a single name, e.g., structuring a student record with name, id, and GPA.
 
 4. Unions (`union`):
 
-   - Similar to structures, but members share the same memory location, useful
-     for storing data that could be of multiple types.
+    - Similar to structures, but members share the same memory location, useful
+      for storing data that could be of multiple types.
 
 5. Enumerations (`enum`):
-   - Defines a type that can have one of a few predefined constants, improving
-     code readability and maintainability.
+    - Defines a type that can have one of a few predefined constants, improving
+      code readability and maintainability.
 
 ## Typedef
 
@@ -240,13 +241,13 @@ typedef struct this_is_optional {
 Syntax broken down:
 
 - `typedef struct this_is_optional`:
-  - This declares a struct type.
-  - The `this_is_optional` is the name of the struct type.
-    - This is optional, the actual name goes at the end of the block.
-  - The struct members are defined inside the braces `{ }`.
-  - After the closing brace, we can define the name of the struct type.
-    - In this case, `grocery_list_t`.
-    - The `_t` is a naming convention for custom types.
+    - This declares a struct type.
+    - The `this_is_optional` is the name of the struct type.
+        - This is optional, the actual name goes at the end of the block.
+    - The struct members are defined inside the braces `{ }`.
+    - After the closing brace, we can define the name of the struct type.
+        - In this case, `grocery_list_t`.
+        - The `_t` is a naming convention for custom types.
 
 ## Fixed-Width Integer Types
 
@@ -276,66 +277,66 @@ The `_t` syntax is a naming convention for types made with `typedef`.
 ### Signed Fixed-Width Integer Types
 
 - **`int8_t`, `int16_t`, `int32_t`, `int64_t`**:
-  - These types represent signed integers of 8, 16, 32, and 64 bits, respectively.
-  - **Ranges**:
-    - `int8_t`: -128 to 127
-    - `int16_t`: -32,768 to 32,767
-    - `int32_t`: -2,147,483,648 to 2,147,483,647
-    - `int64_t`: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+    - These types represent signed integers of 8, 16, 32, and 64 bits, respectively.
+    - **Ranges**:
+        - `int8_t`: -128 to 127
+        - `int16_t`: -32,768 to 32,767
+        - `int32_t`: -2,147,483,648 to 2,147,483,647
+        - `int64_t`: -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
 
 ### Unsigned Fixed-Width Integer Types
 
 - **`uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`**:
-  - These types represent unsigned integers of 8, 16, 32, and 64 bits, respectively.
-  - **Ranges**:
-    - `uint8_t`: 0 to 255
-    - `uint16_t`: 0 to 65,535
-    - `uint32_t`: 0 to 4,294,967,295
-    - `uint64_t`: 0 to 18,446,744,073,709,551,615
+    - These types represent unsigned integers of 8, 16, 32, and 64 bits, respectively.
+    - **Ranges**:
+        - `uint8_t`: 0 to 255
+        - `uint16_t`: 0 to 65,535
+        - `uint32_t`: 0 to 4,294,967,295
+        - `uint64_t`: 0 to 18,446,744,073,709,551,615
 
 ### Minimum-Width Integer Types
 
 These are the smallest types that have **at least** the specified bit width.
 
 - Minimum-width types (`int_least*` and `uint_least*`):
-  - Offer at least the specified bit width, potentially more, depending  
-    on what's most efficient for the platform.
-  - Useful for saving memory while ensuring a minimum capacity for data representation.
+    - Offer at least the specified bit width, potentially more, depending  
+      on what's most efficient for the platform.
+    - Useful for saving memory while ensuring a minimum capacity for data representation.
 
 ### Fastest Minimum-Width Integer Types
 
 These are the fastest types with **at least** the specified bit width.
 
 - Fastest minimum-width types (`int_fast*` and `uint_fast*`):
-  - These prioritize speed over exact size, providing the fastest type  
-    with at least the specified width.
-  - Ideal for performance-critical applications where operation speed is more  
-    important than minimizing data size.
+    - These prioritize speed over exact size, providing the fastest type  
+      with at least the specified width.
+    - Ideal for performance-critical applications where operation speed is more  
+      important than minimizing data size.
 
 ### Pointer-Sized Integer Types
 
 These are signed and unsigned integer types capable of storing a pointer.
 
 - `intptr_t` and `uintptr_t`:
-  - Capable of storing a pointer, thus aligning with the machine's address width.
-  - Essential for scenarios requiring the manipulation or arithmetic of pointers  
-    and integers interchangeably.
-  * Useful for integer-pointer conversions without loss of information.
+    - Capable of storing a pointer, thus aligning with the machine's address width.
+    - Essential for scenarios requiring the manipulation or arithmetic of pointers  
+      and integers interchangeably.
+    - Useful for integer-pointer conversions without loss of information.
 
 ### Maximum-Width Integer Types
 
 These are the **largest** signed and unsigned integers supported.
 
 - `intmax_t` and `uintmax_t`:
-  - Represent the largest signed and unsigned integers supported by the implementation.
-  - Useful for operations that need to accommodate the widest range of integer values possible.
+    - Represent the largest signed and unsigned integers supported by the implementation.
+    - Useful for operations that need to accommodate the widest range of integer values possible.
 
 ### Best Practices for Fixed-Width Integer Types
 
 - General-purpose programming
-  - Continue using Standard C types (`int`, `unsigned int`, etc.) when the  
-    exact size is not **critical**.
-  - These are suitable for most purposes and are optimized for native architecture speed.
+    - Continue using Standard C types (`int`, `unsigned int`, etc.) when the  
+      exact size is not **critical**.
+    - These are suitable for most purposes and are optimized for native architecture speed.
 - Predictable, exact-size integers
-  - Fixed-width types should be used when precise control over integer size  
-    and consistent behavior across platforms are necessary.
+    - Fixed-width types should be used when precise control over integer size  
+      and consistent behavior across platforms are necessary.
