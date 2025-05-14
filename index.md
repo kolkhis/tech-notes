@@ -15,6 +15,13 @@ into words that now exist on the internet.
 
 Use these words as you see fit. Share them if you want. It's the internet. Do what you want.  
 
+## Build
+
+This site was built with `mkdocs`. The build process is automated using GitHub
+Actions, and the `mkdocs.yml` file (which determines the layout of the website) is 
+procedurally generated using a Bash script. I did it this way so that the website would
+automatically update each time I add a new file or delete/rename an existing one.  
+
 
 ## Disclaimer
 
@@ -22,5 +29,8 @@ These are my **personal** notes that **I** reference on a day-to-day basis.
 They are messy.  
 They may be incomplete.  
 They are constantly being updated and changed.  
+
+
+
 
 
