@@ -142,8 +142,10 @@ so the result could expand further into multiple words or paths.
 
 ### Special Characters for Parameter Transformation
 Bash supports the use of `^` and `,` for making values uppercase/lowercase.  
+
 * `^`: Uppercase
 * `,`: Lowercase
+
 ```bash
 ${@^} # Capitalize the first character of each value in the array
 ${@,} # Lowercase the first character of each value in the array
@@ -159,6 +161,7 @@ ${*,,} # Lowercase all characters in the string
 
 
 ### Table of Examples using Special Characters
+
 | Syntax       | Description           | Example Output (for `hello world bash`)   |
 |--------------|-------------------------------------------------|--------------------  
 | `${@^}` | Capitalizes each parameter                            | `Hello World Bash`

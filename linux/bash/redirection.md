@@ -1,9 +1,8 @@
-
-
 # Redirection in Bash  
 
 
 Notes taken from:  
+
 * `man://bash`
 * [Bash Hacker's Wiki](https://web.archive.org/web/20230315225157/https://wiki.bash-hackers.org/howto/redirection_tutorial#illustrated_redirection_tutorial)  
 
@@ -63,6 +62,7 @@ A file descriptor is a number that refers to a file or a process.
 
 ## `stdin`, `stdout`, `stderr`  
 When bash starts, 3 file descritors are opened:  
+
 * `0`: Standard Input (`stdin`)  
 * `1`: Standard Output (`stdout`)  
 * `2`: Standard Error (`stderr`)  
@@ -77,6 +77,7 @@ bash    710386 kolkhis    0u   CHR     RW,AP  136,3      0t0    6 /dev/pts/3
 bash    710386 kolkhis    1u   CHR     RW,AP  136,3      0t0    6 /dev/pts/3
 bash    710386 kolkhis    2u   CHR     RW,AP  136,3      0t0    6 /dev/pts/3
 ```
+
 * `lsof`: List open files.  
     * `+f g`: Show file flag abbreviations  
     * `-a`: List selection is `AND`ed together.  
@@ -99,6 +100,7 @@ printf "This is a line\n" > output.txt
 # This is the same as  
 printf "This is a line\n" 1> output.txt  
 ```
+
 * `> output.txt` is the same as `1>output.txt`
 * The `> output.txt` alters the file descriptors belonging to the command `printf`.  
     * It changes the fd `1` (`stdout`) so that it points to the file `output.txt`.  
@@ -188,6 +190,7 @@ For example:
 ```bash  
 exec 2>error_file  
 ```
+
 * `2>`: Redirects `stderr` - in this case, to a file.  
     * If you don't specify a file descriptor with the `>` operator, it
       defaults to `1` (`stdout`).  
@@ -209,6 +212,7 @@ Another example:
 exec >/tmp/all_output.log 2>&1  
 ```
 This will redirect both `stdout` and `stderr` to `/tmp/all_output.log`.  
+
 * `exec >`: Redirects `stdout` - in this case, to a file.  
 * `2>&1`: Redirects `stderr` to `stdout`. 
 

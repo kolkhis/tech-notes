@@ -4,8 +4,10 @@
 
 You can read the help pages (like a book): `:h 1.1`  
 Information on Vimscript and Vimscript functions are found in `usr_41.txt`.  
+
 * See [Vim Script for Python Developers](https://gist.github.com/yegappan/16d964a37ead0979b05e655aa036cad0)  
 List of all default vim keybindings/commands for each mode:  
+
 * *:h index*  
 * *:h insert-index* / *visual-index*  
 * *:h default-mappings*  
@@ -308,6 +310,7 @@ For more info:
     * `/c\{5}` match exactly 'ccccc'  
 
 For more info:  
+
 * :h pattern-overview  
 * :h character-classes  
 
@@ -387,25 +390,36 @@ or motion.
 * func({type}, ...): {type}
 
 Not supported yet:  
+
 * tuple<a: {type}, b: {type}, ...>  
 
 ### Installing Vim With Full Feature Support  
 To get Vim with Python support, it can be installed from source:  
+
 * `https://github.com/vim/vim/blob/master/src/INSTALL`  
 
 Base Installation Dependencies:  
+
 * `git`
 * `make`
 * `clang`
 * `libtool-bin`
+
 X-windows Clipboard Dependencies:  
+
 * `libxt-dev`
+
 Python Dependencies:  
+
 * `libpython3-dev`
 * The `CONF_OPT_PYTHON3 = --enable-python3interp` needs to be uncommented from the Makefile.  
+
 GUI Dependencies (lol):  
+
 * `libgtk-3-dev`
+
 Debugging:  
+
 * `valgrind`
 * Uncomment in Makefile:  
     * `CFLAGS = -g -Wall -Wextra -Wshadow -Wmissing-prototypes -Wunreachable-code -Wno-deprecated-declarations -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1`
@@ -455,6 +469,7 @@ such a Korean, Japanese, Chinese, etc.
 
 ## Select mode  
 Entering select mode:  
+
 * From Normal mode with:  
     * `gh` for character-wise selection  
     * `gH` for line-wise selection  
@@ -493,7 +508,8 @@ Movement keys in this mode are the cursor keys,
 
 ## Jumping Around Files Based on Percentage  
 > `:h N%`
-{count}% jumps to a line {count} percentage down the file 
+
+`{count}%` jumps to a line `{count}` percentage down the file.  
 
 
 ## Recursive Macros  
@@ -545,6 +561,7 @@ This will create a file called vim.log that logs what gets loaded and when.
 
 ### Omnicomplete  
 Omnicompletion in vim:  
+
 * The good stuff is documented in `ins-completion`  
 * `^x^n`: Searches for completions in JUST this file  
 * `^x^f`: Searches for completions in filenames (works with `path+=**`)  
@@ -555,6 +572,7 @@ Omnicompletion in vim:
 ### Netrw  
 See `./netrw.md`
 File browsing with netrw:  
+
 * You can do a lot with netrw. Connect to remote filesystems with ssh, mark files, etc.  
 * Open in split with `v`, `o`, or `p`  
 * `:h netrw-browse-maps`  
@@ -569,6 +587,7 @@ files in the current directory and all subdirectories (with `set path+=**` set)
 ```vim  
 command! MakeTags !ctags -R .  
 ```
+
 * `C-]` will jump to tag  
 * `g<C-]>` will list all tags  
 * `<C-t>` will jump back up the tag stack  

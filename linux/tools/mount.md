@@ -1,4 +1,3 @@
-
 # Mount
 The `mount` command is used to mount a file system to a directory.  
 
@@ -14,6 +13,7 @@ The `mount` command is used to mount a file system to a directory.
 
 ## What Mount does
 Without args, `mount` will dump every file system that's mounted, in the order they were mounted.  
+
 * `mount` reads from `/etc/mtab` when it does this.  
     * Never edit `/etc/mtab` in real-time yourself. 
 
@@ -47,6 +47,7 @@ Everything stored in `/new_mountpoint` will be stored on the new filesystem.
 
 ## Weird things about mount
 `mount` can be used in a lot of weird, complex ways. 
+
 * The same filesystem can be mounted more than once.
 * In some cases (e.g., network filesystems) the same filesystem can be mounted on the 
   same mountpoint multiple times.
@@ -54,6 +55,7 @@ Everything stored in `/new_mountpoint` will be stored on the new filesystem.
 ## mount and fstab
 
 By default, mount will use `/etc/fstab` if either `device` or `directory` are omitted.
+
 * The `/etc/fstab` (file system tables) file contains info about the file systems and 
   their mount points.  
 * `mount` uses this file to determine how to mount certain filesystems automatically,

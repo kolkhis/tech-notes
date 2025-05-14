@@ -28,6 +28,7 @@ wget \
      -P "$CACHE_DIR" \
      "$URL"
 ```
+
 * `--mirror`: Recursive. 
     - Shortcut for `-r`, `-N`, `-l inf` `--no-remove-listing`.
 * `--convert-links`: Adjusts the HTML so links point to local files

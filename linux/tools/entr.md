@@ -1,4 +1,3 @@
-
 # `entr`
 
 `entr` is a tool used for running a command when a file changes.  
@@ -24,6 +23,7 @@ The `entr` program will rerun a program each time the given file is changed (wri
 ```bash  
 entr bash -c "clear; ./my_script" <<< my_script  
 ```
+
 * This tells `entr` to run `bash -c "clear; ./my_script"` each time `my_script` is changed.  
     * Clears the screen, and then runs the file `./my_script`.  
 * `<<<` is a `here string` redirection operator (bash-only).  

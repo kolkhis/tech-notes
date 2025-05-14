@@ -17,6 +17,7 @@ It's used to manipulate text using regular expressions.
 
 
 ## Common Options
+
 * `-E`: Use extended regex instead of basic regex.  
     * This prevents the need for escaping a lot of things (like capture group parentheses).  
 * `-i`: Edit the file in place.  
@@ -36,6 +37,7 @@ Use the `-i` flag with `sed` to edit a file inplace.
 ```bash
 sudo sed -i 's/old/new/g' /etc/fstab
 ```
+
 * `sed -i`: Edit the file in place
 * `'s/old/new/g'`: Replaces all occurrences of `old` with `new`.  
 * `/etc/fstab`: The file to edit.  
@@ -49,6 +51,7 @@ Basic syntax:
 ```bash
 sed -i '/pattern/s/old/new/' file.txt
 ```
+
 * `'/pattern/s/old/new/`: Replace `old` with `new`, ONLY on lines that match `pattern`.  
 
 ---
@@ -56,6 +59,7 @@ sed -i '/pattern/s/old/new/' file.txt
 ```bash
 sed -i -E '/find this/s/find/change/g' somefile.txt
 ```
+
 * `/find this/`: Specifies the pattern to match.  
 * `s/find/change/g`: This is the substitution.  
 
@@ -63,6 +67,7 @@ You can specify multiple patterns with `-e`.
 ```bash
 sed -i_old -E -e '/find this/s/find/change/g' -e '/ this/s/this/that/g'
 ```
+
 * `-e '/find this/s/find/change/g`: Match lines containing the text "`find this`",
   then replace "`find`" with "`change`".  
 * `-e '/ this/s/this/that/g'`: Match a line containing "` this`" (including the
@@ -99,6 +104,7 @@ The most popular command used in `sed` is the `s` (substitute) command.
 ```bash
 sed -i '/pattern/s/old/new' file.txt
 ```
+
 * This will replace `old` with `new` on any lines that match `pattern`.  
 
 But you can use other commands, like `d` (delete) to remove lines or `c` to change lines.  
@@ -107,6 +113,7 @@ But you can use other commands, like `d` (delete) to remove lines or `c` to chan
 ```bash
 sed -i '/pattern/d' file.txt
 ```
+
 * `'/pattern/d'` This will delete any lines that match the pattern.  
 
 ### Change Whole Lines
@@ -114,6 +121,7 @@ To change a whole line that matches a pattern:
 ```bash
 sed -i '/pattern/c New text for the line' file.txt
 ```
+
 * This will match the line containing `pattern`, delete that line, then add the text
   that comes after `c`.  
 * Any whitespace between the `c` and the start of the text will not be used.  
@@ -129,13 +137,14 @@ E.g., if you wanted to use `sed` to append text to the end of a file:
 ```bash
 sed -i "\$a This text will go at the end of the file" file.txt
 ```
-- The `$` is escaped so that it is not read as a variable. 
+
+* The `$` is escaped so that it is not read as a variable. 
     - Necessary with double quotes.
     - If using single quotes, the `\` is not needed.
       ```bash
       sed -i '$a This t5ext will go at the end of the file' file.txt
       ```
-- If you were to use `$` as the `pattern`, it would append text to the end of every
+* If you were to use `$` as the `pattern`, it would append text to the end of every
   line instead of the EOF.
 
 ### Inserting Text
@@ -172,6 +181,7 @@ Using the `,` command specifies a range command.
 ```bash
 sed '/start pattern/,/end pattern/...'
 ```
+
 * `/start pattern`: The start pattern. The range will start here.
 * `/,/`: Indicates a range, `sed` will expect an end pattern.  
 * `end pattern/`: The end pattern.
@@ -193,6 +203,7 @@ sed -i '/^## Pattern/,/^$/ {/^$/ a\
 New line goes here.
 }' file.md
 ```
+
 * `/^## Pattern/`: Start matching from this pattern.
 * `/,/`: Indicates the start of a range pattern (start pattern).  
     - From the start pattern (`## Pattern`) to the next pattern.
@@ -213,6 +224,7 @@ To insert the new line *above* the blank line, use `i` instead of `a`:
 sed -i '/^## Pattern/,/^$/ {/^$/ i New line goes here 
 }' file.md
 ```
+
 * This does the same thing as above, but instead puts the line above instead of
   below.  
 

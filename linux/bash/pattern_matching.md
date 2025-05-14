@@ -1,9 +1,9 @@
-
 # Pattern Matching (Globbing) in Bash
 
 Pattern matching, or globbing, is a way to match files and directories.
 
 Relevant shell options:
+
 * `globstar`
 * `extglob`
 
@@ -11,6 +11,7 @@ Relevant shell options:
 ## Quickref
 
 ### Pattern Matching Characters:
+
 | Character     | Meaning
 |-|-
 | `*`           | Zero or more characters (any characters)

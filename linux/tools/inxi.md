@@ -1,4 +1,3 @@
-
 # inxi
 
 The `inxi` command will list information about the current system.

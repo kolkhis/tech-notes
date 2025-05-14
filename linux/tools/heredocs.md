@@ -1,4 +1,3 @@
-
 # Heredocs / Here Documents in Linux
 
 
@@ -71,6 +70,7 @@ EOF
 ```
 
 ## Quickref
+
 * Use a Heredoc as a multi-line string literal. (see [this page](https://ioflood.com/blog/bash-multiline-string/))
 ```bash
 cat >>- my_script.sh << 'EOF'
@@ -184,7 +184,9 @@ _end_of_text
 Tabs in the Data List are preserved by default.  
 When handling tabs or working with tab characters,
 you can add a `-` (dash) to the redirection operator.  
+
 * This will ignore all leading tab characters.  
+
 ```bash  
 #!/bin/bash  
 cat <<- _end_of_text  

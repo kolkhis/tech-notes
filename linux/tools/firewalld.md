@@ -118,6 +118,7 @@ firewall-cmd --permanent --add-port=8080/udp
 # reload so permanent changes take effect
 firewall-cmd --reload
 ```
+
 * Use the `--permanent` flag to make changes persist.  
     * When using `--permanent`, you must reload or restart `firewalld` for changes to
       take effect.  

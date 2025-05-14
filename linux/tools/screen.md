@@ -1,5 +1,3 @@
-
-
 # GNU Screen  
 Any system that doesn't have tmux will almost always have screen.  
 
@@ -64,6 +62,7 @@ make
 
 Screen's default `<leader>` is `<Ctrl-a>`
 Since this can be changed, I'll use `<leader>` to refer to it.  
+
 * `C-a` is the prefix/leader.  
 * `<leader> ?` for a list of keybindings.  
 * `<leader>w` (or `<leader>w`) will show which window is active  
@@ -86,6 +85,7 @@ Since this can be changed, I'll use `<leader>` to refer to it.
 * `<leader>]`: Paste from screen buffer  
 
 To paste into vim/nvim:  
+
 * `:set paste`
 * `i`
 * `<leader>]`
@@ -98,6 +98,7 @@ i.e., You can use a region to access window 2 while working in window 1.
 
 
 ### Working with regions (called panes in tmux):  
+
 * `C-a S` Splits the screen horizontally (capital S). 
 * `C-a |` Splits the screen vertically. (not `\`, that kills all the windows).  
 * `C-a C-i` switches between regions (panes).  
@@ -137,6 +138,7 @@ The following is an example of what displays could look like:
    (A)   (B)     (C)     (D)      (E) (F)(G)   (H)(I)  
 ```
 The legend is as follows:  
+
 * `(A)`: The terminal type known by screen for this display.  
 * `(B)`: Displays geometry as width x height.  
 * `(C)`: Username who is logged in at the display.  

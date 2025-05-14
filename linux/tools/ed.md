@@ -1,5 +1,3 @@
-
-
 # The Line-based Editor, `ed`
 
 `ed` is on almost every Linux machine.  
@@ -8,6 +6,7 @@
 ## Editing with `ed`
 Editing is done in two modes: `command` and `input`.
 `ed` is in command mode when it's first started.
+
 * Command mode is similar to vim's command mode. Substitutions can be made:
   ```plaintext
   ,s/OLD/NEW/g
@@ -25,6 +24,7 @@ Editing is done in two modes: `command` and `input`.
     * You can run shell commands from here, prefixing with `!` (like vim filters)
 
 All `ed` commands operate over single lines or a range of lines.  
+
 * `d`: deletes lines
 * `m`: moves lines
 

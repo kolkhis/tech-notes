@@ -1,5 +1,3 @@
-
-
 # Using `trap` for Error Handling, Debugging, & Other Behavior  
 See the [kill builtin](./kill.md) for more info on signal specs (`SIGSPEC`).
 
@@ -32,6 +30,7 @@ trap [-lp] [[action] signal_spec(s)]
 You can optionally specify an action to take when the signal is triggered.  
 
 Options:
+
 * `-l`: Prints a list of signal names and their corresponding numbers.  
 * `-p`: Displays the trap commands associated with each `SIGNAL_SPEC`
  
@@ -55,6 +54,7 @@ trap -l
 The above command **`-l`ists** all signals that Linux uses.  
 
 Some common signals are:  
+
 * `SIGINT`: Signal interrupt, typically sent when the user presses Ctrl+C.  
 * `SIGTERM`: Signal terminate, a request to gracefully terminate the process.  
 * `EXIT`: Triggered when a script exits (0).  
@@ -80,24 +80,29 @@ Not an exhaustive list:
 | `SIGUSR1 (10) and SIGUSR2 (12)`| User-defined signals.  |
 
 ## Bash-specific Signals for Scripting and Error Handling  
+
 * ### `ERR`  
+
 This pseudo-signal is trapped whenever a command in the script  
 returns a non-zero exit status (indicating failure).  
 It allows you to execute a specific action, like cleanup or logging,
 when an error occurs in the script.  
 
 * ### `DEBUG`  
+
 This is used to execute a command before every statement in a script or function.  
 It's particularly useful for debugging purposes,
 as it can provide detailed insight into the flow of execution.  
 
 * ### `EXIT`  
+
 This pseudo-signal is trapped when the script exits,
 either normally or through an unhandled signal.  
 It's commonly used for cleanup actions that should occur 
 regardless of how the script terminates.  
 
 * ### `RETURN`  
+
 Trapped when a shell function or a sourced script executes its last command.  
 This allows actions to be taken just before the function or the sourced script completes.  
 
@@ -221,6 +226,7 @@ trap - EXIT
 
 
 ## Additional Notes on `trap`
+
 * Multiple Traps  
     * You can set multiple `trap` commands for different signals in the same script.  
 * Disabling a Trap  

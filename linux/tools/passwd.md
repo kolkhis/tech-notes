@@ -1,4 +1,3 @@
-
 # `passwd`
 
 ## Table of Contents
@@ -97,6 +96,7 @@ When you change a password in Linux using the `passwd` command, all authenticati
 Practical Use: This option is particularly useful in environments where multiple forms of authentication are used, and you want to enforce password changes for security reasons without affecting currently valid tokens. It helps in scenarios where, for example, forcing a password update due to a policy change without disrupting users who have recently updated their passwords.
 
 ### `-r, --repository`
+
 * A `REPOSITORY`, in this context, refers to a place where user authentication data is stored.
 
 This specifies that the password change should be made in a specific 

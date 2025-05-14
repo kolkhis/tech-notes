@@ -1,4 +1,3 @@
-
 # Permissions
 
 ## Table of Contents
@@ -17,9 +16,10 @@ It may look something like this:
 This represents a basic file.  
 
 The permission string can be broken down into these 4 parts:  
+
 1. The first character indicates the type of file. (`-`)  
-The next nine characters represent the permissions for users,
-broken up into 3 characters for each permission.  
+   The next nine characters represent the permissions for users,
+   broken up into 3 characters for each permission.  
 2. user (owner) - (`rwx`)   
 3. group - (`r-x`)  
 4. others - (`r-x`)  

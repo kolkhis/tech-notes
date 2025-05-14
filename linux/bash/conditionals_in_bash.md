@@ -88,6 +88,7 @@ In Linux/Unix, a file descriptor is a non-negative number that
 uniquely identifies an open file for the process.  
 
 Standard file descriptors: 
+
 * `0`: standard input (stdin)  
 * `1`: standard output (stdout)  
 * `2`: standard error (stderr)  
@@ -137,6 +138,7 @@ fi
 
 ## Bash Conditional Flags Table
 See `man://bash 2069`.  
+
 | Flag      | True if |
 |-|-  
 | `-a file` | File exists.  

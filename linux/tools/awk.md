@@ -1,5 +1,3 @@
-
-
 # Awk (Advanced Worlking)  
 
 Awk is a programming language for text processing and data wrangling 
@@ -66,6 +64,7 @@ The basic syntax of using `awk` on the command line:
 ```bash  
 awk [options] 'program' input-file(s)  
 ```
+
 * `options`: Command-line options (e.g., `-f` to specify a file containing an `awk` script).  
 * `program`: Instructions for `awk` to execute, typically enclosed in single quotes.  
 * `input-file(s)`: The file(s) `awk` will process. 
@@ -114,6 +113,7 @@ Awk recognizes two types of separators:
 awk -F: '{print($1)}' /etc/passwd  
 ```
 **Note**: Parentheses are optional for the `print` function.  
+
 * You can also specify a new field separator or delimiter from within the `awk` program, using 
   the `BEGIN` block:  
     ```bash  
@@ -127,6 +127,7 @@ awk -F: '{print($1)}' /etc/passwd
 ```bash  
 awk '{print $1}' file.txt  
 ```
+
 * `{print $1}` is the `awk` program that instructs `awk` to print the  
   first field (`$1`) of each record (typically, a line in the file).  
 
@@ -145,6 +146,7 @@ awk 'BEGIN {FS=":"} {print $1, $2}' /etc/passwd
 
 ### Built-in Variables
 These are builtin variables in awk:  
+
 * `FS`: Field separator variable (default is whitespace).  
 * `OFS`: Output field separator (default is a space).  
 * `NR`: Number of the current record (line).  
@@ -192,6 +194,7 @@ awk '$1 > 10 {print}' file.txt
 
 ## Useful Builtin Functions  
 See [builtin functions](#builtin-functions)  
+
 * `printf()`: Prints a format string to stdout.  
 * `length()`: Returns the length of a string.  
 * `split()`: Splits a string into an array.  
@@ -231,6 +234,7 @@ awk '{ for(i=1; 1<=NF; i++) print($i); }' file.txt
 
 Relational operators compare two values or expressions.  
 awk supports the following relational operators: 
+
 * `<`  
 * `<=`  
 * `==`  
@@ -277,6 +281,7 @@ Logical operators are used to combine multiple conditions. `awk` supports logica
 ```bash
 awk '$1 > 100 && $2 < 200 { print $0 }' data.txt
 ```
+
 * This prints lines where the first field is "John" or the second field is 50 or more.
     
 * **Logical NOT**:
@@ -301,12 +306,14 @@ string matches or doesn't match a given pattern.
 ```bash
 awk '$1 ~ /^admin/ { print $0 }' /etc/passwd
 ```
+
 * This prints lines where the first field starts with "admin".
     
 * **Regular Expression Not Match**:
 ```bash
 awk '$1 !~ /^root/ { print $0 }' /etc/passwd
 ```
+
 * This prints lines where the first field does not start with "root".
     
 * **Field Match**:
@@ -330,12 +337,14 @@ It is the only ternary operator in `awk`.
 ```bash
 awk '{ print ($1 > 50) ? "High" : "Low" }' data.txt
 ```
+
 * This prints "High" if the first field is greater than 50, and "Low" otherwise.
 
 * **Field Selection**:
 ```bash
 awk '{ print ($1 > $2) ? $1 : $2 }' data.txt
 ```
+
 * This prints the larger of the first two fields.
 
 * **Adjust Output Based on Conditions**:
@@ -377,6 +386,7 @@ Example:
 ```bash  
 awk '{ count++ } END { printf("Total Records: %d", count)}' myfile  
 ```
+
 * Here, the `count` variable is *implicitly* initialized to 0.  
     * This means that variable declaration is not required 
     * While declaration is not required, it is encouraged.  
@@ -543,6 +553,7 @@ echo "$thing" | awk -F '[ =]' '{
     for(i=1; i< NF; i++) 
     if($i == "ansible_host") print $(i+1) }'
 ```
+
 * `-F '[ =]`: Use **either** a space or equals sign as the field separator.  
 
 
@@ -553,6 +564,7 @@ while read -r l; do
     NODE=$(printf "%s" "$l" | awk -F '[ =]' '{ for(i=1; i< NF; i++) if($i == "ansible_host") print $(i+1) }')
 done < ./hosts
 ```
+
 * `-F '[ =]`: Use **either** a space or equals sign as the field separator.  
 * `{ for (i=1; i<NF; i++)`: 
     - The `{` opens the main block meaning it will start processing the input. 

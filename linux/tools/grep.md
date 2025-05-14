@@ -1,5 +1,3 @@
-
-
 # The Grep Command  
 Print lines that match patterns.  
 
@@ -30,6 +28,7 @@ grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
 #
 # -n: Line Numbers; -r: recusive; -E: Extended Regex
 ```
+
 * `-v` will print the lines that *don't* match the pattern.
     * Matches NON-MATCHING lines.  
 * `-n` will output the line number of the match.
@@ -50,6 +49,7 @@ egrep
 fgrep  
 rgrep 
 ```
+
 * `grep`: Uses Basic Regular Expressions (BRE) by default.  
 * `egrep`: Uses Extended Regular Expressions (ERE).  
     * Equivalent to `grep -E`
@@ -59,6 +59,7 @@ rgrep
     * Equivalent to `grep -r`
 
 ###  Basic vs Extended Regular Expressions:  
+
 * Basic Regular Expressions (BRE)  
     * In basic regular expressions the meta-characters 
       `?`, `+`, `{`, `|`, `(`, and `)` lose their special meaning. 
@@ -95,6 +96,7 @@ A bracket expression is a `set` of characters inside square
 brackets `[ ]`, which is used to match a single character.
 
 ### What can go inside the brackets
+
 * Sets accept a single character, a range of characters, a set of characters, or a 
   combination of those.
     * E.g.: `[a]`, `[abc]`, `[a-z]`, `[A-Z]`, or `[0-9]`
@@ -129,6 +131,7 @@ the syntax `[:class:]`.
 If the first character of the `set` is the caret `^`, then it matches any
 character **not** in the list.  
 E.g., `[^abc]` will match everything except one of `abc`.  
+
 * Note: Using the `-v` option also has this effect: It matches everything that does not match
   the pattern.
     * This applies to the entire pattern passed to `grep`. 
@@ -199,6 +202,7 @@ For instance, fgrep "example.com" filename will match lines containing "example.
 
 
 ## Grep Colors  
+
 * Note: `-v` matches NON-MATCHING lines.  
 Specifies the colors and other attributes used to highlight various parts of `grep` output.  
 Its value is a colon-separated list of capabilities that defaults to:  

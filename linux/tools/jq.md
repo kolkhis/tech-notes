@@ -14,12 +14,14 @@ jq '.' data.json        # Pretty-print
 jq '.key' data.json     # Extract values with the given .key
 jq '.[] | select(.key > value)' # Filter based on conditions
 ```
+
 * `.[]`: Used to iterate over each element of an array.
 
 
 
 
 ## `jq` Installation
+
 * [Source](https://github.com/jqlang/jq?tab=readme-ov-file#installation)
 
 Most Linux distributions have `jq` available via their package managers.  
@@ -49,6 +51,7 @@ podman run --rm -i -v "${PWD}:${PWD}" -w "${PWD}" ghcr.io/jqlang/jq:latest '.ver
 ```
 
 ## `jq` Basics
+
 * `.` (dot): The identity operator. Stands for the current input when used by itself.  
 * `--arg val 123`: Pass a value into `jq`.
     * This creates the `$val` variable, and assigns its value as `123`.  
@@ -143,6 +146,7 @@ This results in the output:
 
 
 ## `jq` Flags/Options
+
 * `--arg val 123`: Pass a value into `jq`.
     * This creates the `$val` variable, and assigns its value as `123`.  
 * `--sort-keys`/`-S`: Outputs the object with sorted keys.  

@@ -36,6 +36,7 @@ Arrays in Bash can be declared with the `declare` keyword:
 ```bash  
 declare -a ARRAY_NAME  
 ```
+
 * The `-a` flag indicates that the variable is an array.  
 
 
@@ -55,6 +56,7 @@ MY_ARRAY+=("element")
 # or
 MY_ARRAY=("${MY_ARRAY[@]}" "element")
 ```
+
 * Note the parentheses `( )` around the element.  
 * This is necessary when appending elements to an array.  
 
@@ -86,6 +88,7 @@ printf "%s\n" "${MY_ARRAY[0:3]}"
 # or: 
 printf "%s\n" "${MY_ARRAY[@]:0:3}"
 ```
+
 * This will call `printf`'s `%s` three times, once for each element passed in.  
 * The third `printf` uses the syntax `"${ARR[@]:start:length}"`.
     * The `@` operator indicates that we're passing in the whole array.  
@@ -123,6 +126,7 @@ printf "%s " "${MY_ARRAY[*]}"
 This command expands to `printf '%s, ' '1 2 3 4 5 Six Seven'`.  
 In this case, `%s` will only be called once, using
 the string `'1 2 3 4 5 Six Seven'`.  
+
 * Note the quotes around the elements.
 * The `*` operator combines all elements into a single string.
 * This means that formatting as CSV, TSV, etc., is not possible.
@@ -146,6 +150,7 @@ for item in "${MY_ARRAY[@]}"; do
     printf "Item: %s\n" "$item"
 done
 ```
+
 * The `@` is a special variable that tells the array to return all of 
   it's elements, separated by spaces.
 
@@ -209,6 +214,7 @@ file descriptor `FD` if the `-u` option is given.
 The variable `MAPFILE` is the default `array_name`.
 
 Options:
+
 * `-d delim`: Use `DELIM` to terminate lines, instead of a newline.  
 * `-n count`: Copy at most `COUNT` lines.  If `COUNT` is `0`, all lines are copied
 * `-O origin`: Begin assigning to `array_name` at index `ORIGIN`.  The default index is 0.  
@@ -219,6 +225,7 @@ Options:
 * `-c quantum`: Specify the number of lines read between each call to `CALLBACK`
 
 Arguments:
+
 * `array_name`: Array variable name to use for file data
 
 If not supplied with an explicit origin, mapfile will 
@@ -274,6 +281,7 @@ callback_function() {
 }
 echo -e "one;two;three;" | mapfile -d ';' -C callback_function -c 1 -t
 ```
+
 * `-d ';'`: This sets the delimiter as a semicolon.  
 * `-C callback_function`: Sets the callback function to use.  
     * This passes both the index and the contents of the current line for each call 
@@ -408,6 +416,7 @@ declare -a FILES
 ```
 
 Then, use either `read` or `mapfile` to get the output of a `find` command.  
+
 * It should be noted that during my testing of these two methods, I found `mapfile` to
   be significantly slower than `read` for this purpose.  
 

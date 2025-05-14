@@ -19,6 +19,7 @@ By default the event uses the format:
 ```bash
 watched_filename EVENT_NAMES event_filename
 ```
+
 - `watched_filename`: The name of the file that the change occurred in.  
 - `EVENT_NAMES`: Comma-separated `inotify` events that occurred.  
 - `event_filename`: Only outputs when the event occurred on a directory.

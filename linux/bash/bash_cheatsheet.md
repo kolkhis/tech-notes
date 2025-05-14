@@ -343,6 +343,7 @@ See what processes are running on the system:
 ```bash  
 ps -ef  
 ```
+
 * `-e`: Show every process on the system  
 * `-f`: Show full command lines (full-format listing)  
     * Causes the command arguments to be printed.  
@@ -356,6 +357,7 @@ Or, you can add them to their own files in `/etc/sudoers.d/`
 ```bash  
 usermod -G 
 ```
+
 * **NOTE:** in the `/etc/sudoers` file, lines starting with one hash `#` are **NOT COMMENTS.** 
 Those lines are **NOT** ignored (see `man sudoers(5)`).  
 The lines need to have two `##` in order to be comments  
@@ -388,6 +390,7 @@ variable (`VARIABLE_NAME`) that holds the value (`world`).
 
 This can be used on arrays (lists) and associative arrays (dictionaries) as to  
 access the keys or values of all elements:  
+
 * Indirection with arrays (lists):  
     * Using indirection on a list will return the indices of all elements in the list.  
     * ```bash  
@@ -414,6 +417,7 @@ access the keys or values of all elements:
 
 ## Using Grep  
 See [grep](../tools/grep.md).  
+
 * Print lines that match patterns.  
 The greps:  
 ```bash  
@@ -422,6 +426,7 @@ egrep
 fgrep  
 rgrep 
 ```
+
 * `grep` uses "basic regex" by default.  
 * `grep -E` enables "extended regex."  
     * Basic vs Extended Regular Expressions:  
@@ -540,6 +545,7 @@ sudo -l -U user
 ---  
 ## Replacing All Occurrences of a String in Multiple Files  
 `grep -rl "oldstring" *.txt | xargs sed -i 's/oldstring/newstring/g'` - Replace a string in multiple files  
+
 * `grep -r`ecursively, `-l`ist files that have a match  
 * `sed` changes file `-i`n-place  
 
@@ -574,6 +580,7 @@ find . -type f -name '*.py'                     # Same as above (-a is optional)
 
 ### Testing Timestamps of Files with `find`
 For testing the timestamps on files:  
+
 * `-daystart`: Measure times from the  beginning of today rather than from 24 hours ago.  
 (for `-amin`, `-atime`, `-cmin`, `-ctime`, `-mmin`, and `-mtime`)  
 
@@ -641,6 +648,7 @@ For testing the timestamps on files:
 To run a script automatically when ANY user logs in, 
 add it to the `/etc/profile` file, or add it as a 
 shell (`.sh`) script in the `/etc/profile.d/` directory.  
+
 * `/etc/profile` is a POSIX shell script.  
 ```bash  
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))  
@@ -724,6 +732,7 @@ gedit
 
 ## Get or Increase the Limit of Open Files  
 There are soft limits and hard limits:  
+
 * Soft limits are the currently enforced limits  
 * Hard limits are the max value that can't be passed by setting the soft limit.  
 Getting the current max file limit:  
@@ -806,6 +815,7 @@ dir=${0%/*}
 
 ## Search Terms for Bash Man Page  
 `man bash`  
+
 * /pathname expansion  
 * /pattern matching  
 * /coprocesses (`coproc`)  
@@ -814,6 +824,7 @@ dir=${0%/*}
 
 ## Definitions  
 The following definitions are used throughout the `bash` man page.  
+
 * `blank`: A space or tab.  
 * `word`: A sequence of characters considered as a single unit by the shell.  
           Also known as a token.  
@@ -874,6 +885,7 @@ A cron job is defined by a line in the crontab, which has the following format:
 ```bash  
 * * * * * command_to_be_executed  
 ```
+
 * The five asterisks represent:  
     1. Minute (0-59)  
     1. Hour (0-23)  
@@ -885,6 +897,7 @@ For example, to run a Python script every day at 3:30 PM:
 30 15 * * * python3 /path/to/the_script.py  
 ```
 Or, instead of the 5-asterisks method, special strings can be used  
+
 * Common Special Strings:  
     * `@reboot`: Run once at startup.  
     * `@yearly` or `@annually`: Run once a year, equivalent to `0 0 1 1 *`.  
@@ -926,6 +939,7 @@ if [[ -z "$1" ]]; then
 elif [[ -n "$1" ]]; then  
     echo "The first position argument is NOT an empty string."  
 ```
+
 * `-n`: Argument is present 
 * `-z`: Argument not present  
 
@@ -952,6 +966,7 @@ Basic Exclusion Syntax
 ```bash  
 find /path/to/search -type d -name 'directory_to_exclude' -prune -o -print  
 ```
+
 * `-type d`: specifies that you're looking for directories.  
 * `-name '.git'`: specifies the name of the directory you want to exclude.  
 * `-prune`: tells find to prune (skip) the directory when it's encountered.  
@@ -1136,6 +1151,7 @@ fi
 
 ## Special Arguments/Parameters  
 Full list [here](https://web.archive.org/web/20230318164746/https://wiki.bash-hackers.org/syntax/shellvars#special_parameters_and_shell_variables)  
+
 * `${PIPESTATUS[n]}`: return value of piped commands (array)  
 * `$#`: Number of arguments  
 * `$*`: All positional arguments (as a single word)  
@@ -1263,7 +1279,9 @@ for commands that only accept files.
 
 ## Process Substitution  
 `man bash; /Process Substitution`
+
 * **Note**: Process substitution is not POSIX-compliant.  
+
 Process substitution allows a process's input or output to  
 be referred to using a filename.  
  
@@ -1306,89 +1324,90 @@ echo "Welcome To This Wonderful Shell" | tr '[:lower:]' '[:upper:]'
 
 ## All Bash Conditional Flags  
 See `./conditionals_in_bash.md`  
-* -a file  
+
+- `-a file`
     * True if file exists.  
     * Check if file exists.  
-* -b file  
+- `-b file`
     * True if file exists and is a block special file.  
     * Check if file exists and is a block special file.  
-* -c file  
+- `-c file`
     * True if file exists and is a character special file.  
     * Check if file exists and file is a character special file.  
-* -d file  
+- `-d file`
     * True if file exists and is a directory.  
     * Check if directory exists.  
-* -e file  
+- `-e file`
     * True if file exists.  
     * Check if file exists.  
-* -f file  
+- `-f file`
     * True if file exists and file is a regular file.  
-* -g file  
+- `-g file`
     * True if file exists and is set-group-id.  
-* -h file  
+- `-h file`
     * True if file exists and is a symbolic link.  
     * Check if file exists and file is a symlink. 
-* -k file  
+- `-k file`
     * True if file exists and its ``sticky'' bit is set.  
     * Check if file exists and has sticky bit set. 
 
-* -p file  
+- `-p file`
     * True if file exists and is a named pipe (FIFO).  
     * Check if file exists and is a named pipe. 
-* -r file  
+- `-r file`
     * True if file exists and is readable.  
     * Check if file exists and is readable. 
-* -s file  
+- `-s file`
     * True if file exists and has a size greater than zero.  
     * Check if file exists and is not empty. 
-* -t fd   
+- `-t fd `
     * True if file descriptor fd is open and refers to a terminal.  
-* -u file  
+- `-u file`
     * True if file exists and its set-user-id bit is set.  
-* -w file  
+- `-w file`
     * True if file exists and is writable.  
-* -x file  
+- `-x file`
     * True if file exists and is executable.  
-* -G file  
+- `-G file`
     * True if file exists and is owned by the effective group id.  
-* -L file  
+- `-L file`
     * True if file exists and is a symbolic link.  
-* -N file  
+- `-N file`
     * True if file exists and has been modified since it was last read.  
-* -O file  
+- `-O file`
     * True if file exists and is owned by the effective user id.  
-* -S file  
+- `-S file`
     * True if file exists and is a socket.  
-* file1 -ef file2
+- `file1 -ef file2`
     * True if file1 and file2 refer to the same device and inode numbers.  
 
-* file1 -nt file2
-    * True if file1 is newer (according to modification date) than file2, or if file1  exists  and file2 does not.  
-* file1 -ot file2
-    * True if file1 is older than file2, or if file2 exists and file1 does not.  
-* -o optname  
+- `file1 -nt file2`
+    * True if `file1` is newer (according to modification date) than `file2`, or if `file1` exists and file2 does not. 
+- `file1 -ot file2`
+    * True if `file1` is older than `file2`, or if `file2` exists and `file1` does not.  
+- `-o optname`
     * True if the shell option optname is enabled. 
     * See the list of options under the description of the `-o` option to the set builtin below.  
-* -v varname  
+- `-v varname`
     * True if the shell variable varname is set (has been assigned a value).  
-* -R varname  
+- `-R varname`
     * True if the shell variable varname is set and is a name reference.  
-* -z string  
+- `-z string`
     * True if the length of string is zero.  
    string  
-* -n string  
+- `-n string`
     * True if the length of string is non-zero.  
-* string1 == string2
-    * string1 = string2
+- `string1 == string2`
+    * Or, `string1 = string2`
     * True if the strings are equal.  
-    * = should be used with the test command for POSIX-compliance. 
-    * When  used  with  the [[ command, this performs pattern matching as 
-      described in (Compound Commands).  
-* string1 != string2
+    * `=` should be used with the `test` command (`[`) for POSIX-compliance. 
+    * When used with the `[[` command, this performs pattern matching as it is
+      described in `man://bash /Compound Commands`.  
+- `string1 != string2`
     * True if the strings are not equal.  
-* string1 < string2
+- `string1 < string2`
     * True if string1 sorts before string2 lexicographically.  
-* string1 > string2
+- `string1 > string2`
     * True if string1 sorts after string2 lexicographically.  
 
 #### Arithmetic Operators:  
@@ -1627,6 +1646,7 @@ rmdir ~/dir/to/delete
 # Delete all of the parent directories too (as long as they're empty)
 rmdir -p ~/dirs/to/delete
 ```
+
 * `-p`: Delete each parent directory as well.  
 * `-v`: Output every directory that is processed.  
 
@@ -1642,6 +1662,7 @@ fi
 ```
 
 The `BASH_REMATCH` Array:
+
 - After a successful regex match, Bash stores the results in an array named `BASH_REMATCH`.
 - `BASH_REMATCH[0]` contains the entire substring that matched the regex.
     - This is the only element that is set without capture groups.  
@@ -1716,6 +1737,7 @@ You can reload a command hash with `hash -d`:
 ```bash
 hash -d duck  # Unhash a single command
 ```
+
 * `-d`: Delete
 * This removes `duck` from Bash's command hash table.  
 * The next time you run `duck`, it'll be re-resolved via `$PATH`.  
@@ -1724,6 +1746,7 @@ Or, clear **all** command hashes with `hash -r`.
 ```bash
 hash -r
 ```
+
 * `-r`: Reset.
 * This wipes the entire hash table.  
 * Use this if you're renamed or moved a bunch of commands or installed new software.

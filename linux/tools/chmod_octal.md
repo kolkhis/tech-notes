@@ -1,4 +1,3 @@
-
 # `chmod` With Octal Notation
 
 Octal notation is a concise way to set permissions on a file or directory.
@@ -40,6 +39,7 @@ Each digit in octal notation is the sum of its component permissions:
 ```bash
 chmod 755 file
 ```
+
 * Owner: rwx (4+2+1 = 7)
 * Group: r-x (4+0+1 = 5)
 * Others: r-x (4+0+1 = 5)
@@ -49,6 +49,7 @@ chmod 755 file
 ```bash
 chmod 644 file
 ```
+
 * Owner: rw- (4+2+0 = 6)
 * Group: r-- (4+0+0 = 4)
 * Others: r-- (4+0+0 = 4)
@@ -60,6 +61,7 @@ To set the setuid, setgid, and sticky bits, you can use a fourth digit:
 ```bash
 chmod 1755 file
 ```
+
 * Special bits: 1
 * Owner: rwx (7)
 * Group: r-x (5)

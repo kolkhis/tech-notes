@@ -7,6 +7,7 @@ You can extend the default bash autocompletion (or tab completion) in Bash.
 The process for writing bash completions utilizes `compgen` and `complete` (bash
 builtins).
 Important variables in this process:
+
 - `COMP_WORDS`
 - `COMP_CWORD`
 
@@ -118,6 +119,7 @@ You can use `-P` and `-S` together, too:
 complete -W "alpha beta gamma" -P "--mode=" -S ";" mycmd
 ```
 With this example, tab-completing `mycmd --mode=` gives:
+
 * `--mode=alpha;`
 * `--mode=beta;`
 * `--mode=gamma;`
@@ -131,6 +133,7 @@ completions.
 * `_init_completion -n =`: Don't split completion on `=` (like when you do `--option=value`)
 
 When `_init_completion` is called, it populates the variables:
+
 - `cur`: The word currently being typed (the partial input that's already there)
 - `prev`: The previous word.
 - `words`: All the words in the command line so far.
@@ -152,6 +155,7 @@ If you **don't** want to use `_init_completion`, there are other ways to do get 
 values you need in order to produce completions.  
 
 Without using `_init_completion`, these variables are made available by the shell:  
+
 * `COMP_WORDS`: An array of all words typed so far.
 * `COMP_CWORD`: Index of the word being completed.
 * `COMP_LINE`: The full command line as a single string.

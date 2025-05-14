@@ -8,6 +8,7 @@
 ## The `shift` Command  
 
 Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.  
+
 * The `shift` command will remove the first argument from the list.  
 * This will mean the **next** argument is now in `$1`.  
 * All the remaining arguments will be shifted from `$n` to `$n-1`.  
@@ -102,6 +103,7 @@ while getopts "hvf:" opt; do
     case $opt in
     ...
 ```
+
 - `"hvf:"`: Specifies valid options. 
     - `-h` and `-v` used as standalone options.
     - `-f filename` (the colon `:` tells `getopts` that it expects an argument)
@@ -121,6 +123,7 @@ while getopts ":hf:v" opt; do
     esac
 done
 ```
+
 - `getopts ":hf:v"`: This means:
     - The leading colon `:` suppresses automatic error messages. With this, you need
       to perform error handling yourself. See [leading colon vs no leading
@@ -179,6 +182,7 @@ will disable default error handling for missing arguments.
 getopts ":hf:v" opt
 ```
 The first colon in this string tells `getopts` to let us handle errors ourselves.
+
 - This requires the addition of a `:)` case, which is hit when a required argument is
   missing.
   - E.g., if `-f` did not have a `filename`, it would hit the `:` case.
@@ -194,6 +198,7 @@ getopts ":f:h" opt
 ./script -z
 ```
 This will set the variables as:
+
 - `opt="?"`
 - `OPTARG="z"`
 
@@ -219,6 +224,7 @@ getopts ":f:h" opt
 ./script -f
 ```
 This will set the variables as:
+
 - `opt=":"`
 - `OPTARG="f"`
 
@@ -239,6 +245,7 @@ getopts "f:h" opt
 ```
 
 This will set the variables to:
+
 - `opt="?"`
 - `OPTARG="f"`
 - An error is also printed.

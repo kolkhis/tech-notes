@@ -26,11 +26,13 @@ On the client node, you specify the server node with `-c <ip>`.
 ```bash
 iperf3 -c 192.168.200.101 -n 1G
 ```
+
 * This tests the speed of the network using TCP packets with `1G` of data.  
 
 ```bash
 iperf3 -c 192.168.200.101 -n 1G -P 128
 ```
+
 * This does the same thing, except it uses 128 parallel streams.
     * This is the maximum number of parallel streams you can use in `iperf3`.  
 

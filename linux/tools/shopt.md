@@ -1,4 +1,3 @@
-
 # The Shopt builtin  
 
 This builtin allows you to change additional shell optional behavior.  

@@ -1,4 +1,3 @@
-
 # systemd
 
 `systemd` is a system and service manager for Linux.  
@@ -38,6 +37,7 @@ Many `systemd` functions are available through `systemctl`.
 
 ## What `systemd` does
 It does a number of things on the system:
+
 * Provides parallelization capabilities
 * Uses socket a D-Bus activation for starting services
 * Offers on-demand starting of daemons and services
@@ -47,6 +47,7 @@ It does a number of things on the system:
 
 
 The primary roles of `systemd`:
+
 * Parallelization Capabilities
     * Boots up services in parallel to reduce startup times.
 * Socket and D-Bus Activation
@@ -87,6 +88,7 @@ Restart=always
 [Install]
 WantedBy=graphical.target
 ```
+
 * `[Unit]`: This section contains directives about when and how this service should start, 
   and if it should wait for other services.
     - `Description=`: A short description of the service
@@ -96,6 +98,7 @@ WantedBy=graphical.target
     - `Environment=DISPLAY=:0`: Required so Firefox knows to use the Pi's display.
 
 ### Service File Section Entries
+
 - The `[Unit]` section has some common directives:
     - `Description=`: A short description of the service
     - `After=`: Make sure this service starts *after* the listed targets/services.
@@ -128,6 +131,7 @@ WantedBy=graphical.target
 
 
 ## Useful `systemd` commands
+
 - Note: `systemctl` is not the same as `sysctl` - `sysctl` is used for controlling
   kernel parameters, `systemctl` is used for controlling system processes.  
 
@@ -135,6 +139,7 @@ WantedBy=graphical.target
 ```bash
 systemctl list-units --state=failed
 ```
+
 * Lists units (services) that failed to start.  
 * `systemctl --failed` is good shorthand for this.  
 
@@ -142,11 +147,13 @@ systemctl list-units --state=failed
 ```bash
 systemctl cat ssh
 ```
+
 * This will show you the configuration (unit file) used for the ssh service.
 
 ```bash
 cd /etc/systemd/system && ls
 ```
+
 * This is the directory where systemd stores its service files.
   You can find `target` files, `service` files, and `socket` files.
 
@@ -157,6 +164,7 @@ cd /etc/systemd/system && ls
 ```bash
 systemd-analyze --help
 ```
+
 * This will output all of the different arguments and commands that
   you can use with `systemd-analyze`.
 
@@ -164,11 +172,13 @@ systemd-analyze --help
 ```bash
 systemctl is-active ssh
 ```
+
 * Shows if a service is active or not.  
 
 ```bash
 systemctl is-enabled ssh
 ```
+
 * Shows whether or not a service is enabled.  
 
 
@@ -334,6 +344,7 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 ```
+
 - `[Unit]`: This section just gives some info about the process.  
 - `[Timer]`: This is where we define the timer rules.  
     - `OnCalendar=*-*-* 02:00:00`: Run every day at 2AM.  
@@ -347,6 +358,7 @@ systemctl daemon-reexec
 systemctl daemon-reload
 sudo systemctl enable --now gh-backups.timer
 ```
+
 - `systemctl daemon-reexec`: Re-executes the `systemd` manager.  
     - This will "serialize" the manager state, re-execute the process, and
       "deserialize" the state again.  
@@ -392,6 +404,7 @@ since the variables will already be in the environment.
 
 
 ## Resources
+
 * [Systemd Service Files](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#)
 * [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html)
 

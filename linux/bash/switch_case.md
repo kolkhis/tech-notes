@@ -1,4 +1,3 @@
-
 # Switch Case in Bash  
 The `case` statement itself does not directly support regex.  
 It uses glob patterns for matching.  
@@ -19,6 +18,7 @@ case <value> in
 esac  
 ```
 `case <value> in` is the beginning of the switch case.  
+
 * The `value` is the value that will be compared to the patterns. 
 * This is typically a variable, but can be any value.  
     * E.g.:  
@@ -27,6 +27,7 @@ esac
     ```
 
 Each case starts with a pattern, which is a value or range of values.  
+
 * The patterns can be either surrounded in parentheses `()`, or just ended  
   with a closing parenthesis `)`.  
 * Multiple patterns can be given for one case, separated by `|`.  
@@ -124,6 +125,7 @@ Converting the value to lowercase temporarily can make things easier:
 # Just change the value to lowercase temporarily  
 case ${name,,} in  
 ```
+
 * Note: This method of string manipulation (parameter expansion) is not POSIX-compliant.  
 
 A POSIX-compliant way to do this:  

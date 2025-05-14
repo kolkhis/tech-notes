@@ -1,4 +1,3 @@
-
 # `dd`
 
 The `dd` command is used for many things.  
@@ -18,6 +17,7 @@ file and measure how long it takes to write the file to the disk.
 ```bash
 dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct
 ```
+
 * `if=/dev/zero`: The input file is `/dev/zero`. This is a special file that generates a stream of zero bytes.  
 * `of=testfile`: The output file, which will be created and written to the disk.  
 * `bs=1`: The block size is 1 gigabyte. Can adjust this to test different block sizes.  
@@ -31,6 +31,7 @@ measure how quickly it can be read into memory.
 ```bash
 dd if=testfile of=/dev/null bs=1G count=1 iflag=direct
 ```
+
 * `if=testfile`: The input file, created in the write test.  
 * `of=/dev/null`: The output is sent to `/dev/null`, which discards all data sent to it.  
 * `bs=1 count=1`: Reads the file in 1 gigabyte blocks.  

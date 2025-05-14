@@ -1,4 +1,3 @@
-
 # `nmap`
 
 `nmap` is a tool for network exploration and security auditing.  
@@ -63,6 +62,7 @@ nmap -iL targets.txt
 ```bash
 nmap -O --osscan-guess 192.168.1.1
 ```
+
 * `-O`: Enable OS detection
 * `--osscan-limit`: Limit OS detection to promising targets
 * `--osscan-guess`: Guess OS more aggressively
@@ -109,6 +109,7 @@ An example:
 ```bash
 nmap -p- -T4 --open -Pn -vvv 10.10.11.174 -oN output.txt
 ```
+
 * `-T4`: Sets the "timing template" to 4 for faster execution.
 * `--open`: Only show open (or possibly open) ports
 * `-Pn`: No ping. Skips nmap discovery stage. 

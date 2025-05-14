@@ -1,4 +1,3 @@
-
 # Using fzf (Fuzzy Finder) on Linux  
 
 ## Table of Contents
@@ -50,6 +49,7 @@ fzf --bind=ctrl-j:accept,ctrl-k:kill-line
 ### Availble keys for fzf keybinding: `man fzf` -> `/AVAILBLE KEYS`
 
 The ones that involve the `CTRL` key:  
+
 * `Ctrl-[a-z]`
 * `Ctrl-space`
 * `Ctrl-\`
@@ -59,6 +59,7 @@ The ones that involve the `CTRL` key:
 * `Ctrl-Alt-[a-z]`
 
 Some other common keys:  
+
 * `tab`
 * `btab` (`Shift-tab`)  
 * `esc`
@@ -67,6 +68,7 @@ Some other common keys:
 * Any single character  
 
 ### Available Events:  
+
 * `change`
     * Triggered whenever the query string is changed  
     * E.g., Move cursor to the first entry whenever the query is changed:  

@@ -11,6 +11,7 @@ are **immediate but not persistent** unless written to a config file.
     * [`sysctl` Priority Order](#sysctl-priority-order) 
 
 ## Basic Usage
+
 * View all kernel runtime parameters as they're currently set:
   ```bash
   sysctl -a
@@ -55,15 +56,17 @@ add them to a config file in `/etc/sysctl.d/`.
 
 Custom settings should go in `/etc/sysctl.d/`, but there are other locations where
 settings are stored:  
-- `/usr/lib/sysctl.d/`: Vendor settings go in here. 
-- `/etc/sysctl.d/`: This is where you should put your settings.  
-- `/run/sysctl.d/`
+
+* `/usr/lib/sysctl.d/`: Vendor settings go in here. 
+* `/etc/sysctl.d/`: This is where you should put your settings.  
+* `/run/sysctl.d/`
 
 
 
 ### `sysctl` Priority Order
 When kernel paremeters are loaded in, either on boot or with `sysctl --system`, it
 looks for files in this order:
+
 * `/etc/sysctl.d/*.conf`
 * `/run/sysctl.d/*.conf`
 * `/usr/local/lib/sysctl.d/*.conf`

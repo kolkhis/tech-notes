@@ -206,6 +206,7 @@ Here's why *not* to use `/usr/bin/env bash`:
 ---
 
 The consensus:
+
 - If the script is personal, portable, and user-level, `/usr/bin/env bash` is fine.  
 - If it's production, automation, infrastruture, root-owned, or in a secure
   environment use `/bin/bash`. 
@@ -1716,6 +1717,7 @@ the `strace`/`strace [opts]`:
 ```bash
 sudo strace -ffs320 mknod -m 666 /tmp/mynull c 1 3
 ```
+
 - `-ff`: Also trace child processes as they're created by the traced process (spawned 
          via `fork()`/`vfork()`).
     * Combines `-f` and `--output-separately`.
@@ -1806,6 +1808,7 @@ A common fork bomb:
 ```bash
 :(){:|:&};:
 ```
+
 - `:()`: Start a function definition for a function literally named `:`.
 - `{ ... }`: The contents of the function.
     - `:|:`: Calls `:` (itself), then pipe it to `:` to call itself again.
@@ -1813,6 +1816,7 @@ A common fork bomb:
 - `;:`: End the function definition and then call the `:` function.  
 
 What happens here:
+
 - It calls itself twice (`:` and `:` again via the pipe).  
 - Backgrounds the *second* call (`&`).  
 - Runs the function.  
@@ -1828,6 +1832,7 @@ A fork bomb abuses `fork()` repeatedly and infinitely.
 
 #### User Process Limit
 You can proctect against this with `ulimit -u` (max user processes).  
+
 - `ulimit -u 4096`: Prevent a fork bomb from destroying the whole system.  
     - Only the user account running the fork bomb would freeze.  
     - Using `ulimit -u` is ***temporary***, it will only work for the current
@@ -1862,6 +1867,7 @@ Add the lines:
 username soft nproc 2048
 username hard nproc 4096
 ```
+
 - `username`: The user account you want to limit.  
 - `soft`: Warning limit. User can change it temporarily lower.  
     - Set to `2048` in this example.  
@@ -1875,6 +1881,7 @@ If you *really* wanted to, you could change `pid_max` kernel parameter temporari
 ```bash
 sudo sysctl -w kernel.pid_max=65536
 ```
+
 - `sysctl -w`: Write (set) a value.  
 
 This is temporary only unless you set it in `/etc/sysctl*`.  
@@ -1913,6 +1920,7 @@ Syntax:
 ```bash
 mknod [OPTION]... NAME TYPE [MAJOR MINOR]
 ```
+
 - `NAME`: The path to the special file.  
 - `TYPE`: You can specify the `TYPE` of file:  
     - `p`: Pipe (FIFO) special file.  
@@ -1968,6 +1976,7 @@ We can use those to duplicate the file with `mknod`.
 sudo mknod /tmp/mynull c 1 3
 sudo chmod 666 /tmp/mynull
 ```
+
 - This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
 - That matches the null device (`/dev/null`).  
 

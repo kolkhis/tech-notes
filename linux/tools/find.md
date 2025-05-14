@@ -1,4 +1,3 @@
-
 # Finding Files
 
 The bulk of this file is notes on the `find` command.  
@@ -44,6 +43,7 @@ Before that, some other commands to find files.
 ## `tree`
 * `tree -I '.git'` - Tree view of current directory and subdirectories.  
     * `-I`(gnore) the `.git` directory.  
+
 ## `ls`
 ```bash
 ls -I '.git'          # List current directory, -I(gnore) .git/
@@ -67,6 +67,7 @@ You can specify the type of regex used with `-regextype` (`find -regextype help`
 
 
 ## Quick Overview of File Timestamps  
+
 | **Attribute** | **Meaning**                                           |
 |---------------|-------------------------------------------------------|
 |   `atime`     | file ***Accessed*** time                              |
@@ -87,6 +88,7 @@ The `-prune` option tells `find`: "if the file is a directory, don't descend int
 This allows you to skip over the contents of a specific directory.  
 
 Skip directories with `find`:
+
 * To **SKIP** a directory and print all other files found:  
   ```bash  
   find . -path ./src/emacs -prune -o -print  # skip the ./src/emacs dir
@@ -161,6 +163,7 @@ Pass all files to `my_script` as arguments:
 ```bash  
 find . -type f -exec my_script '{}' +  
 ```
+
 * `'{}'` expands to the names of the file(s) that are found with `find`.  
 * `+`: Tell `find` to pass **all** files to `my_script` as arguments.  
     * This is different than using `';'`, which passes the found file to `exec` one
@@ -237,11 +240,13 @@ find . -perm 664
 
 ### Change How `find` Handles Symbolic Links  
 The first 3 deal with symbolic links:  
+
 * `-P`: Never follow symbolic links. (default)  
 * `-L`: Follow symbolic links  
 * `-H`: Don't follow symbolic links, except while processing the command line arguments.  
 
 ### Get Diagnostic Information from `find`
+
 * `-D debugopts`: Print diagnostic information; 
     * use to diagnose problems with why find is not doing what you want.  
     * `debugopts` should be comma separated. 
@@ -250,6 +255,7 @@ The first 3 deal with symbolic links:
         * `all`: enables all of the other debug options (except help)  
 
 ### `find` Query Optimization  
+
 * `-Olevel`:  Enables query optimisation. *Should* make `find` run faster or consume less resources.  
     * `-O0`:  Same as `-O1`
     * `-O1`:  Default.  
@@ -265,6 +271,7 @@ being examined and some reference file specified on the command line.
 See [Timestamps Explained](#timestamps-explained).  
 
 A numeric argument  `n`  can be specified to tests (like `-amin`, `-mtime`, `-gid`, `-inum`, `-links`, `-size`, `-uid` and `-used`)  
+
 * `+n`: for greater than `n`
 * `-n`: for less than `n`
 * `n`:  for exactly `n`
@@ -305,6 +312,7 @@ A numeric argument  `n`  can be specified to tests (like `-amin`, `-mtime`, `-gi
 ---  
 
 ### Users and Groups  
+
 * `-user uname`: File is owned by user `uname` (numeric user ID allowed).  
 * `-nogroup`: No group corresponds to file's numeric group ID.  
 * `-nouser`: No user corresponds to file's numeric user ID.  
@@ -313,6 +321,7 @@ A numeric argument  `n`  can be specified to tests (like `-amin`, `-mtime`, `-gi
 * `-uid n`: File's numeric user ID is less than, more than or exactly `n`.  
 
 ### Permissions  
+
 * `-perm mode`: File's permission bits are **exactly** `mode` (octal or symbolic).  
 * `-perm -mode`: **All** of the permission bits `mode` are set for the file.  
 * `-perm /mode`: **Any** of the permission bits `mode` are set for the file.  
@@ -336,7 +345,9 @@ A numeric argument  `n`  can be specified to tests (like `-amin`, `-mtime`, `-gi
     * `G`: for gibibytes (GiB, units of 1024 * 1024 * 1024 = 1073741824 bytes)  
 
 * `-context pattern`: (SELinux only) Security context of the file matches glob pattern.  
+
 ---  
+
 * `-false`: Always false.  
 * `-true`:  Always true.  
 
@@ -355,6 +366,7 @@ A numeric argument  `n`  can be specified to tests (like `-amin`, `-mtime`, `-gi
 
 ## Testing Timestamps of Files with `find`
 For testing the timestamps on files:  
+
 * `-daystart`: Measure times from the beginning of today rather than from 24 hours ago.  
 (for `-amin`, `-atime`, `-cmin`, `-ctime`, `-mmin`, and `-mtime`)  
 
@@ -597,6 +609,7 @@ Both these commands do the same thing.
 find . -perm -444 -perm /222 \! -perm /111  
 find . -perm -a+r -perm /a+w \! -perm /a+x  
 ```
+
 * These two commands both search for files that are:  
     1. readable for everybody (`-perm -444` or `-perm -a+r`)  
     1. have at least one write bit set (`-perm /222` or `-perm /a+w`)  

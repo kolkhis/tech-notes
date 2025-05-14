@@ -60,6 +60,7 @@ A cron job is defined by a line in the crontab, which has the following format:
 ```bash
 * * * * * [user] command_to_be_executed
 ```
+
 * The five asterisks represent:
     1. Minute (0-59)
     1. Hour (0-23)
@@ -90,6 +91,7 @@ For example:
 Instead of using the 5-asterisks method, special strings can be used for scheduling jobs.  
 
 Common special strings:  
+
 * `@reboot`: Run once at startup.  
 * `@yearly` or `@annually`: Run once a year, equivalent to `0 0 1 1 *`.  
 * `@monthly`: Run once a month, equivalent to `0 0 1 * *`.  
@@ -186,6 +188,7 @@ The `user` field in a cron job is only required in system-wide cron
 files (e.g., `/etc/crontab` or cron files located in `/etc/cron.d`).
  
 The entries:
+
 * The first entry runs on the 17th minute of every hour.  
 * The second entry runs at `06:25` every day.  
 * The third entry runs at `06:47` every Sunday (`7`).  

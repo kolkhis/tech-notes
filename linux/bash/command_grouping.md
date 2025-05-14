@@ -19,6 +19,7 @@ This means that any changes made to the environment persist
 after the command group ends.  
  
 This includes:
+
 * Variable declarations and assignments.  
 * `cd`: Changes the current working directory.
 * `set`: Changes to shell options.

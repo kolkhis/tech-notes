@@ -1,4 +1,3 @@
-
 # vmstat
 
 The `vmstat` command provides information about system processes, memory,
@@ -31,6 +30,7 @@ To see updates in real-time:
 ```bash
 vmstat 1 5
 ```
+
 * `1`: Update every second
 * `5`: Run for 5 seconds
 

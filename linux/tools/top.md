@@ -1,5 +1,3 @@
-
-
 # The `top` Command
 Using `top` will show the current status of the system.  
 Its output is very detailed.  
@@ -113,6 +111,7 @@ MiB Swap:  49152.0 total,  48436.2 free,    715.8 used.   6278.3 avail Mem
 Below the first five lines is the process list.  
 
 This list contains the following fields:
+
 * `PID`: Process ID number.  
     * It is a unique number given to the process by the system.
 * `USER`: Process owner.  

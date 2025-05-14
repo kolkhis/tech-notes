@@ -1,4 +1,3 @@
-
 # rsync  
 `rsync` is a tool that can be used to synchronize files and directories between two locations.  
 
@@ -25,6 +24,7 @@ directory `src` on the machine `foo`.
 ```bash  
 rsync -t *.c foo:src/  
 ```
+
 * `-t`: Preserves modification times.  
 * `*.c`: Pattern to match files.  
 * `foo:src/`: Remote directory to transfer files to.  
@@ -59,6 +59,7 @@ rsync -avz -e ssh user@192.168.0.11:/path/to/files/ /path/to/local/home/
 rsync -avz -e ssh user@homelab:/path/to/files/ /path/to/local/home/  
 ```
 Replace `user@192.168.0.11` or `user@homelab` with the remote host's IP address or name.  
+
 * `-a`: Archive mode (preserves permissions, symlinks, etc.)  
 * `-v`: Verbose (shows the files being transferred)  
 * `-z`: Compress file data during the transfer.  
@@ -132,6 +133,7 @@ It will tell `rsync` to recurse down any directories and preserve many of the
 attributes of the files.  
 
 The only things it does not preserve:
+
 * `ACL` (Access Control Lists), use `-A` for this.
 * `xattr`, use `-X` for this. 
 * `atime`, use `-U` for this

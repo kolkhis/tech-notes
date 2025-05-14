@@ -162,6 +162,7 @@ diff <(ls dir1) <(ls dir2)
 ```bash  
 paste -d "\n" <(cat file1.txt) <(cat file2.txt) > merged.txt  
 ```
+
 1. Combines `file1.txt` and `file2.txt` side-by-side into `merged.txt`.  
     * This is useful for comparing or merging files line by line.  
 
@@ -169,6 +170,7 @@ paste -d "\n" <(cat file1.txt) <(cat file2.txt) > merged.txt
 ```bash  
 grep ERROR <(zcat /var/log/app.log.gz)  
 ```
+
 1. If you have compressed log files (like `.gz` files), this command lets  
    you grep them directly without manual decompression.  
     * `zcat` is identical to `gunzip -c`
@@ -210,6 +212,7 @@ echo "Hello, world" > >(tr 'a-z' 'A-Z')
 ```bash  
 printf "Application started at: %s\n" "$(date)" | tee >(logger -t myapp)  
 ```
+
 * This command writes a log message to both the standard output and the system logger.  
   It's useful for logging and monitoring.  
     * `logger` is a command that writes to the system log.  
@@ -224,6 +227,7 @@ printf "Application started at: %s\n" "$(date)" | tee >(logger -t myapp)
 ```bash  
 cat /var/log/syslog | grep --line-buffered "CRON" > >(notify-send -t 10000 "Cron Alert")  
 ```
+
 * This command monitors the syslog for CRON entries 
   and sends desktop notifications in real-time for each match.  
 * Great for real-time monitoring of logs.  
@@ -234,6 +238,7 @@ cat /var/log/syslog | grep --line-buffered "CRON" > >(notify-send -t 10000 "Cron
 ```bash  
 ffmpeg -i input.mp4 >(x264 -o output.mkv -)  
 ```
+
 * In this example, `ffmpeg` reads a video file and pipes the output 
   to `x264` for transcoding.  
 

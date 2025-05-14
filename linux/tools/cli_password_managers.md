@@ -3,6 +3,7 @@
 ## Using GPG with Pass (Password Manager)
 
 Before you can use `pass`, you need to initialize it with a GPG key.
+
 * See `./gpg.md` on how to generate a GPG key and get its ID.
 
 

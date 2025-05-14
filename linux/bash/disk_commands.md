@@ -95,6 +95,7 @@ Syntax for mounting a file system to a directory:
 ```bash  
 mount -t type /dev/device directory  
 ```
+
 * `-t`: Optional. Specifies the type of filesystem to be mounted. (e.g., `ext4`, `ntfs`, `zfs`)
     * `mount -t xfs`: Tells `mount` that the `-t`ype of file system is `xfs`.  
     * `ext4` and `xfs` are some of the most common file system formats in the industry.  
@@ -135,6 +136,7 @@ umount /mnt/disk1  # Unmounts the filesystem that is mounted at /mnt/disk1
 
 
 If a file system has file handles open in it, you can't unmount it.  
+
 * To check if there are any files open in a file system:  
   ```bash  
   du /boot/efi  
@@ -154,6 +156,7 @@ You can either use `umount` to unmount and then `mount` to mount, or use `mount 
 ```bash
 mount -o remount /boot/efi  # Remount the `/boot/efi` file system (the boot partition).  
 ```
+
 * `mount` reads from `/etc/mtab` when it does this.  
     * Never edit `/etc/mtab` in real-time yourself. 
 This example tells the kernel to attach the filesystem found on `/dev/device` (which is the 
@@ -181,6 +184,7 @@ To see the total size of a filesystem, you can use `df` on the directory where i
 # Show the total size of the filesystem mounted on the root directory
 df -h / | grep -v Size | awk '{print $2}' 
 ```
+
 * `df -h /` Show the disk filesystem space usage in the `/` root directory.  
 * `grep -v Size` will remove the line containing the word `Size`
 * `awk '{print $2}'` will print 2nd column
@@ -264,6 +268,7 @@ smartctl -l selftest /dev/sda   # View test results
 
 
 Weird things about `mount`:  
+
 * The same filesystem can be mounted more than once.  
 * In some cases (e.g., network filesystems) the same filesystem can be mounted on the 
   same mountpoint multiple times.  
@@ -305,6 +310,7 @@ and mounts it to the directory `/directory`
       in that file system.  
 
 ---
+
 * `journalctl` 
     * Log analysis tools like `journalctl` can be used to quickly triage system issues 
       based on error severity.

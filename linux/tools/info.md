@@ -1,4 +1,3 @@
-
 # The Info Command  
 
 The `info` command is for reading "Info documents."  

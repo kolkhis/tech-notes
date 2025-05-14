@@ -30,6 +30,7 @@ i.e., `+=`, `*=`, `/=`, etc..
 
 
 ### Options  
+
 | Option              | Description                                      |
 | ------------------- | ------------------------------------------------ |
 | `-h, --help`        | Print the usage and exit.                        |
@@ -50,11 +51,13 @@ echo "(79 + 79 + 80 + 80 + 45) / 5" | bc -l
 
 ## Passing Strings to `bc`
 Some strings passed to `bc` will change the way it behaves.  
+
 * `scale=2;` sets the decimal precision to 2 decimal places.  
 ```bash
 echo "scale=2;10/3" | bc
 # 3.33
 ```
+
 * `ibase` and `obase`: Set the input base and output base (for base number conversion).  
     * Useful for converting binary, octal, decimal, and hexadecimal numbers.  
 ```bash
@@ -68,6 +71,7 @@ echo "ibase=10;obase=8; 160" | bc  # Convert 160 from deciaml to octal
 ## Converting Celsuis to Fahrenheit  
 
 Formulas:  
+
 * `°F = (°C × 9/5) + 32`
 * `°C = (°F − 32) x 5/9`
 
@@ -113,6 +117,7 @@ the syntax `/* comment */`.
 
 ## Variables in `bc`
 Numbers are stored in two types of variables:
+
 * Simple variables  
 * Arrays  
 
@@ -120,6 +125,7 @@ Both simple variables and array variables are named.
  
 Names begin with a letter followed by any number of letters, digits and underscores.  
 All letters in the variable names must be lower case.  
+
 * Full alpha-numeric names are an extension. 
 * In POSIX `bc`, all names are a single lowercase letter. 
 
@@ -127,6 +133,7 @@ The type of variable is clear by the context; all array variable names will be
 followed by brackets (`[]`).  
 
 There are four special variables:  
+
 * `scale` 
     * Defines how some operations use digits after the decimal point.  
     * The default value of `scale` is 0. 

@@ -83,6 +83,7 @@ They both achieve the same result.
 
 ### Using the Key ID
 Using the Key ID to export the public key is far more accurate
+
 * To get the Key ID:
   ```bash  
   gpg --list-secret-keys --keyid-format=long  
@@ -99,6 +100,7 @@ Using the Key ID to export the public key is far more accurate
 * `<Your-Key-ID>`: This is your Key ID.  
 
 Now you can export your public GPG key using your Key ID. 
+
 * Run the following command:
   ```bash
   gpg --armor --export <Your-Key-ID>  
@@ -165,6 +167,7 @@ Ensuring authenticity is a common use case for GPG.
 Signing files is a way to verify integrity.  
 
 There are three main ways to sign a file:
+
 * To sign a file inline:
   ```bash
   gpg --armor --sign file.txt
@@ -208,6 +211,7 @@ There are three main ways to sign a file:
 
 ---
 Other `--sign` info:
+
 * If you use `--sign` without other options, GPG creates a "detatched signature" file.  
     * e.g., `file.txt.sig`
 * If you use `--clearsign`, it embeds the signature within the file, but the content
@@ -241,6 +245,7 @@ well as the revocation certificate.
 
 
 Revoke a key if it is compromised.  
+
 * Create a revocation certificate to invalidate your key if it's lost or compromised.  
   ```bash
   gpg --output revoke_cert.asc --gen-revoke your_email@example.com
@@ -275,8 +280,10 @@ if you’re using multiple machines.
 
 ## The Keyring
 Keys are stored in the keyring:
+
 * Private keys: `~/.gnupg/pubring.kbx`
 * Public keys:  `~/.gnupg/private-keys-v1.d/`
+
 These files are managed by GPG. You should avoid modifying them directly.  
 
 
@@ -289,6 +296,7 @@ Keyservers help make sure people have the most recent and legit public key for y
 which is especially important if you need to revoke/update a key.  
 
 Using a keyserver:
+
 * Upload your public key:
   ```bash
   gpg --send-keys <YOUR_KEY_ID> --keyserver hkp://keys/gnupg.net
@@ -303,12 +311,14 @@ Using a keyserver:
   ```
 
 Some popular keyservers:
+
 * `hkp://keys.gnupg.net`
 * `hkp://keyserver.ubuntu.com`
 
 
 ## File Types
 GPG uses `.kbx` files (keybox files) and `.asc` files (ASCII-armored files).  
+
 * Keybox files are binary files used by GPG to store public keys locally. 
     * This is an internal storage format that GPG reads and writes to when you import
       or manage keys.  
@@ -320,6 +330,7 @@ GPG uses `.kbx` files (keybox files) and `.asc` files (ASCII-armored files).
 
 
 ## Quickref
+
 * Generate a key pair: `gpg --full-generate-key`
 * Export your public key: `gpg --armor --export > publickey.asc`
 * Encrypt a file: `gpg --encrypt --recipient email file.txt`
@@ -336,6 +347,7 @@ mkdir ~/.gnupg
 echo "default-cache-ttl 600" >> ~/.gnupg/gpg-agent.conf
 echo "max-cache-ttl 7200" >> ~/.gnupg/gpg-agent.conf
 ```
+
 * `default-cache-ttl 600`: Caches the passphrase for 10 minutes.  
 * `max-cache-ttl 7200`: Maximum cache duration of 2 hours.  
 

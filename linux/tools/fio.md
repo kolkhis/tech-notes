@@ -30,6 +30,7 @@ fio --name=randrw --rw=randrw --bs=4k --size=1G --numjobs=1 \
     --ioengine=libaio --runtime=60 --group_reporting \
     --filename=/disk/mountpoint/file
 ```
+
 * `--name=randrw`: The name of the job. This can be anything.  
 * `--rw=randrw`: Test both random reads and writes.  
 * `--bs=4k`: Block size. `4k` is typical for random I/O.  
@@ -73,6 +74,7 @@ fio --name=concurrent --rw=randrw --bs=64k --size=10G --numjobs=16 \
     --filename=/disk/mountpoint/file
 ```
 This uses 16 concurrent jobs to test 10G of data with a block size of 64k.  
+
 * `--bs=64k`: Block size increased to 64k for testing workloads with larger sequential reads/writes.  
 * `--runtime=120`: Ensures all jobs run for at least 120 seconds, even if the data size completes early.  
 * This simulates real multi-threaded workloads (e.g., database queries or heavy multi-user applications).  
@@ -99,6 +101,7 @@ Using the `net` ioengine
 
 ## Output Reports
 `fio` generates detailed outputs including:
+
 * Throughput/Bandwidth (`bw`)
 * Input/output operations per second (`iops`)
 * Latency 
@@ -146,6 +149,7 @@ If this limit is longer than the time required to process the specified `--size`
 then `fio` continues to perform operations by looping back to the beginning.  
 
 When the `runtime` is longer than twhat the `size` alone would require:
+
 * The amount of data processed increases.  
 * Results such as bandwidth (`bw`), IOPS, and latency are measured across the
   entire `runtime`, not just against the `size`.  
@@ -156,6 +160,7 @@ fio --name=example --rw=randrw --bs=4k --size=1G --runtime=60 \
     --ioengine=libaio --filename=/disk/testfile
 ```
 If processing `1G` takes 20 seconds:
+
 * The test will loop and repeat the 1G workload 3 times (20 seconds * 3 = 60 seconds).
 * Total data processed will be approximately 3G.
 
