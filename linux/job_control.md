@@ -120,6 +120,7 @@ This displays the current jobs and their statuses.
 
 ## Important Notes
 Naming a job can be used to bring it into the foreground: 
+
 * `%1`  is  a  synonym  for  `fg %1`, bringing job 1 from the background into the foreground.
 * `%1 &` resumes job 1 in the background, equivalent to `bg %1`.
 

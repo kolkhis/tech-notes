@@ -6,6 +6,7 @@
 
 ## The Three "Main" Families of Linux
 There are three major families of Linux distributions:
+
 * Red Hat
 * SUSE
 * Debian
@@ -93,6 +94,7 @@ processes known as "daemons".
 The Linux community is made up of people across the world in many different roles.  
 Developers, system administrators, users, and vendors, all connect with each other in
 many ways.
+
 * IRC (Internet Relay Chat), like with WeeChat, HexChat, Pidgin, XChat, etc.
 * Linux User Groups, both local and online.  
 * Newsgroups and mailing lists (incl the Linux Kernel Mailing List)
@@ -110,6 +112,7 @@ threads, and free tutorials and tips.
 ### Linux Terminology Overview
 
 Some common terminology you'll see in Linux:
+
 * Kernel: The glue between the hardware and applications.  
 * Distributon: Collection of software, combined with the Linux kernel, making up a Linux-based OS
 * Boot Loader: Program that boots the operating system (GRUB/ISOLINUX)

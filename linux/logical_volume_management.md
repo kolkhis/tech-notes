@@ -124,6 +124,7 @@ You can also use the `blkid` command to check the partitioning scheme:
 ```bash
 blkid -p /dev/sda
 ```
+
 * `-p`: Low-level probing mode.  
 The output should indicate either `PTTYPE=gpt` for GPT or `PTTYPE=dos` for MBR.  
 
@@ -399,6 +400,7 @@ You can both extend or reduce the size of a logical volume.
 ### Filesystem resizing
 `lvextend`: Increases the size of LV
 When extending an LV, ensure that the underlying filesystem is resized accordingly.
+
 * For `ext4` or `ext3` filesystems:
  ```bash
  sudo resize2fs /dev/mapper/myvg-mylv
@@ -419,6 +421,7 @@ LVM allows you to create snapshots of Logical Volumes for backup/testing.
 ### LVM Thin Provisioning
 Thin provisioning allows you to over-allocate storage to logical volumes, and space 
 is allocated only when data is written.  
+
 * This is useful for maximizing storage utilization.
  ```bash
  sudo lvcreate --thinpool thinpool --size 100G myvg
