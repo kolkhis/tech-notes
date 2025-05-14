@@ -164,6 +164,7 @@ Kafka is typically run on a dedicated VM or hardware.
 ---
 
 Kafka is a message broker that works with a message queue (or event bus).  
+
 * The message broker is not limited to just logs -- it can queue any sort of information.  
 
 

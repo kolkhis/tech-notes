@@ -220,6 +220,7 @@ pidstat --human 1 5     # Human-readable format.
 ```
 
 The different between `ps -ef` and `ps aux`:  
+
 * `ps -ef` shows the PPIDs of processes (parent process ID), `ps aux` doesn't.  
     * `-e`: List `-e`very process.  
         * Displays all prcesses running on the system regardless of the user.  
@@ -239,6 +240,7 @@ The different between `ps -ef` and `ps aux`:
     * This is `BSD` style.  
 
 Main differences:
+
 * `ps aux` does not display the PPID.  
 * `ps -ef` does not display CPU/memory usage of the processes. Also, it includes processes from all users but does not explicitly show detached terminal processes.  
 
@@ -336,6 +338,7 @@ Killercoda lab on setting up telemetry/logging:
 [here](https://killercoda.com/het-tanis/course/Linux-Labs/102-monitoring-linux-logs)  
 
 Uses:
+
 * Grafana - for displaying data nicely  
 * Promtail - pushes logs into the Loki server  
 * Loki - API driven log aggregator  
@@ -347,6 +350,7 @@ Uses:
 * `ulimit [-HS] [-bcdefiklmnpqrstuvxPRT [limit]]`
 Provides control over the resources available to the shell and to
 processes started by it, on systems that allow such control.  
+
 * `man bash; /ulimit \[-HS`
 
 ---

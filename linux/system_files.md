@@ -68,6 +68,7 @@ The `~/.bash_logout` file will be read/executed every time a shell exits (with t
 ---
 
 So the order in which bash loads config files:
+
 * Non-interactive
     - `/etc/profile` (always)
     - First one found (in this order):
@@ -96,6 +97,7 @@ The format of each line in `/etc/passwd` is as follows:
 ```bash  
 username:password:UID:GID:GECOS:home_directory:shell  
 ```
+
 * `username`: The username for the new user.  
 * `password`: The encrypted password for the user. 
     * This is set to `x` if a password exists.  
@@ -111,6 +113,7 @@ Groups are stored in this file as:
 ```plaintext  
 group_name:password:group_id:group_members  
 ```
+
 * Just like `/etc/passwd`, the `password` field usually has an `x` (if a password exists).  
 
 
@@ -139,6 +142,7 @@ Add a rule for a user in this file in the format:
 # username host=(user:group) commands
 username ALL=(ALL:ALL) ALL
 ```
+
 * `username`: The username of the user that the rule will apply to.  
 * `ALL=`: Defines where the rule applies.
     * `ALL` means it applies to any host (for multi-host environments).  
@@ -194,6 +198,7 @@ mounting when the system boots.
 ### `/boot/grub2/grub.cfg` (or `/boot/grub/grub.cfg`)
 GRUB bootloader config file.  
 Contains kernel and boot options.  
+
 * Do **not** edit this firle directly. Use something like `grub-mkconfig` instead.  
 
 ### `/etc/default/grub`

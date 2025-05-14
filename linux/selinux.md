@@ -87,6 +87,7 @@ This context controls which processes can access the file, and in what way.
 
 An SELinux Context is a rule that defines access permissions for files/directory.  
 It consists of 4 parts:  
+
 * `user`: SELinux user identity.  
     * This is **not** the same as a Linux user. It's an SELinux-specific user that 
       processes and objects are assigned to.  
@@ -108,6 +109,7 @@ The `type` (third field) is important when defining what actions can be
 performed on the file.  
 
 Examples:  
+
 * Files labeled with the type `httpd_sys_content_t` can be read by the Apache web server but 
   not by other processes.  
 * Files labeled with the type `ssh_home_t` are accessible only to the SSH daemon.  
@@ -145,6 +147,7 @@ ls -Z /var/www/html/index.html
 -rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 /var/www/html/index.html
 #                     ^ user   ^ role   ^ type              ^ level
 ```
+
 * `system_u`: SELinux user (`system_u` is a system user).
 * `object_r`: The role (for files and directories, it's typically `object_r`).
 * `httpd_sys_content_t`: The type (this means the file is meant to be served by an HTTP server).
@@ -160,6 +163,7 @@ processes.
 The SELinux mode can be set in `/etc/selinux/config`.  
 
 SELinux has 3 modes:
+
 * Disabled
 * Permissive
 * Enforcing
@@ -193,6 +197,7 @@ The format is:
 ```plaintext
 /pattern/ -- user:role:type:level
 ```
+
 * The whitespace on either side of the `--` are tabs.  
     * These are options, sometimes `-d`, `-c`, etc
 * `/pattern/` can be a path or basic regular expression.  
@@ -254,6 +259,7 @@ create custom policies.
 
 ## SELinux Troubleshooting
 Check the audit logs for context violations:
+
 * `/var/log/audit/audit.log`
 * `/var/log/messages` (if auditd isn't running)
 The `ausearch` and `sealert` tools are also useful for troubleshooting:

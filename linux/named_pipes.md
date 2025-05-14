@@ -21,21 +21,25 @@
 ### What is a Named Pipe?  
 A named pipe is a special kind of file that exists as a name in the  
 filesystem but behaves like a pipe.  
+
 * It provides a FIFO communication channel between two or more processes.  
 
 ### How it Works  
 Data written to a named pipe by one process can be read by another  
 process in the order it was written, hence "first in, first out."  
+
 * Unlike regular files, named pipes do not store data on the filesystem.  
 
 ### Uses  
 Named pipes are useful for inter-process communication, especially when  
 you want to transfer data between processes without writing to disk.  
+
 * They can be used for logging, streaming data, message passing, and more.  
 
 ### Benefits  
 Named pipes provide a simple and effective way to achieve real-time data  
 processing and communication between processes. 
+
 * This can minimize the need for temporary files and potentially reducing I/O overhead.  
 
 ## Named Pipe Usage  

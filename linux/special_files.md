@@ -22,6 +22,7 @@ Syntax:
 ```bash
 mknod [OPTION]... NAME TYPE [MAJOR MINOR]
 ```
+
 - `NAME`: The path to the special file.  
 - `TYPE`: You can specify the `TYPE` of file:  
     - `p`: Pipe (FIFO) special file.  
@@ -45,6 +46,7 @@ We can use those to duplicate the file with `mknod`.
 sudo mknod /tmp/mynull c 1 3
 sudo chmod 666 /tmp/mynull
 ```
+
 - This creates a character device at `/tmp/mynull` with major `1` and minor `3`.  
 - That matches the null device (`/dev/null`).  
 
