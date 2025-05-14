@@ -29,7 +29,7 @@ copy-to-docs() {
         find . -maxdepth 1 -mindepth 1 #-type d #! -name "*.git" ! -name "*venv"
     )
 
-    if ! [[ -d docs ]]; then
+    if ! [[ -d ./docs ]]; then
         mkdir docs || { printf "Failed to create docs directory!\n"; }
     fi
 
@@ -38,12 +38,16 @@ copy-to-docs() {
             printf "Found exlusion directory: %s\n" "$FILE"
             continue
         fi
-        printf "DEBUG: Directory: %s\n" "$FILE"
+        printf "DEBUG: File: %s \n" "$FILE"
+        [[ -f $FILE ]] && printf " %s is a regular file.\n" "$FILE"
 
+        perl -pi -e '
+        print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*]|\d\.)|\n) /;
+        $prev = $_' "./docs/$FILE"
         # Recursive copying is copying symlinks
         if [[ ! -h $FILE ]]; then
-            rsync -a --no-links "$FILE" ./docs
             # cp -r "$FILE" ./docs
+            rsync -a --no-links "$FILE" ./docs
         fi
     done
 }
