@@ -51,6 +51,7 @@ chomp(my @lines = <$fh>);
 # Always close your filehandle
 close $fh;
 ```
+
 - `my $filename = 'file.md';`: Declares a scalar variable containing the filename.
 - `open my $fh, '<', $filename;`: Opens the file as readonly mode (`<`), and saves 
   the file handle into the `$fh` variable.  
@@ -96,6 +97,7 @@ Transforming lines with `map`:
 ```perl
 my @uppercased = map { uc($_) } @lines;
 ```
+
 - `map` creates a new list based on the expression.
     - It evaluates the expression (`{ ... }`) and saves the results in the new list.
     * Map always returns a list, and can be assigned to a hash where the elements
@@ -226,6 +228,7 @@ my %stuff = (
 ```
 
 So any of these can be values:
+
 * `@array`: an array (list context)
 * `%hash`: a hash
 * `\@array`: a scalar reference to that array
@@ -272,6 +275,7 @@ need a way to access those values as well.
 If you need to access a hash value that's a reference (e.g., an array, a hash, or a
 submodule), you will need to dereference it first.  
 There are two main ways to do this:
+
 - `->`: Dereference with this operator.  
     - Usually called the "arrow operator" or "method/dereference" operator.  
     - It serves two purposes:
@@ -282,6 +286,7 @@ There are two main ways to do this:
           $coderef->();      # dereference and call a coderef
           ```
         - Also calls methods on objects (in OOPerl).  
+
 - `${ ... }`: Dereference a reference by using this syntax.  
     - This is usually called **manual dereferencing** or scalar dereferencing syntax.  
     - This method is less common in modern perl (5.10+) but still valid and sometimes
@@ -365,6 +370,7 @@ delete $fruits{"banana"};
 
 ### Looping over a Hash
 There are a couple of ways to iterate over a hash in Perl.  
+
 - Using `keys` with a `foreach` loop
 - Using `each` with a `while` loop (more modern/efficient)
     - This method avoids looking up values manually.
@@ -401,6 +407,7 @@ foreach my $fruit (sort { $fruits{$a} cmd $fruits{$b} } keys %fruits) {
     print "$fruit => $fruits{$fruit}\n";
 }
 ```
+
 - `keys %fruits`: Returns a list of all keys (`"apple"`, `"banana"`, ...)
 - `sort { ... }`: Sorts that list using a custom comparison block.  
     - `sort { ... } LIST`: The braces are a code block (an anonmymous subroutine)
@@ -460,6 +467,7 @@ Another way to dereference it (`${ reference }{key}`):
 # access via manual dereferencing 
 print "Name: ${ $otherstuff{stuff} }{name}"
 ```
+
 * `$otherstuff{stuff}`: Returns a referene to the `%stuff` hash.
 * `->{name}` dereferences the `stuff` hash and accesses the `name` key.
 

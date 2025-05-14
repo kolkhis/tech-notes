@@ -1,8 +1,8 @@
 # File Operations in Perl
 
 ## Table of Contents
-* [Opening and Closing Files](#opening-and-closing-files) 
-* [File Operations](#file-operations) 
+- [Opening and Closing Files](#opening-and-closing-files) 
+- [File Operations](#file-operations) 
 
 
 ---
@@ -13,6 +13,7 @@ You can open files with the `open` function:
 ```perl
 open my $fh, '<', 'file.txt' or die $!; 
 ```
+
 - `open`: Builtin perl function to open a file.
     - `my $fh`: Defines `$fh` as a file handle. Like a pointer to the opened file.
         - The `my` keyword makes it lexically scoped (only available in that block)
@@ -104,6 +105,7 @@ open(my $fh, '>', 'output.txt') or die $!;
 print $fh "Hello, world.\n";
 close $fh;
 ```
+
 - `print $fh "...";`: The `print` function can take a filehandle as an argument.  
     - The output of the print statement will be directed to that filehandle.  
 
@@ -123,6 +125,7 @@ printf "Hello, world.\n" >> output.txt
 
 ## Reading Filenames from a Directory
 There are specific perl directory functions to help with this kind of thing.  
+
 - `opendir`
 - `closedir`
 - `readdir`
@@ -138,14 +141,14 @@ foreach my $f (@files) {
     print "File: $f\n";
 }
 ```
-* `opendir()` opens a directory and returns a directory handle.
-* `readdir()` reads all filenames in the directory into an array.
-* `closedir()` closes the directory handle.
+- `opendir()` opens a directory and returns a directory handle.
+- `readdir()` reads all filenames in the directory into an array.
+- `closedir()` closes the directory handle.
 
 ---
 
 ### Excluding `.` and `..`
-* Use a `grep` to exclude the `.` (current) and `..` (parent) directories.  
+- Use a `grep` to exclude the `.` (current) and `..` (parent) directories.  
   ```perl
   my $dir_name = '/home/kolkhis/notes';
   openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
@@ -159,7 +162,7 @@ foreach my $f (@files) {
   Using `grep { ... } readdir($dir)` filters out unwanted entries.  
   It accepts the `ne` (not equal) function for conditionals.  
   
-* Just add a `-f` check in the `grep` to only get regular files.
+- Just add a `-f` check in the `grep` to only get regular files.
   ```perl
   my $dir_name = '/home/kolkhis/notes';
   openddir(my $dir, $dir_name) or die "Can't open dir: $dirname: $!";
@@ -196,10 +199,10 @@ foreach my $f (@files) {
     print "File: $f\n";
 }
 ```
-* `File::Spec->catfile($dir_name, $_)`: 
+- `File::Spec->catfile($dir_name, $_)`: 
     - Safely joins the directory path and filename regardless of OS.  
     - So instead of `"$dir_name/$_"`, we use `catfile`.
-* `-f`: Tests if the path is a regular file. Skips directories, pipes, symlinks, etc. 
+- `-f`: Tests if the path is a regular file. Skips directories, pipes, symlinks, etc. 
     - Just like bash. 
 
 ### Getting Regular Files Only with `Path::Tiny`
@@ -218,6 +221,7 @@ foreach my $file (@files) {
     print "File: $file\n";
 }
 ```
+
 - The `path()` function returns a `dir` object.  
 - This `dir` object has a method `children()`.
     - `qr/`: The `qr` means "quote regex." It compiles regex as an object.
@@ -239,20 +243,20 @@ Perl supports a lot of conditionals that Bash has for checking the state of file
 (e.g., `-f $FILE`).  
 
 A list of Perl file test operators (and their bash equivalents):
-* `-f`: Is a regular file   
+- `-f`: Is a regular file   
     - `[[ -f "$file" ]]`
-* `-d`: Is a directory  
+- `-d`: Is a directory  
     - `[[ -d "$dir" ]]`
-* `-e`: Exists  
+- `-e`: Exists  
     - `[[ -e "$path" ]]`
-* `-s`:  Size > 0    
+- `-s`:  Size > 0    
     - `[[ -s "$file" ]]`
-* `-r`, `-w`, `-x`: Readable / writable / executable   
+- `-r`, `-w`, `-x`: Readable / writable / executable   
     - Same as Bash
-* `-z`: Size is zero
+- `-z`: Size is zero
     * `[[ -z "$file" ]]`
     * `[[ ! -s "$file" ]]`
-* `-l`: Is a symlink 
+- `-l`: Is a symlink 
     * `[[ -L "$file" ]]`
 
 An example:
@@ -314,6 +318,7 @@ print $fh "Hello!\n";
 close $fh;
 print "File written to $filename\n"
 ```
+
 - `use File::Temp qw/tempfile/;`: The `qw` stands for "quote words." It's a perl shortcut for
   space-separatesd strings.
     - So this is the same as `('tempfile')`.
@@ -324,6 +329,7 @@ print "File written to $filename\n"
 For safe concurrent writing, you can implement file locks with `flock()`.  
 File locking prevents multiple processes from writing to the same file at the same
 time (i.e., avoiding race conditions or corruption).  
+
 - It's like a mutex but for files
 - If one process locks a file, others have to wait (or fail) if they try to lock it too.  
 ```perl
@@ -332,8 +338,10 @@ flock($fh, 2) or die "Can't lock: $!";
 print $fh "Some log entry\n";
 close($fh); 
 ```
+
 - `flock($fh, 2)`: Lock the file with an exclusive lock (write lock).  
 - The 2 means "Exclusive Lock". There are others:
+
   | Number | Constant  | Meaning |
   |--------|-----------|---------|
   |   1    | `LOCK_SH` | Shared Lock (read)
@@ -350,10 +358,11 @@ In bash, this would be:
 flock -x log.lock -c 'echo "Some log entry" >> shared.log'
 ```
 This says:
-* Lock the file `log.lock` exclusively (`-x`)
-* Then run the command (`-c '...'`)
-* While that command runs, the lock is held
-* Other processes trying to `flock log.lock` will wait
+
+- Lock the file `log.lock` exclusively (`-x`)
+- Then run the command (`-c '...'`)
+- While that command runs, the lock is held
+- Other processes trying to `flock log.lock` will wait
 
 This prevents two scripts from writing to `shared.log` at the same time.  
 
@@ -400,6 +409,7 @@ You can also utilize `open` to write output to pipes.
 
 Both commands use Perl's internal `exec()` function to execute the command.  
 But, `exec()` behaves differently when it's passed a single string vs. an array (list) of items.  
+
 - When `exec()` is passed only a **single string** as the command, it uses the shell (`$SHELL`) to execute it.  
 - When `exec()` is passed an **array**, it behaves like C's `execvp()` syscall and skips
   the shell.  
@@ -447,10 +457,10 @@ close $fh;
 
 Just like with reading from a pipe (`-|`), the form you use matters:
 
-* If you pass a single string:
+- If you pass a single string:
     * Perl will invoke the shell (`sh -c "tee -a output.log"`)
     * This is less safe and can cause quoting issues or shell injection
-* If you pass a list of arguments:
+- If you pass a list of arguments:
     * Perl directly invokes the command using `execvp()` (no shell)
     * Safer and more predictable:
       ```perl
@@ -463,6 +473,7 @@ command as an array is safer.
 ```perl
 open(my $ls, '-|', 'ls', '-alh', '/tmp') or die $!;
 ```
+
 - This tells Perl:
     - Do not spawn a subshell. 
     - Fork the current Perl process.
@@ -471,15 +482,16 @@ open(my $ls, '-|', 'ls', '-alh', '/tmp') or die $!;
 This works more like how `execvp()` works in C.  
 
 This is safer than using shell pipelines (e.g., spawning subshells with `qx(ls -alh /tmp)` or ``` `ls -alh /tmp` ```):
-* Those versions use the shell (`$SHELL`) to run the command, and are basically
+
+- Those versions use the shell (`$SHELL`) to run the command, and are basically
   equivalent to `bash -c 'ls -alh /tmp'`.  
-* They involve parsing the command string, so quoting and escaping can be tricky. 
+- They involve parsing the command string, so quoting and escaping can be tricky. 
   ```perl
   qx(ls -l "$some_path"); # can break if $some_path has spaces
   ```
-* No shell parsing means no injection risk.  
-* No need to escape quotes, backslashes, or whitespace in paths.
-* No reliance on `$SHELL`
+- No shell parsing means no injection risk.  
+- No need to escape quotes, backslashes, or whitespace in paths.
+- No reliance on `$SHELL`
 
 So if you're using `open` to run the command, it bypasses the shell (avoids quoting 
 issues), and you pass arguments directly to the command.  
@@ -495,6 +507,7 @@ That's why this works:
 ```perl
 open(my $fh, '-|', 'ls', '-alh', '/tmp');
 ```
+
 - `'-|'`: Tells Perl to create a child process (a fork).  
 - The child process then does an `exec` of the given command.  
 - The parent gets a filehandle to read from the child's STDOUT.  

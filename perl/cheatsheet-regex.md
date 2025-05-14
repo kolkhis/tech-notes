@@ -8,6 +8,7 @@
 * [Special Syntax](#special-syntax) 
 
 ## Character Classes
+
 | Pattern | Meaning                         |
 |---------|----------------------------------|
 | `\d`    | Digit `[0-9]`                    |
@@ -25,6 +26,7 @@
 ---
 
 ## Quantifiers
+
 | Pattern     | Meaning                       |
 |-------------|-------------------------------|
 | `*`         | `0` or more                   |
@@ -43,6 +45,7 @@ Examples: `.*?`, `.+?`, `{1,5}?`
 ## Regex Modifiers
 Modifiers come at the end of the pattern, after the last `/`, or whatever delimiter
 is being used.  
+
 | Modifier | Meaning                                 |
 |----------|-----------------------------------------|
 | `/i`     | Case-insensitive                        |
@@ -55,6 +58,7 @@ is being used.
 ---
 
 ## Anchors
+
 | Pattern | Meaning               |
 |---------|------------------------|
 | `^`     | Start of string (or line with `/m`) |
@@ -67,6 +71,7 @@ is being used.
 ---
 
 ## Perl-Specific Special Syntax
+
 | Syntax         | Meaning                            |
 |----------------|------------------------------------|
 | `( ... )`      | Capturing group                    |

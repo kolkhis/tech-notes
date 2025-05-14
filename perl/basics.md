@@ -1,29 +1,29 @@
 # Perl Basics
 
 ## Table of Contents
-* [Getting Help](#getting-help) 
-* [Running Perl](#running-perl) 
-* [Variables](#variables) 
+- [Getting Help](#getting-help) 
+- [Running Perl](#running-perl) 
+- [Variables](#variables) 
     * [Scalar Variables](#scalar-variables) 
     * [Examples of Scalars in Perl](#examples-of-scalars-in-perl) 
         * [Scalar Operations](#scalar-operations) 
     * [Accessing Variables](#accessing-variables) 
-* [Scalar Context vs List Context with Arrays](#scalar-context-vs-list-context-with-arrays) 
+- [Scalar Context vs List Context with Arrays](#scalar-context-vs-list-context-with-arrays) 
     * [Scalar Context](#scalar-context) 
         * [List Context](#list-context) 
-* [Perl File Structure](#perl-file-structure) 
-* [Pragmas](#pragmas) 
-* [Subroutines](#subroutines) 
+- [Perl File Structure](#perl-file-structure) 
+- [Pragmas](#pragmas) 
+- [Subroutines](#subroutines) 
     * [Passing arguments to subroutines](#passing-arguments-to-subroutines) 
     * [Returning values from subroutines](#returning-values-from-subroutines) 
     * [Example subroutine: Check if a file exists](#example-subroutine-check-if-a-file-exists) 
-* [Using Arrays in Perl](#using-arrays-in-perl) 
-* [Using `Data::Dumper` to Print Data](#using-datadumper-to-print-data) 
-* [Accessing Command Line Arguments](#accessing-command-line-arguments) 
-* [Command Line Options](#command-line-options) 
-* [BEGIN and END Blocks](#begin-and-end-blocks) 
-* [File Operations](#file-operations) 
-* [Resources](#resources) 
+- [Using Arrays in Perl](#using-arrays-in-perl) 
+- [Using `Data::Dumper` to Print Data](#using-datadumper-to-print-data) 
+- [Accessing Command Line Arguments](#accessing-command-line-arguments) 
+- [Command Line Options](#command-line-options) 
+- [BEGIN and END Blocks](#begin-and-end-blocks) 
+- [File Operations](#file-operations) 
+- [Resources](#resources) 
 
 ## Getting Help
 `man perl` is available, but it is not as robust as some man pages.
@@ -85,8 +85,8 @@ Does not work with `-e`, because features are not enabled with `-e`.
 ```bash
 perl -E 'while(<>) { say uc $_ }'
 ```
-* `while(<>)` reads from STDIN
-* `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
+- `while(<>)` reads from STDIN
+- `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
 This will wait for user input and print it back in uppercase.
 
 
@@ -94,6 +94,7 @@ This will wait for user input and print it back in uppercase.
 
 ## Variables
 Types of variables in perl are:
+
 - Scalar
 - Array
 - Hash
@@ -111,6 +112,7 @@ print "$var\n"
 ```
 
 Not "technically" variables, but the same rule applies to these:
+
 - Handles
     - File Handle
     - Directory Handle  
@@ -154,7 +156,7 @@ print $array_ref->[0];     # outputs: 1
 #### Scalar Operations
 ---
 
-* Scalars can holds numbers and perform mathmatical operations.  
+- Scalars can holds numbers and perform mathmatical operations.  
   ```perl
   my $a = 10;
   my $b = 21;
@@ -162,7 +164,7 @@ print $array_ref->[0];     # outputs: 1
   print $sum;
   ```
 
-* Scalars can also holds strings, and you can perform concatenation.  
+- Scalars can also holds strings, and you can perform concatenation.  
   ```perl
   my $first = "Hello";
   my $second = "World";
@@ -171,7 +173,7 @@ print $array_ref->[0];     # outputs: 1
   ```
   Use `.` to concatenate strings in perl.  
 
-* Scalars can be evaluated to `true` or `false` for boolean operations.  
+- Scalars can be evaluated to `true` or `false` for boolean operations.  
     * Non-zero numbers and non-empty strings are `true`.  
     * Zero `0` and empty strings `""` are `false`.  
       ```bash
@@ -181,7 +183,7 @@ print $array_ref->[0];     # outputs: 1
       }
       ```
 
-* Scalar context is *the* way to get the length of an array.  
+- Scalar context is *the* way to get the length of an array.  
   ```perl
   my @colors = ('red', 'green', 'blue');
   my $count = @colors;  # get the number of elements
@@ -274,14 +276,15 @@ execution of the script.
 They're included using the `use` keyword.  
 
 Some common pragmas:
-* `strict`: Enforces stricter programming rules, like declaring variables before using them.  
+
+- `strict`: Enforces stricter programming rules, like declaring variables before using them.  
     * Helps catch typos and errors early.  
     ```bash
     use strict;
     my $var = 42;  # Without `my`, perl would throw an error
     ```
 
-* `warnings`: Outputs warnings for potentially problematic code
+- `warnings`: Outputs warnings for potentially problematic code
     * For example, if you're using an uninitialized variable.  
       ```bash
       use warnings; 
@@ -289,13 +292,13 @@ Some common pragmas:
       print $x; # warns: use of uninitialized value $x
       ```
 
-* `utf8`: Enables utf-8 encoding for the script's source code.  
+- `utf8`: Enables utf-8 encoding for the script's source code.  
   ```bash
   use utf8;
   my $str = "こんにちは"; # Japanese greeting
   ```
 
-* `autodie`: Makes file operations (e.g., `open`) throw exceptions on failure.  
+- `autodie`: Makes file operations (e.g., `open`) throw exceptions on failure.  
   ```perl
   use autodie; 
   open my $gh, '<', 'nonexistent.txt'; # dies if the file doesn't exist
@@ -307,6 +310,7 @@ You can specify what to load from a pragma by giving it an argument.
 ```perl
 use charnames ":full";
 ```
+
 - `":full"`: This is a pragma argument, or "tag."  
     - It's not normal Perl syntax, it's now certain pragmas (`open`, `charnames`,
       `strict`, `warnings`) allow you to configure what they load or activate.  
@@ -409,15 +413,16 @@ my $input = shift;
 print "First argument: $input\n";
 print "Remaining arguments: ", Dumper(\@ARGV); 
 ```
-* `Data::Dumper`: A perl module that converts complex data structures (arrays,
+
+- `Data::Dumper`: A perl module that converts complex data structures (arrays,
   dictionaries/hashes, etc) into a human-readable string.  
     * Regular `print` statements won't give you the output, it will flatten this data.  
-* `\@ARGV`: The `\` is used to pass a reference to the array `@ARGV`.  
+- `\@ARGV`: The `\` is used to pass a reference to the array `@ARGV`.  
     * This creates a reference so that `Dumper` knows you're passing a whole array, not 
       the contents of the array.  
 
 
-* The difference between `$ARGV[n]` and `@ARGV` comes from how variables are accessed in Perl:
+- The difference between `$ARGV[n]` and `@ARGV` comes from how variables are accessed in Perl:
     * `@ARGV`: Refers to the entire array. I.e., all the command-line arguments.
     * `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
     * `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
@@ -426,8 +431,9 @@ print "Remaining arguments: ", Dumper(\@ARGV);
           multiple files.  
 
 Accessing elements in arrays:
-* `$` = Single value (scalar).
-* `@` = Full array.
+
+- `$` = Single value (scalar).
+- `@` = Full array.
 
 To output an array:
 If we pass an array to `Data::Dumper` without a reference (`\@`), then the output will look different:
@@ -461,10 +467,11 @@ Then at the command line:
 
 ## Accessing Command Line Arguments
 You can access CLI arguments from a script in a couple different ways.
-* `@ARGV`: An array that holds all the CLI arguments.  
+
+- `@ARGV`: An array that holds all the CLI arguments.  
     * Stands for "Argument Vector."
     * Using `$ARGV[0]` will not modify the `@ARGV` array.  
-* `shift`: Command that **removes and returns** the first element from `@ARGV`.  
+- `shift`: Command that **removes and returns** the first element from `@ARGV`.  
     * If called inside a subroutine (function), it pulls from the default array `@_`.  
     * Just like `shift` in bash.  
 
@@ -475,29 +482,29 @@ You can access CLI arguments from a script in a couple different ways.
 ## Command Line Options
 Some CLI arguments for perl:
 
-* `-p`: Places a printing loop around your command so that it acts on each line of standard input.
+- `-p`: Places a printing loop around your command so that it acts on each line of standard input.
     * Use to loop over the contents of a file line by line and output every line after being processed.  
     * This is similar to what `awk` does.  
 
-* `-e`: Allows you to provide the perl script as an argument rather than in a file.
+- `-e`: Allows you to provide the perl script as an argument rather than in a file.
     * Identical to `-c` in Python or Bash.  
 
-* `-i`: Edit the file in place, making a backup of the original.
+- `-i`: Edit the file in place, making a backup of the original.
     * Allows you to modify files without `{copy, delete-original, rename}`.
 
-* `-n`: Places a non-printing loop around your command.
+- `-n`: Places a non-printing loop around your command.
     * Use to loop over the contents of a file line by line and NOT output anything
       other than what you specify.  
-* `-w`: Activates some warnings. 
+- `-w`: Activates some warnings. 
     * Someone said "Any good Perl coder will use this."
 
-* `-d`: Run the command under the Perl debugger.  
+- `-d`: Run the command under the Perl debugger.  
 
-* `-t`: Taint mode. Treats **certain** operations as "tainted" code.  
+- `-t`: Taint mode. Treats **certain** operations as "tainted" code.  
     * It treats any external input (i.e., CLI args) as tainted until it's sanitized.  
     * Use to beef up Perl security, e.g., when running as setuid scripts.  
 
-* `-T`: Taint mode, for a whole script.
+- `-T`: Taint mode, for a whole script.
     * Doesn't just use taint mode for certain operations, it treats **all** external data as taineted until sanitized.   
     * This is used to prevent bad actors for performing destructive operations. 
       ```bash
@@ -530,24 +537,25 @@ Example: print the total word count of a file in the `END` block
 ```bash
 perl -ne 'END { print $t } @w = /(\w+)/g; $t += @w' file.txt
 ```
-* `-n`: Loop over the file, line by line.  
+
+- `-n`: Loop over the file, line by line.  
     * Same as `while(<>)`
-* `-e`: Allows execution of the code provided directly as a string.  
+- `-e`: Allows execution of the code provided directly as a string.  
     * Similar to `-c` in other tools.  
-* `END { print $t }`
+- `END { print $t }`
     * The `END` block is executed once after all lines of the file have been processed.  
     * It prints the value of `$t`, which is the total word count.  
-* `@w = /(\w+)/g`:
+- `@w = /(\w+)/g`:
     * `@w` is an array.
     * `/(\w+)/g`: Regex that matches every `word` in the current line.  
         * `\w+`: Matches one or more word characters (letters, digits, or underscores).  
         * `g`: Global modifier. Ensures all matches in the line are captured.  
     * For each line, `@w` contains all words found in that line.  
-* `$t += @w`: 
+- `$t += @w`: 
     * `$t`: Scalar variable, initialized to `0` by default.  
     * `@w`: In scalar context, gives the number of elements in the array (words).  
     * `$t` holds the total number of words across all lines.  
-* `file.txt`: The input file.  
+- `file.txt`: The input file.  
 
 ---
 
@@ -556,6 +564,7 @@ Subshells are a thing in perl. You can capture the output of shell commands.
 
 In order to achieve the same result as `$(...)` (bash) in perl, you can do one of two
 things:
+
 - Wrap a shell command in backticks(``` `cmd` ```)
 - Use the [`qx` operator](./operators.md) (`qx/cmd/` or `qx(cmd)`)
 
@@ -581,6 +590,7 @@ In perl, we can use the `or` operator along with the `die` function to handle er
 ```perl
 open(my $fh, '<', 'file.txt') or die $!;
 ```
+
 - This attempts to open the file `file.txt` in readonly mode.  
 - If it fails, it will trigger the `or` (since the exit code of the `open` will be non-zero).
 - `die` will exit with an error message. 
@@ -588,6 +598,7 @@ open(my $fh, '<', 'file.txt') or die $!;
 
 
 ## Resources
-* [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
+
+- [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
 
 

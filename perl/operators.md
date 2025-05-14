@@ -155,6 +155,7 @@ You'll mostly only need to use references
 Referencing is done mainly on arrays, hashes, and code (subroutines).  
 
 Shorthand for these references are:
+
 - arrayref
 - hashref
 - coderef
@@ -182,7 +183,7 @@ There are two ways to dereference in Perl:
           ```
         - Also calls methods on objects (in OOPerl).  
 
-* Sigil (`@{}`/`${}`/`&{}`) syntax (or "manual dereferencing"). Not as easy or readable as `->`.  
+- Sigil (`@{}`/`${}`/`&{}`) syntax (or "manual dereferencing"). Not as easy or readable as `->`.  
     - `&{ ... }` syntax dereferences a **coderef**
     - `@{ ... }` syntax dereferences a **arrayref**
     - `%{ ... }` syntax dereferences a **hashref**
@@ -194,6 +195,7 @@ There are two ways to dereference in Perl:
 
 The table below shows how to use sigil syntax to dereference different types of
 references:
+
 | Ref Type | Sigil Syntax | Meaning
 |-|-|-
 | Array     | `@{ $arrayref }`    | Dereference to full array
@@ -204,6 +206,7 @@ references:
 | Hash val  | `${ $hashref }{a}`  | Dereference, then access key
 
 Or, more condensed:
+
 | Sigil |   Used for |  Example
 |-|-|-
 | `$`   | Scalars    |  `${ $ref }`, `${ $ref }[0]`

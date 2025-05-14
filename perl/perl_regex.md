@@ -15,6 +15,7 @@ variable (holds the current line) and the `lc` (lowercase) perl function.
 
 ## Special Variables
 You can reference capture groups (much like `sed`) with variables:
+
 - `$&`: Matched string in last regex.  
     - Holds the whole matched string from the last regex.  
     - Like `${BASH_REMATCH[0]}`
@@ -74,6 +75,7 @@ if ($text =~ /foo(?!\d+)/) {
 
 Lookbehinds are very useful.  
 But:
+
 - They must have a fixed width (can't be variable-width).
 - That means they can not use certain multis (like `*`, `+`, etc).  
   ```perl
@@ -116,6 +118,7 @@ while (<$fh>) {
     print "Valid: $_\n";
 }
 ```
+
 - `chomp` removes trailing `$/` characters (input record separator, default newline)
     - If `$/` is default, removes trailing newlines.  
 
@@ -126,6 +129,7 @@ Perl has pretty much the same character classes as vim, sed, etc.
 ### Bracketed Classes (sets)
 Bracketed classes (sets) can specify ranges of characters.  
 You can specify multiple ranges in a set.  
+
 - `[abc]`: Matches `a`, `b`, or `c` (a standard set)
 - `[a-z]`: Matches any letter `a-z` (lowercase).
 - `[A-Z]`: Matches any letter `a-z` (uppercase).
@@ -134,6 +138,7 @@ You can specify multiple ranges in a set.
 
 ### Standard POSIX-style Character Classes
 The uppercase counterparts match the opposite of the lowercase character classes.  
+
 - `\d`: Digits `[0-9]`
     - `\D`: Non-digits (`[^0-9]`)
 - `\w`: Word character (`[a-zA-Z0-9_]`)
@@ -159,6 +164,7 @@ The `\p` class is used in conjunction with `{Unicode Class}` when using the `/u`
 Quantifiers are a way to specify how many of a character to match.  
 
 Basic quantifiers:
+
 - `*`: Zero or more
 - `+`: One or more
 - `?`: Zero or one
@@ -248,6 +254,7 @@ If there is a question mark at the start of the group `(?...)`, then it is a
 
 
 Formatted as a table:
+
 | Syntax         | Meaning                            |
 |----------------|------------------------------------|
 | `( ... )`      | Capturing group                    |
@@ -289,6 +296,7 @@ perl -CSDA -pi \
     -e "s/${APOSTRAPHE}/'/g" \
     "${FILES[@]}"
 ```
+
 - `\x{...}`: These are the hex escape codes for the characters.  
     - If you try to use the characters themselves here, it won't work properly.  
 - `-CSDA`: Sets perl's I/O streams to UTF-8 instead of ascii (avoids byte confusion).  
@@ -310,6 +318,7 @@ perl -CSDA -Mutf8 -Mopen=:std,:encoding\(UTF-8\) -pi -e '
     s/\N{RIGHT SINGLE QUOTATION MARK}/'\''/g;
 ' "${FILES[@]}"
 ```
+
 - `-M`: Specify a module or pragma to load and use with the code in `-e`.  
     - `-Mutf8`: Specify the `utf8` pragma. Tells perl that the source file is UTF-8.  
         - The `utf8` pragma and makes unicode characters work correctly.  
@@ -371,6 +380,7 @@ sed -i \
 
 
 ## Resources
+
 - Unicode character resources
     - <https://unicode.org/charts/>
         - Punctuation chart: <https://unicode.org/charts/PDF/U2000.pdf>

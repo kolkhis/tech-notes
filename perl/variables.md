@@ -3,24 +3,25 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
 
 
 ## Table of Contents
-* [List of Special Variables](#list-of-special-variables) 
+- [List of Special Variables](#list-of-special-variables) 
     * [Advanced/Less Common Special Vars](#advancedless-common-special-vars) 
-* [`$/` and `$\`](#-and-) 
+- [`$/` and `$\`](#-and-) 
     * [`$/` - Input Record Separator](#---input-record-separator) 
         * [`$/` (Input Record Separator) Examples](#-input-record-separator-examples) 
     * [`$\` - Output Record Separator](#---output-record-separator) 
         * [`$\` (Output Record Separator) Examples](#-output-record-separator-examples) 
-* [Practical Usage Examples](#practical-usage-examples) 
+- [Practical Usage Examples](#practical-usage-examples) 
     * [Print the Current Line Number](#print-the-current-line-number) 
     * [Using Environment Variables](#using-environment-variables) 
     * [Showing the Last Error](#showing-the-last-error) 
     * [Auto-flushing Output with `$|`](#auto-flushing-output-with-) 
-* [Memorize These](#memorize-these) 
-* [Perl Special Variable Cheatsheet](#perl-special-variable-cheatsheet) 
+- [Memorize These](#memorize-these) 
+- [Perl Special Variable Cheatsheet](#perl-special-variable-cheatsheet) 
 
 
 
 ## List of Special Variables
+
 - `$_`: Default variable. Holds the current line when processing text or the
   default input.  
     - Most common, used in `while (<>) {...}`, `foreach`, `map`, regex, etc.
@@ -67,15 +68,17 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
 ---
 
 The difference between `$ARGV[n]` and `@ARGV` comes from how variables are accessed in Perl:
-* `@ARGV`: Refers to the entire array. i.e., all the command-line arguments.
-* `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
-* `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
+
+- `@ARGV`: Refers to the entire array. i.e., all the command-line arguments.
+- `$ARGV[0]`: Accesses a single element (scalar) from the array `@ARGV`.  
+- `$ARGV` (without `[]`, scalar context): Holds file name passed in via command line 
   arguments or stdin when used in scalar context. 
     - This will hold the filename that is currently being processed if there are
       multiple files.  
 
 
 ### Advanced/Less Common Special Vars
+
 - `$^I`: Stores the in-place edit extension (used with the `-i` flag).  
     * Like using `sed -i.bak`, perl supports the same thing.  
     - `$^I` stores the backup extension you set (`perl -p -i.bak -e '..'`).
@@ -136,6 +139,7 @@ my $file_contents = <$fh>;
 close $fh;
 print $file_contents;
 ```
+
 - `open`: Builtin perl function to open a file.
     - `my $fh`: Defines `$fh` as a file handle. Like a pointer to the opened file.
         - The `my` keyword makes it lexically scoped (only available in that block)
@@ -270,7 +274,7 @@ With `$| = 1`, the text is immediately flushed and visible on the screen without
 
 - `$_`: Current line
 - `$.`: Current line number
-* `$1`, `$2`, `$&`: Regex captures
+- `$1`, `$2`, `$&`: Regex captures
     - `$&` is the entire match, not capture groups.  
 - `$!`: Last system error
 - `@ARGV`: Command-line args
@@ -309,6 +313,7 @@ With `$| = 1`, the text is immediately flushed and visible on the screen without
 
 ## Regular Variables
 Variables have three typical data types in Perl, indicated by their [sigil](#sigils):
+
 - `$var`: Scalars
 - `@var`: Arrays
 - `%var`: Hashes
@@ -319,6 +324,7 @@ Everything is basically a string or a number.
 Variables act differently when they're in different "contexts."  
 
 There are four *main* contexts, which defines what perl wants:
+
 - Scalar: Perl wants a single value.  
 - List: A list of values.  
 - Void: Throwaway result.  
@@ -327,10 +333,11 @@ There are four *main* contexts, which defines what perl wants:
 
 Another way to look at it:  
 Context is how Perl decides what kind of value it wants from an expression.  
-* A single value: scalar context
-* A list of values: list context
-* A boolean test: boolean context (a special case of scalar)
-* A void context: the value is thrown away
+
+- A single value: scalar context
+- A list of values: list context
+- A boolean test: boolean context (a special case of scalar)
+- A void context: the value is thrown away
 
 ```perl
 $x = @array;            # Scalar context (returns number of elements)
