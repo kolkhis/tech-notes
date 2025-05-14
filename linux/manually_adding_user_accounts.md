@@ -26,6 +26,7 @@ The format of each line is as follows:
 ```bash  
 username:password:UID:GID:GECOS:home_directory:shell  
 ```
+
 * `username`: The username for the new user.  
 * `password`: The encrypted password for the user.  
     * You can leave this field empty to disable password login.  
@@ -43,6 +44,7 @@ Save and close the file after adding the user information.
 ### Create the user's home directory  
 If you specified a home directory for the new 
 user, you may need to manually create it using the `mkdir` command.  
+
 * ```bash  
   sudo mkdir /home/newuser  
   ```
@@ -51,6 +53,7 @@ user, you may need to manually create it using the `mkdir` command.
 
 After creating the home directory, make the new user the owner to allow the new user 
 to access it.  
+
 * ```bash  
   sudo chown newuser:newuser /home/newuser  
   ```
@@ -58,6 +61,7 @@ to access it.
 ### Set the user's password 
 If you left the password field empty in the `/etc/passwd` file, set a password for 
 the new user using the `passwd` command.  
+
 * ```bash  
   sudo passwd newuser  
   ```

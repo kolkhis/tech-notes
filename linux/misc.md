@@ -213,6 +213,7 @@ The consensus:
 
 ## The Three "Main" Families of Linux  
 There are three major families of Linux distributions:  
+
 * Red Hat  
 * SUSE  
 * Debian  
@@ -295,6 +296,7 @@ cat somefile | grep -n "search for this"
 ping -M do <target>  
 ```
 This `-M do` makes sure the packet does not get fragmented.  
+
 * `ping`: The basic `ping` command is used to test the connectivity between two devices 
   on a network by sending ICMP echo request packets to the target and measuring the 
   time it takes to receive an echo reply (response). 
@@ -304,6 +306,7 @@ This `-M do` makes sure the packet does not get fragmented.
 ### MTU (Maximum Transmission Unit)
 MTU stands for **Maximum Transmission Unit**, which is the largest size of a packet 
 that can be sent over a network link *without fragmentation*.  
+
 * The MTU for a network interface can be found using `ifconfig` or `ip`:  
   ```bash  
   ifconfig  
@@ -325,6 +328,7 @@ ip route
 ip r  
 ```
 The name will be something like `enp0s31f6`, or something like `eth1` on older systems.  
+
 * `en`: Indicates that it's an ethernet connection.  
 * `p0s31f6`: This is the info on the ethernet port and bus being used.  
 
@@ -346,6 +350,7 @@ The format of each line in `/etc/passwd` is as follows:
 ```bash  
 username:password:UID:GID:GECOS:home_directory:shell  
 ```
+
 * `username`: The username for the new user.  
 * `password`: The encrypted password for the user (you can leave this field empty to disable password login).  
 * `UID`: The user ID for the new user.  
@@ -681,6 +686,7 @@ lscpu | grep "MHz"
 ```bash  
 dmidecode -s system-manufacturer  
 ```
+
 * If it's a phyical system, you'll see the manufacturer (e.g., `Dell Inc.`).  
 * If it's a virtual system, you'll see some sort of virtualization:  
     * `QEMU`
@@ -689,6 +695,7 @@ dmidecode -s system-manufacturer
 ```bash  
 dmidecode  
 ```
+
 * `dmidecode` is for dumping a computer's `DMI` (`SMBIOS`) table contents in a 
   human-readable format.  
     * `SMBIOS` stands for "System Management BIOS", while 
@@ -752,6 +759,7 @@ cat /etc/passwd | awk -F: '{ print($1) }' | grep -v "nologin"
 ```bash  
 cut -d: -f1 /etc/passwd  
 ```
+
 * `-d:` sets the delimiter to `:`
 * `-f1` tells `cut` to print the first field (the username)  
 
@@ -759,6 +767,7 @@ cut -d: -f1 /etc/passwd
 ```bash  
 compgen -u | column  
 ```
+
 * This command outputs possible completions depending on the options.  
 
 
@@ -838,6 +847,7 @@ and other terminal features.
 You can use `LESS_TERMCAP_**` to add colors to `less` output in the terminal (where  
 `**` are two letters that indicate a mode).  
 Some of the modes that you can use to colorize output:  
+
 * `so`: Start standout mode  
 * `se`: End standout mode  
 * `us`: Start underlining  
@@ -864,6 +874,7 @@ export LESS_TERMCAP_se=""      # "0m"
 ```bash  
 export LESS="-FXR"  
 ```
+
 * `-F` causes less to automatically exit if the entire file can be displayed on the first screen.  
 * `-X` stops `less` from clearing the screen when it exits.   
     * Disables sending the termcap initialization and deinitialization strings to the terminal.  
@@ -1211,6 +1222,7 @@ The walrus operator `:=` is available in bash using the syntax:
 "${foo:=default_value}"
 ```
 This will only set `foo` if `foo` is either:
+
 * Unset (variable doesn't exist yet)
 * Empty (variable exists but has no value)
 
@@ -1252,6 +1264,7 @@ echo "VAR"              # Output: default (value is updated)
 
 ## Checking the Operating System with the `OSTYPE` Variable  
 Use `OSTYPE` instead of `uname` for checking the operating system. 
+
 * This is an environment variable. On Ubuntu Server (or any Linux distro), it will have the value `linux-gnu`.  
 * This saves you from making an external call to the shell (with `uname`).  
 
@@ -1259,6 +1272,7 @@ Use `OSTYPE` instead of `uname` for checking the operating system.
 ## Patching Linux Systems  
 How you go about patching/updating systems in Linux depends on if the node is  
 stateful or stateless. 
+
 * A stateful node retains its state, data, and specific configurations across session  
   and reboots.  
 * A stateless node is ephemeral. This means that it does not retain state, data, or  
@@ -1335,6 +1349,7 @@ Clearing cache, memory, and swap space on Linux is done with a special file:
 The `drop_caches` file is used to clean cache without killing any applications.  
 
 This file is used by `echo`ing a number between `1` and `3` into the file.  
+
 * Clear PageCache only:  
   ```bash  
   sudo sh -c 'echo 1 > /proc/sys/vm/drop_caches'  
@@ -1368,6 +1383,7 @@ To clear the buffer cache, use `sync` before clearing the PageCache.
 sudo sync && echo 1 > /proc/sys/vm/drop_caches  
 ```
 This is both clears the PageCache and the buffer cache.  
+
 * `sync`: Flushes the filesystem buffers to disk.  
     * It synchronizes cached writes to the disk.  
 
@@ -1425,6 +1441,7 @@ Easy, free, secure, and flexible.
 ---
 
 OPNsense is commonly used for:
+
 * Home network firewalls
 * Enterprise gateway firewalls
 * VPN servers
@@ -1434,6 +1451,7 @@ OPNsense is commonly used for:
 ---
 
 Some of the features of OPNsense:
+
 * Firewall and security:
     * Uses `pfSense`'s `pf` (packet fileter) for robust and efficient packet filtering.  
     * Supports statful packet inspection; tracks the state of connections and applies
@@ -1481,6 +1499,7 @@ print
 # Quit parted
 quit
 ```
+
 * `mkpart primary 0% 100%`
     * `mkpart`: Make partition. Creates a new partition on the disk.  
     * `primary`: Specify the type of partition.   
@@ -1550,6 +1569,7 @@ ClamAV is in the `apt` package repository, for Debian-based systems.
 sudo apt update 
 sudo apt install clamav clamav-daemon
 ```
+
 * `clamav`: The main ClamAV package.
 * `clamav-daemon`: The ClamAV daemon.  
 
@@ -1565,6 +1585,7 @@ Run a scan against a directory, and time it:
 ```bash
 time clamscan -i -r --log=/var/log/clamav/clamav.log /home/
 ```
+
 * `-i`/`--infected`: Only show infected files.  
 * `--remove`: Automatically remove infected files.  
 * `-r`/`--recursive`: Recursively scan directories.  
@@ -1595,6 +1616,7 @@ echo "Directories: $scanDirectories Files: $scanFiles Infected: $infectedFiles T
 exit 0
 ```
 To run the script daily:
+
 * Copy the script into `/etc/cron.daily/`
 * Set it to run in the `crontab` (cron table)
   ```bash
@@ -1629,6 +1651,7 @@ timeout 5 ssh user@hostname
 timeout --preserve-status 5 ssh user@hostname  # Exit with the same status as ssh
 timeout -s SIGINT 5 ssh user@hostname
 ```
+
 * `--preserve-status`: Exit `timeout` with the same status as the command.  
 * `-s`/`--signal`: Specify the signal to exit with if a timeout occurs.  
 
