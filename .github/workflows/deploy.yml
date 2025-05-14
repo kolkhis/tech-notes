@@ -3,7 +3,7 @@ name: Deploy notes into a blog on GitHub Pages with mkdocs
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "test-branch"]
+    branches: ["main"]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
