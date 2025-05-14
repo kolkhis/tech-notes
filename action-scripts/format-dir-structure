@@ -43,7 +43,7 @@ copy-to-docs() {
 
         perl -pi -e '
         print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*]|\d\.)|\n) /;
-        $prev = $_' "./docs/$FILE"
+        $prev = $_' "$FILE"
         # Recursive copying is copying symlinks
         if [[ ! -h $FILE ]]; then
             # cp -r "$FILE" ./docs
