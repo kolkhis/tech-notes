@@ -104,13 +104,17 @@ in the current directory, use the syntax:
 ```vim  
 :vim /pattern/ *  
 ```
+
 To search recursively:  
+
 * Note: You may need to enable the `globstar` in your shell for this to work.  
+
 ```vim  
 :vim /pattern/ **/*  
 ```
 This uses the `globstar` feature in bash.  
 The recursive searching goes up to 100 directories deep.  
+
 * `:vimgrep` puts all matching files in the `quickfix list`/`error list`.  
     * Using `:lvimgrep` (or `:lvim`) will use the `location list` instead.  
 * Just like in substitutions, the `/` can be swapped for another char (i.e., `;`)  
@@ -143,6 +147,7 @@ Another example:
 :'<,'>norm ^i* [ ] <Esc>  
 ```
 Relevant hotkey(s):  
+
 * `gv`: Reselect last visual selection  
 
 
@@ -170,6 +175,7 @@ if v:version > 704 || (v:version == 704 && has('patch401'))
 
 ## History Tables  
 There are actually five history tables:  
+
 * one for `:` commands  
 * one for search strings  
 * one for expressions  
@@ -183,6 +189,7 @@ Using:
 ```vim  
 :[range]ret[ab][!] [new_tabstop]  
 ```
+
 * If there's no tabstop size or it's zero, Vim uses `tabstop`.  
 * With `!`, Vim also replaces strings of only normal spaces with tabs where appropriate.  
 * With `expandtab` on, Vim replaces all tabs with the appropriate number of spaces.  
@@ -409,6 +416,7 @@ Debugging:
   
 Here is a table representation of the different 
 mapping mode letters for keymaps:  
+
 Mode Letter|Regular|Non-recursive|  Removing |      Modes                    |
 |---|-------|------------|------------|---------------------------------|
 | - | :map  |  :noremap  |   :unmap   |   Normal, Visual, Select, Operator-pending  |
@@ -425,6 +433,7 @@ Mode Letter|Regular|Non-recursive|  Removing |      Modes                    |
 
 When put into practice, this graph may be more helpful to identify  
 which type of mapping you need:  
+
 | Command mode:  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
 |----------------|------|-----|-----|-----|-----|-----|------|------|
 | [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
@@ -490,6 +499,7 @@ Movement keys in this mode are the cursor keys,
 ## Recursive Macros  
 To create a recursive macro, you need to first record the macro you want to repeat.  
 For this example, we'll be using the `a` key as a macro register.  
+
 1. Press `q` then another key to start recording to that macro register.  
     * e.g., `qa` will record to the `a` macro register.  
 1. Perform the actions that you want to repeat.  
@@ -566,6 +576,7 @@ command! MakeTags !ctags -R .
 
 ### Command Mode Editing  
 Or Ex mode editing.  
+
 * `c_CTRL-z` will show all Ex commands in autocomplete.  
 * `c_CTRL-u` will remove all the text between the cursor and the beginning of the command (to the `:`)  
 * `c_CTRL-p`/`c_CTRL-n` will insert the last command executed / cycle through command history.  
@@ -574,6 +585,7 @@ Or Ex mode editing.
 * `c_CTRL-e` will put cursor at the end of the line.  
 
 Special words for command mode (can be used with `expand()`):  
+
 * `<cfile>`: is replaced with the path name under the cursor (like what `gf` uses)  
 * `<cword>`: is replaced with the word under the cursor (like `star`)  
 * `<cWORD>`: is replaced with the WORD under the cursor (see `WORD`)  
@@ -583,6 +595,7 @@ Special words for command mode (can be used with `expand()`):
     which this autocommand was executed.  
 
 Paste the contents of a register into the command line:  
+
 * `CTRL-R w`: Pastes the contents of the `w` register into the command line (can be any register).  
 * Special Registers for `<C-r>`/`CTRL-R`:  
     * `CTRL-F`:  the Filename under the cursor  
@@ -599,6 +612,7 @@ Paste the contents of a register into the command line:
 > `:h :;`: Using semicolons vs commas  
 
 With cmds that accept ranges, lines can be separated with commas or semicolons (`,`/`;`)    
+
 * When separated with `;` the cursor position will be set to the match before interpreting the next  
   line specifier:  
   ```vim  
@@ -628,6 +642,7 @@ With cmds that accept ranges, lines can be separated with commas or semicolons (
 
 ### Easy Searching  
 > Most of these only work when `incsearch` is set.  
+
 * `/_CTRL-L` will select one character to the right in search mode, adding it to the search  
 * `/_CTRL-G` & `/_CTRL-T` will cycle through the matches for the current search pattern  
 
@@ -677,6 +692,7 @@ Browse the list of options with:
 
 ### Undo Options  
 See the undo list with `:undol[ist]` (only contains metadata).  
+
 * `undolevels`: maximum number of changes that can be undone  
     * (global or local to buffer)  
     * `set ul=1000`  
@@ -724,6 +740,7 @@ moves to the next spot, and then calls itself again.
 It will run recursively until it encounters an error.  
 
 This could be 
+
 * Trying to move past the end of the buffer.  
 * Finding no matches for a search.  
 * Search hitting the end of buffer if `nowrapscan` is set.   
@@ -748,14 +765,14 @@ can add or remove words from the wordlist used for:
 :setlocal spell spelllang=en_us  
 ```
 
-I find gi helpful and didn’t use it for the longest time.  
+`gi` is helpful, didn’t use it for the longest time.  
 Also `<c-a>` and `<c-d>` in Ex mode for autocompleting all strings or showing a list (when you don’t set list in wildmode).  
-I think :~ is not so common either.  
-I never use virtual replace mode gR.  
+I think `:~` is not so common either.  
+I never use virtual replace mode `gR`.  
 
-Some commands I do use quite often that might be less common are `:@“` to run an ex command that I copied from some buffer,  
- mainly for testing changes to my vimrc, `@:` to rerun the last ex command  
-  (I abuse makeprg and use make to do a lot of testing, and sometimes I need to repeat lest run one script to test against another).  
+Some commands that might be less common are `:@"` to run an ex command that I copied 
+from some buffer, mainly for testing changes to my vimrc, `@:` to rerun the last ex 
+command  (abuse `makeprg` and use `:make` to do testing).  
 I don’t think going into ex mode via `Q` is too common, but `q:` is handy for modifying ex history.  
 But I don’t know, maybe everyone else uses these regularly, I guess it depends on your work flow.  
 
@@ -763,13 +780,15 @@ But I don’t know, maybe everyone else uses these regularly, I guess it depends
 
 
 ### Function author for a quick search type thing  
-He wrote an operator mapping activated by <leader>/ that takes  
+He wrote an operator mapping activated by `<leader>/` that takes  
 the result of the motion and sets the search register to it.  
 
-For example, hitting <leader>/i( will search for the string currently in the parentheses where the cursor is.  
+For example, hitting `<leader>/i(` will search for the string currently in the 
+parentheses where the cursor is.  
 
-he's on a mobile right now so can't share it, but grab any of your existing mappings for o mode and just set @/ to the captured text.  
-For extra fun, replace all whitespace with \s+ to make it even more useful so hitting <leader>/i' inside 'a b' will match 'a b', also.  
+he's on a mobile right now so can't share it, but grab any of your existing mappings 
+for `o` mode and just set `@/` to the captured text.  
+For extra fun, replace all whitespace with `\s+` to make it even more useful so hitting `<leader>/i'` inside `'a b'` will match `'a b'`, also.  
 
 ```vim  
 " Defines an operator (<Leader>/) that will search for the specified text.  
@@ -807,6 +826,7 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 
 
 ### Help Sections to Read Up On  
+
 * `:h various.txt`:  
 * `:h filter`:  
 * `:h redir`:  
@@ -819,7 +839,13 @@ nnoremap <leader>/ :set opfunc=SetSearch<cr>g@
 
 
 ## Random Stuff  
+
+```md
 Using a <Del> in markdown will strikethrough all subsequent lines </Del>  
+```
+
+Using a <Del> in markdown will strikethrough all subsequent lines </Del>  
+
 Empty filename for `%` or `#` only works with `:p:h`
 
 

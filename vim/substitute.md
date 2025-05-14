@@ -46,6 +46,7 @@ This is called the "substitute string" in the docs.
 ## Special Characters in Substitutions
 There are a few special characters that you can use in substitutions.  
 When used in a substitution (`:s/`)
+
 * `&`: Keep the flags from the previous substitute.  
     * Use in the flags to use the same flags as the last substitution.  
       ```vim

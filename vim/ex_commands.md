@@ -57,19 +57,20 @@ Quickref:
 ## Line Numbers in the Command Line
 
 Line numbers may be specified with special characters:
-| Character | Description
-|-|-
-| `{number}` | an absolute line number  
-| `.` | the current line			  
-| `$` | the last line in the file		  
-| `%` | equal to 1,$ (the entire file)		  
-| `'t` | position of mark t (lowercase)		  
-| `'T` | position of mark T (uppercase); when the mark is in another file it cannot be used in a range
-| `/{pattern}[/]` | the next line where `{pattern}` matches
-| `?{pattern}[?]` | the previous line where `{pattern}` matches
-| `\/` | the next line where the previously used search pattern matches
-| `\?` | the previous line where the previously used search pattern matches
-| `\&` | the next line where the previously used substitute pattern matches
+
+| Character | Description |
+|-|-|
+| `{number}` | an absolute line number  |
+| `.` | the current line			  |
+| `$` | the last line in the file		  |
+| `%` | equal to 1,$ (the entire file)		  |
+| `'t` | position of mark t (lowercase)		  |
+| `'T` | position of mark T (uppercase); when the mark is in another file it cannot be used in a range |
+| `/{pattern}[/]` | the next line where `{pattern}` matches |
+| `?{pattern}[?]` | the previous line where `{pattern}` matches |
+| `\/` | the next line where the previously used search pattern matches |
+| `\?` | the previous line where the previously used search pattern matches |
+| `\&` | the next line where the previously used substitute pattern matches |
 
 
 ## Filter
@@ -579,6 +580,7 @@ The file name modifiers can be used after
 ## Examples  
 
 Examples, when the file name is `src/version.c`, & current dir `/home/mool/vim`:  
+
 |   Modifier              |     End Result                      |
 |-------------------------|-------------------------------------|
 |   `:p`                  |   `/home/mool/vim/src/version.c`    |
@@ -598,6 +600,7 @@ Examples, when the file name is `src/version.c`, & current dir `/home/mool/vim`:
 |   `:p:gs?/?\\?`         |   `\home\mool\vim\src\version.c`    |
 
 Examples, when the file name is `src/version.c.gz`: 
+
 |   Modifier              |   End Result                      |
 |-------------------------|-----------------------------------|
 |     `:p`                | /home/mool/vim/src/version.c.gz   |
@@ -618,6 +621,7 @@ The main commands you'll use are `:Run`, to run the program, and
 `:Arguments` to set the arguments.  
 
 These are the Ex commands for *running* Gnu Debugger (gdb):  
+
 | Command               |       Effect                                                  |
 |-----------------------|---------------------------------------------------------------|
 | `:Run [args]`         | run the program with `[args]` or the previous arguments       |
@@ -657,6 +661,7 @@ These are the Ex commands for *running* Gnu Debugger (gdb):
 
 
 ### Other commands 
+
 | Command   |       Effect                              |
 |-----------|-------------------------------------------|
 | `:Gdb`    | Jump to the gdb window.  

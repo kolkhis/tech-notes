@@ -25,6 +25,7 @@ Linux supports RAID through the `mdadm` utility, which allows you to create, man
 
 ## RAID Levels  
 RAID has 5 common levels:  
+
 * RAID 0 - Striping 
 * RAID 1 - Mirroring  
 * RAID 5 - Striping with Parity 
@@ -69,6 +70,7 @@ To create a RAID array, the general command syntax is
 ```bash  
 sudo mdadm  --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc  
 ```
+
 * `--create`: Specifies that you're creating a new RAID array.  
 * `/dev/md0`: The name of the new RAID device. It will live under `/dev/`.  
 * `--level=1`: Specifies the RAID level. In this instance, RAID 1 (mirroring).  

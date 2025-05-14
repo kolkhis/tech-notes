@@ -25,6 +25,7 @@ The basic syntax for an ANSI color control sequence is:
 ```bash  
 printf "\e[<STYLE_CODE>m"
 ```
+
 * `\e` represents the escape character, which begins the sequence.  
 * `<STYLE_CODE>` is a number (or series of numbers separated by semicolons) that specifies the color or style.  
 * `m` indicates the end of the sequence.  
@@ -32,6 +33,7 @@ printf "\e[<STYLE_CODE>m"
 ## Quickref
 
 Colors:
+
 | Number| Color
 |-|-
 |  `0`  |   black
@@ -45,6 +47,7 @@ Colors:
 
 
 ANSI codes:
+
 | Number | Description
 |-|-
 | 0      |  clear
@@ -94,6 +97,7 @@ show_cursor() { printf "\e[?25h"; }
 The foreground (`30-37`) and background (`40-47`) colors use 8 "standard" colors.  
  
 The 8 standard colors are:  
+
 * `0`: Black  
 * `1`: Red  
 * `2`: Green  
@@ -116,6 +120,7 @@ I generally format the style code like this:
 ```bash  
 printf "\e[<TEXT_STYLE>;<COLOR_MODE>;<COLOR>]"  
 ```
+
 * `<TEXT_STYLE>` is a number that specifies the text style (`1`-`7` or `0`).  
     * There can be multiple text styles, separated by semicolons.  
 * `<COLOR_MODE>` will specify the color mode (i.e., if using 256-color).  
@@ -127,6 +132,7 @@ printf "\e[<TEXT_STYLE>;<COLOR_MODE>;<COLOR>]"
 ```bash  
 printf "\e[1;5;31;40m---Testing a color code---\e[0m"  
 ```
+
 * `\e[`: The start of the sequence  
     * This can also be `\033[`
 * `1;5;`: Specifies bold and blinking text (styles `1-7`))  
@@ -142,8 +148,8 @@ printf "\e[1;5;31;40m---Testing a color code---\e[0m"
 
 ### 256-colors  
 
-38; indicates "foreground"  
-5; indicates "256-color"  
+`38;` indicates "foreground"  
+`5;` indicates "256-color"  
 ```bash  
 SYNTAX="\e[38;5;${COLOR_CODE}m"  
 # or, if used in your prompt customization:  

@@ -46,6 +46,7 @@ allow `[++opt]` and `[+cmd]` (see help pages).
 
 ## Commands for Manipulating the Argument List  
 Commands ending with a bang (`!`) usually discard changes to the current buffer.  
+
 | **Command**                | **Short Name**                | **Effect**                |
 |----------------------------|----------------------------|------------------------------|
 |  `:args`                   |  `:ar`              | Print the argument list.     |  
@@ -58,6 +59,7 @@ Commands ending with a bang (`!`) usually discard changes to the current buffer.
 |  `:argdedupe`              |  `:argded`          | Remove duplicate filenames from arglist.  |  
  
 ## Commands for Using the Argument List to Edit Files  
+
 | **Command**                | **Short Name**                | **Effect**                |
 |----------------------------|----------------------------|------------------------------|
 |  `[ct]argument[!] [ct]`    |  `:argu [ct]`       | Edit file `ct` (or current entry).  |  
@@ -92,6 +94,7 @@ current argument. Then, these commands result in:
 |  `:$argadd x` |     `a b c x`         | Adds to the end of the list  |  
 
 And after the last one:  
+
 |    Command      |  New Argument List | **Effect**                                      |
 |-----------------|--------------------|-------------------------------------------------|
 |  `:+2argadd y`  |  `a b c x y`       | Add **after** the current index (`b` / 1), + 2  |  

@@ -51,6 +51,7 @@ eval.c 40 ~
     * Can provide a `count` to close multiple tab pages. (`:tabclose {count}`)
 
 Examples:
+
 | Command        |  Description
 |-|-
 | `:-tabclose`   |  Close the previous tab page
@@ -68,6 +69,7 @@ Examples:
         * `:tabonly {count}` closes all tab pages except `{count}`
 
 Examples:
+
 | Command        |  Description
 |-|-
 | `:.tabonly`   |  Close all tabs except current tab  

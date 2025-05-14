@@ -64,6 +64,7 @@ Now you can call `@a` and it will repeat.
 ## Recursive Macros (more detailed)  
 To create a recursive macro, you need to first record the macro you want to repeat.  
 For this example, we'll be using the `a` key as a macro register.  
+
 1. Press `q` then another key to start recording to that macro register.  
     * e.g., `qa` will record to the `a` macro register.  
 1. Perform the actions that you want to repeat.  
