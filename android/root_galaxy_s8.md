@@ -1,8 +1,7 @@
-### Steps to Root Samsung Galaxy S8:
+### Steps to Root Samsung Galaxy S8
 
 #### Step 1: Backup Data
-
-Even though you mentioned you don't have important data on the device, it's always good to double-check.
+If you need to.  
 
 #### Step 2: Check Bootloader Status and Unlock It
 
@@ -41,26 +40,28 @@ Once your device is rooted, you can install Termux from the Google Play Store an
 
 #### tl;dr
 
-To root your Samsung Galaxy S8, you'll need to unlock the bootloader, install ADB and Fastboot, flash a custom recovery like TWRP, and then use Magisk to root the device.  
-Finally, you can install Termux for root access.
+Unlock the bootloader, install ADB and Fastboot, flash a custom recovery like TWRP, and then use Magisk to root the device.  
+Install Termux for root access.
 
-#### Questions to Consider:
+#### Questions
 
 * What is ADB and Fastboot?
-    
-    * Answer: ADB (Android Debug Bridge) and Fastboot are command-line tools used for interacting with Android devices. ADB is used for debugging and Fastboot is used for flashing firmware.
+    * ADB (Android Debug Bridge) and Fastboot are command-line tools used for interacting with Android devices. ADB is used for debugging and Fastboot is used for flashing firmware.
+
 * What is Magisk?
-    
-    * Answer: Magisk is a tool that provides root access and allows you to modify the system without altering system partitions.
+    * Magisk is a tool that provides root access and allows you to modify the system without altering system partitions.
+
 * What is Termux?
-    
-    * Answer: Termux is a terminal emulator for Android that allows you to run a Linux distribution on your device.
+    * Termux is a terminal emulator for Android that allows you to run a Linux distribution on your device.
 
 
 
 
 ## Determining TWRP Version
-To determine which version of TWRP (Exynos or Snapdragon) you should download for your Samsung Galaxy S8, you need to know which chipset your device is using. Samsung Galaxy S8 models are released with different chipsets in different regions: Exynos and Snapdragon. Here's how you can find out which chipset your Galaxy S8 has:
+To determine which version of TWRP (Exynos or Snapdragon) you should download for 
+your Samsung Galaxy S8, you need to know which chipset your device is using. Samsung 
+Galaxy S8 models are released with different chipsets in different regions: Exynos 
+and Snapdragon. Here's how you can find out which chipset your Galaxy S8 has:
 
 ### Method 1: Check the Model Number
 

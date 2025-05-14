@@ -13,25 +13,24 @@ EXCLUDE_DIRS=(
     "ai"
     "proxmox"
     "skilstak"
-    "skilstak/beginner_boost_week"
     "pi"
     "nix"
     "api"
     "killercoda"
     "android"
-    "product_manager"
-    "security_architect"
-    "design"
+    "api/product_manager"
+    "api/security_architect"
+    "api/design"
     "chatgpt_prompts"
-    "flipper"
     "hax/htb"
     "hax/thm"
     "linux/mint"
-    "lfcs"
+    "linux/lfcs"
     "linux/labs"
     "linux/labs/linux"
     "linux/labs/hashicorp"
     "aws/cloud_quest"
+    ""
 )
 
 generate_mkdocs_header() {
@@ -56,7 +55,6 @@ features:
 
 nav:
   - Home: index.md
-  - Notes:
 EOF
 }
 
@@ -67,7 +65,7 @@ sanitize_title() {
 
 generate_nav_entries() {
     local base_dir="$1"
-    local indent="    "
+    local indent="  "
 
     # find "$base_dir" -type d | sort | 
     while read -r dir; do
@@ -75,7 +73,7 @@ generate_nav_entries() {
 
         # Skip excluded dirs and pwd
         # [[ -z "$rel_dir" || "$rel_dir" == "." ]] && continue
-        [[ "${EXCLUDE_DIRS[*]}" =~ $rel_dir || "$dir" == "$base_dir" ||
+        [[ "${EXCLUDE_DIRS[*]}" =~ [[:space:]]${rel_dir}[[:space:]] || "$dir" == "$base_dir" ||
                 -z "$rel_dir" || "$rel_dir" == "." ]] && continue
 
         # for ex in "${EXCLUDE_DIRS[@]}"; do
