@@ -174,7 +174,6 @@ as `kcat`).
 You can set up Kafka logs to be picked up by Promtail and sent to Loki.  
 It can also be integrated with other monitoring stacks.  
 
-
 TODO: Finish this section on setting up kafka
 
 

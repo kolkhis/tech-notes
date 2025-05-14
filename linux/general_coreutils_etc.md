@@ -22,6 +22,7 @@
 
 
 `man` sections:
+
 | Section | Description
 |-|-
 | `1` | Executable programs or shell commands
@@ -82,21 +83,24 @@
 ### Cool Vim Tips/Tricks
 
 Registers:
+
 * `"tyy` <- yank line to register t  
 * `@t` <- play register as macro  
 
 Macros:
+
 * `q[char]` <- start recording a macro in the [char] register. q again to stop recording.  
 * `@[char]` <- play the macro  
 
 Vim Filters:
+
 * `:.![cmd]` <- use the current line as stdin for `[cmd]`, stdout on current line  
 * `:%! [cmd]` <- use the entire file as stdin for `[cmd]`, stdout on current line
 * Pressing `!!` in normal mode will automatically start a filter command
   for the current line (`:.!`)
 
 `<C-o>p` <- quickly pastes register while in insert mode  
-:h i_ctrl-o 
+`:h i_ctrl-o` 
 
 
 

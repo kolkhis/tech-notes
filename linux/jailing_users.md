@@ -118,6 +118,7 @@ else
     printf "Travelling to %s\n" "${RESPONSE}"
 fi
 ```
+
 * `read -r -p "Type where you want to go: " -t 5 RESPONSE`:
     - `-r` Sanitizes input - doesn't allow escaped chars.  
     - `-p "Type where yo uwant to go:`: The prompt that the user will see.  

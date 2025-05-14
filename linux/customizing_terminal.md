@@ -39,6 +39,7 @@ The `~/.bash_logout` file will be read/executed every time a shell exits (with t
 ---
 
 So the order in which bash loads config files:
+
 * Non-interactive
     - `/etc/profile` (always)
     - First one found (in this order):
@@ -61,6 +62,7 @@ So the order in which bash loads config files:
 ## Colors
 
 See [ANSI escape sequences](./ansi_control_sequences.md) for more details.  
+
 * `30 - 37` : 8-color foreground colors.
 * `40 - 47` : 8-color background colors.
 * `38;5;0 - 255` : 88/256-color foreground colors.  
@@ -114,7 +116,7 @@ export PS1="\[\e[38;5;20m\]\u:\h \$ \[\e[0m\]"
 ```
 See [ANSI control sequences](./ansi_control_sequences.md) for adding colors.
 
-* \w (The current working directory), uses the value of the `PROMPT_DIRTRIM`
+* `\w` (The current working directory), uses the value of the `PROMPT_DIRTRIM`
   variable.
     - If set, it will use this number as the number of trailing directories to keep.  
 

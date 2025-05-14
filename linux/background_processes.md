@@ -45,6 +45,7 @@ in your current shell, you can redirect it:
 ```bash
 { some_command & } > /dev/null 2>&1
 ```
+
 * This redirects both `stdout` and `stderr` to `/dev/null` (trash can).  
 * It's used in a command group to allow the `&` syntax to be used.  
 
@@ -52,6 +53,7 @@ in your current shell, you can redirect it:
 mkfifo /tmp/temp_pipe
 { some_command & } > /tmp/temp_pipe 2>&1
 ```
+
 * This redirects the output to a named pipe, which can be read by another process.  
 
 
@@ -72,6 +74,7 @@ parent shell.
 The distinction primarily affects how you think about the process grouping and management.  
  
 In terms of readability and understanding:
+
 * Placing `&` inside might suggest only the command is meant to run in the background.
 * Placing it outside clearly indicates the entire set of 
   operations (the subshell) is intended to be backgrounded.

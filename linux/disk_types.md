@@ -18,6 +18,7 @@ e.g.:
 xvda
 xvda1
 ```
+
 * `xvd` is the prefix
 * `a` is the position of the disk
 * `1` is the number of the partition. If there's no number, it's not a partition.  

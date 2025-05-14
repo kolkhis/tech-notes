@@ -17,6 +17,7 @@ Options for extracting tarballs:
 tar -xzvf name.tar.gz
 tar -xjvf name.tar.bz2
 ```
+
 * `xvf` for both
 * `z` for `.gz`
 * `j` for `.bz2`
@@ -25,6 +26,7 @@ tar -xjvf name.tar.bz2
 ## Tarballs
 
 A `.tar.gz` file or `.tar.bz2` file is a *compressed* tarball.  
+
 * The uncompressed extension of a tarball would be `.tar`.  
 
 The tarball contains the source code for an application.  
