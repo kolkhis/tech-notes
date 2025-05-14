@@ -8,21 +8,30 @@ declare -a EXCLUDE_DIRS=(
     "./.github"
 )
 
-create-mkdocs-yml() {
-    cat <<EOF | tee ./mkdocs.yml
-site_name: Tech Notes by Kolkhis
-theme:
-  name: material
+# create-mkdocs-yml() {
+#     cat <<EOF | tee ./mkdocs.yml
+# site_name: Tech Notes by Kolkhis
+# theme:
+#   name: material
 
-nav:
-  - Home: index.md
-  - Bash:
-      - Overview: linux/bash/misc.md
-      - Redirection: linux/bash/redirection.md
-  - Kubernetes:
-      - Pod Networking: kubernetes/pod-networking.md
-EOF
+# nav:
+#   - Home: index.md
+#   - Bash:
+#       - Overview: linux/bash/misc.md
+#       - Redirection: linux/bash/redirection.md
+#   - Kubernetes:
+#       - Pod Networking: kubernetes/pod-networking.md
+# EOF
+# }
+
+add-newlines-before-lists(){
+    set -o globstar
+    perl -pi -e '
+    print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*]|\d\.)|\n) /;
+    $prev = $_' ./**/*.md
+    :
 }
+
 
 copy-to-docs() {
     read -r -d '' -a FILES < <(
@@ -41,9 +50,6 @@ copy-to-docs() {
         printf "DEBUG: File: %s \n" "$FILE"
         [[ -f $FILE ]] && printf " %s is a regular file.\n" "$FILE"
 
-        perl -pi -e '
-        print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*]|\d\.)|\n) /;
-        $prev = $_' "$FILE"
         # Recursive copying is copying symlinks
         if [[ ! -h $FILE ]]; then
             # cp -r "$FILE" ./docs
@@ -52,7 +58,9 @@ copy-to-docs() {
     done
 }
 
-create-mkdocs-yml
+# create-mkdocs-yml
+
+add-newlines-before-lists
 copy-to-docs
 
 
