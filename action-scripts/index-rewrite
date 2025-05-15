@@ -11,6 +11,7 @@ EXCLUDE_DIRS=(
     ".github"
     "."
     "ai"
+    "ai/chatgpt_prompts"
     "proxmox"
     "skilstak"
     "pi"
@@ -21,7 +22,6 @@ EXCLUDE_DIRS=(
     "api/product_manager"
     "api/security_architect"
     "api/design"
-    "chatgpt_prompts"
     "hax/htb"
     "hax/thm"
     "linux/mint"
@@ -71,18 +71,11 @@ generate_nav_entries() {
     while read -r dir; do
         local rel_dir="${dir#./docs/}"
 
-        # Skip excluded dirs and pwd
-        # [[ -z "$rel_dir" || "$rel_dir" == "." ]] && continue
         [[ "${EXCLUDE_DIRS[*]}" =~ [[:space:]]${rel_dir}[[:space:]] || "$dir" == "$base_dir" ||
                 -z "$rel_dir" || "$rel_dir" == "." ]] && continue
 
-        # for ex in "${EXCLUDE_DIRS[@]}"; do
-        #     [[ "$rel_dir" == "$ex" ]] && continue 2
-        # done
-
         local section_title
         section_title=$(sanitize_title "$rel_dir")
-        # echo "${indent}- $section_title:"
 
         local -a ENTRIES=()
         while read -r file; do
@@ -99,7 +92,7 @@ generate_nav_entries() {
             ENTRIES+=("${indent}  - $relpath")
         done < <(find "$dir" -maxdepth 1 -type f -name "*.md" | sort)
 
-        if (( ${#ENTRIES[@]} > 0 )); then
+        if [[ ${#ENTRIES[@]} -gt 0 ]]; then
             if grep -qi '/' <<< "$section_title"; then
                 # Section is in a subdirectory.
                 section_title=$(perl -pe 's,/, - ,g' <<< "$section_title")
@@ -111,7 +104,7 @@ generate_nav_entries() {
             fi
         fi
 
-    done < <(find "$base_dir" -type d ! -path '*skilstak*' ! -path '*api/*' ! -path '*ai/*' | sort)
+    done < <(find "$base_dir" -type d ! -path '*skilstak/*' | sort)
 }
 
 main() {
