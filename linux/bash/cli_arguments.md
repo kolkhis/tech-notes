@@ -1,9 +1,16 @@
-# Taking in Arguments from the Command Line in Bash  
+# Parsing Command Line Arguments
+
 
 ## Table of Contents
 * [The `shift` Command](#the-shift-command) 
 * [Getting CLI Options, Arguments, and Flags](#getting-cli-options-arguments-and-flags) 
 * [Flags that take a value](#flags-that-take-a-value) 
+* [Using `getopts`](#using-getopts) 
+    * [`getopts` Leading Colon vs No Leading Colon](#getopts-leading-colon-vs-no-leading-colon) 
+        * [No Leading Colon](#no-leading-colon) 
+        * [Leading Colon](#leading-colon) 
+        * [`getopts` Example: Unknown Option (`?` case)](#getopts-example-unknown-option--case) 
+        * [`getopts` Example: Missing Argument for a Valid Option (`:` case)](#getopts-example-missing-argument-for-a-valid-option--case) 
 
 ## The `shift` Command  
 
