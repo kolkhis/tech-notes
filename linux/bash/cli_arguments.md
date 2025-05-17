@@ -79,8 +79,7 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do
             verbose=1;   
             shift;
             ;;  
-    esac;  
-    shift;  
+    esac
 done  
 
 if [[ "$1" == '--' ]]; then  
