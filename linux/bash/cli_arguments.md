@@ -22,37 +22,42 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
     * `$2` becomes `$1`, `$3` becomes `$2`, and so on.  
 
 ## Getting CLI Options, Arguments, and Flags  
+
 1. Use a `while` loop to loop over the arguments.  
-    * ```bash  
-        while [[ "$1" ]]; do  
-            echo "Code to process the arguments..."  
-            # Now move on to the next argument:  
-            shift 
-        done  
+   ```bash  
+       while [[ "$1" ]]; do  
+           echo "Code to process the arguments..."  
+           # Now move on to the next argument:  
+           shift 
+       done  
+   ```
+
     * The `shift` command will remove the first argument from the list.  
     * This will mean the **next** argument is now in `$1`.  
     * All the remaining arguments will be shifted from `$n` to `$n-1`.  
 
 
 2. Use the regex comparison operator `=~` to check if the argument starts with a dash `-`.  
-    * ```bash  
-        while [[ "$1" =~ ^- ]];  
-      ```
+   ```bash  
+       while [[ "$1" =~ ^- ]];  do ...; done
+   ```
 
 3. Check that the argument isn't `--` on its own.  
-    * ```bash  
-        while [[ "$1" =~ ^- && ! "$1" == "--" ]];  
-      ```
+   ```bash  
+     while [[ "$1" =~ ^- && ! "$1" == "--" ]];  do ...; done
+   ```
+
     * The `--` flag is used to indicate that all the arguments have been given.
 
 4. If it does, use a `switch`/`case` to handle the flag  
-    * ```bash  
-        while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do  
-            case $1 in  
-                (-v | -version)  
-                    printf "%s" "$version";  
-                    ;;  
-      ```
+   ```bash  
+     while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do  
+         case $1 in  
+             (-v | -version)  
+                 printf "%s\n" "$version";  
+                 exit 0;
+                 ;;  
+   ```
 
 5. Use `shift` to pop the argument off the argument list.  
     * This will mean the **next** argument is now in `$1`.  
@@ -62,20 +67,22 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
 ```bash  
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do 
     case $1 in  
-      -V | --version)  
-        echo "$version";  
-        exit;  
-        ;;  
-      -s | --string )  
-        shift; 
-        string=$1;  
-        ;;  
-      -f | --flag )  
-        flag=1;  
-        ;;  
+        -V | --version)  
+            echo "$version";  
+            exit;  
+            ;;  
+        -s | --string )  
+            shift; 
+            string=$1;  
+            ;;  
+        -v | --verbose-flag )  
+            verbose=1;   
+            shift;
+            ;;  
     esac;  
     shift;  
 done  
+
 if [[ "$1" == '--' ]]; then  
     shift;  # Clean up the argument list 
 fi  
@@ -86,11 +93,11 @@ fi
 If you have a flag that takes a value, use the `shift` command to get the value:  
 ```bash  
     case $1 in  
-      -i | --input-file)  
-        shift;  # Pop the -i or --input-file flag out of the argument list  
-        INPUT_FILE="$1";  
-        shift;  # Now pop the value out of the argument list  
-        ;;  
+        -i | --input-file)  
+            shift;  # Pop the -i or --input-file flag out of the argument list  
+            INPUT_FILE="$1";  
+            shift;  # Now pop the value out of the argument list  
+            ;;  
 ```
 
 
@@ -148,6 +155,7 @@ done
 
 A case switch is used in a `while` loop with `getopts`.  
 There are 2 special cases that need to be accounted for:
+
 1. `\?)`: This case catches unknown/invalid options.
     - This will always be triggered whenever invalid options are given, whether you have
       disabled error reporting (leading colon) or not.
@@ -168,6 +176,7 @@ This gives you more granular control over what happens when the script is invoke
 improperly.  
 
 ---
+
 #### No Leading Colon
 - Without the leading colon `:`, if an unknown option is 
   passed (not in `optstring`, like `-z`), `getopts` will:
@@ -178,9 +187,10 @@ improperly.
   but no argument was given), it will:
     - Print an error message to `stderr`
     - Set `$opt` to `?`.  
-Does this also set `$OPTARG` to the option that was given?
+
 
 ---
+
 #### Leading Colon
 Starting your `optstring` with a colon will suppress default error messages, and it
 will disable default error handling for missing arguments.  
@@ -192,13 +202,15 @@ The first colon in this string tells `getopts` to let us handle errors ourselves
 
 - This requires the addition of a `:)` case, which is hit when a required argument is
   missing.
-  - E.g., if `-f` did not have a `filename`, it would hit the `:` case.
+    - E.g., if `-f` did not have a `filename`, it would hit the `:` case.
 
 When an unknown option is given, `OPTARG` will hold the option letter, and the `opt`
 variable will be `?`.
 
 #### `getopts` Example: Unknown Option (`?` case)
+
 ---
+
 With a leading colon:
 ```bash
 getopts ":f:h" opt
@@ -216,6 +228,7 @@ case "$opt" in
         printf "Unknown option: -%s\n" "$OPTARG"
         ;;
 ```
+
 ---
 
 Without a leading colon, the behavior is mostly the same.  
@@ -260,3 +273,4 @@ This will set the variables to:
 Without a leading colon, this will not call the `:` case.  
 
 ---
+
