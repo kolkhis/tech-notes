@@ -2,7 +2,9 @@
 
 
 
-## KC Lab (notes)
+## Setting up Hashicorp Vault
+
+##### KC Lab (notes)
 
 Start the Hashicorp Vault server in dev mode:  
 ```bash
@@ -56,6 +58,7 @@ destroyed          false
 version            1
 ```
 
+- Note this `Secret Path`.  
 
 Verify the values were set:
 ```bash
@@ -70,7 +73,6 @@ vault auth enable userpass
 ```
 
 Creating a user for Hashicorp vault
-
 ```bash
 vault write auth/userpass/users/ansible password=ansible12#$
 ```
@@ -112,7 +114,6 @@ vault read auth/userpass/users/ansible
   gather_facts: True
   become: False
   tasks:
-
 
   # Hit the vault API
   - name: test my connection to vault for credentials
@@ -188,5 +189,9 @@ secrets that we retrieved from Hashicorp Vault.
 
 ---
 
+
+Set ansible user for both prod and dev servers.  
+- Prod servers will have one ansible user, dev servers will have another.
+- These 2 user accounts will have different credentials.  
 
 
