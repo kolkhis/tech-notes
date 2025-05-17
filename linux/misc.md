@@ -1985,6 +1985,29 @@ You can also save yourself the `chmod` and use the `-m` option:
 sudo mknod -m 666 /tmp/mynull c 1 3
 ```
 
+## Kill Unresponsive SSH Sessions
+
+To kill an unresponsive SSH session, you can hit `~.` to kick you back off the SSH
+connection.  
+
+This is known as the "SSH Escape Character."  
+
+```bash
+~.
+```
+
+Hit enter afterwards.  
+
+---
+
+This can be set manually to something different if you want.  
+
+Set the SSH escape character with:
+
+- `ssh -e <char>` when connecting with SSH.  
+- `EscapeChar` in the SSH config file (`~/.ssh/config`)  
+
+
 ## Terms
 
 * RTO: Recovery time objective
