@@ -25,10 +25,10 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
 
 1. Use a `while` loop to loop over the arguments.  
    ```bash  
-       while [[ "$1" ]]; do  
-           echo "Code to process the arguments..."  
+       while [[ -n "$1" ]]; do  
+           printf "Code to process the arguments...\n"  
            # Now move on to the next argument:  
-           shift 
+           shift
        done  
    ```
 
@@ -68,12 +68,13 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do 
     case $1 in  
         -V | --version)  
-            echo "$version";  
-            exit;  
+            printf "%s\n" "$version";  
+            exit 0;  
             ;;  
         -s | --string )  
             shift; 
             string=$1;  
+            shift;
             ;;  
         -v | --verbose-flag )  
             verbose=1;   
@@ -92,12 +93,57 @@ fi
 If you have a flag that takes a value, use the `shift` command to get the value:  
 ```bash  
     case $1 in  
-        -i | --input-file)  
+        -i|--input-file)  
             shift;  # Pop the -i or --input-file flag out of the argument list  
             INPUT_FILE="$1";  
             shift;  # Now pop the value out of the argument list  
             ;;  
+    esac
 ```
+
+### Requiring Arguments
+
+If you want to require that an argument is set, you can add conditional logic inside
+the `case` statement.  
+```bash
+    case $1 in
+        -i|--input-file) 
+            if [[ -n $2 ]] && [[ ! $2 =~ ^- ]]; then
+                INPUT_FILE=$2 && shift
+            else
+                printf >&2 "The -i (--input-file) option was given but no valid values were specified.\n"
+                exit 1
+            fi
+            shift;
+            ;;
+```
+This will check for the existence of an argument to the flag `-i`, make sure it is
+not another flag (doesn't start with `-`), and then assign it.  
+
+If those conditions are not met, the program will print an error message to stderr
+and exit with exit status 1.  
+
+### Defaulting to Interactive Input
+
+Now, if that value *must* have a value, and it *must* come from the user, we can
+default to interactive behavior if the user doesn't specify the `-i FILE` argument.  
+
+```bash
+# After parsing arguments
+[[ -z $INPUT_FILE ]] && read -r -p "Enter input file: " INPUT_FILE
+```
+This will prompt the user for input for the variable `INPUT_FILE` if the variable is
+empty.  
+
+We can add an additional check after that to fatally exit if the value is still
+empty.  
+```bash
+[[ -z $INPUT_FILE ]] && printf >&2 "No input file given!\n" && exit 1
+```
+This prints a helpful error message and exits with a status of 1 (failure).  
+
+If you don't want to make the script interactive at all, you can skip the `read` and
+go straight to the fatal exit.  
 
 
 ## Using `getopts`
