@@ -2007,6 +2007,57 @@ Set the SSH escape character with:
 - `ssh -e <char>` when connecting with SSH.  
 - `EscapeChar` in the SSH config file (`~/.ssh/config`)  
 
+## TTY vs Terminal Emulator
+
+
+An actual TTY (stands for Teletypewriter, usually called a terminal) is a direct 
+connection to the system.  
+
+- A TTY is a **physical** device used to interact with computers in early Unix
+  systems.  
+- On modern systems, a TTY refers to either a **real hardware terminal** or a 
+  **virtual console** (e.g., the ones you access via `Ctrl-Alt-F1` through `F6` on 
+  Linux).  
+
+
+A terminal emulator is an emulated version of a TTY.  
+Terminal emulators connect to the machine through **pseudo-terminals (PTYs)**.  
+
+- The terminal emulator is a program that mimics the behavior of a TTY in a graphical
+  or networked environment.  
+- These are your `xterm`, `alactritty`, `gnome-terminal`, `konsole`, `tmux`, etc.  
+
+A pseudo-terminal is a pair of virtual devices that simulate a physical terminal.  
+There is a master and a slave in a pseudo-terminal pair.  
+- The master (`/dev/ptmx`) is controlled by the terminal emulator (e.g.,
+  `gnome-terminal`, `ssh`, `tmux`).  
+- The slave (`/dev/pts/n`) acts like the terminal device for the shell or program.  
+    - `pts` stands for **psuedo-terminal slave**.  
+        - This is the slave sside of a pseudo-terminal pair. It's what your shell is
+          using as its TTY.  
+
+
+---
+
+* `tty` (the command) in Linux/Unix systems prints the file name 
+  of the terminal connected to stdin.  
+
+```bash
+tty
+# /dev/pts/2
+```
+
+You'll see:
+
+- `/dev/tty0`, `/dev/tty1`, etc: Physical or virtual TTYs (real terminals).  
+- `/dev/pts/0`, `/dev/pts/1`, etc: Pseudo-terminals (terminal emulators).  
+
+> In Linux/Unix, **"Everything is a file,"** even your terminal.  
+
+
+
+
+
 
 ## Terms
 
@@ -2018,4 +2069,6 @@ Set the SSH escape character with:
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
 * [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
+
+* <https://www.linuxmissive.com/2020/04/how-to-interrupt-grub-and-override-init.html>
 
