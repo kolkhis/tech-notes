@@ -1,6 +1,2 @@
-site_name: Tech Notes by Kolkhis
-theme:
-  name: material
-
-nav:
-  - Home: index.md
+# This file is dynamically generated on build time.
+# Edits to this file will not take effect in the actual build process in the CI/CD pipeline.
