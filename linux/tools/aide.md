@@ -17,19 +17,26 @@ Install AIDE with your package manager:
 sudo apt install -y aide
 ```
 
+---
+
 Create a new AIDE database:
 ```bash
 aide -i -c /etc/aide/aide.conf
 ```
 
+- `-i`: Initializes a new database.  
+- `-c`: Specifies the configuration file to use.  
 This will output a new database, `/var/lib/aide/aide.db.new`.  
+The `.new` is added so it does not overwrite any pre-existing AIDE database.  
 
-- The `.new` is added so it does not overwrite any pre-existing AIDE database.  
+---
 
 Set up the database properly:
 ```bash
 cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 ```
+
+---
 
 Then you can test AIDE by making changes in a tracked directory, then running:
 ```bash
