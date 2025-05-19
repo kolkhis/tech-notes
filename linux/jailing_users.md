@@ -52,8 +52,7 @@ dependencies are there.
 ```bash
 ldd /bin/bash
 ```
-This will show the libraries that bash depends on in order to run.  
-
+This will show the libraries that `bash` depends on in order to run.  
 
 ## How to Build a Chroot Jail
 ### Setting up the Chroot Jail
@@ -76,17 +75,32 @@ This will show the libraries that bash depends on in order to run.
 4. Copy the link libraries that the executables need (bash shell functionality)
   ```bash
   for pkg in $(ldd /bin/bash | awk '{print $(NF -1)}'); do 
-      cp $pkg /var/chroot/$pkg
+      cp $pkg /var/chroot$pkg
   done
   ```
 
-5. Test the chroot jail.  
-  ```bash
-  echo $$  # Check your current shell's PID
-  chroot /var/chroot
-  echo $$  # Check again
-  ```
-  Test by using commands that you haven't added to the jail, and commands that you have.  
+5. You'll need some character special files in your chroot jail for everything
+   to work properly.  
+   ```bash
+   mknod -m 666 "/var/chroot/dev/null" c 1 3
+   mknod -m 666 "/var/chroot/dev/tty" c 5 0
+   mknod -m 666 "/var/chroot/dev/zero" c 1 5
+   mknod -m 666 "/var/chroot/dev/random" c 1 8 
+   mknod -m 666 "/var/chroot/dev/urandom" c 1 9
+   ```
+
+6. You also need your name switch service files for network functionality.  
+   ```bash
+   cp -r /lib/x86_64-linux-gnu/*nss* /var/chroot/lib/x86_64-linux-gnu/
+   ```
+
+7. Test the chroot jail.  
+   ```bash
+   echo $$  # Check your current shell's PID
+   chroot /var/chroot
+   echo $$  # Check again
+   ```
+   Test by using commands that you haven't added to the jail, and commands that you have.  
 
 ### Populating the Jail
 Add in the system files needed for user functionality, the binaries (`curl`, `ssh`, etc.) alone with their dependent link libraries.  
@@ -98,7 +112,7 @@ for file in {passwd,group,nsswitch.conf,hosts}; do
 done
 ```
 
-* SSH requires the file(s) `/dev/random`/`/dev/urandom`.  
+* SSH requires the file(s) `/dev/random` and `/dev/urandom`.  
     * If the jailed process needs SSH, make sure these are available.  
 
 
@@ -156,5 +170,81 @@ It also doesn't allow the user to run any commands with slashes (e.g., `/usr/bin
 
 ## Resources
 * [Chroot Jail ProLUG Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
+
+
+---
+
+## Other Jailing Techniques in Linux
+
+| Method  | Description  | Use Cases
+| -- | --- | --------
+| `chroot`                 | Restricts process to a directory as new `/`. Basic and easy, but bypassable if root.          | Old-school isolation, single app sandbox
+| Namespaces             | Kernel feature to isolate resources: PID, NET, MNT, UTS, IPC, USER, TIME. Used by containers. | Process-level isolation (e.g. for containers or seccomp sandboxes)
+| Cgroups                | Control resource usage (CPU, RAM, IO, etc.) of processes. Works with namespaces.              | Resource-limiting, DoS protection
+| Seccomp                | Blocks syscalls from being used by a process. Can whitelist or blacklist syscalls.            | Reduces attack surface; used by Docker, systemd
+| AppArmor / SELinux     | Mandatory Access Control (MAC) — defines what a process *can* access, even as root.            | Policy-driven hardening of services
+| `unshare` / `nsenter`  | CLI tools to launch processes in new namespaces manually.                                     | Lightweight container-like jails
+| `bwrap` (bubblewrap)       | Sandboxing tool used by Flatpak; combines namespaces + mounts + tmpfs                         | Desktop and service sandboxing
+| `systemd-nspawn`           | `systemd`-native lightweight container runtime using chroot + namespaces                        | Service testing, network/service isolation
+| Container Jails (Docker/Podman) | Full-featured OCI containerization, combining namespaces, cgroups, overlayfs, etc.            | Microservices, app isolation, ephemeral environments
+
+---
+
+### Other Jailing Method Examples
+
+#### 1. Manual Namespace Jail with `unshare`
+
+```bash
+sudo unshare --mount --uts --ipc --net --pid --fork /bin/bash
+```
+
+This puts you in a new shell with:
+
+* An isolated process tree
+* A new hostname
+* An empty mount table
+* No network
+
+You’re now in a basic jail, isolated from the rest of the system.
+
+---
+
+#### 2. Use `bwrap` (Bubblewrap)
+
+```bash
+bwrap --ro-bind /usr /usr --ro-bind /bin /bin \
+      --dev /dev --proc /proc --tmpfs /tmp \
+      /bin/bash
+```
+
+* Filesystem is isolated
+* No network unless explicitly added
+* You can't escape the jail without privilege escalation
+
+Used by `Flatpak` and some sandboxed tools like `firejail`.
+
+---
+
+#### 3. Restrict Syscalls with `seccomp`
+
+Seccomp is harder to use directly, but Docker or Podman support it out-of-the-box:
+
+```bash
+podman run --rm --security-opt seccomp=./custom-seccomp.json alpine
+```
+
+Your `custom-seccomp.json` can block dangerous syscalls like `ptrace`, `mount`, or `keyctl`.
+
+---
+
+### Combining Tools
+
+For truly hardened jails:
+
+* Use `namespaces + cgroups + seccomp + AppArmor/SELinux`.  
+* Add **immutable configs** (`chattr +i`) to prevent changes.  
+* Monitor processes with `auditd`, `ps`, and logs.  
+
+---
 
 
