@@ -253,3 +253,5 @@ setup-cron-job(){
 
 
 
+Cron daily runs at 3:14 AM every morning on a linux system.  
+
