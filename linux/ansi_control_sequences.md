@@ -8,6 +8,7 @@ colors, cursor visibility, screen clearing, mouse tracking, etc.
 They're very useful for customizing how a terminal behaves under certain
 circumstances.  
 
+
 For colors, see [text formatting sequences](#text-formatting-sequences-sgr).  
 
 
@@ -34,15 +35,16 @@ These different methods of starting ANSI control sequences are
 called "Control Sequence Introducer," or "CSI" commands.  
 
 * Standard ANSI escape sequences are prefixed with `ESC[`, where `ESC` is one of:
-    - `\e`:  Interpreted as `ESC` by many programs.  
-        - `\e` is not guaranteed to work in all languages/compilers.  
-        - It's recommended to use octal/hexadecimal for `ESC`.  
     - `\x1b`: Hexadecimal for `ESC`.  
     - `\033`: Octal for `ESC`.  
     - `\u001b`: Unicode for `ESC`.  
     - `` (`^[`): The actual escape control character.  
         - Typing the characters `^` and `[` will not work for this. It needs to be
           the actual `Ctrl-[` key signal.   
+    - `\e`:  Interpreted as `ESC` by many programs.  
+        - `\e` is not guaranteed to work in all languages/compilers.  
+        - It's recommended to use octal, hexadecimal, or unicode for `ESC`.  
+        - Check what's supported in your language/environment.  
 
 ```bash
 \e      # Interpreted as ESC by programs
@@ -73,7 +75,7 @@ printf "\x1b[SEQ"
 Some ANSI control sequences take multiple arguments. Specify multiple arguments by
 using semicolons (`;`) in between them.  
 
-For example:  
+For example, using a 255-color escape sequence:  
 ```bash
 "\x1b[38;5;33m"
 ```
@@ -83,7 +85,6 @@ For example:
 - `33`: Third arg
 - `m`: The end  
 
-<!-- TODO: Explain difference between all of these -->
 
 ## ASCII Codes
 The ASCII codes here are used in some of the ANSI control sequences.  
@@ -351,10 +352,10 @@ These sequences interact with the terminal emulator's operating system features.
 
 | Sequence          | Action
 |-|-
-| `ESC]0;titleBEL`  | Set window title to "title"
-| `ESC]2;titleBEL`  | Set icon name to "title"
+| `ESC]0;titleBEL`  | Set window title to `title`
+| `ESC]2;titleBEL`  | Set icon name to `title`
 
-The `BEL` is the bell character (`\a` or `\x07`).
+`BEL` is the bell character (`\a` or `\x07`).
 
 ### Private Modes
 
