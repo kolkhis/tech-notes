@@ -1,24 +1,119 @@
+# ANSI Control Sequences  
 
-# ANSI Color Control Sequences  
+ANSI Control Sequences.  
+
+These are used to control things in the terminal, like terminal text color, background
+colors, cursor visibility, screen clearing, mouse tracking, etc.  
+
+They're very useful for customizing how a terminal behaves under certain
+circumstances.  
+
+For colors, see [text formatting sequences](#text-formatting-sequences-sgr).  
+
+
+## Types of Sequences
+There are a few different types of ANSI control sequences:
+
+1. `ESC`: Escape Sequences. Start with `ESC` (e.g., `\033`, `\x1b`)  
+2. `CSI`: Control Sequence Introducer. Starts with `ESC [`, or CSI (`\x9B`)
+3. `DCS`: Device Control String. Starts with `ESC P`, or DSC (`\x90`)  
+4. `OSC`: Operating System Command. Starts with `ESC ]`, or OSC )`\x9D`
+    * (ignore whitespace between `ESC` and `[` / `P` / `]`)
+
+```bash
+\x1b      # Escape sequence
+\x1b[     # Control sequence introducer
+\x1bP     # Device Control String
+\x1b]     # Operating System Command
+```
+
+## ANSI Escape Sequence Syntax
+You can start escape sequences a number of different ways.  
+
+These different methods of starting ANSI control sequences are
+called "Control Sequence Introducer," or "CSI" commands.  
+
+* Standard ANSI escape sequences are prefixed with `ESC[`, where `ESC` is one of:
+    - `\e`:  Interpreted as `ESC` by many programs.  
+        - `\e` is not guaranteed to work in all languages/compilers.  
+        - It's recommended to use octal/hexadecimal for `ESC`.  
+    - `\x1b`: Hexadecimal for `ESC`.  
+    - `\033`: Octal for `ESC`.  
+    - `\u001b`: Unicode for `ESC`.  
+    - `` (`^[`): The actual escape control character.  
+        - Typing the characters `^` and `[` will not work for this. It needs to be
+          the actual `Ctrl-[` key signal.   
+
+```bash
+\e      # Interpreted as ESC by programs
+\033    # ESC in (Octal)
+\x1b    # ESC in (Hexadecimal)
+\u001b  # ESC in (Unicode)
+      # ESC (the actual ESC control character)
+```
+
+---
+
+The general syntax for an ANSI escape sequence is:  
+```bash
+printf "\e[SEQ"
+# or
+printf "\033[SEQ"
+# or
+printf "[SEQ"
+# or
+printf "\x1b[SEQ"
+```
+`SEQ` is the ANSI sequence that you're trying to access.  
+
+* Also see: <https://en.wikipedia.org/wiki/ANSI_escape_code#Control_Sequence_Introducer_commands>
+
+---
+
+Some ANSI control sequences take multiple arguments. Specify multiple arguments by
+using semicolons (`;`) in between them.  
+
+For example:  
+```bash
+"\x1b[38;5;33m"
+```
+
+- `38`: First arg  
+- `5`: Second arg
+- `33`: Third arg
+- `m`: The end  
+
+<!-- TODO: Explain difference between all of these -->
+
+## ASCII Codes
+The ASCII codes here are used in some of the ANSI control sequences.  
+
+| Name |  Decimal | Octal  | Hex    | C Escape | Ctrl-Key   | What it is
+|-|-|-|-|-|-|-
+| `BEL`  |    `7`   |  `007` | `0x07` |  `\a`    | `^G`     | Terminal bell
+| `BS`   |    `8`   |  `010` | `0x08` |  `\b`    | `^H`     | Backspace
+| `HT`   |    `9`   |  `011` | `0x09` |  `\t`    | `^I`     | Horizontal tab
+| `LF`   |    `10`  |  `012` | `0x0A` |  `\n`    | `^J`     | Line feed (newline)
+| `VT`   |    `11`  |  `013` | `0x0B` |  `\v`    | `^K`     | Vertical tab
+| `FF`   |    `12`  |  `014` | `0x0C` |  `\f`    | `^L`     | Form feed (also: New page NP)
+| `CR`   |    `13`  |  `015` | `0x0D` |  `\r`    | `^M`     | Carriage return (CR)
+| `ESC`  |    `27`  |  `033` | `0x1B` |  `\e`    | `^[`     | Escape character
+| `DEL`  |    `127` |  `177` | `0x7F` |  `<none>`| `<none>` | Delete character
+
+
+---
+
+## Text Formatting Sequences (SGR)
+**SGR - Select Graphic Rendition**. This is used to format text.  
 
 The ANSI color control sequences are used to change the text color  
 and background color of the terminal.  
- 
+
 Each number in the control sequence represents a way to customize the 
 foreground (text) or background.  
 
 
-## Table of Contents
-* [Basic Syntax](#basic-syntax) 
-* [Quickref](#quickref) 
-* [Common Style Codes](#common-style-codes) 
-* [Standard Colors (8 color)](#standard-colors-8-color) 
-* [Formatting the Style Code](#formatting-the-style-code) 
-    * [Examples](#examples) 
-    * [256-colors](#256colors) 
-
-
-## Basic Syntax  
+### Color Basic Syntax  
  
 The basic syntax for an ANSI color control sequence is:  
 
@@ -30,7 +125,9 @@ printf "\e[<STYLE_CODE>m"
 * `<STYLE_CODE>` is a number (or series of numbers separated by semicolons) that specifies the color or style.  
 * `m` indicates the end of the sequence.  
 
-## Quickref
+---
+
+### Quickref
 
 Colors:
 
@@ -70,7 +167,7 @@ show_cursor() { printf "\e[?25h"; }
 
 
 
-## Common Style Codes  
+### Common Style Codes  
 
 * Text Styles and Defaults  
     * `0`: Reset all styles to default.  
@@ -93,7 +190,7 @@ show_cursor() { printf "\e[?25h"; }
     * `<COLOR_CODE>` ranges from `0` to `255`.  
 
 
-## Standard Colors (8 color)  
+### Standard Colors (8 color)  
 The foreground (`30-37`) and background (`40-47`) colors use 8 "standard" colors.  
  
 The 8 standard colors are:  
@@ -108,7 +205,7 @@ The 8 standard colors are:
 * `7`: White  
 
 
-## Formatting the Style Code
+### Formatting the Style Code
 
 The style code can be formatted in several ways. 
 As long as the numbers given match the ones above, the order doesn't matter  
@@ -128,7 +225,7 @@ printf "\e[<TEXT_STYLE>;<COLOR_MODE>;<COLOR>]"
 
 
 
-### Examples  
+#### ANSI Color Examples  
 ```bash  
 printf "\e[1;5;31;40m---Testing a color code---\e[0m"  
 ```
@@ -146,7 +243,7 @@ printf "\e[1;5;31;40m---Testing a color code---\e[0m"
 ---  
 
 
-### 256-colors  
+#### 256-colors  
 
 `38;` indicates "foreground"  
 `5;` indicates "256-color"  
@@ -160,3 +257,117 @@ PS1_SYNTAX="\[\e[38;5;${COLOR_CODE}m\]"
 232-255: Grayscale  
 ```
 
+
+## Terminal Manipulation Sequences
+
+### Cursor Manipulation
+
+These sequences control the cursor's position on the screen.
+
+| Sequence  | Action
+|-|-
+| `ESC[nA`      | Move cursor up by `n` lines
+| `ESC[nB`      | Move cursor down by `n` lines
+| `ESC[nC`      | Move cursor forward by `n` columns
+| `ESC[nD`      | Move cursor backward by `n` columns
+| `ESC[nF`      | Move cursor to beginning of line, `n` lines up
+| `ESC[nG`      | Move cursor to column `n`  
+| `ESC[n;fH`    | Move cursor to row `n`, column `f`
+| `ESC[M`       | Move cursor one line up. Scrolls if necessary  
+| `ESC[6n`      | Request cursor position (responds as `ESC[n;nR`), (literal `n`)
+| `ESC[7`       | Save cursor position (DEC)
+| `ESC[8`       | Restore cursor position (DEC)
+| `ESC[s`       | Save cursor position (SCO)
+| `ESC[u`       | Restore cursor position (SCO)
+
+- DEC v. SCO
+    - Some terminals (`xterm`-derived) support both SCO and DEC sequences, but they
+      may have different functionality.  
+    - Prefer DEC sequences over SCO.   
+
+You can also change the cursor's shape and behavior.  
+
+| Sequence |  Description
+|-|-
+| `ESC[0 q` | Changes cursor shape to steady block
+| `ESC[1 q` | Changes cursor shape to steady block also
+| `ESC[2 q` | Changes cursor shape to blinking block
+| `ESC[3 q` | Changes cursor shape to steady underline
+| `ESC[4 q` | Changes cursor shape to blinking underline
+| `ESC[5 q` | Changes cursor shape to steady bar
+| `ESC[6 q` | Changes cursor shape to blinking bar
+
+
+E.g.,:  
+```bash
+printf "\x1b[\x30 q" # changes to blinking block
+printf "\x1b[\x31 q" # changes to blinking block also
+printf "\x1b[\x32 q" # changes to steady block
+printf "\x1b[\x33 q" # changes to blinking underline
+printf "\x1b[\x34 q" # changes to steady underline
+printf "\x1b[\x35 q" # changes to blinking bar
+printf "\x1b[\x36 q" # changes to steady bar
+```
+
+
+### Screen and Line Clearing
+
+These sequences clear parts or all of the terminal screen.
+
+| Sequence    | Action
+|-|-
+| `ESC[J`     | Clear from cursor to end of the screen (same as `ESC[0J`)
+| `ESC[0J`    | Clear from cursor to end of the screen
+| `ESC[1J`    | Clear from cursor to beginning of the screen 
+| `ESC[2J`    | Clear entire screen
+| `ESC[3J`    | Clear saved lines
+| `ESC[K`     | Clear from cursor to end of line (same as `ESC[0K`)
+| `ESC[0K`    | Clear from cursor to end of line
+| `ESC[1K`    | Clear from cursor to beginning of line
+| `ESC[2K`    | Clear entire line
+
+Clearing lines won't move the cursor. The cursor will stay where it was before clearing. 
+Use `\r` to move the cursor to the beginning of the line if you need to.  
+Also see [cursor movement](#cursor-movement).  
+
+### Mouse Interaction
+
+Some terminals support mouse tracking sequences:
+
+| Sequence      | Action
+|-|-
+| `ESC[?1000h`  | Enable mouse tracking
+| `ESC[?1000l`  | Disable mouse tracking
+
+
+### Operating System Commands (OSC)
+
+These sequences interact with the terminal emulator's operating system features.
+
+| Sequence          | Action
+|-|-
+| `ESC]0;titleBEL`  | Set window title to "title"
+| `ESC]2;titleBEL`  | Set icon name to "title"
+
+The `BEL` is the bell character (`\a` or `\x07`).
+
+### Private Modes
+
+These are implemented in most terminals, though not explicitly defined in the ANSI
+specification. 
+
+| Sequence | Description
+|-|-
+| `ESC[?25l`    | Make cursor invisible
+| `ESC[?25h`    | Make cursor visible
+| `ESC[?47l`    | Restore screen
+| `ESC[?47h`    | Save screen
+| `ESC[?1049h`  | Enables the alternative buffer
+| `ESC[?1049l`  | Disables the alternative buffer
+
+## Resources
+* <https://jvns.ca/blog/2025/03/07/escape-code-standards>
+* <https://en.wikipedia.org/wiki/ANSI_escape_code>
+* <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html>
+* <https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797#screen-modes>
+* <https://stackoverflow.com/questions/4416909/anyway-change-the-cursor-vertical-line-instead-of-a-box>
