@@ -280,12 +280,13 @@ These sequences control the cursor's position on the screen.
 | `ESC[s`       | Save cursor position (SCO)
 | `ESC[u`       | Restore cursor position (SCO)
 
-- DEC v. SCO
+- **DEC v. SCO**
     - Some terminals (`xterm`-derived) support both SCO and DEC sequences, but they
       may have different functionality.  
     - Prefer DEC sequences over SCO.   
 
 You can also change the cursor's shape and behavior.  
+<!-- hide cursor change cursor shape change cursor type show cursor unhide cursor cursor to block cursor line cursor bar cursor underline cursor blinking -->
 
 | Sequence |  Description
 |-|-
@@ -296,17 +297,21 @@ You can also change the cursor's shape and behavior.
 | `ESC[4 q` | Changes cursor shape to blinking underline
 | `ESC[5 q` | Changes cursor shape to steady bar
 | `ESC[6 q` | Changes cursor shape to blinking bar
-
+| `ESC[?25l`| Hide the cursor
+| `ESC[?25h`| Show the cursor (unhide cursor)
 
 E.g.,:  
 ```bash
 printf "\x1b[\x30 q" # changes to blinking block
-printf "\x1b[\x31 q" # changes to blinking block also
+printf "\x1b[\x31 q" # changes to blinking block
 printf "\x1b[\x32 q" # changes to steady block
 printf "\x1b[\x33 q" # changes to blinking underline
 printf "\x1b[\x34 q" # changes to steady underline
 printf "\x1b[\x35 q" # changes to blinking bar
 printf "\x1b[\x36 q" # changes to steady bar
+
+printf "\x1b[?25l"   # will hide cursor
+printf "\x1b[?25h"   # will show cursor again
 ```
 
 
