@@ -1,16 +1,4 @@
-
 # Misc Git Notes
-
-
-
-
-
-
-From `~/notes/linux/general_coreutils_etc.md`:
-
-<details>
-## <summary>GPG for git</summary>
-
 
 ## Table of Contents
 * [Plain GPG Protected Credential Helper](#plain-gpg-protected-credential-helper) 
@@ -19,7 +7,6 @@ From `~/notes/linux/general_coreutils_etc.md`:
     * [Add the New GPG Key to Github](#add-the-new-gpg-key-to-github) 
     * [Signing Commits with GPG](#signing-commits-with-gpg) 
 * [Git Commit Message Conventions](#git-commit-message-conventions) 
-
 
 ## Plain GPG Protected Credential Helper  
 Using GPG authentication (HTTPS) with git is not as straightforward as using
@@ -37,6 +24,7 @@ git config --global credential.credentialStore gpg
 
 ### Generate a New GPG Key  
 First, you'll need to generate a GPG key before you can add it to Github.  
+
 1. Run the command to generate a new key:  
     ```bash  
     gpg --full-generate-key  
@@ -89,10 +77,8 @@ First, you'll need to generate a GPG key before you can add it to Github.
       git config --global commit.gpgsign true  
       ```
 
-</details>
 
-<details>
-<summary> Other Git Encryption Solutions:</summary> 
+#### Other Git Encryption Solutions: 
 
 * SSH with `ssh-keygen`  
 * `git-remote-gcrypt`  
@@ -101,14 +87,9 @@ First, you'll need to generate a GPG key before you can add it to Github.
 
 * BlackBox by StackOverflow
 
-</details>
-
-
 
 
 ## Git Commit Message Conventions
-<details>
-<summary>Git commit message convention</summary>
 
 ```gitcommit
 [type]: [description]
@@ -134,5 +115,4 @@ Where:
 * `[body]` (optional): A more detailed description of the changes made in the commit.
     * This part is optional but can be useful for providing additional context or 
       information about the changes.
-</details>
 

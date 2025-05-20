@@ -1,8 +1,4 @@
-
-
-
-
-# Notes On Git  
+# Git Operations
 Getting help on a git command: 
 ```bash  
 man git[-command]  
@@ -67,7 +63,9 @@ It's a quick way to see what changes are pending.
 ```bash  
 git status  
 ```
+
 Options:  
+
 * `--short` or `-s`: Gives a shorter output.  
 * `--branch` or `-b`: Shows the branch and tracking information.  
 
@@ -98,6 +96,7 @@ Shows changes between commits, commit and working tree, etc.
 git diff  
 ```
 Options:  
+
 * `--[cached | staged]`: Shows changes in the staging area.  
 * `[commit1] [commit2]`: Compares two commits.  
 
@@ -113,12 +112,17 @@ Options:
 ```bash
 git diff commit1 commit2  
 ```
+
 * Using `HEAD` will refer to the last commit you made.  
 * Using `HEAD~1` will refer to the commit before that (think of it like `HEAD - 1`).  
     * `HEAD~2` will show 2 commits back, etc.  
+
 ```bash  
 git diff HEAD HEAD~1   
+# or:
+git diff HEAD~1   
 ```
+The first `HEAD` is optional. It is implied by default.  
 
 ---  
 
@@ -129,10 +133,11 @@ Adds files to the staging area.
 ---  
 
 ### `git commit`
-`git commit`  
+
 Commits the staged files, and any changes made to them, to the repository.  
 Running `git commit` without any options will open a text editor (determined  
 by the `$EDITOR` environment variable) for you to write a commit message.  
+
 * Options:
     * `-m` or `--message`: Allows you to pass the commit message on the command line.
     * `-a` or `--all`: Commits all files, including untracked files.
@@ -167,6 +172,7 @@ Shows the commit history.
 ```bash  
 git log  
 ```
+
 * Options:  
     * `--oneline`: Condenses each commit to a single line, useful for a brief overview.  
     * `--graph`: Shows a text-based graphical representation of the commit history.  
@@ -225,6 +231,7 @@ Lists, creates, or deletes branches.
 ```bash  
 git branch  
 ```
+
 * Options:  
     * `-a`: Lists all branches, both local and remote.  
     * `-d`: Safely deletes a branch (only if it has been merged).  
@@ -238,6 +245,7 @@ Switches branches or restores working tree files.
 ```bash  
 git checkout branch_name  
 ```
+
 * Options:  
     * `-b [new-branch]`: Creates and switches to a new branch.  
     * `-- [file-name]`: Discards changes in the working directory for specific files.  
@@ -249,6 +257,7 @@ Merges another branch into your current branch.
 ```bash  
 git merge branch_name  
 ```
+
 * Options:  
     * `--no-ff`: Creates a merge commit even if a fast-forward merge is possible.  
     * `--abort`: Aborts the merge process in case of conflicts.  
@@ -268,14 +277,18 @@ git stash
 ---  
 
 ### `git fetch`
-Downloads objects and refs from a remote repository.  
+Downloads branches and tags from a remote repository.  
 ```bash  
-git fetch  
+git fetch [remote] [branch]
 ```
+
 * Options:  
     * `--all`: Fetches from all remotes.  
     * `-p` or `--prune`: Deletes any remote-tracking references that no longer exist on 
       the remote.  
+        - Good for updating deleted branches.  
+    - `--dry-run`: Show what would happen without actually doing it.  
+    - `-t`: Fetch all tags from the remote.  
 
 ---  
 
@@ -283,11 +296,14 @@ git fetch
 Fetches from and integrates with another repository or local branch.  
 
 The `pull` command performs two operations: 
+
 1. It `fetch`es changes from a remote branch.  
 2. Then it `merge`s them into the current branch.  
+
 ```bash  
-git pull  
+git pull [remote] [branch]
 ```
+
 * Options:  
     * `--rebase`: Instead of merging, it rebases the current branch.  
 
@@ -299,6 +315,7 @@ Shows what revision and author last modified each line of a file.
 ```bash  
 git blame [filename]  
 ```
+
 * Options:  
     * `-L`: Restricts the annotation to a specified line range.  
 
