@@ -66,13 +66,16 @@ SELinux uses these contexts to enforce its access control policies.
         * This is not the same as a Linux user. It's an SELinux-specific user that 
           processes and objects are assigned to.
         * E.g., `system_u` represents system processes.
+
     * `role`: This defines what a user or process is allowed to do on the system.  
         * E.g., `object_r` for files and directories, `system_r` for system processes.  
+
     * `type`: Defines what a process can interact with.
         * Processes are labeled with a type, and files/resources are labeled with  
           a different type.
         * SELinux policies decide which types can access or interact with each  
           other. This is called the "type enforcement".
+
     * `level`: Defines the sensitivity or integrity level of the object. 
         * This is used for "Multi-Level Security" (MLS) and Multi-Category Security (MCS).  
         * Often used in government or other high-security environments.  
