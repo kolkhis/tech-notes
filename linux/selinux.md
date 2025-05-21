@@ -65,10 +65,10 @@ SELinux uses these contexts to enforce its access control policies.
     * `user`: SELinux user identity.  
         * This is not the same as a Linux user. It's an SELinux-specific user that 
           processes and objects are assigned to.
-        * E.g., `system_u` represents system processes.  
+        * E.g., `system_u` represents system processes.
     * `role`: This defines what a user or process is allowed to do on the system.  
         * E.g., `object_r` for files and directories, `system_r` for system processes.  
-    * `type`: Defines what a process can interact with.  
+    * `type`: Defines what a process can interact with.
         * Processes are labeled with a type, and files/resources are labeled with  
           a different type.
         * SELinux policies decide which types can access or interact with each  
