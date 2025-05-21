@@ -22,6 +22,29 @@ to minimize the potential of the user breaking out of the jail.
 | Internet |  --->  | JailedUser   |  ---> |  Unjailed User
 ```
 
+---
+
+The concepts implemented here:
+
+- Strong security posture
+
+    - Using a chroot jail with a custom shell (and possibly `rbash`) enforces the
+      rule of least privilege and containment.  
+
+    - Air-gapping the internal network by forcing access through a bastion host is a
+      standard practice in secure enterprise environments.  
+
+- User isolation
+- SSH restrictions
+- Minimal userland
+
+Tools used:
+
+- `bash`/`rbash`
+- `ldd` (binary dependencies)
+- `mknod`, character devices (special files)
+- SSH `Match` blocks.  
+
 
 
 ## Building a Chroot Jail
@@ -255,6 +278,46 @@ ssh jaileduser@bastion
 ```
 
 
+---
+
+
+
+## Enhancements (TODO)
+* Log all access attempts to a file (inside the jail).
+  
+  E.g.,
+  ```bash
+  logfile="/var/log/bastion_access.log"
+  echo "$(date): User input '$INPUT'" >> "$logfile"
+  ```
+    - To keep it inside the jail, mount `/dev/log` and use `logger` with `rsyslog`.
+        - `man logger`
+        - `man rsyslog`
+
+* Add more Defense-in-Depth
+
+    * `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
+      restrictions on the jailed shell or rbash.
+    * `iptables`/`nftables` rule to restrict the jailed user to only be able to SSH out 
+      to certain IPs (destination hosts).
+    * Read-only bind mounts for even more restricted jail environments (advanced).
+        <!-- - TODO: Look more into this. What is a 'bind mount'? -->
+
+* Make jail setup script idempotent
+
+    * Before copying libraries and binaries, check stat on the destination path and skip 
+      if already present.
+
+    * Use `install -Dm755` for cleaner binary copying with permission setting in one go.
+
+---
+
+* Testing coverage ideas
+
+    * SSH login succeeds and shows menu
+    * Restricted to menu options (try to run commands like `ls`, `cd /`, `echo`)
+    * User cannot escape the chroot via symlinks, process manipulation, or `scp`
+    * Confirm logs or alerts on each access (build a log watcher or Promtail integration)
 
 ## Resources
 - []()
