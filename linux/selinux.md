@@ -62,21 +62,21 @@ SELinux uses these contexts to enforce its access control policies.
 
 * An SELinux Context is a rule that defines access permissions for files/directory.  
 * It consists of 4 parts:  
-    * `user`: SELinux user identity.  
+    1. `user`: SELinux user identity.  
         * This is not the same as a Linux user. It's an SELinux-specific user that 
           processes and objects are assigned to.
         * E.g., `system_u` represents system processes.
 
-    * `role`: This defines what a user or process is allowed to do on the system.  
+    2. `role`: This defines what a user or process is allowed to do on the system.  
         * E.g., `object_r` for files and directories, `system_r` for system processes.  
 
-    * `type`: Defines what a process can interact with.
+    3. `type`: Defines what a process can interact with.
         * Processes are labeled with a type, and files/resources are labeled with  
           a different type.
         * SELinux policies decide which types can access or interact with each  
           other. This is called the "type enforcement".
 
-    * `level`: Defines the sensitivity or integrity level of the object. 
+    4. `level`: Defines the sensitivity or integrity level of the object. 
         * This is used for "Multi-Level Security" (MLS) and Multi-Category Security (MCS).  
         * Often used in government or other high-security environments.  
         * Default level is `s0`. 
@@ -124,7 +124,7 @@ Running `ls -Z` on a file, you'll see its SELinux context.
 
 Check context:
 ```bash  
-ls -Z /var/www/html/index.html  
+ls -lZ /var/www/html/index.html  
 # Output:
 -rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 /var/www/html/index.html
 #                     ^ user   ^ role   ^ type              ^ level
