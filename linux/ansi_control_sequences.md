@@ -370,6 +370,10 @@ specification.
 | `ESC[?47h`    | Save screen
 | `ESC[?1049h`  | Enables the alternative buffer
 | `ESC[?1049l`  | Disables the alternative buffer
+| `ESC[?1004h`  | Enable reporting focus. Reports whenever terminal enters/exits focus (`ESC[I`/`ESC[O` respectively.
+| `ESC[?1004l`  | Disable reporting focus.
+| `ESC[ s`      | Save current cursor position (SCP, SCOSC).
+| `ESC[ u`      | Restore saved cursor position (RCP, SCORC).  
 
 ## Resources
 * <https://jvns.ca/blog/2025/03/07/escape-code-standards>
@@ -377,3 +381,4 @@ specification.
 * <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html>
 * <https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797#screen-modes>
 * <https://stackoverflow.com/questions/4416909/anyway-change-the-cursor-vertical-line-instead-of-a-box>
+* <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html>
