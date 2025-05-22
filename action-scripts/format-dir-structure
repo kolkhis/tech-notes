@@ -8,6 +8,7 @@ declare -a EXCLUDE_DIRS=(
     "./.github"
     "./."
     "./ai"
+    "./ai/chatgpt_prompts"
     "./proxmox"
     "./skilstak"
     "./pi"
@@ -24,6 +25,12 @@ declare -a EXCLUDE_DIRS=(
     "./linux/labs/hashicorp"
     "./aws/cloud_quest"
     ""
+)
+
+declare -a EXCLUDE_KEYWORDS=(
+    "skilstak"
+    "beginner_boost"
+    "chatgpt_prompts"
 )
 
 add-newlines-before-lists(){
@@ -45,7 +52,8 @@ copy-to-docs() {
     fi
 
     for FILE in "${FILES[@]}"; do
-        if [[ "${EXCLUDE_DIRS[*]}" =~ [[:space:]]${FILE}[[:space:]] ]]; then
+        if [[ "${EXCLUDE_DIRS[*]}" =~ [[:space:]]${FILE}[[:space:]] ||
+            "${EXCLUDE_KEYWORDS[*]}" =~ ${FILE} ]]; then
             printf "Found exlusion directory: %s\n" "$FILE" && continue
         fi
         printf "DEBUG: File: %s \n" "$FILE"
@@ -59,6 +67,6 @@ copy-to-docs() {
     done
 }
 
-add-newlines-before-lists
+[[ ! $(hostname) == homelab ]] && add-newlines-before-lists
 copy-to-docs
 
