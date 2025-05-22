@@ -51,8 +51,11 @@ called "Control Sequence Introducer," or "CSI" commands.
 \033    # ESC in (Octal)
 \x1b    # ESC in (Hexadecimal)
 \u001b  # ESC in (Unicode)
-      # ESC (the actual ESC control character)
+^[      # ESC (the actual ESC control character, not the ^ and [ characters)
 ```
+
+Any `ESC` on this page can safely be replaced by `\033`, `\x1b`, or `\u001b`.  
+You can use `` or `\e` (if supported).  
 
 ---
 
@@ -112,6 +115,9 @@ and background color of the terminal.
 
 Each number in the control sequence represents a way to customize the 
 foreground (text) or background.  
+
+
+> See the [wiki article](https://en.wikipedia.org/wiki/ANSI_escape_code#Select_Graphic_Rendition_parameters) for a list of SGR parameters.  
 
 
 ### Color Basic Syntax  
@@ -245,18 +251,57 @@ printf "\e[1;5;31;40m---Testing a color code---\e[0m"
 
 
 #### 256-colors  
+In an ANSI control sequence using SGR, the control sequence can take multiple
+arguments to specify 256-color.  
 
-`38;` indicates "foreground"  
-`5;` indicates "256-color"  
+```bash
+"\x1b[38;5;196m"
+```
+
+- `ESC[`: CSI
+- `38;`: indicates "foreground"  
+- `5;`: indicates "256-color"  
+- `33`: A number in the range `0`-`255`.  
+- `m`: The end of the control sequence.  
+
 ```bash  
 SYNTAX="\e[38;5;${COLOR_CODE}m"  
 # or, if used in your prompt customization:  
 PS1_SYNTAX="\[\e[38;5;${COLOR_CODE}m\]"  
-0-7: Standard colors  
-8-15: Bright colors  
-16-231: 6x6x6 RGB cube  
-232-255: Grayscale  
+
+# Boils down to this:
+"ESC[38;5;${COLOR_CODE}m"   # Select foreground color
+"ESC[48;5;${COLOR_CODE}m"   # Select background color
 ```
+
+The `ESC` is one of the escape methods listed [here](#ansi-escape-sequence-syntax).  
+
+The `${COLOR_CODE}` is a number between `0` and `255`:
+
+* `0-7`:  Standard colors (Same as `ESC[30-37m`)
+* `8-15`: High intensity colors (Same as `ESC[90-97m`)
+* `16-231`: 6x6x6 RGB cube  
+* `232-255`: Grayscale in 24 steps.  
+
+---
+
+
+#### Chaining Colors
+You can specify both a foreground and background color in the same escape sequence.  
+An example:
+```bash
+printf "\x1b[38;5;196;48;5;227mHello, world\x1b[0m\n"
+```
+
+- `\x1b[`: CSI (`ESC[`)
+- `38;5;196`: Specify the foreground (`38`) 
+    - `5;196` is selecting `196` out of the 256 colors.  
+- `48;5;232`: Specify the background (`48`)
+    - `5;232` is selecting `232` out of the 256 colors.  
+
+This prints the text `Hello, world` with a black background with red text.  
+
+Then we have `\x1b[0m` to reset the colors back to their defaults.  
 
 
 ## Terminal Manipulation Sequences
@@ -378,6 +423,9 @@ specification.
 ## Resources
 * <https://jvns.ca/blog/2025/03/07/escape-code-standards>
 * <https://en.wikipedia.org/wiki/ANSI_escape_code>
+    * <https://en.wikipedia.org/wiki/ANSI_escape_code#Control_Sequence_Introducer_commands>
+    * <https://en.wikipedia.org/wiki/ANSI_escape_code#Examples>
+    * <https://en.wikipedia.org/wiki/ANSI_escape_code#Select_Graphic_Rendition_parameters>
 * <https://invisible-island.net/xterm/ctlseqs/ctlseqs.html>
 * <https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797#screen-modes>
 * <https://stackoverflow.com/questions/4416909/anyway-change-the-cursor-vertical-line-instead-of-a-box>
