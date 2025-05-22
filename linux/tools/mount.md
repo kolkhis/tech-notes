@@ -92,5 +92,63 @@ You can add an entry to `/etc/fstab` and then running `mount -a` to mount a file
   ```
 
 
+## Bind Mounts
+
+A **bind mount** is when you take an existing directory or file on the Linux
+filesystem and `mount` it again somewhere else in the filesystem tree.  
+
+Unlike a typical mount (like mountaing a USB stick), bind mounts don't change
+devices. They just provice a second access point to the same file or directory.  
+
+---
+
+Bind mounts let you reuse existing directories or files in multiple places *without
+duplication*.  
+
+For example, if you wanted to reuse a directory in a chrooted environment, you could
+use a bind mount:
+```bash
+mkdir /mnt/real_data
+mkdir /var/chroot/mnt_data
+mount --bind /mnt/real_data /var/chroot/mnt_data
+```
+
+Now `/mnt/real_data` and `var/chroot/mnt_data` point to the *same exact* data.  
+
+---
+
+You can also bind mount a single file if you want.  
+```bash
+mkdir /var/chroot/etc
+mount --bind /etc/hosts /var/chroot/etc/hosts
+```
+
+### Making a Bind Mount Read-Only
+
+You can remount a bind mount as read-only.  
+
+This is great for security, especially in jailed environments where you might want to
+give the user access to certain files (like `/etc/hosts`, `/bin/bash`, `/usr/bin/ssh`), 
+but not allow them to change those files.
+
+For example, mounting `/bin` into a chroot jail as read-only:
+```bash
+mkdir -p /var/chroot/bin
+mount --bind /bin/var/chroot/bin
+mount -o remount,bind,ro /bin /var/chroot/bin
+```
+
+> **Note**: You *must* do the `--bind` first, then a second `-o remount,bind,ro` to
+> make it readonly. Linux doesn't allow `--bind` and `ro` together in the same step.  
+
+This is really useful for when mounting single files that are not meant to be
+changed, like `/etc/hosts`:
+```bash
+mkdir /var/chroot/etc
+mount --bind /etc/hosts /var/chroot/etc/hosts
+mount -o remount,bind,ro /etc/hosts /var/chroot/etc/hosts
+```
+
+
 
 
