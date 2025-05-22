@@ -4,6 +4,23 @@ To improve security, the system will be air-gapped.
 This will be done with a bastion node that contains a user account that is jailed to
 a chrooted environment.  
 
+
+## Table of Contents
+* [Overview](#overview) 
+* [Building a Chroot Jail](#building-a-chroot-jail) 
+    * [Create the Directory Structure](#create-the-directory-structure) 
+    * [Copy over Binaries (and Linked Libraries)](#copy-over-binaries-and-linked-libraries) 
+        * [Copy all of the Binaries](#copy-all-of-the-binaries) 
+    * [Copy over Required System Files](#copy-over-required-system-files) 
+    * [Create Special Files](#create-special-files) 
+    * [Copy Name Switch Service Files](#copy-name-switch-service-files) 
+    * [Create the User Account](#create-the-user-account) 
+        * [Create a Custom Shell](#create-a-custom-shell) 
+* [High Level Steps](#high-level-steps) 
+* [Enhancements (TODO)](#enhancements-todo) 
+* [Resources](#resources) 
+
+
 ## Overview
 
 There will be 1 node with a jailed user.
@@ -51,8 +68,14 @@ Tools used:
 
 On the proposed jumpbox, use a chrooted environment in which to jail users.  
 
+### Create the Directory Structure
+
 `/var/chroot` is a good location, it's out of the way and won't be interfered with.  
 
+If we wanted to make multiple chroot environments on the same host for multiple user
+accounts, we could name the chroot directories accordingly (`/var/chroot_user1`, `/var/chroot_user2`, etc.).  
+
+For now, we'll only do one.  
 ```bash
 mkdir /var/chroot
 ```
@@ -76,30 +99,42 @@ mkdir -p /var/chroot/{bin,lib64,dev,etc,home,usr/bin,lib/x86_64-linux-gnu}
 ls -l /var/chroot   # verify
 ```
 
-
 ---
+
+### Copy over Binaries (and Linked Libraries)
 
 Then we can copy over some binaries.  
 
+Let's start with one, bash.  
 ```bash
 cp /usr/bin/bash /var/chroot/bin/bash
 ```
 
-The binary won't be able to work by itself.  
-Binaries usually have linked libraries that they use as dependencies.  
+Now, the binary won't be able to work by itself.  
+Binaries typically have linked libraries that they use as dependencies.  
 
-We can get a list of those linked libraries with `ldd`.  
+We can get a list of those linked libraries by using the `ldd` program.  
 
 ```bash
 ldd /bin/bash
 ```
-Copy them over:
+This shows all the linked libraries that `bash` depends on in order to function
+properly.  
+
+Copy them over to the chroot environment.  
+
+Extract them however you want.  
 <!-- ldd /bin/bash | perl -pe 's/.*?(\/.*?)\(.*?\)$/\1/' # filter the paths -->
 <!-- ldd /bin/bash | perl -pe 's/.*?(\/.*?)\(.*/$1/' -->
 <!-- ldd /bin/bash | sed -E 's/^[^\/]*(\/.*)\(.*$/\1/' -->
 ```bash
-# extract only paths
+# extract only paths with perl
 for LLIB in $(ldd /bin/bash | perl -ne 'print $1 . "\n" if s/^[^\/]*(\/.*)\(.*$/\1/'); do
+    cp $LLIB /var/chroot/$LLIB
+done 
+
+# Using grep -o ('-o'nly print match)
+for LLIB in $(ldd /bin/bash | grep -o '/[^ ]*'); do
     cp $LLIB /var/chroot/$LLIB
 done 
 
@@ -109,9 +144,31 @@ for LLIB in $(ldd /bin/bash | awk '{print $(NF -1)}'); do
 done
 ```
 
+#### Copy all of the Binaries
+
+Let's do that for all the binaries we want to give them.  
+
+Give the jailed user their binaries.  
+Of course, we'll need the linked libraries for those binaries as well.  
+
+We can do this by looping over what we want to give them.  
+```bash
+for binary in {bash,ssh,curl}; do 
+    path=$(which $binary)
+    cp "$path" "/var/chroot$path"
+    for lib in $(ldd "$binary" | grep -o '/[^ ]*'); do
+        cp "$lib" "/var/chroot$lib"
+    done
+done
+```
+
+
 ---
 
+### Copy over Required System Files
+
 Certain system files also need to be present to get the expected functionality.  
+
 - `/etc/passwd`
 - `/etc/group`
 - `/etc/nsswitch.conf`
@@ -125,13 +182,6 @@ done
 ```
 
 Now those base files are in the jail. 
-
-Give the jailed user some binaries.  
-```bash
-for binary in "bash" "ssh" "curl"; do 
-    cp "/usr/bin/$binary" "/var/chroot/usr/bin/$binary"
-done
-```
 
 ### Create Special Files
 A functional shell expects to have certain system files.  
@@ -152,6 +202,96 @@ The chroot jail needs the NSS files in order to have network functionality.
 
 ```bash
 cp -r /lib/x86_64-linux-gnu/*nss* /var/chroot/lib/x86_64-linux-gnu/
+```
+
+### Create the User Account
+
+We'll need an actual user account to put in jail.  
+Let's make one called `jaileduser`, and give him a password `testpass`.  
+```bash
+useradd -m jaileduser
+printf "testpass\ntestpass\n" | sudo passwd jaileduser
+```
+
+Now, we'll need to add some rules in `/etc/ssh/sshd_config` to dump him in the jailed
+environment when he connects.  
+
+```bash
+sudo vi /etc/ssh/sshd_config
+```
+
+Add the lines:
+```bash
+Match User jaileduser
+ChrootDirectory /var/chroot
+```
+
+Then restart the SSH service.  
+```bash
+sudo systemctl restart ssh
+```
+
+
+#### Create a Custom Shell
+
+Now we can create a custom shell for the jailed user. This is just going to be a bash
+script.  
+
+An example:
+```bash
+#!/bin/bash
+declare INPUT
+read -r -n 2 -t 20 -p "Welcome!
+Select one of the following:
+1. Connect to DestinationHost
+2. Exit
+> " INPUT
+case $INPUT in
+  1)
+      printf "Going to DestinationHost.\n"
+      ssh freeuser@destinationhost
+      exit 0
+      ;;
+  2)
+      printf "Leaving now.\n"
+      exit 0
+      ;;
+  *)
+      printf "Unknown input. Goodbye.\n"
+      exit 0
+      ;;
+esac
+exit 0
+```
+
+Make sure it's executable.  
+```bash
+chmod 755 bastion.sh
+```
+
+Once that's made, copy (or hardlink) it over to `/var/chroot/bin/bastion.sh`.  
+```bash
+ln ./bastion.sh /var/chroot/bin/bastion.sh
+# or
+cp ./bastion.sh /var/chroot/bin/bastion.sh
+```
+
+---
+
+Now, set the script as the user's shell in `/etc/passwd`.  
+```bash
+sudo vi /etc/passwd
+```
+Then change the line.  
+```bash
+jaileduser:x:1001:1001::/home/jaileduser:/bin/sh
+# change to:
+jaileduser:x:1001:1001::/home/jaileduser:/bin/bastion.sh
+```
+
+Alternatively, you can use `sed` to accomplish this.  
+```bash
+sudo sed -i '/jaileduser/s,/bin/sh,/bin/bastion.sh,' /etc/passwd
 ```
 
 
@@ -283,8 +423,9 @@ ssh jaileduser@bastion
 
 
 ## Enhancements (TODO)
-* Log all access attempts to a file (inside the jail).
-  
+
+* [ ] Log all access attempts to a file (inside the jail).
+
   E.g.,
   ```bash
   logfile="/var/log/bastion_access.log"
@@ -294,30 +435,47 @@ ssh jaileduser@bastion
         - `man logger`
         - `man rsyslog`
 
-* Add more Defense-in-Depth
+* [ ] Support multiple destinations
+    * [ ] Read from an SSH config file for destinations. Dynamically generate prompt for user
+          based on that.
+        - Parse `~/.ssh/config` file and print out shortnames? Hostnames? User@Hostname?
 
-    * `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
+* Add more defense-in-depth
+    * [ ] `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
       restrictions on the jailed shell or rbash.
-    * `iptables`/`nftables` rule to restrict the jailed user to only be able to SSH out 
+    * [ ] `iptables`/`nftables` rule to restrict the jailed user to only be able to SSH out 
       to certain IPs (destination hosts).
-    * Read-only bind mounts for even more restricted jail environments (advanced).
-        <!-- - TODO: Look more into this. What is a 'bind mount'? -->
+    * [ ] Read-only bind mounts for even more restricted jail environments (advanced).
+      ```bash
+      # Example
+      mount --bind /bin /var/chroot/bin
+      mount -o remount,bind,ro /bin /var/chroot/bin
+      mount -o remount,bind,ro,nosuid,nodev,noexec /bin /var/chroot/bin
+      ```
+        - Combine with `nosuid`, `nodev`, and `noexec` for even more lockdown:
+          ```bash
+          mount --bind /bin /var/chroot/bin
+          mount -o remount,bind,ro,nosuid,nodev,noexec /bin /var/chroot/bin
+          ```
 
-* Make jail setup script idempotent
+* [ ] Make jail setup script idempotent
 
-    * Before copying libraries and binaries, check stat on the destination path and skip 
+    * [x] Before copying libraries and binaries, check stat on the destination path and skip 
       if already present.
 
-    * Use `install -Dm755` for cleaner binary copying with permission setting in one go.
+    * [ ] Use `install -Dm755` for cleaner binary copying with permission setting in one go.
+
+* [ ] Automate the whole setup with Ansible (great for portfolio).
+    - Create ansible role for this.  
 
 ---
 
 * Testing coverage ideas
 
-    * SSH login succeeds and shows menu
-    * Restricted to menu options (try to run commands like `ls`, `cd /`, `echo`)
-    * User cannot escape the chroot via symlinks, process manipulation, or `scp`
-    * Confirm logs or alerts on each access (build a log watcher or Promtail integration)
+    * [ ] SSH login succeeds and shows menu
+    * [ ] Restricted to menu options (try to run commands like `ls`, `cd /`, `echo`)
+    * [ ] User cannot escape the chroot via symlinks, process manipulation, or `scp`
+    * [ ] Confirm logs or alerts on each access (build a log watcher or Promtail integration)
 
 ## Resources
 - []()
