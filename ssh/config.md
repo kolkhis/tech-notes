@@ -7,8 +7,8 @@ You can specify a per-user SSH configuration file at `~/.ssh/config`.
 In this file, you can define helpful aliases for establishing SSH connections to remote hosts.  
 
 ---
-
-## Config File Loading Order
+## User Configuration
+### Config File Loading Order
 
 The SSH client reads its configuration in this order:
 
@@ -17,7 +17,7 @@ The SSH client reads its configuration in this order:
 3. System-wide config: `/etc/ssh/ssh_config.d/` (in Debian)
 4. System-wide config: `/etc/ssh/ssh_config` 
 
-## Basic SSH Config Syntax
+### Basic User SSH Config Syntax
 
 A typical SSH config entry will look like this:
 
@@ -66,7 +66,7 @@ ssh my-host
 
 ---
 
-## Other Config Options
+### Other User Config Options
 
 You can specify more details for SSH config entries.  
 
@@ -83,7 +83,7 @@ You have the `Host` entry, then you can have:
 
 More options in `man ssh_config`.  
 
-## Using Multiple Entries to Match Hosts
+### Using Multiple Entries to Match Hosts
 
 Since the `Host` line is a **pattern**, you can specify multiple `Host` entries to
 match a single host.  
@@ -117,4 +117,6 @@ This does 3 things.
     - This will also match `my-host`.  
 
 ---
+
+
 
