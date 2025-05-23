@@ -2072,3 +2072,5 @@ You'll see:
 
 * <https://www.linuxmissive.com/2020/04/how-to-interrupt-grub-and-override-init.html>
 
+- [Linux Kernel Programming](https://sysprog21.github.io/lkmpg/)
+
