@@ -34,6 +34,7 @@ The jailed user will have a custom shell script as their shell, set in `/etc/pas
 Likely `rbash` will be used as the background shell that runs the custom shell script 
 to minimize the potential of the user breaking out of the jail.  
 
+
 ```plaintext
 | Outside  | (SSH)  | Bastion Host | (SSH) |  Destination Host
 | Internet |  --->  | JailedUser   |  ---> |  Unjailed User
@@ -47,6 +48,7 @@ The concepts implemented here:
 
     - Using a chroot jail with a custom shell (and possibly `rbash`) enforces the
       rule of least privilege and containment.  
+        - `rbash` cannot redirect output.  
 
     - Air-gapping the internal network by forcing access through a bastion host is a
       standard practice in secure enterprise environments.  
@@ -424,9 +426,9 @@ ssh jaileduser@bastion
 
 ## Enhancements (TODO)
 
-* [ ] Log all access attempts to a file (inside the jail).
+* [ ] Log all external access attempts to a file (inside the jail).
 
-  E.g.,
+  E.g., when a user tries to connect to an external host from within the jump server.  
   ```bash
   logfile="/var/log/bastion_access.log"
   echo "$(date): User input '$INPUT'" >> "$logfile"
@@ -434,6 +436,8 @@ ssh jaileduser@bastion
     - To keep it inside the jail, mount `/dev/log` and use `logger` with `rsyslog`.
         - `man logger`
         - `man rsyslog`
+
+* [ ] Set up fail2ban for jumpserver.
 
 * [ ] Support multiple destinations
     * [ ] Read from an SSH config file for destinations. Dynamically generate prompt for user
@@ -457,6 +461,10 @@ ssh jaileduser@bastion
           mount --bind /bin /var/chroot/bin
           mount -o remount,bind,ro,nosuid,nodev,noexec /bin /var/chroot/bin
           ```
+
+* [ ] Copy over `~/.ssh/config` file to give access to all local inventory's
+  hostnames, IPs, etc.  
+    - Run script from host user environment?
 
 * [ ] Make jail setup script idempotent
 
