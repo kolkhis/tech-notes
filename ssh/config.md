@@ -119,4 +119,52 @@ This does 3 things.
 ---
 
 
+## `SSHD_CONFIG`
+
+The `/etc/ssh/sshd_config` file defines rules for the SSH daemon.  
+
+The rules here are what controls how users enter the system via SSH.  
+
+By default, the rules defined here affect **all** incoming SSH connections.  
+If you want to define more specific rules for specific users, use a [`Match` 
+block](#match-blocks).  
+
+
+More about this in [hardening SSH](./hardening_ssh.md).  
+
+### `Match` Blocks
+
+You can use `Match` blocks in the SSHD config file to define conditional logic that
+enforces rules only for certain users.  
+
+#### Matching Users
+
+You can match usernames inside `Match` blocks using `Match User <username>`:  
+```bash
+Match User user1
+    ChrootDirectory /var/chroot_user1
+```
+`Match User user1`: This matches the username that a user logs in with, and sets
+the rules underneath it for the matched user.  
+
+Here, we set `ChrootDirectory` to `/var/chroot`.  
+
+Essentially what this is doing is:
+```bash
+ssh user1@remote-host
+# then, immediately:
+chroot /var/chroot_user1
+```
+
+#### Matching Groups
+You can also use `Match Group <groupname>` to match users that belong to a specific 
+group.  
+
+```bash
+Match Group groupname
+    ForceCommand script.sh
+    PermitTTY no
+```
+
+
 
