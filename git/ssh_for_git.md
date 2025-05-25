@@ -24,7 +24,7 @@ Never share your private key with anyone.
 * Then use `ssh git@github.com` to test if it worked.  
 
 
-## SSH 
+## SSH for Signing Commits
 - Add SSH public key to github as "signing key"
 ```bash
 git config --global user.signingkey "/home/YOUR_USERNAME/.ssh/id_ed25519"
