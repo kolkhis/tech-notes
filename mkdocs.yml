@@ -1,2 +1,2 @@
-# This file is dynamically generated on build time.
-# Edits to this file will not take effect in the actual build process in the CI/CD pipeline.
+comment: |
+  This file is dynamically generated at build time using a bash script in GitHub Actions.
