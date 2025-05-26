@@ -1,8 +1,11 @@
 # Regex
 
-## Perl Regex
+---
+
 Perl is noted to have the most powerful regular expression engine.  
 It's usually called PCRE (Perl Compatible Regular Expression).  
+
+---
 
 ## Special Variables
 You can reference capture groups (much like `sed`) with variables:
