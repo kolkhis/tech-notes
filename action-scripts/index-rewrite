@@ -93,13 +93,18 @@ generate_nav_entries() {
         done < <(find "$dir" -maxdepth 1 -type f -name "*.md" | sort)
 
         if [[ ${#ENTRIES[@]} -gt 0 ]]; then
-            if grep -qi '/' <<< "$section_title"; then
-                # Section is in a subdirectory.
-                section_title=$(perl -pe 's,/, - ,g' <<< "$section_title")
+            # Make 3 letter titles caps (AWS, VIM, SSH)
+            [[ ${#section_title} -le 3 ]] &&
+                section_title=${section_title^^} || section_title=${section_title^}
+
+            if grep -qi '/' <<< "$section_title"; then # Section is in a subdirectory.
+                # section_title=$(perl -pe 's,/, - ,g' <<< "${section_title^}")
+                section_title=$(perl -pe 's,.*?/,,g' <<< "${section_title^}")
+
                 printf "%s  - %s:\n" "${indent}" "${section_title}"
                 printf '  %s\n' "${ENTRIES[@]}"
             else
-                printf "%s- %s:\n" "${indent}" "$section_title"
+                printf "%s- %s:\n" "${indent}" "${section_title}"
                 printf '%s\n' "${ENTRIES[@]}"
             fi
         fi
