@@ -243,6 +243,16 @@ Using `@copy` as the variable, with `@` to specify an array, it sets the context
 
 ---
 
+## Lowercase Input
+
+```bash
+ls -alh | perl -pe '$_ = lc $_'
+```
+This turns all input to lowercase.  
+This doesn't actually use any regular expressions, it utilizes the "default"
+variable (holds the current line) and the `lc` (lowercase) perl function.  
+
+---
 
 ## Perl File Structure
 

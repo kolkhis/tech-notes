@@ -1,17 +1,8 @@
-# Perl
+# Regex
 
 ## Perl Regex
 Perl is noted to have the most powerful regular expression engine.  
 It's usually called PCRE (Perl Compatible Regular Expression).  
-
-### Lowercase input:
-
-```bash
-ls -alh | perl -pe '$_ = lc $_'
-```
-This turns all input to lowercase.  
-This doesn't actually use any regular expressions, it utilizes the "default"
-variable (holds the current line) and the `lc` (lowercase) perl function.  
 
 ## Special Variables
 You can reference capture groups (much like `sed`) with variables:
