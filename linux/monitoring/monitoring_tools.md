@@ -279,6 +279,20 @@ bBInHhXJ8z6VOz4kbyr_mrvl25AWk__8HxzTkyGl33AMZlYXVp8kHui0SDhbLUC9w5aVJY_O3GY3pp6q
 
 Default port for `InfluxDB2` is `8086`.  
 
+### Connect InfluxDB to Grafana
+
+Go to the Grafana web UI and go to "Add a Datasource."  
+
+Select InfluxDB and fill in the information:
+
+- Select `Flux` as the query language.  
+
+- Add username/Password
+- Add organization name
+- Add bucket name
+- Add the token from the InfluxDB web UI  
+
+
 ## Setting up Telegraf 
 Telegraf is a very versatile tool that allows you to both collect data and send it places.  
 Often paired with InfluxDB.  
