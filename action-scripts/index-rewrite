@@ -99,12 +99,12 @@ generate_nav_entries() {
 
             if grep -qi '/' <<< "$section_title"; then # Section is in a subdirectory.
                 # section_title=$(perl -pe 's,/, - ,g' <<< "${section_title^}")
-                section_title=$(perl -pe 's,.*?/,,g' <<< "${section_title^}")
+                section_title=$(perl -pe 's,.*?/,,g' <<< "${section_title}")
 
-                printf "%s  - %s:\n" "${indent}" "${section_title}"
+                printf "%s  - %s:\n" "${indent}" "${section_title^}"
                 printf '  %s\n' "${ENTRIES[@]}"
             else
-                printf "%s- %s:\n" "${indent}" "${section_title}"
+                printf "%s- %s:\n" "${indent}" "${section_title^}"
                 printf '%s\n' "${ENTRIES[@]}"
             fi
         fi
