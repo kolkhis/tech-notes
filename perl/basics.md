@@ -90,6 +90,15 @@ perl -E 'while(<>) { say uc $_ }'
 This will wait for user input and print it back in uppercase.
 
 
+---
+
+### Setting the IRS from the CLI
+
+Use the `-0` flag to set the input record separator when running Perl.  
+```bash
+perl -pi -00 
+```
+
 
 
 ## Variables

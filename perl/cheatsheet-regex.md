@@ -1,4 +1,4 @@
-# Perl Regex Cheat Sheets
+# Regex Cheatsheets
 
 ## Table of Contents
 * [Character Classes](#character-classes) 
@@ -17,10 +17,10 @@
 | `\W`    | Not word char                    |
 | `\s`    | Whitespace `[ \t\r\n\f\r]`       |
 | `\S`    | Non-whitespace                   |
-| `.`     | Any char except newline (unless `/s`) |
+| `.`     | Any char except newline (unless using `/s` modifier) |
 | `[...]` | Character set                    |
 | `[^...]`| Negated character set            |
-| `\p{L}` | Unicode letter (needs `/u`)      |
+| `\p{L}` | Unicode letter (needs `/u` modifier)      |
 | `\P{L}` | Not a Unicode letter             |
 
 ---
