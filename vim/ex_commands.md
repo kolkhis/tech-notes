@@ -77,6 +77,15 @@ Line numbers may be specified with special characters:
 Vim filters are used to filter a line or range of lines
 through an external program.
 
+* Vim Filters:
+    * `:.!cmd`: use the current line as `stdin` for `[cmd]`, `stdout` is put on the current line.  
+    * `:%! cmd`: use the entire file as `stdin` for `[cmd]`, stdout is put on the current line.  
+    * Pressing `!!` in normal mode will automatically start a filter command
+      for the current line (`:.!`)
+    * Pressing `!<motion>` will start a filter command for the range given by the
+      motion.  
+
+
 ```vim
 :{range}![!]{filter} [!][arg]
 ```
@@ -87,6 +96,8 @@ Filter `{range}` lines through the external program `{filter}`.
 ```
 * This takes the current line and "filters" it using `python3`.
 * The line is replaced with the output of the `filter` program.
+
+
 
 ### Filtering Example
 You have these three lines in your buffer:
