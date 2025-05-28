@@ -1,7 +1,14 @@
 # `entr`
 
-`entr` is a tool used for running a command when a file changes.  
-This is very helpful in testing.  
+---
+
+`entr` is a tool available on Debian-based systems. 
+It's used for running arbitraty commands when a file is changed.  
+
+This tool is not available in the default RedHat repositories. To get similar
+functionality on RedHat-based systems, look into `inotify-tools`, specifically
+`inotifywait`.  
+
 
 ## Table of Contents
 * [Using `entr` with a single file](#using-entr-with-a-single-file) 
@@ -14,27 +21,34 @@ This is very helpful in testing.
 
 ## Using `entr` with a single file  
 
-It needs the absolute path of a file (or list of files) as input. 
+`entr` expects the path of a file (or list of files) as standard input. 
 This can be done with redirection `<` or with a pipe `|`.  
 
-* The `realpath` command can be used to get the absolute path of a file.  
+* The `realpath` command can be used to get the absolute path of a file if needed.  
 
-The `entr` program will rerun a program each time the given file is changed (written).  
+The `entr` program can rerun a program each time the given file is changed (written).  
 ```bash  
 entr bash -c "clear; ./my_script" <<< my_script  
 ```
 
 * This tells `entr` to run `bash -c "clear; ./my_script"` each time `my_script` is changed.  
     * Clears the screen, and then runs the file `./my_script`.  
-* `<<<` is a `here string` redirection operator (bash-only).  
+* `<<<` is a `herestring` operator (bash-only).  
     * It allows a string to be used as the standard input to a command.  
     * It means "take this string and send it to `stdin` as if it were a file."  
     * Not POSIX-compliant.  
-* A POSIX-compliant alternative would be [process substitution](../process_substitution.md), 
-  using the syntax `<()`.  
-```bash
-entr bash -c "clear; ./my_script" < <(realpath ./my_script)
-```
+
+* Alternatively, for a POSIX-compliant solution, pipe the output of an `ls` or `find` 
+  command to `entr`.  
+  ```bash
+  find . -type f -name 'my_script' | entr bash -c 'clear; ./my_script'
+  ```
+
+* Another alternative would be using [process substitution](../bash/process_substitution.md), 
+  using the `<()` syntax (bash-only).  
+  ```bash
+  entr bash -c "clear; ./my_script" < <(realpath ./my_script)
+  ```
 
 ---  
 
@@ -65,7 +79,7 @@ entr bash -c "clear; go test -v ./..." < <(find . -name '*.go')
 entr bash -c "clear; go test -v ./..." < <(ls **/*.go) 
 ```
 The syntax `./...` is Go's way of saying "all packages in the current directory  
-and subdirectories".  
+and subdirectories."  
 
 
 
@@ -85,7 +99,7 @@ A noob option is to use a loop (poor man's `watch`).
 ```bash  
 while true; do ./my_script; sleep 1; done  
 ```
-This will run the script every second. 
+This will run the script every second.  
 If you do this, remember to use `sleep`!  
 
 
