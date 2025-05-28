@@ -1,9 +1,10 @@
 # Customizing Your Terminal  
 
+
 ## Table of Contents
 * [Config Files](#config-files) 
     * [`~/.bashrc`](#bashrc) 
-    * [`/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)](#etcprofile-and-bashlogout-system-wide-bashrc) 
+    * [`/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)](#etcprofile-and-bash_logout-system-wide-bashrc) 
 * [Colors](#colors) 
 * [Customizing Your Prompt](#customizing-your-prompt) 
     * [Modify the PS1 Environment Variable](#modify-the-ps1-environment-variable) 
