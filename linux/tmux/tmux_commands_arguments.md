@@ -1,4 +1,7 @@
-# tmux Commands & Arguments  
+# Tmux Commands
+
+This pae goes through tmux commands and its arguments. Most of these notes come
+from `man tmux` 
 
 To see all commands in a nice little table, check out the [Table of Commands](#Table-of-`tmux-list-commands`-Output).  
 The options aren't explained there like they are in the [list](List-of-tmux-Commands-and-their-Options/Argumnents), but it's easier to look at.  
@@ -37,6 +40,7 @@ When launching tmux from the command line, you can specify the following options
     * Given twice (`-CC`) disables `echo`. 
 * `-c shell-command`
     * Execute `shell-command` using the default shell.  
+
 * `-D`
     * Do not start the tmux server as a daemon.  
     * This also turns the `exit-empty` option off. 
@@ -46,41 +50,49 @@ When launching tmux from the command line, you can specify the following options
     * Specify an alternative configuration file.  
     * By default, tmux loads the system configuration file from `/etc/tmux.conf`, if present  
     * Then it looks for a user configuration file at `~/.tmux.conf`.  
+
 * `-L socket-name`
-    * tmux stores the server socket in a directory under `TMUX_TMPDIR` or `/tmp` if it is unset.  
+    * tmux stores the server socket in a directory under `TMUX_TMPDIR` (defaults to `/tmp`).  
     * The default socket is named `default`.  
-    * This option allows a different socket name to be specified, allowing several independent  
-      tmux servers to be run. (See `man://tmux 63`)  
+    * Allows a different socket name to be specified, allowing several independent  
+      tmux servers to be run.   
+
 * `-l`
     * Behave as a login shell.  
-    * This flag currently has no effect and is for compatibility with other shells 
+    * Currently has no effect. Exists for compatibility with other shells 
       when using tmux as a login shell.  
 
 * `-N`
     * Do not start the server even if the command would normally do so. 
     * E.g., with `new-session` or `start-server`.  
+
 * `-S socket-path`
     * Specify a full alternative path to the server socket.  
     * If `-S` is specified, the default socket directory is not used and any `-L` flag is ignored.  
+
 * `-u`
-    * Write `UTF-8` output to the terminal regardless of `LC_ALL`, `LC_CTYPE`, or `LANG`.  
-    * This is equivalent to -T UTF-8.  
+    * Force output to be `UTF-8` in the terminal. Ignores `LC_ALL`, `LC_CTYPE`, or `LANG`.  
+    * Equivalent to `-T UTF-8`.  
+
 * `-T features`
-    * Set terminal features for the client.  
-    * This is a comma-separated list of features.  
-    * See the terminal-features option ().  
+    * Set terminal features for the client as a comma-separated list of features.  
+    * Equivalent to setting `terminal-features` in tmux config.  
+
 * `-v`
-    * Request verbose logging.  
-    * Log messages will be saved into `tmux-client-PID.log` and `tmux-server-PID.log` files  
-      in the current directory, where `PID` is the `PID` of the server or client process.  
+    * Verbose logging.  
+    * Log messages are saved into `tmux-client-PID.log` and `tmux-server-PID.log` files  
+      in the current directory.  
+        - `PID` is the `PID` of the server or client process.  
     * If `-v` is specified twice, an additional `tmux-out-PID.log` file is generated with  
       a copy of everything tmux writes to the terminal.  
+
 * `-V`
     * Output the tmux version.  
 
 
 ## Useful Commands Quickref 
 Note: `-t` is usually `target`.  
+
 |  Command      | Alias |  Effect  |
 |-|-|-|
 | `list-panes [-ast]`| `lsp` | `-a`: List all panes on server. `-s`: List panes for a session |
@@ -90,295 +102,295 @@ Note: `-t` is usually `target`.
 ## List of tmux Commands and their Options/Argumnents  
 `tmux list-commands`
 
-1. attach-session (attach)  
+1. `attach-session` (attach)  
     * -t: Target session  
     * -d: Detach other clients  
 
-2. bind-key (bind)  
+2. `bind-key` (bind)  
     * -T: Key table  
     * -n: No prefix key required  
 
-3. break-pane (breakp)  
+3. `break-pane` (breakp)  
     * -d: Leave pane in detached state  
     * -n: New window name  
 
-4. capture-pane (capturep)  
+4. `capture-pane` (capturep)  
     * -S: Start line  
     * -E: End line  
 
-5. choose-buffer  
+5. `choose-buffer`  
 
-6. choose-client  
+6. `choose-client`  
 
-7. choose-session  
+7. `choose-session`  
 
-8. choose-tree  
+8. `choose-tree`  
 
-9. choose-window  
+9. `choose-window`  
 
-10. clear-history (clearhist)  
+10. ``clear-history`` (clearhist)  
 
-11. clock-mode  
+11. `clock-mode`  
 
-12. command-prompt  
+12. `command-prompt`  
 
-13. confirm-before (confirm)  
-    * -p: Prompt message  
+13. `confirm-before` (confirm)  
+    * `-p`: Prompt message  
 
-14. copy-mode  
-    * -u: Scroll one page up  
+14. `copy-mode`  
+    * `-u`: Scroll one page up  
 
-15. copy-pipe  
+15. `copy-pipe`  
     * command: Shell command to pipe to  
 
-16. delete-buffer (deleteb)  
-    * -b: Buffer index  
+16. `delete-buffer` (deleteb)  
+    * `-b`: Buffer index  
 
-17. display-menu (menu) [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...  
+17. `display-menu (menu) [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ... `
 
-17. detach-client (detach)  
-    * -s: Target session  
-    * -a: All but current client  
+17. `detach-client` (detach)  
+    * `-s`: Target session  
+    * `-a`: All but current client  
 
-18. display-message  
-    * -c: Target client  
-    * -p: Print message to stdout  
+18. `display-message`  
+    * `-c`: Target client  
+    * `-p`: Print message to stdout  
 
-19. display-panes  
+19. `display-panes`  
 
-20. find-window  
-    * -N: Search window names  
-    * -C: Search window contents  
+20. `find-window`  
+    * `-N`: Search window names  
+    * `-C`: Search window contents  
 
-21. has-session  
-    * -t: Target session  
+21. `has-session`  
+    * `-t`: Target session  
 
-22. if-shell  
+22. `if-shell`  
     * shell-command: Shell command to execute  
     * tmux-command: Tmux command to run if shell-command succeeds  
 
-23. join-pane  
-    * -h: Join horizontally  
-    * -v: Join vertically  
+23. `join-pane`  
+    * `-h`: Join horizontally  
+    * `-v`: Join vertically  
 
-24. kill-pane  
-    * -t: Target pane  
+24. `kill-pane`  
+    * `-t`: Target pane  
 
-25. kill-server  
+25. `kill-server`  
 
-26. kill-session  
-    * -t: Target session  
+26. `kill-session`  
+    * `-t`: Target session  
 
-27. kill-window  
-    * -t: Target window  
+27. `kill-window`  
+    * `-t`: Target window  
 
-28. last-pane  
+28. `last-pane`  
 
-29. last-window  
+29. `last-window`  
 
-30. link-window  
-    * -s: Source window  
-    * -t: Target window  
+30. `link-window`  
+    * `-s`: Source window  
+    * `-t`: Target window  
 
-31. list-buffers  
+31. `list-buffers`  
 
-32. list-clients  
+32. `list-clients`  
 
-33. list-commands  
+33. `list-commands`  
 
-34. list-keys  
+34. `list-keys`  
 
-35. list-panes  
+35. `list-panes`  
 
-36. list-sessions  
-    * -F: Format  
+36. `list-sessions`  
+    * `-F`: Format  
 
-37. list-windows  
+37. `list-windows`  
 
-38. load-buffer  
-    * -b: Buffer name  
+38. `load-buffer`  
+    * `-b`: Buffer name  
     * path: File path  
 
-39. lock-client  
-    * -t: Target client  
+39. `lock-client`  
+    * `-t`: Target client  
 
-40. lock-server (lock)  
+40. `lock-server` (lock)  
 
-41. lock-session  
-    * -t: Target session  
+41. `lock-session`  
+    * `-t`: Target session  
 
-42. move-pane  
-    * -t: Target window  
+42. `move-pane`  
+    * `-t`: Target window  
 
-43. move-window  
-    * -t: Target session  
-    * -s: Source window  
+43. `move-window`  
+    * `-t`: Target session  
+    * `-s`: Source window  
 
-44. new-session  
-    * -s: Session name  
-    * -n: Window name  
-    * -c: Start directory  
-    * -d: Detached session  
+44. `new-session`  
+    * `-s`: Session name  
+    * `-n`: Window name  
+    * `-c`: Start directory  
+    * `-d`: Detached session  
 
-45. new-window  
-    * -n: Window name  
-    * -c: Start directory  
-    * -d: Detached window  
+45. `new-window`  
+    * `-n`: Window name  
+    * `-c`: Start directory  
+    * `-d`: Detached window  
 
-46. next-layout  
+46. `next-layout`  
 
-47. next-window  
+47. `next-window`  
 
-48. paste-buffer  
-    * -b: Buffer index  
-    * -t: Target pane  
+48. `paste-buffer`  
+    * `-b`: Buffer index  
+    * `-t`: Target pane  
 
-49. pipe-pane  
-    * -o: Only pipe new output  
+49. `pipe-pane`  
+    * `-o`: Only pipe new output  
     * command: Shell command to pipe to  
 
-50. previous-layout  
+50. `previous-layout`  
 
-51. previous-window  
+51. `previous-window`  
 
-52. refresh-client  
-    * -S: Save layout  
+52. `refresh-client`  
+    * `-S`: Save layout  
 
-53. rename-session  
+53. `rename-session`  
     * new-name: New session name  
 
-54. rename-window  
+54. `rename-window`  
     * new-name: New window name  
 
-55. resize-pane  
-    * -U: Resize up  
-    * -D: Resize down  
-    * -L: Resize left  
-    * -R: Resize right  
+55. `resize-pane`  
+    * `-U`: Resize up  
+    * `-D`: Resize down  
+    * `-L`: Resize left  
+    * `-R`: Resize right  
 
-56. resize-window  
-    * -U: Resize up  
-    * -D: Resize down  
-    * -L: Resize left  
-    * -R: Resize right  
+56. `resize-window`  
+    * `-U`: Resize up  
+    * `-D`: Resize down  
+    * `-L`: Resize left  
+    * `-R`: Resize right  
 
-57. respawn-pane  
-    * -k: Kill existing pane  
+57. `respawn-pane`  
+    * `-k`: Kill existing pane  
     * command: Command to execute  
 
-58. respawn-window  
-    * -k: Kill existing window  
+58. `respawn-window`  
+    * `-k`: Kill existing window  
     * command: Command to execute  
 
-59. rotate-window  
-    * -D: Rotate down  
-    * -U: Rotate up  
+59. `rotate-window`  
+    * `-D`: Rotate down  
+    * `-U`: Rotate up  
 
-60. run-shell (run)  
-    * command: Shell command to execute  
+60. `run-shell` (run)  
+    * `command`: Shell command to execute  
 
-61. save-buffer  
-    * -b: Buffer index  
-    * path: File path  
+61. `save-buffer`  
+    * `-b`: Buffer index  
+    * `path`: File path  
 
-62. select-layout  
-    * layout-name: Name of the layout  
+62. `select-layout`  
+    * `layout-name`: Name of the layout  
 
-63. select-pane  
-    * -U: Up  
-    * -D: Down  
-    * -L: Left  
-    * -R: Right  
-    * -m and -M: Set and clear the `marked pane`.  
+63. `select-pane`  
+    * `-U`: Up  
+    * `-D`: Down  
+    * `-L`: Left  
+    * `-R`: Right  
+    * `-m` and `-M`: Set and clear the `marked pane`.  
         * There is one marked pane at a time. 
         * Setting a new one clears the last.  
         * The marked pane is the default target for `-s` to:  
-            * `join-pane`,
-            * `move-pane`,
+            * `join-pane`
+            * `move-pane`
             * `swap-pane`
-            * `swap-window`.  
+            * `swap-window`  
 
-64. select-window  
-    * -t: Target window  
+64. `select-window`  
+    * `-t`: Target window  
 
-65. send-keys  
-    * -t: Target pane  
-    * -l: Literal string  
-    * -R: Clear pane's input buffer  
+65. `send-keys`  
+    * `-t`: Target pane  
+    * `-l`: Literal string  
+    * `-R`: Clear pane's input buffer  
 
-66. send-prefix  
+66. `send-prefix`  
 
-67. set-buffer  
-    * -b: Buffer index  
-    * data: Data to set  
+67. `set-buffer`  
+    * `-b`: Buffer index  
+    * `data`: Data to set  
 
-68. set-environment  
-    * -g: Global variable  
-    * -u: Unset variable  
+68. `set-environment`  
+    * `-g`: Global variable  
+    * `-u`: Unset variable  
 
-69. set-hook  
+69. `set-hook`  
     * hook-name: Name of the hook  
     * command: Command to run  
 
-70. set-option  
-    * -g: Global option  
-    * -w: Window option  
-    * -s: Server option  
+70. `set-option`  
+    * `-g`: Global option  
+    * `-w`: Window option  
+    * `-s`: Server option  
 
-71. set-window-option  
-    * option: Window option  
-    * value: Value to set  
+71. `set-window-option`  
+    * `option`: Window option  
+    * `value`: Value to set  
 
-72. show-buffer  
-    * -b: Buffer index  
+72. `show-buffer`  
+    * `-b`: Buffer index  
 
-73. show-environment  
-    * -g: Show global variables  
+73. `show-environment`  
+    * `-g`: Show global variables  
 
-74. show-hooks  
+74. `show-hooks`  
 
-75. show-messages  
+75. `show-messages`  
 
-76. show-options  
-    * -g: Global options  
-    * -w: Window options  
-    * -s: Server options  
+76. `show-options`  
+    * `-g`: Global options  
+    * `-w`: Window options  
+    * `-s`: Server options  
 
-77. show-window-options  
+77. `show-window-options`  
 
-78. source-file  
-    * file: File to source  
+78. `source-file`  
+    * `file`: File to source  
 
-79. split-window  
-    * -h: Horizontal split  
-    * -v: Vertical split  
-    * -c: Start directory  
+79. `split-window`  
+    * `-h`: Horizontal split  
+    * `-v`: Vertical split  
+    * `-c`: Start directory  
 
-80. start-server  
+80. `start-server`  
 
-81. suspend-client  
-    * -t: Target client  
+81. `suspend-client`  
+    * `-t`: Target client  
 
-82. swap-pane  
-    * -s: Source pane  
-    * -t: Target pane  
+82. `swap-pane`  
+    * `-s`: Source pane  
+    * `-t`: Target pane  
 
-83. swap-window  
-    * -s: Source window  
-    * -t: Target window  
+83. `swap-window`  
+    * `-s`: Source window  
+    * `-t`: Target window  
 
-84. switch-client  
-    * -n: Next session  
-    * -p: Previous session  
-    * -t: Target session  
+84. `switch-client`  
+    * `-n`: Next session  
+    * `-p`: Previous session  
+    * `-t`: Target session  
 
-85. unbind-key  
-    * -T: Key table  
+85. `unbind-key`  
+    * `-T`: Key table  
 
-86. unlink-window  
-    * -k: Kill window if becomes detached  
+86. `unlink-window`  
+    * `-k`: Kill window if becomes detached  
 
-87. wait-for  
+87. `wait-for`  
     * channel: Channel to wait for  
 
 ### Table of `tmux list-commands` Output  
