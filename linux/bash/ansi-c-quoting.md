@@ -1,10 +1,17 @@
 # ANSI-C Quoting
 
+You've probably seen that weird syntax `$'...'` somewhere in a Bash script before.  
+That syntax is called ANSI-C quoting. This page explains what that is.  
+
 ---
 
+## What is ANSI-C quoting?
+
 ANSI-C quoting is a bash feature with special syntax that allows you to use backslash
-escape sequences (like in C) and represent non-printable characters cleanly. It also
+escape sequences that you'd use in C and represent non-printable characters cleanly. It also
 allows for writing characters using octal/hex notation.  
+
+> **Note**: ANSI-C quoting is **not** POSIX-compliant. If you care.  
 
 ---
 
