@@ -1,29 +1,69 @@
+# Tmux Overview
 
-### Tmux vs Screen
-#### Multiple user session:
+Tmux is a terminal multiplexer. It's a successor to GNU Screen (which is still
+alive) with more features.  
+
+## Table of Contents
+* [Tmux vs Screen](#tmux-vs-screen) 
+    * [Multiple user session](#multiple-user-session) 
+* [Attach to Existing Session in Tmux](#attach-to-existing-session-in-tmux) 
+* [Create a New Tmux Session](#create-a-new-tmux-session) 
+* [Tmux Commands](#tmux-commands) 
+    * [Session Management](#session-management) 
+    * [Window Management](#window-management) 
+    * [Pane Management](#pane-management) 
+    * [Miscellaneous Commands](#miscellaneous-commands) 
+    * [Session, Window, and Pane Indexing](#session-window-and-pane-indexing) 
+    * [Copy Mode (for copying text)](#copy-mode-for-copying-text) 
+* [Keybindings and Key Tables](#keybindings-and-key-tables) 
+    * [Key Tables](#key-tables) 
+
+## Tmux vs Screen
+Tmux and screen have a lot of overlapping functionality.  
+The thing that stands out the most (to me) is the fact that tmux panes are much 
+easier to use and more full-featured than Screen's split window.  
+
+They both support multiple users at one time, but Screen is a bit better in this
+regard.  
+
+### Multiple user session:
+
 * Both have multi-user support
 * Screen allows users to share a session, but be in different windows
-      * screen -r sessionowner/[pid.tty.host]
-* Tmux session allows users to share a session, but switching windows switches for both users.
+  ```bash
+  screen -r sessionowner/[pid.tty.host]
+  ```
+* Tmux session allows users to share a session, but switching windows switches for 
+  both users.
 
-### Attach to Existing Session in Tmux:
-* `tmux attach -t 0`
-    * Where 0 is the target session from `tmux ls`
-As a shorthand for `attach`, you can just use `a`:
-* `tmux a -t 0`
+## Tmux Commands
 
 ### Create a New Tmux Session
-* `tmux new`
-    * This creates a session. 
-    * The name of the session is an automatically generated number.
-        * A zero-index-based number is given based on how many other sessions are open.
-To create a session with a given name:
-* `tmux new -s new_session`
-    * Then you'd attach to it with `tmux a -t new_session`
 
-### Tmux Commands
-<details>
-<summary> Session Management:</summary>
+* `tmux new`: Ran by itself, with no arguments, creates a new session. 
+    * The name of the session is an automatically generated number.
+    * A zero-index-based number is given based on how many other sessions are open.
+
+To create a session with a custom name:
+
+* `tmux new -s my-session-name`
+    * Then you'd attach to it with `tmux a -t my-session-name`
+
+### Attach to Existing Session in Tmux:
+
+```bash
+tmux attach -t 0
+```
+
+* `0` is the target session from `tmux ls`
+
+As a shorthand for `attach`, you can just use `a`:
+
+```bash
+tmux a -t 0
+```
+
+### Session Management:
 
 
 * `tmux new-session`: Create a new session.
@@ -110,9 +150,8 @@ To create a session with a given name:
 
 * `tmux copy-mode`: Enter copy mode.
 
-* `tmux send-keys` -X copy-selection: Copy selected text to the clipboard.
+* `tmux send-keys -X copy-selection`: Copy selected text to the clipboard.
 
-</details>
 
 
 ## Keybindings and Key Tables
