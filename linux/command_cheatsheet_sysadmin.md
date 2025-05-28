@@ -1,4 +1,4 @@
-# Linux Command Cheat Sheet for Sysadmins
+# Cheatsheet for Sysadmins
 
 
 ## Table of Contents
@@ -80,7 +80,9 @@ umask 022  # Set default file permissions for new files
 ```
 
 ## Package Management
-### For **Debian-based systems** (like Ubuntu):
+Also see [Package Management](./package_management.md).  
+
+### For **Debian-based systems** (Debian, Ubuntu):
 ```bash
 apt update  # Update package lists
 apt upgrade  # Upgrade all packages
@@ -89,7 +91,7 @@ apt remove package  # Remove a package
 dpkg -i package.deb  # Install a .deb package manually
 ```
 
-### For **Red Hat-based systems** (like CentOS, Fedora):
+### For **Red Hat-based systems** (RHEL, Rocky, CentOS):
 ```bash
 dnf update  # Update packages
 dnf install package  # Install a package
@@ -138,7 +140,7 @@ scp file user@remote:/path  # Securely copy files to a remote system
 ## Disk and Filesystem Management
 ```bash
 fdisk -l       # List partition tables
-mkfs.ext4 /dev/sdX1  # Create an ext4 filesystem on a partition
+mkfs.ext4 /dev/sdX1   # Create an ext4 filesystem on a partition
 mount /dev/sdX1 /mnt  # Mount a filesystem
 umount /mnt     # Unmount a filesystem
 lsblk           # List all available block devices
