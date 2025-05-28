@@ -4,9 +4,20 @@ This is a straightforward guide to contributing to a project on GitHub.
 
 ---
 
-Set up [SSH authentication](./ssh_for_git.md) for the command line.  
+Prerequisites:
+
+- Set up [SSH authentication](./ssh_for_git.md#ssh-for-github-authentication) for the command line.  
+
+- Have a repository to contribute to.  
+    - For the sake of practice, you can create your own repository and use this
+      workflow.  
+    - If you don't want to create your own repo, the Professional Linux Users Group has a 
+      repository specifically for this purpose: 
+      <https://github.com/ProfessionalLinuxUsersGroup/GitPracticeRepo>  
 
 ### 1. Create a fork of the repository in the Github Web UI.  
+
+   If you're using your own repository, you can skip this step.  
 
 ### 2. Clone your fork of the repository.  
    ```bash
@@ -37,7 +48,15 @@ Set up [SSH authentication](./ssh_for_git.md) for the command line.
    ```
 ### 8. Go to the GitHub web UI (back to your fork) and create a pull request from your fork.  
 
-Once that get merged, continue:
+
+   A contributor with write access to the original repository will need to approve and
+   merge your pull request.  
+   
+   Once that gets merged, continue on.  
+   
+   If you're doing this on a repository that you own yourself, you can merge the PR
+   yourself by going to your repo -> Pull Requests -> click the PR you opened -> "Merge pull request."  
+
 
 ### 9. Add original repo as a remote source
    ```bash
@@ -49,4 +68,9 @@ Once that get merged, continue:
    git pull upstream main
    ```
 
-Now your local clone is up to date and you gucci.  
+   Now your local clone is up to date and you gucci.  
+
+---
+
+
+
