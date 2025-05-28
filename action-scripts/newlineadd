@@ -1,0 +1,6 @@
+#!/bin/bash
+# Add a newline before list items (for mkdocs)
+
+set -o globstar
+perl -pi -e 'print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*] |\d\. )|\n) /; $prev = $_' \
+    ./**/*.md
