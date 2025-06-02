@@ -3,11 +3,37 @@ Parameter expansion is a way to modify variables in Bash.
 
 Parameter expansions are used in braces (`${VAR...}`).  
 
+## Table of Contents
+* [Parameter Expansion (Slicing/Substitution)](#parameter-expansion-slicingsubstitution) 
+    * [Slicing](#slicing) 
+    * [Substitution](#substitution) 
+    * [Substrings](#substrings) 
+    * [Getting the Length of a String/Variable](#getting-the-length-of-a-stringvariable) 
+* [Parameter Transformation](#parameter-transformation) 
+    * [Parameter Transformation Operators](#parameter-transformation-operators) 
+    * [Parameter Transformation on Arrays](#parameter-transformation-on-arrays) 
+    * [Special Characters for Parameter Transformation](#special-characters-for-parameter-transformation) 
+    * [Table of Examples using Special Characters](#table-of-examples-using-special-characters) 
+* [Parameter Transformation Examples](#parameter-transformation-examples) 
+* [POSIX-Compliant Parameter Expansions](#posix-compliant-parameter-expansions) 
+
 ## Parameter Expansion (Slicing/Substitution)  
+
+Parameter expansion is a way to modify values in-place.  
+Generally speaking, it uses the syntax:
+```bash
+${variable<operator><args>}
+```
+
+The operator sometimes requires arguments, sometimes it doesn't.  
+
+
 
 Replace strings and variables in place with parameter expansion.  
 
 ### Slicing  
+
+
 ```bash  
 name="John"  
 echo "${name}"  
@@ -179,7 +205,7 @@ ${*,,} # Lowercase all characters in the string
 * `${@^}` applies the uppercase transformation to each argument individually.  
 * `${*^}` treats all arguments as a single string and capitalizes only the first character of that combined string.  
 
-### Parameter Transformation Examples  
+## Parameter Transformation Examples  
 
 Parameter transformation on variables, arrays, and associative arrays:  
 ```bash  
@@ -261,4 +287,54 @@ echo "${@Q}"       # Quotes each argument individually, e.g., "'hello' 'world' '
 # Using ${*} with Q  
 echo "${*Q}"       # Quotes the entire combined string: "'hello world bash'"  
 ```
+
+## Using Default Values
+
+You can use default values for variables that are either null or unset.  
+
+The operators used to do this:
+
+- `:-` Only uses the default value for the current string.
+- `:=` Uses the default value given for the current string *and* assigns the variable
+  to that value.  
+
+
+## POSIX-Compliant Parameter Expansions
+
+POSIX shell does support some parameter expansions.  
+
+- `${var:-Default Value}`
+- `${var:=Default Value}`
+- `${var:?Error message}`
+- `${var:+Alternative value}`
+
+The colons in these parameter expansions are saying "When this variable is either
+unset or null." 
+
+The colon (:) affects how the shell interprets the parameter's state:
+
+* With `:` 
+    - checks if variable is unset OR null (i.e., empty string)
+
+* Without `:` 
+    - checks if variable is unset only
+
+
+The table shows what is used when the variable is set and not null, set and null, or unset.  
+
+| Expression     | var is set & not null | var is set & null (`""`) | var is unset           
+| - | - | - | -
+| `${var:-word}` | value of `var`        | `word`                   | `word`                 
+| `${var-word}`  | value of `var`        | ""                       | `word`                 
+| `${var:=word}` | value of `var`        | sets var=`word`          | sets var=`word`        
+| `${var=word}`  | value of `var`        | ""                       | sets var=`word`        
+| `${var:?word}` | value of `var`        | prints `word` and exits  | prints `word` and exits
+| `${var?word}`  | value of `var`        | `word`                   | prints `word` and exits
+| `${var:+word}` | `word`                | ""                       | ""                     
+| `${var+word}`  | `word`                | `word`                   | ""                     
+
+
+## Resources
+
+- <https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02>
 
