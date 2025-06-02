@@ -141,3 +141,10 @@ The only things it does not preserve:
 * Finding/preserving hardlinks, use `-H` for this.  
 
 
+## Syncing a Directory to Another Host
+
+```bash
+rsync -aiv ./local/directory remote-host:/path/to/destination
+```
+
+
