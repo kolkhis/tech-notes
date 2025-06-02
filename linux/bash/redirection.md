@@ -144,7 +144,7 @@ Bash makes this work like this:
 To prevent a command from writing to a file descriptor (e.g., `stderr`),
 you can close it:  
 ```bash  
-cmd 2>-  
+cmd 2>&-  
 ```
 This effectively silences `stderr` for `cmd`.  
 
@@ -285,7 +285,7 @@ So, `stderr` effectively replaces `stdout`, and `grep` only receives `stderr`.
 
 #### Closing a File Descriptor  
 ```bash  
-exec 3>- # Closes fd 3
+exec 3>&- # Closes fd 3
 ```
 Useful for explicitly releasing system resources.  
 
