@@ -125,24 +125,39 @@ Let's create one.
 
 1. Create a repository on GitHub.  
     - Go to GH -> Top right -> New Repository
-    - Give your repo a name, make sure "Create README.md" is **NOT** checked, and create the repository.  
+    - Give your repo a name ("notes" or "tech-notes"), make sure "Create README.md" is **NOT** checked, and create the repository.  
 
 1. GitHub will give you a list of commands to run. We've already done some of them.  
-These are the commands that GitHub suggests:
+
+   We want the section that says "Push an existing repository from the command line."  
+   ```bash
+   git branch -M main
+   git remote add origin git@github.com:kolkhis/tech-notes.git
+   git push -u origin main
+   ```
+
+    - `git branch -M main`: Renames your branch to `main`, instead of the
+       default `master` that Git uses.  
+       This step is only necessary if you have not configured your default
+       branch name to be `main`.  
+    - `git remote add origin git@github.com:kolkhis/tech-notes.git`: 
+       This adds a new remote repository, called `origin`, pointed to the
+       new repo you just created on Github.  
+    - `git push -u origin main`: This pushes to `origin/main`, and sets the
+      `-u`pstream to this remote and branch.  
+        - This basically means that any time you do a `git pull` or `git push`
+          without any arguments, it will look here.  
+
+
+Now, any time that you push or pull:
 ```bash
-# Already done
-echo "# test" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-
-# These we did not do
-git branch -M main  # Change the name of the branch to 'main'
-git remote add origin git@github.com:kolkhis/test.git
-git push -u origin main
+git push
+git pull
+# Defaults to:
+git push origin main
+git pull origin main
 ```
-
-
+It will default to the remote we set as the upstream, the `origin` remote.  
 
 
 
