@@ -118,4 +118,24 @@ nmap -p- -T4 --open -Pn -vvv 10.10.11.174 -oN output.txt
 
 
 
+## Nmap Flags
+
+The nmap man page has extensive documentation on its flags.  
+
+It has flags for specifying targets, host discovery, different scanning techniques,
+scan order and port specification, service detection, and more.  
+
+### Flags used for Firewall Evasion, Intrusion Detection System Evasion, and Spoofing
+- `-f` : Fragment packets (optionally with the given MTU: `--mtu <val>`)
+- `-D <decoy1,decoy2[,ME],...>`: Cloak a scan with decoys.  
+- `-S <IP_Address>`: Spoof source address
+- `-e <iface>`: Use specified interface
+- `-g/--source-port <portnum>`: Use given port number
+- `--proxies <url1,[url2],...>`: Relay connections through HTTP/SOCKS4 proxies
+- `--data <hex string>`: Append a custom payload to sent packets
+- `--data-string <string>`: Append a custom ASCII string to sent packets
+- `--data-length <num>`: Append random data to sent packets
+- `--ip-options <options>`: Send packets with specified ip options
+- `--ttl <val>`: Set IP time-to-live field
+- `--spoof-mac <mac address/prefix/vendor name>`: Spoof your MAC address
 
