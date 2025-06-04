@@ -128,8 +128,20 @@ Let's create one.
     - Give your repo a name, make sure "Create README.md" is **NOT** checked, and create the repository.  
 
 1. GitHub will give you a list of commands to run. We've already done some of them.  
+These are the commands that GitHub suggests:
 ```bash
+# Already done
+echo "# test" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+
+# These we did not do
+git branch -M main  # Change the name of the branch to 'main'
+git remote add origin git@github.com:kolkhis/test.git
+git push -u origin main
 ```
+
 
 
 
