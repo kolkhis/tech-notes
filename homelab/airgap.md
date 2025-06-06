@@ -26,8 +26,7 @@ a chrooted environment.
 There will be 1 node with a jailed user.
 There will be an ingress to the homelab via this node.  
 
-This node will be responsible for taking input from the user to determine where they
-need to go.  
+This node will be responsible for taking input from the user to determine where they need to go.  
 
 The jailed user will have a custom shell script as their shell, set in `/etc/passwd`.  
 
@@ -421,6 +420,72 @@ ssh jaileduser@bastion
 
 
 ---
+
+## Setting up Logging
+
+Since our bastion script is using `rbash` (restricted bash), redirection is not
+allowed.  
+
+That means the typical:
+```bash
+printf "User entered: %s\n" "$INPUT" >> $LOGFILE
+```
+will not work.  
+
+Sidebar: Though the standard `>` and `>>` redirection operators are disallowed, we
+can still use the pipe (`|`) redirection operator, as well as the `<` input
+redirection operator.  
+
+But, we won't necessarily need those to set up logging.  
+We can use `logger`.  
+
+Now, `logger` is not a builtin command, so it does need to be installed in the chroot
+environment alongside `rbash`, `ssh`, and `ping`, but it will allow us to write logs
+stright to the systemd journal (`journald`), which will then be available through
+`journalctl` (or in `/var/log/syslog` or `/var/log/messages` by default depending on 
+your distro).  
+
+For example:
+```bash
+logger -t bastion "Test message"
+tail -n 1 /var/log/syslog
+# Output:
+# Jun  6 20:27:40 jumpbox01 bastion: Bastion tag test message
+```
+
+The `-t` sets the tag, which will be the current `$USER` by default.  
+
+If we wanted to, we could also use `logger` to write logs 
+to `/var/log/auth.log` (on Debian-based systems only).  
+```bash
+logger -t bastion -p auth.info "Test message"
+tail -n 1 /var/log/auth.log
+# Output:
+# Jun  6 20:30:07 jumpbox01 bastion: Test info severity
+```
+
+- `-p`: Sets the priority for the log, formatted as `facility.level`.  
+    - Defaults to `user.notice`.  
+
+Note that this will not write to `/var/log/secure` on RedHat-based systems, it will write to `/var/log/messages` (tested on Rocky).  
+
+---
+
+Ultimately, `logger` sends log entries to the system logger (`/dev/log` or
+`journald`), and if you're running `rsyslog`, logs end up to wherever your config 
+routes them. This is usually `/var/log/syslog` (Debian) or `/var/log/messages` (RedHat).    
+
+We can set up a custom file through `rsyslog` for our bastion program if we want. We
+would need to add a file in `/etc/rsyslog.d/`, and use `rsyslog`'s quirky
+configuration syntax:  
+```bash
+# /etc/rsyslog.d/50-bastion.conf
+if $programname == 'bastion.sh' then /var/log/bastion.log
+& stop
+```
+
+But, for our purposes, we will likely already be collecting logs from
+the default system log location with our log collection tool (promtail/alloy, etc).  
 
 
 
