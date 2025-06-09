@@ -20,8 +20,9 @@ tail -n 1 /var/log/syslog
 
 The `-t` sets the tag, which will be the current `$USER` by default.  
 
+## Setting Priority
 If we wanted to, we could also use `logger` to write logs 
-to `/var/log/auth.log` (on Debian-based systems only).  
+to `/var/log/auth.log` (on Debian-based systems only) by setting the priority.  
 ```bash
 logger -t bastion -p auth.info "Test message"
 tail -n 1 /var/log/auth.log
@@ -29,10 +30,61 @@ tail -n 1 /var/log/auth.log
 # Jun  6 20:30:07 jumpbox01 bastion: Test info severity
 ```
 
-- `-p`: Sets the priority for the log, formatted as `facility.level`.  
+- `-p auth.info`: Sets the priority for the log, formatted as `facility.level`.  
     - Defaults to `user.notice`.  
 
 Note that this will not write to `/var/log/secure` on RedHat-based systems, it will write to `/var/log/messages` (tested on Rocky).  
+
+### Formatting Priority
+
+The format for `-p`/`--priority` requires the `facility.level` syntax.  
+
+The facilities can be:
+
+#### Facilities
+
+| Facility             | Description / Typical Use
+| -------------------- | ------------ |
+| `auth`               | Authentication logs (login attempts, `sudo`, `su`). Goes to `/var/log/auth.log` (Debian) or `/var/log/secure` (RHEL).
+| `authpriv`           | More sensitive auth data. Not always separate, but can be routed to more secure log files.
+| `cron`               | Cron daemon logs (scheduled job execution, failures).
+| `daemon`             | Misc system daemons not covered by other facilities (e.g., `ntpd`, `dbus`).
+| `kern`               | Kernel messages (from the kernel ring buffer, not usable via `logger`). Logs to `/dev/kmsg`, not `/dev/log`.
+| `lpr`                | Line printer daemon logs. Mostly obsolete unless managing legacy print servers.
+| `mail`               | Mail transport logs (`postfix`, `sendmail`, etc.).
+| `news`               | NNTP servers / Usenet — rarely used today.
+| `syslog`             | Internal syslog messages (`rsyslogd` itself). Good for debugging `rsyslog`.
+| `user`               | Default facility for general user-space processes. `user.notice` is default.
+| `uucp`               | Unix-to-Unix Copy logs. Ancient and probably unused.
+| `ftp`                | FTP daemon logs. Uncommon.  
+| `security`           | Deprecated alias for `auth`.  
+| `local0` to `local7` | Reserved for custom applications. Good for self-contained systems.  
+
+* `kern`: Cannot be generated from userspace process, automatically converted to `user`.
+
+
+#### Levels
+
+These are the `level` options for the `facility.level`.  
+
+| Level Name | Value | Description / Use                                                                 |
+| ---------- | ----- | --------------------------------------------------------------------------------- |
+| `emerg`    | 0     | System is **unusable**. Usually broadcast to all terminals (`wall`). Rarely used.
+| `alert`    | 1     | Needs immediate action. E.g., corrupt system files, full disk on root.
+| `crit`     | 2     | Critical condition. Hardware failures, kernel panic warnings.
+| `err`      | 3     | Standard errors. Application crashes, failed services.
+| `warning`  | 4     | Warnings of potential problems. Could be recoverable or ignored.
+| `notice`   | 5     | Normal, but noteworthy conditions. E.g., "service started".
+| `info`     | 6     | General informational messages. Health checks, connection attempts.
+| `debug`    | 7     | Detailed internal messages. Good for troubleshooting.
+
+
+There are also a few deprecated levels:
+
+* `panic`: Deprecated synonym for `emerg`.  
+* `error`: Deprecated synonym for `err`.  
+* `warn`: Deprecated synonym for `warning`.  
+
 
 ---
 
