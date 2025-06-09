@@ -65,7 +65,10 @@ The facilities can be:
 
 #### Levels
 
-These are the `level` options for the `facility.level`.  
+These are the `level` options for the `facility.level`. Indicates the severity of the
+log that's being sent.  
+
+A lower number means a **higher** priority.  
 
 | Level Name | Value | Description / Use                                                                 |
 | ---------- | ----- | --------------------------------------------------------------------------------- |
