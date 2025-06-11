@@ -477,4 +477,71 @@ You could use a process substitution as input to the while loop, then append eac
 file individually into the array.  
 
 
+## Removing an Element from an Array
+There are a few ways to remove an element from an array in bash.  
+
+### Using Parameter Expansion
+
+If you want to remove a single element from an array, you can use a [parameter
+expansion](./parameter_expansion.md) substitution.  
+
+
+Say we have an array `testarr` with three elements.  
+```bash
+declare -a testarr=("one" "two" "three")
+printf "%s\n" "${testarr[@]}"
+# one
+# two
+# three
+```
+
+We want to get rid of the 2nd element, `"two"`
+
+We can strip out one element by doing:
+```bash
+printf "%s\n" "${testarr[@]/two/}"
+# one
+# 
+# three
+```
+
+This is just stripping it out for the `printf`.  
+We can assign this value to `testarr` as well.  
+```bash
+testarr="${testarr[@]/two/}"
+```
+
+Now, this doesn't actually **remove** the element. It just replaces it with an empty
+string. An element still exists there, but it no longer holds the value it did
+before.  
+
+To truly remove an element (completely), use `unset`.  
+
+### Using a Loop with `unset`
+
+The more "correct" way to remove an element from an array.  
+
+Loop over the whole array, and use `unset` to delete the exact item that you want to
+remove.  
+```bash
+testarr=("one" "two" "three")
+
+for key in "${!arr[@]}"; do
+    if [[ "${testarr[$key]}" == "two" ]]; then
+        unset testarr[$key]
+    fi
+done
+```
+
+Note we're not using the `"${arr[$key]}` syntax here.  
+The `unset` builtin expects just the name and subscript.  
+```bash
+unset name[idx]
+```
+
+So that's why we're doing:
+```bash
+unset testarr[$key]
+```
+
 
