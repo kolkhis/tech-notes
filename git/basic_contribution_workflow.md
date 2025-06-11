@@ -93,34 +93,34 @@ It also gets you hands-on experience with Git.
 ### Create the repo from scratch
 
 1. Create a directory to put your notes in.  
-```bash
-mkdir ~/notes
-cd ~/notes
-```
-
+   ```bash
+   mkdir ~/notes
+   cd ~/notes
+   ```
+   
 1. Now, initialize a new (local) git repository.  
-```bash
-git init
-```
+   ```bash
+   git init
+   ```
 
 1. Create a README.md file and put some text into it.  
-```bash
-echo "# My personal notes" > ./README.md
-```
+   ```bash
+   echo "# My personal notes" > ./README.md
+   ```
 
 1. Stage your new file.  
-```bash
-git add README.md
-```
+   ```bash
+   git add README.md
+   ```
 
 1. Now commit your new file.  
-```bash
-git commit -m "Initial commit"
-```
-Now the local repo has a commit.  
-But, we don't have a remote repo to push it to.  
-
-Let's create one.  
+   ```bash
+   git commit -m "Initial commit"
+   ```
+   Now the local repo has a commit.  
+   But, we don't have a remote repo to push it to.  
+   
+   Let's create one.  
 
 
 1. Create a repository on GitHub.  
