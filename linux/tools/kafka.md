@@ -236,6 +236,96 @@ sudo systemctl restart promtail
 ```
 
 
+## KRaft Mode
+
+KRaft (Kafka Raft Metadata) mode is a Kafka mode available in Kafka 2.8+ (stable in
+Kafka 3.4+) that eliminates the need for Zookeeper.  
+
+It uses Kafka's own Raft quorum for controller election, metadata replication, and
+cluster management.  
+
+
+### Using Kafka in KRaft Mode
+
+Here we'll use a regular VM, with:
+
+- one Kafka broker running in KRaft mode 
+- a local data dir for logs and metadata
+- a config file customized for KRaft
+- a way to test producing and consuming messages (e.g., shell scripts)
+
+1. Download Kafka, 3.4+ for stable KRaft mode
+   ```bash
+   mkdir ~/kafka && cd ~/kafka
+   curl -LO https://dlcdn.apache.org/kafka/3.9.1/kafka-3.9.1-src.tgz
+   tar -xzvf ./kafka_2.13-3.6.0.tgz
+   cd ./kafka_2.13-3.6.0
+   ```
+
+2. Create the data directory
+   ```bash
+   mkdir -p /tmp/kraft-combined-logs
+   ```
+
+3. Create the cluster UUID
+   ```bash
+   ./bin/kafka-storage.sh random-uuid
+   ```
+    * Save this output
+      ```bash
+      CLUSTER_ID="the-cluster-id"
+      ```
+
+4. Format the storage directory.  
+   ```bash
+   ./bin/kafka-storage.sh format -t "$CLUSTER_ID" -c config/kraft/server.properties
+   ```
+
+5. Configure Kafka for KRaft mode.  
+    - Edit `config/kraft/server.properties` with a custom configuration. The minimal
+      config for KRaft:
+     ```ini
+     # KRaft mode
+     process.roles=broker,controller
+     node.id=1
+     controller.quorum.voters=1@localhost:9093
+
+     # Listeners
+     listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+     adverised.listeners=PLAINTEXT://localhost:9092
+     listener.security.protocol.map-CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+
+     # Log dirs (combined metadata and topic logs)
+     log.digs=/tmp/kraft-combined-logs
+
+     # Required for KRaft
+     inter.broker.listener.name=PLAINTEXT
+     ```
+
+6. Start the Kafka broker with the `kafka-server-start.sh` script, passing it the
+   config file as an argument.  
+   ```bash
+   ./bin/kafka-server-start.sh config/kraft/server.properties
+   ```
+
+7. Test
+   ```bash
+   # Create a topic
+   ./bin/kafka-topics.sh --create \
+        --topic test-topic \
+        --bootstrap-server localhost:9092 \
+        --partitions 1 \
+        --replication-factor 1
+
+   # List topics
+   ./bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+   # Produce messages
+   ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic
+
+   # Consume messages
+   ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic --from-beginning
+   ```
 
 ### Kafka Resources
 - <https://www.redpanda.com/guides/kafka-use-cases-log-aggregation>
