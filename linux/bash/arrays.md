@@ -306,7 +306,8 @@ PORTS=(
 )
 ```
 The brackets `[]` in the keys are mandatory.  
-The keys inside the brackets don't have to be quoted, but they can be.  
+The keys inside the brackets don't *have* to be quoted, but they can be.  
+
 
 ### Using Associative Arrays
 Access single values with their keys:
@@ -372,6 +373,9 @@ done
 # Key quoted: 'HTTP'
 ```
 
+> See [parameter expansion](./parameter_expansion.md) for a full list of options.  
+
+
 ## Check if an Element Exists in an Array
 You'll have to use a loop or associative array if you want to check if an element
 exists in an array.  
@@ -384,7 +388,7 @@ declare -A COMPLETED
 something="Let's check for this"
 # Add something to the array
 COMPLETED[something]=true
-if "${COMPLETED[something]}"; then
+if [[ "${COMPLETED[something]}" ]]; then
     printf "element exists\n"
 else
     printf "Element doesn't exist\n"
@@ -402,9 +406,6 @@ for item in "${ARRAY[@]}"; do
     fi
 done
 ```
-
-###### See [parameter transformation](./parameter_transformation.md) for a full list of options.  
-
 
 ## Getting a List of Files in an Array
 One way to get a list of files into an array is using the `read` command along with
@@ -544,4 +545,7 @@ So that's why we're doing:
 unset testarr[$key]
 ```
 
+## Resources
+
+- <https://www.gnu.org/software/bash/manual/html_node/Arrays.html>
 
