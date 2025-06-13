@@ -64,7 +64,6 @@ Tools used:
 - SSH `Match` blocks.  
 
 
-
 ## Building a Chroot Jail
 
 On the proposed jumpbox, use a chrooted environment in which to jail users.  
@@ -550,10 +549,33 @@ the default system log location with our log collection tool (promtail/alloy, et
     * [ ] User cannot escape the chroot via symlinks, process manipulation, or `scp`
     * [ ] Confirm logs or alerts on each access (build a log watcher or Promtail integration)
 
+
+## Future Improvements
+
+- Parse an ansible inventory file for SSH destinations 
+- Use `readonly bind` mounts instead of copying binaries/libraries
+- Add support for logging user actions to a central Loki+Promtail/Alloy instance
+- Implement per-user logging and session auditing
+- Add MFA or TOTP-based verification on top of password login
+- Add AppArmor or Seccomp profile to further restrict jailed shell behavior
+- Replace `rbash` with a minimal statically compiled Go binary as a shell
+
+| Feature                        | Why                                               
+| ------------------------------ | --------------------------------------------------
+| **Parse Ansible inventory**    | Makes system infrastructure-aware and dynamic 
+| **Readonly bind mounts**       | Improves maintainability and reduces duplication  
+| **Centralized logging (Loki)** | Integrates with modern observability stacks       
+| **Per-user auditing**          | Helps in compliance or intrusion forensics        
+| **MFA/TOTP**                   | Hardens authentication beyond passwords           
+| **AppArmor/Seccomp**           | OS-level sandboxing against syscall abuse         
+| **Go binary shell**            | More portable, smaller attack surface than `rbash`
+
+
 ## Resources
 - []()
 - [ProLUG Chroot Jail Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
 - [ProLUG Bastion Host Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/210-building-a-bastion-host)
     * [gh](https://github.com/het-tanis/prolug-labs/tree/main/Linux-Labs/210-building-a-bastion-host)
+
 
 
