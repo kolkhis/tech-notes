@@ -59,6 +59,44 @@ A file descriptor is a number that refers to a file or a process.
 * `|`: Pipes the `stdout` of one command to the `stdin` of another command.  
 * `<<<`: Herestring. This treats the string after it as a file for `stdin`.  
 
+## Obscure Redirection Operators
+Some lesser known redirection operators:
+
+- `<>`: **Opens** the file for both reading *and* writing.  
+    - This should be directed into a file descriptor.  
+      E.g.:
+      ```bash
+      # Open file for read/write using fd 3
+      exec 3<> myfile.txt
+
+      # Read the first line
+      read -r line <&3 && printf "%s\n" "$line"
+
+      # Write something to the file
+      printf >&3 "Log updated!\n" 
+
+      # Close fd 3
+      exec 3>&-
+      ```
+      This can be used to modify a file in-place using file descriptors (e.g.,
+      locking, FIFs, or bidirectional communication).  
+    - This is called the "diamond operator" in Perl.  
+
+- `>|`: Force overwrite with `noclobber` enabled.  
+    - The `noclobber` option will fail any redirections using `>` to a file that
+      already exists.  
+      ```bash
+      set -o noclobber # or set -C
+      touch ./file.txt
+      printf "This won't write!\n" > ./file.txt
+      ```
+      This won't work since `file.txt` already exists.  
+      ```bash
+      printf "This will write!\n" >| ./file.txt
+      ```
+      This will ignore `noclobber` and write to `file.txt` whether it exists or not.  
+
+
 
 ## `stdin`, `stdout`, `stderr`  
 When bash starts, 3 file descritors are opened:  
