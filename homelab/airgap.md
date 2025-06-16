@@ -296,6 +296,9 @@ sudo sed -i '/jaileduser/s,/bin/sh,/bin/bastion.sh,' /etc/passwd
 
 
 ## High Level Steps
+
+###### > Steps taken from het-tanis' [lab on Killercoda](https://killercoda.com/het-tanis/course/Linux-Labs/210-building-a-bastion-host)
+
 Make sure you're on the bastion host.  
 ```bash
 ssh bastion
@@ -317,9 +320,9 @@ cp /usr/bin/curl /var/chroot/bin/curl
 ```
 Copy in their link libraries.
 ```bash
-for pkg in $(ldd /bin/bash | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
-for pkg in $(ldd /usr/bin/ssh | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
-for pkg in $(ldd /usr/bin/curl | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /bin/bash | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /usr/bin/ssh | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /usr/bin/curl | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
 ```
 
 Move in system files.
@@ -503,10 +506,10 @@ the default system log location with our log collection tool (promtail/alloy, et
 
 * [ ] Set up fail2ban for jumpserver.
 
-* [ ] Support multiple destinations
-    * [ ] Read from an SSH config file for destinations. Dynamically generate prompt for user
+* [x] Support multiple destinations
+    * [x] Read from an SSH config file for destinations. Dynamically generate prompt for user
           based on that.
-        - Parse `~/.ssh/config` file and print out shortnames? Hostnames? User@Hostname?
+    * [ ] Read from `/etc/hosts` by default for addresses.  
 
 * Add more defense-in-depth
     * [ ] `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
@@ -526,7 +529,7 @@ the default system log location with our log collection tool (promtail/alloy, et
           mount -o remount,bind,ro,nosuid,nodev,noexec /bin /var/chroot/bin
           ```
 
-* [ ] Copy over `~/.ssh/config` file to give access to all local inventory's
+* [x] Copy over `~/.ssh/config` file to give access to all local inventory's
   hostnames, IPs, etc.  
     - Run script from host user environment?
 
@@ -572,7 +575,6 @@ the default system log location with our log collection tool (promtail/alloy, et
 
 
 ## Resources
-- []()
 - [ProLUG Chroot Jail Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
 - [ProLUG Bastion Host Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/210-building-a-bastion-host)
     * [gh](https://github.com/het-tanis/prolug-labs/tree/main/Linux-Labs/210-building-a-bastion-host)
