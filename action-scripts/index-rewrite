@@ -39,6 +39,8 @@ site_name: Tech Notes by Kolkhis
 repo_url: https://github.com/kolkhis/tech-notes
 theme:
   name: material
+  palette:
+    scheme: slate
 
 markdown_extensions:
   - codehilite
