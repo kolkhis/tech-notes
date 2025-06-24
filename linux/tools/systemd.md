@@ -403,8 +403,50 @@ Using this method, the `gh-backup.sh` script won't need to source a `.env` file,
 since the variables will already be in the environment.  
 
 
+## Mounting Filesystems with Systemd
+
+Systemd can handle mounting file systems.  
+
+The basic way to do this is by using a `.mount` unit file. These contain the UUID of
+the filesystems that are to be mounted and where they should be mounted.
+
+Systemd also has the ability to handle auto-mounting filesystems.  
+You can create a `.automount` unit file to specify the instructions for doing this.  
+
+### `.mount` Unit Files
+The `.mount` unit file should have a `[Mount]` section.  
+```ini
+[Mount]
+What=/dev/disk/by-uuid/f5755511-a714-44c1-a123-cfde0e4ac688
+Where=/mount/point
+Type=ext4
+```
+
+### `.automount` Unit Files
+The `.automount` file **requires** a corresponding `.mount` file, and should have the 
+same base name as the `.mount` file, just with a `.automount` suffix.  
+
+```ini
+[Automount]
+Where=/mount/point
+DirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+
+
+
+
 ## Resources
 
 * [Systemd Service Files](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#)
 * [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html)
+
+- [Systemd Mount](https://www.freedesktop.org/software/systemd/man/latest/systemd.mount.html)
+- [Systemd Automount](https://www.freedesktop.org/software/systemd/man/latest/systemd.automount.html)
+
 
