@@ -143,6 +143,18 @@ ansible-inventory -i /path/to/hosts --graph
 ansible-inventory -i /path/to/hosts --list -y
 ```
 
+## Translating an Inventory to Yaml
+
+Just like checking your hosts file, you can use `ansible-inventory` to translate an
+inventory to `.yaml` format.
+
+```bash
+ansible-inventory -i ./inventory.ini --list --yaml
+```
+
+By default, the `--list` option will output json.  
+You can also output in toml format with `--toml`.  
+
 ## Specifying Different Groups of Hosts (Grouping Hosts)
 ```ini
 [servers]
