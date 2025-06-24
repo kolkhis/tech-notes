@@ -77,7 +77,7 @@ sudo mount -t nfs 192.168.4.11:/nfs/share1 /mnt/share1
 This will mount the remote NFS share to the local directory `/mnt/share1`
 
 
-### Auto Mounting with `/etc/fstab`
+## Auto Mounting NFS Shares with `/etc/fstab`
 If you want to automount the NFS share, you can add an entry if `/etc/fstab` on the client.  
 ```bash
 sudo vi /etc/fstab
@@ -92,7 +92,7 @@ Replace the IP and directories with your host and the NFS directory location.
 
 That's it.
 
-### Auto Mounting with Systemd
+## Auto Mounting NFS Shares with Systemd
 
 Use `.mount` and `.automount` files in order to use systemd to automount the NFS
 share.  
@@ -138,92 +138,34 @@ sudo systemctl enable --now mnt-share1.automount
 
 > **NOTE**: Make sure your unit file names reflect the path of the mount point!  
 
+If you see an error in `journalctl` that says something like 
+"`Where= setting doesn't match unit name. Refusing.`," your naming convention is wrong.  
+
+### Systemd Mount File Name Convention
+
+Your `.mount` and `.automount` files need to reflect the mount point path in their
+names.  
+
 Check what your mount/automount files should be called with the following command:
 ```bash
 systemd-escape -p --suffix=mount '/mnt/share1'
 ```
+
 Plug your mount point into that string and it will show you what your service should
 be called.  
 
+Your file names should be the mount point path, separated by hyphens (`-`) rather
+than slashes.  
 
+So, from the example in this page:
 
-- `/mnt/share1`
-- `mnt-share1`
+- Your mount point is `/mnt/share1`
+- Name the unit files `mnt-share1.mount` and `mnt-share1.automount`.  
 
+Likewise, if you were mounting at `/home/you/nfs`, name the unit files
+`home-you-nfs.mount`, same with the `.automount`.  
 
+Again, the `systemd-escape` command will properly escape your mount point and give
+you a systemd-compliant filename.  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Misc
-```bash
-sudo mount -t nfs 192.168.8.168:/home/ts/nfs-share /home/sam/nfs-mount
-```
-
-
-Automount is a type of unit file through systemd.  
-
-* `systemd-automount`
+---
