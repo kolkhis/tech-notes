@@ -1831,7 +1831,7 @@ A fork bomb abuses `fork()` repeatedly and infinitely.
 ### Protecting Against Fork Bombs
 
 #### User Process Limit
-You can proctect against this with `ulimit -u` (max user processes).  
+You can proctect against forkbombs with `ulimit -u` (max user processes).  
 
 - `ulimit -u 4096`: Prevent a fork bomb from destroying the whole system.  
     - Only the user account running the fork bomb would freeze.  

@@ -353,6 +353,9 @@ Uses:
 Provides control over the resources available to the shell and to
 processes started by it, on systems that allow such control.  
 
+The `ulimit` command can be used to contain the blast radius of forkbombs.  
+More on that [here](./misc.md#user-process-limit).  
+
 * `man bash; /ulimit \[-HS`
 
 ---
