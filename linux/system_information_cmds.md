@@ -1,4 +1,3 @@
-
 ## Linux Cheatsheet
 
 Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).  
@@ -6,7 +5,7 @@ Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).
 
 ## Table of Contents
 * [Linux Cheatsheet](#linux-cheatsheet) 
-* [General Information about the System](#general-information-about-the-system) 
+* [General System Information](#general-system-information) 
     * [User and Group Management](#user-and-group-management) 
     * [Permissions and Ownership](#permissions-and-ownership) 
     * [Package Management](#package-management) 
@@ -20,6 +19,7 @@ Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).
     * [Task Automation and Scheduling](#task-automation-and-scheduling) 
 * [Disk and System Information](#disk-and-system-information) 
     * [vmstat](#vmstat) 
+    * [mpstat](#mpstat) 
     * [Check which version of linux is running](#check-which-version-of-linux-is-running) 
     * [nproc](#nproc) 
     * [Getting Resource Usage Information](#getting-resource-usage-information) 
@@ -35,9 +35,11 @@ Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).
 * [Analyze System Startup Parameters](#analyze-system-startup-parameters) 
 * [Tracking Down a Service](#tracking-down-a-service) 
 * [Verifying File Integrity](#verifying-file-integrity) 
+* [Check if a System Needs Reboot](#check-if-a-system-needs-reboot) 
 
 
-## General Information about the System
+
+## General System Information
 Use `lshw` to list the hardware on the system
 ```bash
 lshw  # List the hardware on the system
