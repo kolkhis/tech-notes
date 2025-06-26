@@ -21,11 +21,14 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
 * All the remaining arguments will be shifted from `$n` to `$n-1`.  
     * `$2` becomes `$1`, `$3` becomes `$2`, and so on.  
 
-## Getting CLI Options, Arguments, and Flags  
+## Basic CLI Argument Parsing
+
+Below is a **minimal** step-by-step way to parse command line arguments using a
+`while` loop with `shift`.  
 
 1. Use a `while` loop to loop over the arguments.  
    ```bash  
-       while [[ -n "$1" ]]; do  
+       while [[ -n $1 ]]; do  
            printf "Code to process the arguments...\n"  
            # Now move on to the next argument:  
            shift
@@ -37,26 +40,28 @@ Processing CLI arguments is best done using a `switch`/`case` in a `while` loop.
     * All the remaining arguments will be shifted from `$n` to `$n-1`.  
 
 
-2. Use the regex comparison operator `=~` to check if the argument starts with a dash `-`.  
+2. Or, use the regex comparison operator `=~` to check if the argument starts with a dash `-`.  
    ```bash  
        while [[ "$1" =~ ^- ]];  do ...; done
    ```
 
-3. Check that the argument isn't `--` on its own.  
+3. Check that the argument isn't `--` on its own (typical usage in many Unix tools).  
    ```bash  
      while [[ "$1" =~ ^- && ! "$1" == "--" ]];  do ...; done
    ```
 
     * The `--` flag is used to indicate that all the arguments have been given.
 
-4. If it does, use a `switch`/`case` to handle the flag  
+4. If `$1` does contain a valid option, use a `switch`/`case` to handle it.  
    ```bash  
-     while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do  
-         case $1 in  
-             (-v | -version)  
-                 printf "%s\n" "$version";  
-                 exit 0;
-                 ;;  
+   while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do  
+       case $1 in  
+           -v|-version)
+               printf "%s\n" "$version";  
+               exit 0;
+               ;;  
+       esac
+   done
    ```
 
 5. Use `shift` to pop the argument off the argument list.  
@@ -87,6 +92,9 @@ if [[ "$1" == '--' ]]; then
     shift;  # Clean up the argument list 
 fi  
 ```
+
+You'd want to do some additional checks when parsing flags that take 
+arguments (e.g., `-s STRING`), but this is a minimal way to do it.  
 
 
 ## Flags that take a value  
