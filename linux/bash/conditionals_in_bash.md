@@ -65,7 +65,7 @@ double `[[ ... ]]` or single `[ ... ]` brackets):
 * `-ge`: Greater than or equal to  
 
 These arithmetic operators in Bash can be used inside double parentheses `(( ... ))`,
-and inside `let` declarations.  
+in `let` statements, and in `declare` statements when using `-i` (`declare -i ...`).  
 
 - `==`: Is equal to   
 - `!=`: Not equal to   
