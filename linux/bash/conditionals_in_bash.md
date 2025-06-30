@@ -53,12 +53,26 @@ The `test` command sorts using ASCII ordering.
 | `-t fd`   |  ["file descriptor"](#file-descriptors) is opened on a terminal.  
 
 ## Arithmetic Operators:  
-* `-eq`: (`==`) Is equal to   
-* `-ne`: (`!=`) Not equal to   
-* `-lt`: (`<`) Less Than   
-* `-le`: (`<=`) Less than or equal to 
-* `-gt`: (`>`) Greater than  
-* `-ge`: (`>=`) Greater than or equal to  
+
+These are the arithmetic operators that are allowed inside bracket notation (either
+double `[[ ... ]]` or single `[ ... ]` brackets):
+
+* `-eq`: Is equal to   
+* `-ne`: Not equal to   
+* `-lt`: Less Than   
+* `-le`: Less than or equal to 
+* `-gt`: Greater than  
+* `-ge`: Greater than or equal to  
+
+These arithmetic operators in Bash can be used inside double parentheses `(( ... ))`,
+and inside `let` declarations.  
+
+- `==`: Is equal to   
+- `!=`: Not equal to   
+- `<`: Less Than   
+- `<=`: Less than or equal to 
+- `>`: Greater than  
+- `>=`: Greater than or equal to  
 
 
 ## Conditionals for Strings and Variables  
