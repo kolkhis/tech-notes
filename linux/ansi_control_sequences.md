@@ -19,14 +19,18 @@ There are a few different types of ANSI control sequences:
 2. `CSI`: Control Sequence Introducer. Starts with `ESC [`, or CSI (`\x9B`)
 3. `DCS`: Device Control String. Starts with `ESC P`, or DSC (`\x90`)  
 4. `OSC`: Operating System Command. Starts with `ESC ]`, or OSC )`\x9D`
+
     * (ignore whitespace between `ESC` and `[` / `P` / `]`)
 
+Below is how you'd perform the ANSI control sequences (where `\x1b` is `ESC`):  
 ```bash
-\x1b      # Escape sequence
+\x1b      # Basic escape sequence
 \x1b[     # Control sequence introducer
 \x1bP     # Device Control String
 \x1b]     # Operating System Command
 ```
+
+Also see [ANSI escape sequence syntax](#ansi-escape-sequence-syntax).  
 
 ## ANSI Escape Sequence Syntax
 You can start escape sequences a number of different ways.  
