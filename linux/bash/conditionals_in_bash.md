@@ -55,7 +55,7 @@ The `test` command sorts using ASCII ordering.
 ## Arithmetic Operators:  
 
 These are the arithmetic operators that are allowed inside bracket notation (either
-double `[[ ... ]]` or single `[ ... ]` brackets):
+double `[[ ... ]]` or single `[ ... ]` brackets, or with `test`):
 
 * `-eq`: Is equal to   
 * `-ne`: Not equal to   
@@ -63,6 +63,13 @@ double `[[ ... ]]` or single `[ ... ]` brackets):
 * `-le`: Less than or equal to 
 * `-gt`: Greater than  
 * `-ge`: Greater than or equal to  
+
+```bash
+if [[ $somevar -gt 0 ]]; then
+    printf "Greater than zero.\n"
+fi
+```
+
 
 These arithmetic operators in Bash can be used inside double parentheses `(( ... ))`,
 in `let` statements, and in `declare` statements when using `-i` (`declare -i ...`).  
@@ -74,6 +81,14 @@ in `let` statements, and in `declare` statements when using `-i` (`declare -i ..
 - `>`: Greater than  
 - `>=`: Greater than or equal to  
 
+```bash
+if (( somevar > 0 )); then
+    printf "Greater than zero.\n"
+fi
+```
+
+> Note that you don't need to use `$` when calling variables inside the arithmetic
+> evaluation.  
 
 ## Conditionals for Strings and Variables  
 * `-v varname`: True if the shell variable varname is set (has been assigned a value).  
