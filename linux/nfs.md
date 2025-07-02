@@ -227,14 +227,38 @@ Available options include:
 
 - `rw`: Read/write access.  
 - `ro`: Read-only access.  
-- `sync`: Write changes to disk **before** responding to client.  
-    - This is recommended for safety.  
+- `sync` The NFS server writes changes to the disk **immediately** before sending a success response to the client.  
+    - This is recommended for safety and data integrity.  
 - `async`: Faster than `sync` but possible to lose data (e.g., system crash).  
-- `no_subtree_check`: Skips directory path checks.  
-    - This is recommended if you're exporting entire filesystem trees.  
+    - With `async`, the NFS server can cache write operations in memory and send a success response
+      to the client **before** actually writing to the disk.  
 - `subtree_check`: Ensures clients can only access the exported directory.  
     - This is the default. Slower than `no_subtree_check`.  
-- `no_root_squash`:
+    - When you export a subdirectory (not a whole filesystem), NFS checks the full path 
+      to ensure the client is only accessing the exported directory.
+    - Better than `no_subtree_check` for security, but slower.  
+- `no_subtree_check`: Skips directory path checks.  
+    - This is usually the recommended approach, especially if you're exporting entire filesystem trees.  
+    - Faster than `subtree_check`, usually fine in most use cases.  
+- `no_root_squash`: Allows root on the client to act as root on the NFS server.  
+    - This means `root` on the client will retain full root permissions on the NFS share.  
+    - This is **dangerous**. If the client gets compromised, the NFS share is compromised. **Not recommended**.  
+- `root_squash`: Maps the client's root user to the `nfsnobody` user.  
+    - This is the safe approach.  
+- `all_squash`: Maps **all** users to the `nfsnobody` user.  
+- `anonuid=UID`: Specify an anonymous UID.  
+- `anongid=UID`: Specify an anonymous GID.  
 
 
+### Reloading Exports
+
+After changing the /etc/exports file, you need to reload the changes.  
+```bash
+sudo exportfs -rav
+```
+
+- `-r`: Re-exports all directories in the `/etc/exports` file.  
+    - This also syncs `/var/lib/nfs/etab` with `/etc/exports`.  
+- `-a`: Exports/un-exports all entries in the `/etc/exports` file.  
+- `-v`: Verbose output.  
 
