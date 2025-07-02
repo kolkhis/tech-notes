@@ -39,14 +39,16 @@ directory you want to export, following the examples at the top of the file:
 ```
 
 - This will allow any IP in the range given in the CIDR address `192.168.4.0/24` to
-  access this share.  
+  access this NFS share.  
   This allows all IPs from `192.168.4.1` to `192.168.4.254`.
+
 - If you want to specify a smaller range, you can create a smaller subnet.  
   ```bash
   /nfs/share1  192.168.4.11/28(rw,sync,no_subtree_check)
   ```
   This will allow IPs from `192.168.4.11` to `192.168.4.27`.  
   The higher the CIDR, the lower the number of available IPs.  
+
 - You can also specify host-specific rules on the same line.  
 
 <!-- TODO: Add section explaining /etc/exports entries -->
@@ -169,3 +171,70 @@ Again, the `systemd-escape` command will properly escape your mount point and gi
 you a systemd-compliant filename.  
 
 ---
+
+## `/etc/exports` Entries
+
+The `/etc/exports` file controls **which directories** are shared over NFS, and **who can
+acess them**.  
+
+Each line in `/etc/exports` defines a directory to share over NFS in the following format:  
+```bash
+<directory> <client>(<options>) <client>(<options>)
+```
+
+- The `<directory>` is the directory to serve over NFS.  
+
+- The `<client>(<options>)` specifies which hosts to allow access to, and what
+  permissions they should have on the NFS share.  
+
+- You can specify multiple clients on the same line, with different permissions.  
+
+
+---
+
+### Client Formats
+
+You can specify the `<client>` in a number of different ways.  
+Some of the most common `<client>` formats are:
+
+- `192.168.1.0/24`: CIDR notation  
+    - This specifies the entire subnet `192.168.1.0` (host bits `1` through `254`).  
+- `192.168.1.11`: Specific IPs  
+    - This specifies a single host to give access to the NFS share.  
+- `homelab`: Specific hostname  
+    - This specifies a single host by name, if it's resolvable.  
+    - This entry should be in `/etc/hosts` to resolve properly.  
+- `*`: Wildcard  
+    - This makes the NFS share available to **any client**.  
+    - **Not recommended** for security reasons.  
+- `@netgroup`: NIS (Network Information Service) netgroup.  
+    - This is mostly used in enterprise setups.  
+
+---
+
+### Options
+
+After you specify the `client`, you need to specify `options` in parentheses.  
+
+```bash
+DIR HOST(OPTIONS)
+```
+
+The `OPTIONS` can be used to specify the permissions for the specific `HOST` (or
+`HOSTS`), as well as how the NFS share will behave on the client.  
+
+Available options include:
+
+- `rw`: Read/write access.  
+- `ro`: Read-only access.  
+- `sync`: Write changes to disk **before** responding to client.  
+    - This is recommended for safety.  
+- `async`: Faster than `sync` but possible to lose data (e.g., system crash).  
+- `no_subtree_check`: Skips directory path checks.  
+    - This is recommended if you're exporting entire filesystem trees.  
+- `subtree_check`: Ensures clients can only access the exported directory.  
+    - This is the default. Slower than `no_subtree_check`.  
+- `no_root_squash`:
+
+
+
