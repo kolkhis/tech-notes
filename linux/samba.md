@@ -28,15 +28,16 @@ sudo mkdir -m0755 -p /srv/samba/share1
 
 ---
 
-### Configure
+### Configuring your Samba Share
 
-Configure Samba to share the directory.  
+Configure Samba to share the directory in `/etc/samba/smb.conf`.  
 ```bash
 sudo vi /etc/samba/smb.conf
 ```
 
 Add an entry following the format specified in the file.  
 
+An example, which will create a public share that anyone on your network can access:  
 ```ini
 [PublicShare]
    path = /srv/samba/share1
@@ -49,6 +50,7 @@ Add an entry following the format specified in the file.
 - `browsable`: Will make it visible in Windows and Linux network browsers
 - `read only`: Allows/disallows writing to the share
 - `guest ok`: Enables/disables requiring authentication
+
 
 > Tip: You can use `testparm` to make sure your config is valid.  
 
