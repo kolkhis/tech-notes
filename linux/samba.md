@@ -5,11 +5,11 @@ Samba is a type of network attached storage that is compatible with Windows mach
 
 
 ## Setting up Samba
----
+
 This page describes how you'd set up Samba on a Linux machine.  
 
 ### Install
----
+
 Install the Samba package.  
 ```bash
 # Debian-based
@@ -29,9 +29,10 @@ sudo mkdir -p /srv/samba/share1
 chmod 755 /srv/samba/share1
 ```
 
+---
 
 ### Configure
----
+
 Configure Samba to share the directory.  
 ```bash
 sudo vi /etc/samba/smb.conf
@@ -59,17 +60,17 @@ Restart the samba service after making changes to the files.
 sudo systemctl restart smbd
 ```
 
+---
 
 ### Mount / Access the Share
----
 
 #### Access Share from Linux
----
 To access the share from Linux, you need the `cifs-utils` package.  
 ```bash
 sudo apt-get install -y cifs-utils
 ```
-CIFS stands for "Common Internet Filesystem".  
+
+- CIFS stands for "Common Internet Filesystem".  
 
 The Samba share will be available using `//server-ip/ShareName`.  
 In this case, `//192.168.x.x/PublicShare`.  
@@ -91,8 +92,9 @@ sudo mount -t cifs //192.168.4.11/PublicShare /mnt/samba/ -o guest
 You may need to change the ownership of the Samba share on the Samba server if you
 want to write to the shares.  
 
-#### Access Share from Windows
 ---
+
+#### Access Share from Windows
 
 To access the Samba share from Windows, just open the File Explorer and type
 `\\server-ip\ShareName` in the navigation bar.  
@@ -103,8 +105,9 @@ select "Map network drive".
 Enter the address the same way, `\\server-ip\ShareName`, and select a drive letter,
 then click "Finish".  
 
-## Adding Authentication to the Samba Share
 ---
+
+## Adding Authentication to the Samba Share
 
 You can add user-based authentication to the Samba share by modifying the entry in
 `/etc/samba/smb.conf`.  
