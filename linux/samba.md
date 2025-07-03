@@ -1,27 +1,25 @@
 # Samba
 
-Samba is a type of network attached storage that is compatible with Windows machines.  
-
-
+Samba is a type of network attached storage that is compatible with both Linux and Windows machines.  
 
 ## Setting up Samba
 
 This page describes how you'd set up Samba on a Linux machine.  
 
-### Install
+### Installing Samba
 
-Install the Samba package.  
+Install the Samba package with the package manager.  
 ```bash
 # Debian-based
 sudo apt-get update
 sudo apt-get install -y samba
 # RedHat-based
-sudo dnf install -y samba samba-common samba-client
+sudo dnf install -y samba
 ```
 
-- On RedHat systems, you need to specify all 3 packages, where as Debian-based 
-  systems just need the `samba` package (it will install the others automatically).  
-
+- You can additionally install `samba-client` package if you want access to tools like
+  `smbclient`, `smbget`, etc.  
+ 
 
 Choose/create the directory to server over Samba.  
 ```bash
