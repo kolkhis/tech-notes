@@ -177,13 +177,17 @@ Also make sure `read only = no` in your `smb.conf` file.
 
 ## Managing Samba Users
 
-You can use the `smbpasswd` command to edit the passwords for Samba users.  
+You can use the `smbpasswd` command to manage Samba users.  
 ```bash
-sudo smbpasswd -a sambauser
+sudo smbpasswd -a sambauser  # Add a user and change password
+sudo smbpasswd -x sambauser  # Delete a user
+sudo smbpasswd sambauser     # Change password
 ```
 
-- This will change the Samba password for the user `sambauser`. This user account must
-  already exist on the host (e.g., have an entry in `/etc/passwd`).  
+The `smbpasswd -a sambauser` will add the user as a Samba user, **and** change the 
+Samba password for the user `sambauser`.  
+
+This user account **must already exist on the host** (e.g., have an entry in `/etc/passwd`).  
 
 You can use the `pdbedit` command to view current Samba users and details.  
 ```bash
@@ -191,11 +195,10 @@ sudo pdbedit -L             # List all Samba users in /etc/passwd format
 sudo pdbedit -Lv sambauser  # Inspect the user details of sambauser
 ```
 
-- This will list all the Samba users.  
+- `pdbedit -L` will list all the Samba users by default. Specify a username  
 - The Samba users will share a UID with the system's corresponding user.  
     - E.g., `sambauser` has UID `1002` in `/etc/passwd`. `pdbedit -L` will show
       `1002` as `sambauser`'s UID.  
-
 
 
 ## Using `sambaclient`
@@ -224,12 +227,77 @@ This copies the local file `/home/kolkhis/somefile` to the NFS share.
 
 ## tl;dr
 
-| Task                   | Command                              |
-| ---------------------- | ------------------------------------ |
-| Install Samba          | `sudo apt install samba`             |
-| Create Share Directory | `sudo mkdir -p /srv/samba/share`     |
-| Configure Share        | Add to `/etc/samba/smb.conf`         |
-| Restart Samba          | `sudo systemctl restart smbd`        |
-| Access (Windows)       | `\\server-ip\sharename`              |
-| Access (Linux)         | `//server-ip/sharename`              |
+```bash
+# Server-side
+sudo apt-get update
+sudo apt-get install -y samba
+# Or, on RedHat-based systems:
+sudo dnf install -y samba samba-common samba-client
+
+# Create share directory
+sudo mkdir -p /srv/samba/share
+
+# Add config entry for share
+sudo vi /etc/samba/smb.conf
+```
+
+The config entry should look like this:
+```ini
+# For shares that don't require authentication
+[PublicShare]
+   path = /srv/samba/share1
+   browsable = yes
+   read only = no
+   guest ok = yes
+
+# for a share that requires authentication
+[SecureShare]
+   path=/srv/samba/share1
+   browsable = yes
+   read only = no
+   guest ok = no
+   valid users = sambauser
+```
+
+After changing the `smb.conf`, restart the `smbd` service.  
+```bash
+sudo systemctl restart smbd
+```
+
+If you're using a secure share with authentication, add some login credentials.  
+```bash
+sudo useradd sambauser
+sudo passwd sambauser
+sudo smbpasswd -a sambauser
+```
+
+Then, on your **client** machines, install `cifs-utils`.  
+```bash
+sudo apt-get install -y cifs-utils
+```
+
+Then mount the Samba share.  
+```bash
+sudo mount -t cifs //192.168.x.x/ShareName -o guest
+# Or, if using a secure share
+sudo mount -t cifs //192.168.x.x/ShareName -o username=sambauser
+```
+
+> Alternatively, use [`sambaclient`](#using-sambaclient) to interact with the Samba share.  
+
+To access the share on Windows, open File Explorer and either type `\\server-ip\ShareName`
+into the File Explorer URI bar, or right click on "Network", then "Map network drive...".  
+
+
+| Task            | Command
+| ----------------| -------
+| Install Samba   | `sudo apt install samba` or `sudo dnf install samba samba-common samba-client`
+| Create Share    | `sudo mkdir -p /srv/samba/share1`
+| Configure Share | Add to `/etc/samba/smb.conf`
+| Restart Samba   | `sudo systemctl restart smbd`
+| Mount Share (Linux)    | `sudo mount -t cifs //server-ip/share /mnt -o guest`
+| Access Share (Windows) | `\\server-ip\sharename`
+| Add Samba User         | `sudo smbpasswd -a sambauser`
+| List Samba Users       | `sudo pdbedit -L`
+| Command-Line Client    | `smbclient //server-ip/share -U sambauser`
 
