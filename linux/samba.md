@@ -72,14 +72,14 @@ sudo apt-get install -y cifs-utils
 The Samba share will be available using `//server-ip/ShareName`.  
 In this case, `//192.168.x.x/PublicShare`.  
 ```bash
-sudo mount -t cifs //192.168.4.11/PublicShare /mnt -o guest
+sudo mount -t cifs //192.168.x.x/PublicShare /mnt -o guest
 ```
 This will mount the share directly to the `/mnt` directory. If you want it to have
 its own directory, create one first.  
 ```bash
 sudo umount /mnt # if you mounted already
 sudo mkdir -p /mnt/samba
-sudo mount -t cifs //192.168.4.11/PublicShare /mnt/samba/ -o guest
+sudo mount -t cifs //192.168.x.x/PublicShare /mnt/samba/ -o guest
 ```
 
 - `-o guest`: No username or password is sent. The Samba server must have `guest ok =
