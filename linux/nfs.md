@@ -51,8 +51,6 @@ directory you want to export, following the examples at the top of the file:
 
 - You can also specify host-specific rules on the same line.  
 
-<!-- TODO: Add section explaining /etc/exports entries -->
-
 After saving the file with the new entry, use the `exportfs` command to load the new
 NFS config.  
 ```bash
@@ -245,9 +243,14 @@ Available options include:
     - This is **dangerous**. If the client gets compromised, the NFS share is compromised. **Not recommended**.  
 - `root_squash`: Maps the client's root user to the `nfsnobody` user.  
     - This is the safe approach.  
+    - `nfsnobody` is is a restricted, low-privilege user that usually can't write to
+      most directories (unless you allow it).  
 - `all_squash`: Maps **all** users to the `nfsnobody` user.  
-- `anonuid=UID`: Specify an anonymous UID.  
-- `anongid=UID`: Specify an anonymous GID.  
+- `anonuid=UID`: Specify an anonymous UID to use for squashed users.  
+- `anongid=UID`: Specify an anonymous GID to use for squashed users.  
+    - This is the UID/GID that would be used instead of the `nfsnobody` user (UID/GID `65534` by default).  
+    - So, instead of using the `nfsnobody` user and group, you can specify a
+      different user for `sqash` operations.  
 
 
 ### Reloading Exports
@@ -257,8 +260,22 @@ After changing the /etc/exports file, you need to reload the changes.
 sudo exportfs -rav
 ```
 
-- `-r`: Re-exports all directories in the `/etc/exports` file.  
-    - This also syncs `/var/lib/nfs/etab` with `/etc/exports`.  
-- `-a`: Exports/un-exports all entries in the `/etc/exports` file.  
+- `-r`: Reloads the exports.
+    - This also syncs `/var/lib/nfs/etab` with `/etc/exports`, which updates the kernel 
+      export table.  
+- `-a`: Exports/un-exports all entries in the `/etc/exports` file (apply to all).  
 - `-v`: Verbose output.  
+
+---
+
+The difference between `-r` and `-a`: 
+
+- `-r` reloads all exports, *and* syncs `/etc/exports` with `/var/lib/nfs/etab` (the
+  NFS kernel export table).  
+    - The `-r` is what actually forces the NFS server to update the kernel export table.
+- `-a` simply means "apply to all", which is useful when adding/removing entries.  
+
+---
+
+
 
