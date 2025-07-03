@@ -190,11 +190,31 @@ sudo pdbedit -Lv sambauser  # Inspect the user details of sambauser
 
 
 
+## Using `sambaclient`
+
+If you don't want to mount the Samba share directly, you can use `sambaclient` to 
+open up a prompt to interact with the share.  
+```bash
+sambaclient //server-ip/ShareName
+```
+Type `?` or `help` to see a list of commands.  
+
+The `get` command will copy a file to your home directory by default.  
+```bash
+get hi.txt
+```
+This copies `hi.txt` to your home dir.  
+
+Use `put` to copy a local file into the Samba share.  
+```bash
+put /home/kolkhis/somefile somefile
+```
+This copies the local file `/home/kolkhis/somefile` to the NFS share.  
 
 
 ---
 
-You can use `testparm` to make sure your config is valid.  
+## tl;dr
 
 | Task                   | Command                              |
 | ---------------------- | ------------------------------------ |
@@ -202,5 +222,6 @@ You can use `testparm` to make sure your config is valid.
 | Create Share Directory | `sudo mkdir -p /srv/samba/share`     |
 | Configure Share        | Add to `/etc/samba/smb.conf`         |
 | Restart Samba          | `sudo systemctl restart smbd`        |
-| Access                 | `\\server-ip\sharename` from Windows |
+| Access (Windows)       | `\\server-ip\sharename`              |
+| Access (Linux)         | `//server-ip/sharename`              |
 
