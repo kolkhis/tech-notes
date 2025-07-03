@@ -70,7 +70,7 @@ sudo apt-get install -y cifs-utils
 - CIFS stands for "Common Internet Filesystem".  
 
 The Samba share will be available using `//server-ip/ShareName`.  
-In this case, `//192.168.x.x/PublicShare`.  
+In this case, `//192.168.x.x/PublicShare` (replace `x` with your host IP).  
 ```bash
 sudo mount -t cifs //192.168.x.x/PublicShare /mnt -o guest
 ```
