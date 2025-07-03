@@ -1,6 +1,10 @@
 # NFS
 
-NFS (Network File Share) is a way to serve a mountpoint over a network.  
+NFS (Network File Share) is a type of network attached storage that provides a way to 
+serve a mountpoint over your network.  
+
+It's worth noting that NFS only shares to Linux machines. If you want a
+Windows-compatible network storage solution, check out [Samba](./samba.md).  
 
 ## Setting up NFS
 
