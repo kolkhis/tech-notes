@@ -23,8 +23,7 @@ sudo dnf install -y samba
 
 Choose/create the directory to server over Samba.  
 ```bash
-sudo mkdir -p /srv/samba/share1
-chmod 755 /srv/samba/share1
+sudo mkdir -m0755 -p /srv/samba/share1
 ```
 
 ---
