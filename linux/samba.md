@@ -35,6 +35,9 @@ Configure Samba to share the directory in `/etc/samba/smb.conf`.
 sudo vi /etc/samba/smb.conf
 ```
 
+- This file may be under `/usr/local/samba/lib/smb.conf` or `/usr/samba/lib/smb.conf` 
+  on some systems.  
+
 Add an entry following the format specified in the file.  
 
 An example, which will create a public share that anyone on your network can access:  
@@ -221,10 +224,198 @@ put /home/kolkhis/somefile somefile
 ```
 This copies the local file `/home/kolkhis/somefile` to the NFS share.  
 
+## Securing Samba Shares
+
+You can limit the access to a Samba share inside the config file.  
+There are also config options for setting default file permissions, setting read-only
+access for certain users, giving write access to certain users, and more.  
+
+Find the entry you want to limit, and decide how you want to limit it.  
+
+### Limit Access by IP
+
+- You can only allow access to a certain IP (or multiple, separated with commas,
+  spaces, or tabs):
+  ```ini
+  [MyShare]
+     hosts allow = 192.168.1.11, 192.168.1.12
+     hosts deny = ALL
+     ...
+  ```
+
+- Allow access to an entire subnet by leaving out the last number of the IP:
+  ```ini
+  [MyShare]
+     hosts allow = 192.168.1.
+     hosts deny = ALL
+     ...
+  ```
+  This only allows any IP in the `192.168.1.0/24` subnet.  
+
+- Specify more than one subnet by separating with spaces, commas, or tabs:  
+  ```ini
+  [MyShare]
+     hosts allow = 192.168.1. 127.
+     hosts deny = ALL
+     ...
+  ```
+  This allows any IP in the `192.168.1.0/24` subnet, and the localhost.  
+
+
+- You can allow entire subnets with **exceptions** as well:
+  ```ini
+  [MyShare]
+     hosts allow = 192.168.1. except 192.168.1.12
+     hosts deny = ALL
+  ```
+  This will allow the whole subnet except for `192.168.1.12`
+
+
+- You can also specify a subnet mask directly (CIDR notation isn't supported).
+  ```ini
+  [MyShare]
+     hosts allow = 10.0.0.0/255.0.0.0
+     hosts deny = ALL
+  ```
+
+- You can also just specify hosts that *aren't* allowed to access the share:
+  ```ini
+  [MyShare]
+     hosts deny = 192.168.4.
+  ```
+
+- Specify both a `hosts allow` and `hosts deny` to only allow trusted subnets:
+  ```ini
+  [MyShare]
+     hosts allow = 192.168.1. 127.
+     hosts deny = ALL
+  ```
+
+### Limit by User
+
+- Specify users that can have access to the share:
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+  ```
+    - Only the user `sambauser` and members of the group `sambagroup` will be able to
+      access this share.  
+    - This will not allow guest access.  
+
+- You can specifically prevent certain users from accessing a share:
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     invalid users = troll
+  ```
+
+- You can also make shares read-only for specific users:  
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sam sambauser @sambagroup
+     read list = sam
+  ```
+  Now the user `sam` will have read-only access to the share.  
+
+- Do the same with write access.  
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sam sambauser @sambagroup
+     write list = sambauser
+  ```
+  Even if the share is read-only, `sambauser` will have write access.  
+
+
+### Hiding Files from Unauthorized Users
+
+You can simply set `hide readable` in your `smb.conf` entry to hide files from users
+who do not have read access to them.  
+
+```ini
+[MyShare]
+   guest ok = no
+   valid users = sambauser @sambagroup
+   hide unreadable = yes
+```
+This will prevent the user from seeing any files they don't have access to.  
+
+### Setting Permissions
+
+- We can set the **default permissions** for files that are **newly created** in the share.  
+  Use the `create mask` option to specify the permissions they should have.  
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     create mask = 640
+  ```
+  This sets the **maximum allowed permissions** for new files created on the share.  
+    - This limits the maximum permissions to `rw-r-----` (`640`) for new files.
+
+- We can also enforce minimum permissions on directories in the share with `force directory mode`.  
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     force directory mode = 750
+  ```
+
+- We can also control what permissions bits the client is allowed to modify by
+  setting the `security mask`.   
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     security mask = 750
+  ```
+  This limits which permission bits a client is allowed to modify (e.g., with `chmod`).  
+  Clients can only change permission bits that are included in this mask.  
+
+
+- We can force certain permission bits on directories.  
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     force security directory mask = 500
+  ```
+    - `force security directory mask` forcibly overwrites directory permissions when the 
+      client attempts to change them.
+    - This forces the owner to always have `r-x` and others to always have `---`, 
+      regardless of what the client tries to set.
+    - It overwrites permission changes on directories, forcing these bits.
 
 ---
 
-## tl;dr
+There are a bunch of other options for controlling how permissions work in your samba
+shares.  
+
+Below is a table explaining what each does.  
+
+| Option                          | Purpose                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `directory mask`                | Max allowed permissions for new directories    |
+| `force create mode`             | Forces minimum permissions for new files       |
+| `force directory mode`          | Forces minimum permissions for new directories |
+| `security mask`                 | Limits `chmod` permissions on files            |
+| `directory security mask`       | Limits `chmod` permissions on directories      |
+| `force security mask`           | Forces `chmod` permissions on files            |
+| `force security directory mask` | Forces `chmod` permissions on directories      |
+| `inherit permissions`           | New files inherit parent directory permissions |
+| `inherit owner`                 | New files inherit parent directory ownership   |
+| `force user`                    | Forces all file ownership to a specific user   |
+| `force group`                   | Forces all file ownership to a specific group  |
+| `map archive`                   | Map Windows archive attribute                  |
+| `map hidden`                    | Map Windows hidden attribute                   |
+| `map system`                    | Map Windows system attribute                   |
+
+
+
+## Install tl;dr
 
 ```bash
 # Server-side
@@ -300,3 +491,11 @@ into the File Explorer URI bar, or right click on "Network", then "Map network d
 | List Samba Users       | `sudo pdbedit -L`
 | Command-Line Client    | `smbclient //server-ip/share -U sambauser`
 
+
+## Resources
+
+- `man samba`
+- `man 5 smb.conf`
+- <https://linux-training.be/networking/ch21.html>
+- <https://www.tecmint.com/install-samba-rhel-rocky-linux-and-almalinux/>
+- <https://www.suse.com/support/kb/doc/?id=000016742>
