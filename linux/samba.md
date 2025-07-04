@@ -394,7 +394,7 @@ This will prevent the user from seeing any files they don't have access to.
 There are a bunch of other options for controlling how permissions work in your samba
 shares.  
 
-Below is a table explaining what each does.  
+Below is a table explaining what each option does.  
 
 | Option                          | Purpose                                        |
 | ------------------------------- | ---------------------------------------------- |
@@ -413,6 +413,11 @@ Below is a table explaining what each does.
 | `map hidden`                    | Map Windows hidden attribute                   |
 | `map system`                    | Map Windows system attribute                   |
 
+Using these options gives you very granular control over what a user can do on your
+Samba shares.  
+
+For instance, if you want to give a user write access but you don't want to allow
+them to *set* write permissions on files. That type of control is extremely useful.  
 
 
 ## Install tl;dr
