@@ -343,6 +343,10 @@ who do not have read access to them.
 ```
 This will prevent the user from seeing any files they don't have access to.  
 
+This *kind of* enforces security through obscurity, which is not a solid security posture,
+but it's still a good measure to take if you don't want users messing with files they
+can't access.  
+
 ### Setting Permissions
 
 - We can set the **default permissions** for files that are **newly created** in the share.  
@@ -363,6 +367,7 @@ This will prevent the user from seeing any files they don't have access to.
      valid users = sambauser @sambagroup
      force directory mode = 750
   ```
+  This will ensure that the **minimum** permissions on any new directories created 
 
 - We can also control what permissions bits the client is allowed to modify by
   setting the `security mask`.   
