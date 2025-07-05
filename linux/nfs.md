@@ -63,6 +63,10 @@ exportfs -rav
 
 The share will now be accessible over the network.  
 
+> NOTE: The default port for NFS is `2049`. If you're running a firewall, either
+> open the port or allow the service.  
+
+
 ### Mounting an NFS Share
 
 From a client machine, you also need the NFS package in order to mount an NFS share.  
@@ -91,6 +95,14 @@ Add the line:
 ```bash
 192.168.4.11:/nfs/share1 /mnt/share1 nfs defaults 0 1
 ```
+
+- Instead of `defaults`, you can use `soft`. This will keep trying to mount the share, 
+  but it will not force the system to wait for it to be mounted.  
+  ```bash
+  192.168.4.11:/nfs/share1 /mnt/share1 nfs soft 0 1
+  ```
+  If you have a `hard` wait, it can break bootup when the NFS server isn't available.  
+
 
 Replace the IP and directories with your host and the NFS directory location.  
 
@@ -282,4 +294,18 @@ The difference between `-r` and `-a`:
 ---
 
 
+## NFS Share Ownership
+The group owner of the share **on the server** can be used when setting the `setguid` 
+bit on the directory.  
+
+This will ensure that any changes on the NFS share are still owned by the group.  
+
+
+
+
+## Resources
+
+* <https://linuxconfig.org/how-to-configure-nfs-on-linux>
+* RedHat-based: <https://www.tecmint.com/how-to-setup-nfs-server-in-linux/>
+* Debian-based: <https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nfs-mount-on-ubuntu-20-04>
 
