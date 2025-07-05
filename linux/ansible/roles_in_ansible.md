@@ -93,6 +93,11 @@ Use the name of the role in a playbook using the `roles` key.
 The playbook calls the `myrole` role.  
 This runs the tasks and resources defined in the role (`roles/myrole`).  
 
+
+> **NOTE**: If you have a playbook that you're inheriting roles in (as above), any 
+> tasks in **that playbook** will always happen **after** roles are executed.  
+> If you need tasks to happen before roles, use `pre_tasks` instead of `tasks`.  
+
 ---
 
 ### Where you can Use Roles
