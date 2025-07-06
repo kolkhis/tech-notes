@@ -23,10 +23,11 @@ It's used to manipulate text using regular expressions.
 * `-i`: Edit the file in place.  
     * Optionally specify a suffix for a backup file:
         * `-i_old`/`--in-place=_old`: Will make a backup with the name `filename_old`.  
-        * If this isn't specified then no backup will be made.  
+        * `-i.bak`/`--in-place=.bak`: Will make a backup with the name `filename.bak`.  
+        * The suffix is optional. If there is no suffix then no backup will be made.  
 * `-e`: Specify a command for `sed`.  
     * This can be used multiple times to perform several edits with one command.  
-* `-n`: Suppress output.  
+* `-n`: Quiet. Suppresses output.  
     * `--quiet`/`--silent`
 * `-s`: Treat multiple files as separate files rather than one long stream.  
 
@@ -99,7 +100,7 @@ cat somefile.txt | sed -E 's/(old)/\1new/g'
 # oldnew
 ```
 
-## Different Commands
+## Other Sed Commands
 The most popular command used in `sed` is the `s` (substitute) command.  
 ```bash
 sed -i '/pattern/s/old/new' file.txt
@@ -109,14 +110,14 @@ sed -i '/pattern/s/old/new' file.txt
 
 But you can use other commands, like `d` (delete) to remove lines or `c` to change lines.  
 
-### Delete Whole Lines
+### Delete Lines (`d`)
 ```bash
 sed -i '/pattern/d' file.txt
 ```
 
 * `'/pattern/d'` This will delete any lines that match the pattern.  
 
-### Change Whole Lines
+### Change Lines (`c`)
 To change a whole line that matches a pattern:
 ```bash
 sed -i '/pattern/c New text for the line' file.txt
@@ -126,12 +127,13 @@ sed -i '/pattern/c New text for the line' file.txt
   that comes after `c`.  
 * Any whitespace between the `c` and the start of the text will not be used.  
 
-### Append Text to Lines
+### Appending Lines (`a`)
 Append text to lines by using the `a` command with `sed`:
 ```bash
-sed -i '/pattern/a Text to append' file.txt
+sed -i '/pattern/a New line text' file.txt
 ```
-The end of each `a` command inserts a newline.
+The beginning and end of each `a` command inserts a newline. This create a new line
+with the text `New line text` after any lines containing the `pattern`.  
 
 E.g., if you wanted to use `sed` to append text to the end of a file:
 ```bash
@@ -145,12 +147,11 @@ sed -i "\$a This text will go at the end of the file" file.txt
       sed -i '$a This t5ext will go at the end of the file' file.txt
       ```
 * If you were to use `$` as the `pattern`, it would append text to the end of every
-  line instead of the EOF.
+  line instead of the EOF (e.g., `/$/a ... `).
 
-### Inserting Text
+### Inserting Lines (`i`)
 Opposite of appending, you can insert text above a given line.  
 
-Ex: insert text above a line: 
 ```bash
 sed -i '/pattern/i This text will go above the line containing the pattern' file.txt
 ```
@@ -160,7 +161,7 @@ in the stream.
 
 `sed` inserts a newline at the end of each `i` command. 
 
-### Append Text from a File
+### Insert from a File (`r`)
 You can use `sed`'s `r` command to append text to a file from another file.  
 
 Ex, to append the contents of `file2.txt` to `file.txt`:
