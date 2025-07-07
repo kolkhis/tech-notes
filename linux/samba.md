@@ -519,10 +519,42 @@ of the samba config file `/etc/samba/smb.conf`.
 [global]
 unix password sync = yes
 passwd program = /usr/bin/passwd %u
-passwd chat = "*New Password:*" %n\n "*Reenter New Password:*" %n\n "*Password changed.*"
+passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
 ```
 The `passwd program` and `passwd chat` options need to be set for the Unix password
 sync to work properly on Linux.  
+
+The `passwd chat` line needs to **exactly match** the output of the `passwd program` 
+being used (in this case, `/usr/bin/passwd`) returns when changing a password using 
+that program.
+
+## Clearing SMB Sessions on Windows
+
+If you've made changes to the Samba share or credentials and try to reconnect via 
+Windows, then you may run into an issue where you get an error looking something
+like:  
+```txt
+The network folder specified is currently mapped using
+a different user name and password.  
+To connect using a different user name and password, first
+disconnect any existing mappings to this network share.
+```
+
+You can clear the cached credentials using PowerShell:
+```sh
+net use
+```
+This will show network drives.  
+
+If you see your drive there (`\\192.168.x.x\ShareName`), that's your Samba session
+that you need to clear.  
+```sh
+net use \\192.168.x.x\ShareName /delete
+# Or, delete all samba sessions
+net use * /delete
+```
+This will clear it, and you'll be able to map/mount the Samba share again through
+File Explorer.  
 
 
 
