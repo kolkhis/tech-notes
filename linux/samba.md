@@ -501,6 +501,30 @@ into the File Explorer URI bar, or right click on "Network", then "Map network d
 | List Samba Users       | `sudo pdbedit -L`
 | Command-Line Client    | `smbclient //server-ip/share -U sambauser`
 
+## Linux/Unix Password Sync
+
+This part is configured by default on some installations of Samba on Linux.  
+But, if you find that your Samba user's password and the Linux user's password are
+out of sync with each other, you'll need to configure password sync.  
+
+---
+
+If Samba is not configured for password sync, when you change the password of a user 
+using either `passwd` or `smbpasswd`, the passwords for the Linux system and the 
+Samba share will be out of sync.  
+This is avoided by setting the `unix password sync = yes` in the `[global]` section 
+of the samba config file `/etc/samba/smb.conf`.  
+
+```ini
+[global]
+unix password sync = yes
+passwd program = /usr/bin/passwd %u
+passwd chat = "*New Password:*" %n\n "*Reenter New Password:*" %n\n "*Password changed.*"
+```
+The `passwd program` and `passwd chat` options need to be set for the Unix password
+sync to work properly on Linux.  
+
+
 
 ## Resources
 
