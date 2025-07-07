@@ -1,6 +1,5 @@
 #!/bin/bash
 
-declare -a FILES
 declare -a EXCLUDE_DIRS=(
     "./docs"
     "./venv"
@@ -38,11 +37,11 @@ add-newlines-before-lists(){
     perl -pi -e '
     print "\n" if /^\s{0,}([-*]|\d\.) / && $prev !~ /^(?:\s{0,}([-*]|\d\.)|\n) /;
     $prev = $_' ./**/*.md
-    :
 }
 
 
 copy-to-docs() {
+    local -a FILES
     read -r -d '' -a FILES < <(
         find . -maxdepth 1 -mindepth 1 #-type d
     )
@@ -59,14 +58,14 @@ copy-to-docs() {
         printf "DEBUG: File: %s \n" "$FILE"
         [[ -f $FILE ]] && printf " %s is a regular file.\n" "$FILE"
 
-        # Recursive copying is copying symlinks
         if [[ ! -h $FILE ]]; then
+            # Recursive copying copies symlinks (bad)
             # cp -r "$FILE" ./docs
             rsync -a --no-links "$FILE" ./docs
         fi
     done
 }
 
-[[ ! $(hostname) == homelab ]] && add-newlines-before-lists
+# [[ ! $(hostname) == homelab ]] && add-newlines-before-lists
 copy-to-docs
 

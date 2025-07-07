@@ -115,12 +115,12 @@ generate_nav_entries() {
 }
 
 main() {
-    echo "Generating $MKDOCS_FILE..."
+    printf "Generating mkdocs.yml at: %s\n" "$MKDOCS_FILE..."
     {
         generate_mkdocs_header
         generate_nav_entries "$DOCS_DIR"
     } > "$MKDOCS_FILE"
-    echo "Done!"
+    printf "Done!\n"
 }
 
 main
