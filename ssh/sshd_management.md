@@ -147,4 +147,57 @@ sudo systemctl restart ssh
 
 
 
+## AllowGroups / DenyGroups
+
+We can configure `AllowGroups` to work with local **and** remote groups (e.g., groups
+through Active Directory).  
+
+```bash
+sudo vi /etc/ssh/sshd_config
+```
+
+Then add a line that matches the group name.  
+```bash
+AllowGroups ssh_users
+```
+
+Adding this will only allow users in the `ssh_users` group (local or from AD) to SSH
+in. All other users will be rejected.  
+
+
+You can also specify multiple group names on the same line.  
+```bash
+AllowGroups ssh_users admins ops_team
+```
+If you need to explicitly block users from certain groups, use the `DenyGroups`
+directive.  
+```bash
+DenyGroups blocked_users
+```
+
+> **NOTE**: Any user part of a group in `DenyGroups` will **always**  be blocked,
+> regardless of whether or not they're in a group specified in `AllowGroup`.  
+
+You can also use `Match` blocks with group names to set rules for these groups.  
+```bash
+Match Group ssh_users
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+```
+
+---
+
+Side note: If filtering out users through AD, you can also filter out unwanted users
+through `/etc/sssd/sssd.conf`.  
+```ini
+[domain/YOUR.DOMAIN]
+access_provider = simple
+simple_allow_groups = ssh_users
+```
+Or:
+```ini
+[domain/YOUR.DOMAIN]
+access_provider = ldap
+ldap_access_filter = (memberOf=cn=ssh_users,ou=Groups,dc=your,dc=domain)
+```
 
