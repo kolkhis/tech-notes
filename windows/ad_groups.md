@@ -30,7 +30,8 @@ Using PowerShell:
   CN=Domain Users,CN=Users,DC=example,DC=com
   ```
 
-- Or use a "cleaner" method using a pipeline:
+- Or use a "cleaner" method using dot notation to extract the `MemberOf` property
+  from the user and pipe it though a loop to extract just the first `CN` from each line:
   ```sh
   (Get-ADUser username -Properties MemberOf).MemberOf | ForEach-Object { ($_ -split ',' )[0]}
   ```
