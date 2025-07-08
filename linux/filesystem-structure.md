@@ -90,6 +90,12 @@ The files in this directory are meant to be persistent.
 
 This is where application data is stored.  
 
+## `/dev`
+
+The `/dev` directory stores special files.  
+
+Special files can either be block devices or character special files.  
+
 
 ## `/boot`
 
@@ -104,6 +110,30 @@ The config files not needed at boot time go in `/etc`.
 
 The `/boot` directory also contains the kernel (or the kernel is located in the `/` [root] directory).  
 
+
+## `/etc`
+
+The `/etc` directory contains primarily configuration files.  
+
+There should be no binaries here. There can be scripts, though.  
+
+There are some subdirectories that should be here (only the first one is mandatory):  
+
+- `/etc/opt`: Stores config files for `/opt`.  
+- `/etc/X11`: Stores config files for the X window manager.  
+    - Optional.  
+- `/etc/sgml`: Stores config files for SGML (Standard Generalized Markup Language).  
+    - Optional.  
+- `/etc/xml`: Stores config files for XML (eXtensible Markup Language).  
+    - Optional.  
+
+
+
+
+## `/srv`
+
+The `/srv` directory is not on all Linux machines by default.  
+This directory is used for data that is being served by the system (e.g., Samba).  
 
 ## Resources
 - <https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03.html>
