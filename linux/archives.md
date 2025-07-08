@@ -13,11 +13,10 @@ There are a few different formats.
 
 - `.gz`: Gzip file.  
     - `gzip` is a compression utility, not an archiving utility.
-    - Compression is often used in conjunction with archives to make the file
-      smaller.  
-- `.tar`: Tar file.  
-- `.tar.gz`: 
-- `.tgz`:
+    - Compression is often used in conjunction with archives to make the file smaller.  
+- `.tar`: Tar archive file.  
+- `.tar.gz`: Tar archive file compressed with `gzip`.  
+    - Sometimes represented as `.tgz` 
 
 ```bash
 # Modern GNU tar options. This works for files compressed
@@ -27,7 +26,7 @@ tar --extract --file filename
 # Same as above
 tar -xf filename
 
-# Same as above. Leading "-" is optional
+# Same as above. The leading dash is optional
 tar xf filename
 
 # explicitly decompress gzip2-compressed file then
@@ -38,7 +37,7 @@ gzip -cd filename.tgz | tar xf -
 bunzip2 -cd filename.tar.bz2 | tar xf -
 ```
 
-## Compression Utilities
+## Compression Formats
 
 ### `.gz` (`gzip`)
 Gzip is a fast compression utility, but it doesn't have a great compression ratio.  
@@ -170,3 +169,67 @@ tar -xJf archive.tar.xz
 # -f: archive file name
 ```
 
+### `.zip`
+The `.zip` format is a cross-platform archive format.  
+Supports compression and multi-file archiving.  
+
+- Create an archive with `zip`:
+  ```bash
+  zip archive.zip file1 file2 dir/
+  ```
+  This bundles `file1`, `file2`, and `dir/` into `archive.zip`.  
+
+- Extract an archive with `unzip`.  
+  ```bash
+  unzip archive.zip
+  ```
+
+### `.rar`
+
+This is a **proprietary** archive format.  
+
+- You **can not** create a `.rar` file without `rar`, which is **not free**.  
+
+- Extracting a `.rar` requires the `unrar` package.  
+  ```bash
+  unrar x archive.rar
+  ```
+
+
+### `.7z` (7zip)
+
+The `.7z` format has a high compression ratio and requires the `p7zip` or `7zip`
+package to use.  
+
+- Create a `.7z` archive with `7z a`.
+  ```bash
+  7z a archive.7z file1 dir/
+  ```
+  This creates `archive.7z` with the files given.  
+
+- Extract a 7zip archive with `7z x`.  
+  ```bash
+  7z x archive.7z
+  ```
+
+---
+
+## tl;dr
+
+```bash
+# Create
+tar -czf foo.tar.gz dir/          # gzip
+tar -cjf foo.tar.bz2 dir/         # bzip2
+tar -cJf foo.tar.xz dir/          # xz
+tar --zstd -cf foo.tar.zst dir/   # zstd
+zip -r foo.zip dir/               # zip
+7z a foo.7z dir/                  # 7zip
+
+# Extract
+tar -xzf foo.tar.gz
+tar -xjf foo.tar.bz2
+tar -xJf foo.tar.xz
+tar --zstd -xf foo.tar.zst
+unzip foo.zip
+7z x foo.7z
+```
