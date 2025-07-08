@@ -135,5 +135,14 @@ There are some subdirectories that should be here (only the first one is mandato
 The `/srv` directory is not on all Linux machines by default.  
 This directory is used for data that is being served by the system (e.g., Samba).  
 
+## `/home`
+
+This stores the home directory for users.  
+
+This directory doesn't **have** to be on a system. User account home directories can 
+be stored elsewhere.  
+
+
+
 ## Resources
 - <https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03.html>
