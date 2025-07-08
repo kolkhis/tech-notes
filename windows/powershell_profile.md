@@ -2,22 +2,26 @@
 # PowerShell Profile  
 
 ## PowerShell vs Windows PowerShell 
-PowerShell (`pwsh.exe`) is a different program from  
-Windows PowerShell (`powershell.exe`).  
-PowerShell (called "pwsh" from now on) is the newer shell for  
-Windows.  
+PowerShell (`pwsh.exe`) is a different program from Windows PowerShell (`powershell.exe`).  
+
+PowerShell (called "pwsh" on this page) is the newer shell for Windows.  
+
+Any PowerShell version 7.0 or above is referencing `pwsh.exe`.  
 
 ## Profile  
 
-Since these two programs are different, both *pwsh* and  
-*powershell* have different `$PROFILE` files.  
+Since these two programs are different, both `pwsh.exe` and 
+`powershell.exe` have different `$PROFILE` files.  
+
 * Note: The `$PROFILE` variable will be set even if there is no profile file.  
   To create one, just start editing it with a text editor. (`nvim $PROFILE`).  
 
 You can check to see if your configuration file actually exists with the `Test-Path` cmdlet.  
-```ps1  
+
+```powershell  
 Test-Path -Path $PROFILE  
 ```
+
 * If there is a file, `Test-Path` returns `TRUE`.  
 * If no file is set, the response is `FALSE`.  
 
@@ -25,7 +29,7 @@ Test-Path -Path $PROFILE
 
 ### PowerShell (`pwsh.exe`) `$PROFILE` Location  
 By default, on Windows, the `$PROFILE` for pwsh will be set to:  
-```ps1  
+```powershell  
 C:\Users\kolkhis\OneDrive\Documents\PowerShell\Microsoft.PowerShell_profile.ps1  
 # or 
 ~/OneDrive/Documents/PowerShell/Microsoft.PowerShell_profile.ps1  
@@ -38,7 +42,7 @@ On Ubuntu/Debian systems:
 
 ### Windows PowerShell (`powershell.exe`) `$PROFILE` Location  
 The default `$PROFILE` location for powershell is:  
-```ps1  
+```powershell  
 C:\Users\kolkhis\OneDrive\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1  
 # or  
 ~/OneDrive/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1  
@@ -46,11 +50,11 @@ C:\Users\kolkhis\OneDrive\Documents\WindowsPowerShell\Microsoft.PowerShell_profi
 
 
 ## Vi Mode  
-```ps1  
+```powershell  
 Install-Module PSReadLine  
 ```
 Then in your profile:  
-```ps1  
+```powershell
 Set-PSReadLineOption -EditMode Vi  
 Set-PSReadLineKeyHandler -Chord Ctrl+[ -Function ViCommandMode  
 # If the above doesn't work for ESC:  
@@ -58,14 +62,14 @@ Set-PSReadLineKeyHandler -Chord Ctrl+Oem4 -Function ViCommandMode
 ```
 
 ## Aliases  
-```ps1  
+```powershell  
 Set-Alias -Name vim -Value nvim  
 ```
 
 ## Customizing The Prompt  
 
 To customize the prompt, we make a function called `prompt`.  
-```ps1  
+```powershell  
 function prompt {
     "$pwd`nPS > "  
 }
@@ -77,7 +81,7 @@ Escape sequences are done with backticks instead of backslashes in PowerShell.
 
 You can define colors in-line in the strings with `$PSStyle`, 
 specifially the `$PSStyle.Foreground.FromRgb` command:  
-```ps1  
+```powershell  
 function prompt  
 {
     Write-Host "$($Global:PSStyle.Foreground.FromRgb(102, 0, 0))${FirstSep} " -NoNewline 
@@ -95,12 +99,45 @@ function prompt
 }
 ```
 
+You can also use ANSI control sequences with the ``` `e[5m ``` syntax (PowerShell
+uses backticks for its escape sequences).  
+
+If your terminal supports it, you can use 255-colors with ANSI control sequences.  
+```powershell
+$BURNT_ORANGE="`e[38;5;130m"
+$DARK_YELLOW="`e[38;5;58m"
+$GREY="`e[38;5;241m"
+$MUTED_BLUEGREEN="`e[38;5;30m"
+$RED_256="`e[38;5;160m"
+$DARK_RED="`e[38;5;88m"
+$RESET="`e[0m"
+
+$FIRST_SEP="┏"
+$SECOND_SEP="┗"
+function prompt
+{
+    # Return a blank prompt to let Write-Host handle everything
+    Write-Host "${SEP_COLOR}${FIRST_SEP} " -NoNewline 
+    Write-Host "${NAME_COLOR}$env:USERNAME" -NoNewline 
+    Write-Host "${GREY}@" -NoNewline 
+    Write-Host "${HOST_COLOR}$(hostname)" -NoNewline 
+    Write-Host "${GREY}:" -NoNewline 
+    Write-Host "${PATH_COLOR}${PWD}" -NoNewline
+    Write-Host "${RED_256}$(Get-GitBranch)"
+    Write-Host "${SEP_COLOR}${SECOND_SEP} " -NoNewline 
+    Write-Host "${GREY}$" -NoNewline
+    return " ${RESET}"
+}
+```
+
+
+
 ## Prompt Colors in Powershell (5.x)  
 
 Since powershell 5.x doesn't have `$PSStyle`, you need to use  
 the default colors to customize the prompt (as far as I know).  
 Pass them into `Write-Host` with the `-ForegroundColor` argument:  
-```ps1  
+```powershell  
     $Global:NameColor = "DarkRed"  
     $Global:HostColor = "DarkMagenta"  
     $Global:PathColor = "DarkCyan"  
@@ -124,7 +161,7 @@ function prompt
 
 The `-Colors` argument to `PSReadLine` accepts a hash table (dictionary).  
 Dictionaries in PowerShell are defined with the syntax:  
-```ps1 
+```powershell 
 $MyDict = @{ "key" = "value" }
 ```
 * All variable definitions are started with `$`
@@ -164,7 +201,8 @@ There are 18 keys you can specify colors to with `PSReadLine`.
 
 
 ### `pwsh` PS 7.x PSReadLine Colors
-```ps1  
+
+```powershell  
 ######################/* PSReadLineOption Color Tokens */######################  
 # PSReadLineOption -Colors {Hash Table}. Escape with `e for pwsh, $([char]0x1b) for powershell.exe (5.x)  
 $colors = @{
@@ -192,7 +230,7 @@ Set-PSReadLineOption -Colors $colors
 
 ### `powershell` PS 5.x PSReadLine Colors
 
-```ps1
+```powershell
 $colors = @{
     "Number"                    = "$([char]0x1b)[38;5;39m"     # The number token color.
     "Error"                     = "$([char]0x1b)[38;5;1m"      # The error color. 
