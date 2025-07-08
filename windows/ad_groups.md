@@ -1,8 +1,12 @@
 # AD Groups
 
+Active Directory (AD) groups are a way to manage permissions for users.  
 
+You can manage AD groups in the GUI on your AD box by going to 
+`Active Directory Users and Computers` or running `dsa.msc` from the Start menu.  
 
----
+You can also manage AD groups directly through PowerShell.  
+There are a variety of cmdlets for interacting with AD users and groups.  
 
 ## Checking Active AD Groups
 
@@ -102,23 +106,23 @@ In PowerShell:
 
 
 
-## Check Group Membership
+### PowerShell Script to Check Group Membership
 
-Specify a list of users to check memberships of.  
+Specify a list of users in the array to check their memberships.  
 
 ```sh
 # check_ad_groups.ps1
-# Usage: Run in PowerShell on a domain-joined machine
+# Run in PowerShell on the AD box or a domain-joined machine 
 
 $users = @("username1", "username2", "username3")  # List of AD usernames to check
 
 foreach ($user in $users) {
-    Write-Host "Groups for $user:"
+    write-host "Groups for $user:"
     $groups = (Get-ADUser $user -Properties MemberOf).MemberOf | ForEach-Object { ($_ -split ',')[0] }
     foreach ($group in $groups) {
-        Write-Host "  - $group"
+        write-host "  - $group"
     }
-    Write-Host "`n"
+    write-host "---`n"
 }
 ```
 
