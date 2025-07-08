@@ -89,8 +89,53 @@ perl -E 'while(<>) { say uc $_ }'
 - `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
 This will wait for user input and print it back in uppercase.
 
+### Piping to Perl
+
+If you're piping input to Perl, use either `-p` or `-n` to loop over the input.  
+```bash
+printf "Hello, world.\n" | perl -pe 's/Hello/Hi/'
+```
+The `-p` options is usually what you want for basic substutitions.  
+It wraps the input in a **printing loop**.  
+This means that it will print each line as it is being processed.  
+
+Basically, it is equivalent to this perl program:  
+```perl
+while (<>) {
+    print $_;
+}
+```
+
+Whatever code you have in `-e` will also be inside this while loop.  
+
+```perl
+while (<>) {
+    $_ =~ s/Hello/Hi/;
+    print $_;
+}
+```
+
+> Note: The `=~` operator serves as both a comparison operator and an assignment
+> operator.  
 
 ---
+
+If you use `-n` (e.g., `perl -ne`), the input will be wrapped in a **non-printing
+loop**.  
+
+So doing this:
+```bash
+perl -ne 'print "The current line is: $_\n"'
+```
+
+Will not print the lines by default, unless explicitly printing the `$_` variable.  
+This is what that command is doing:
+```perl
+while (<>) {
+    print "The current line is: $_\n";
+}
+```
+
 
 ### Setting the IRS from the CLI
 
