@@ -384,8 +384,10 @@ literally.
 
 Some of the metacharacters only *count* as metacharacters in certain situations.  
 
-| Character | Purpose | When
-|-|-|-
+The metacharacters: `{}[]()^$.|*+?-#\`  
+
+| Character | Purpose 
+|-|-
 | `\`  | Escape the next character
 | `^`  | Match the beginning of the string (or line, if `/m` is used)
 | `^`  | Negate the `[]` class when used as the first char `[^...]`
@@ -407,10 +409,128 @@ Some of the metacharacters only *count* as metacharacters in certain situations.
 Some of these (like the quantifiers and anchors) won't count as metacharacters when 
 inside a set (`[...]`).  
 
+## Modifiers
+
+Modifiers, as the name suggests, modifies how a regex processes its input.  
+These change the behavior of matching in how it handles the interpretation of the
+pattern.  
+
+Modifiers come at the end of the match, after the last `/` (or whatever other
+delimiter you're using), e.g., `m/(pattern)/<MODIFIERS>`.  
+
+You can use as many modifiers as you want in each match.  
+
+
+- `/m`: Multi-line modifier. Treats the string being matched as multiple lines.  
+- `/s`: Single-line modifier. Opposite of `/m`. Treats the string as a single line.    
+    - This changes `.` to match any character, including newlines.  
+- `/i`: Case-insensitive modifier. Turns off case sensitivity.  
+- `/x` (and `/xx`): Extends legibility. This modifier enables whitespace and comments.
+    - `/x`: Tells the regex parser to ignore any whitespace that isn't escaped or in a 
+      set (`[ ]`). Also enables comments with `#`, which runs to either the end of line or 
+      the closing delimiter of the pattern.    
+        - Does not apply inside sets (aka bracketed character classes, `[...]`).   
+        - You can use the `(?#text)` syntax to make a comment that ends earlier than EOL
+          or end of pattern.  
+            - The comment's `text` can't include the pattern delimiter unless it's escaped.  
+        - If you're using this and you want to match actual whitespace or `#` characters,
+          they either need to be escaped or in a set (e.g., `[ #]`), or encode them with
+          octal/hex
+    - `/xx`: Does everything that `/x` does, but also ignores non-escaped tabs or space
+      characters in sets/bracketed character classes (`[ ]`).  
+        - An example of using `/xx` to add whitespace for readability:
+          ```perl
+          # With `/xx`:
+          / [d-e g-i 3-7]/xx
+          /[ ! @ " # $ % ^ & * () = ? <> ' ]/xx
+          # Without using `/xx`:
+          /[d-eg-i3-7]/
+          /[!@"#$%^&*()=?<>']/
+          ```
+        - The `/xx` modifier is new in Perl 5.26. 
+
+- `-p`: Preserves the string matched.  
+    - This is ignored in Perl 5.20 and later.  
+- `/n`: Non-capturing groups. Stops capture groups `()` from capturing.  
+    - Equivalent to using `(?:)` in all your capture groups.  
+    - New in Perl 5.22.  
+    - You can disable the `/n` modifier for certain capture groups by nesting capture
+      groups inside a `(?-n:)` group.  
+      ```perl
+      "hello" =~ /(?-n:(hi|hello))/n  # $1 captures "hello"
+      ```
+      An example in bash:
+      ```bash
+      perl -ne 'print $1 if m/(?-n:(test))/n' <<< 'test'
+      ```
+- `/g`: Global modifier. Match the pattern repeatedly in the string.  
+- `/c`: Keeps the current position during repeated matching.  
+    <!-- - TODO: What does this mean? -->
+
+- `/a`, `/d`, `/l`, `/u`: Character set modifiers. New in Perl 5.14. You usually
+  won't need to use these.    
+    - `/a`: Sets the charset to unicode, but adds several restrictions for ASCII-safe
+      matching.  
+        - Allows code that is to work mostly on ASCII data to not have to concern itself with 
+          Unicode.  
+    - `/l`: Sets the charset to the machine's locale.  
+    - `/u`: Sets the charset to unicode.  
+    - `/d`: "Old, problematic, pre-5.14 Defualt charset behavior". Forces old behavior. Probably exists for legacy reasons.  
+    - These aren't really useful, mostly used internally for Perl. The `/a` modifier
+      might be useful if you're working with ASCII that contains Unicode.  
+
+---
+
+There are also some substitution-specific modifiers. 
+They can only be used in substitutions (e.g., `s/old/new/<MODIFIERS>`)
+
+- `/e`: Evaluate the right-hand side as an expression.  
+    - Allows you to run perl code on the replacement side of a substitution.  
+    - An example, evaluating some arithmetic:
+      ```perl
+      my $x = "2 + 2";
+      $x =~ s/.+/$&/e;  # $& is "2 + 2" and gets evaluated
+      print $x;         # output: 4
+      ```
+        - The `$&` variable holds the **entire string matched** by the last **successful** regex.  
+        - It does not hold the whole *input string*, only the *matched part* of that string.  
+    - Another example, capitalizing the first letter:
+      ```perl
+      my $name = "connor";
+      $name =~ s/\w+/\u$&/e;  # The \u capitalizes the first letter
+      print $name;            # "Connor"
+      ```
+    - The RHS can be math, conditionals, function calls, any valid perl code.  
+
+- `/ee`: Evaluate the right-hand side a string, then `eval` the result.  
+    - This is a rare one to use, and can be a bit dangerous. But it might be useful
+      if you're dynamically generating code in a DSL or in a templating situation.  
+- `/o`: "Pretend to optimize your code, but actually introduce bugs" - `man perlre`
+    - This is hilarious.  
+- `/r`: Perform non-destructive substitutions and return the new value.  
+    - This means it doesn't modify the original string. It returns a **new** string.  
+    - This is useful if you need to preserve the old string.  
+    - An example of this:
+      ```perl
+      my $str = "hello, world.";
+      my $new = $str =~ s/world/friend/r;
+      print $str; # hello, world.
+      print $new; # hello, friend.
+      # As opposed to:
+      $str =~ s/world/universe/;  # destructive, changes $str directly
+      ```
+
+Some modifiers (`/imnsxadlup`) can be embedded inside the regex itself, rather than
+specified at the end, by using the `(?+n)` grouping syntax. The modifiers will only
+apply to the patterns inside that group.  
+
+
 
 ## Resources
 
 - `man perlre`
+
+- `man perlretut`
 
 - Unicode character resources
     - <https://unicode.org/charts/>
