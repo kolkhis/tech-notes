@@ -137,6 +137,12 @@ More about this in [hardening SSH](./hardening_ssh.md).
 You can use `Match` blocks in the SSHD config file to define conditional logic that
 enforces rules only for certain users.  
 
+> **NOTE:** When using `Match` blocks, the rules inside will apply to the group
+> either until the end of the file or until the next `Match` block. Global rules
+> cannot come after a `Match` block unless you reset with `Match all`. 
+
+
+
 #### Matching Users
 
 You can match usernames inside `Match` blocks using `Match User <username>`:  
@@ -166,5 +172,33 @@ Match Group groupname
     PermitTTY no
 ```
 
+#### Resetting Match
+
+Like noted previously, when using a `Match` block, the rules will keep applying to
+the matched users/group until either the end of file or until the next `Match` block
+starts.  
+
+```bash
+Match Group groupname
+    ForceCommand script.sh
+    PermitTTY no
+
+PasswordAuthentication yes
+```
+
+Here, `PasswordAuthentication yes` will only apply to the group `groupname`.  
+The indentation is only for readability.  
+
+In order to reset to global options, use `Match all`.  
+```bash
+Match Group groupname
+    ForceCommand script.sh
+    PermitTTY no
+
+Match all
+PasswordAuthentication yes
+```
+
+Now, `PasswordAuthentication` will be applied globally.  
 
 
