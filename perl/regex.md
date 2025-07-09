@@ -176,6 +176,44 @@ m/\P{L}/u;  # Match any non-letter
 ```
 The `\p` class is used in conjunction with `{Unicode Class}` when using the `/u` modifier.  
 
+### All Character Classes
+
+- `[...]`: Custom class. Also called a "bracketed character class" or a "set."  
+    - Match a character within the custom class.  
+- `[[:...:]]`   Match a character according to the POSIX character class `...` (e.g., `[[:space:]]`.  
+- `(?[...])`: Extended bracketed character class
+- `\w` Match a "word" character 
+    - Alphanumeric + `_` + other connector punctuation chars + Unicode marks
+- `\W`: Match a non-word character (opposite of `\w`)
+- `\s`: Match a whitespace character
+- `\S`: Match a non-whitespace character
+- `\d`: Match a decimal digit character
+- `\D`: Match a non-digit character
+
+- `\pP`: Match `P`, the named property.  Use `\p{Prop}` for longer names
+- `\PP`: Match non-`P`
+- `\X`: Match Unicode "eXtended grapheme cluster"
+- `\1`: Backreference to a capture group or buffer. '1' may actually be any positive integer.
+- `\g1`: Backreference to a specific or previous group.  
+    - `\g{-1}`: The number may be negative indicating a relative previous group and may 
+      optionally be wrapped in curly brackets for safer parsing.
+    - This is another way to access capture groups.  
+- `\g{name}`: Named backreference
+- `\k<name>`: Named backreference
+- `\k'name'`: Named backreference
+- `\k{name}`: Named backreference
+
+- `\K`: Keep the stuff left of the `\K`, don't include it in `$&`
+
+- `\N`: Any character but `\n`.  Not affected by the `/s` modifier
+    - When of the form `\N{NAME}`, it matches the character or character sequence whose 
+      name is `NAME`.  
+    - When of the form `\N{U+hex}`, it matches the character whose Unicode code point is `hex`.  
+- `\v`: Vertical whitespace
+- `\V`: Not vertical whitespace
+- `\h`: Horizontal whitespace
+- `\H`: Not horizontal whitespace
+- `\R`: Linebreak
 
 ## Quantifiers
 Quantifiers are a way to specify how many of a character to match.  
@@ -188,7 +226,7 @@ Basic quantifiers:
 - `{n}`: Exactly `n`
 - `{n,}`: At least `n`
 - `{,n}`: At most `n`
-    - If you have trouble with this one, use `{0,n}`
+    - If you have trouble with this one, just use `{0,n}`
 - `{n,m}`: Match between `n` and `m`.  
 
 Quantifiers can either be greedy or non-greedy.  
@@ -590,6 +628,46 @@ They can only be used in substitutions (e.g., `s/old/new/<MODIFIERS>`)
 Some modifiers (`/imnsxadlup`) can be embedded inside the regex itself, rather than
 specified at the end, by using the `(?+n)` grouping syntax. The modifiers will only
 apply to the patterns inside that group.  
+
+
+## Escape Sequences in Patterns
+
+`man perlre /^\s*Escape sequences`
+
+When patterns are evaluated in Perl, they're treated as double-quoted strings.  
+That means all escape sequences are expanded properly. Newlines (`\n`), tabs (`\t`),
+etc. all work inside patterns.  
+
+- `\t`: Tab                   (HT, TAB)
+- `\n`: Newline               (LF, NL)
+- `\r`: Return                (CR)
+- `\f`: Form feed             (FF)
+- `\a`: Alarm (`bell`)          (BEL)
+- `\e`: Escape (think `troff`)  (ESC)
+- `\cK`: Control char          (example: VT)
+- `\x{}` or `\x00`: Match a character by its hexadecimal number 
+- `\N{name}`: Named Unicode character or character sequence
+- `\N{U+263D}`  Unicode character (example: FIRST QUARTER MOON)
+- `\o{}` or `\000`: Match a character by its octal number
+- `\l`: Lowercase next char (just like in vi/vim)
+- `\u`: Uppercase next char (just like in vi/vim)
+- `\L`: Lowercase all chars until `\E` (just like in vi/vim)
+- `\U`: Uppercase all chars until `\E` (just like in vi/vim)
+- `\Q`: Quote (disable) pattern metacharacters until `\E`
+- `\E`: End either case modification or quoted section, as in `vi`/`vim`
+
+---
+
+There are also zero-width assertions (anchors) that can be used in patterns:
+
+- `\b{}`: Match at Unicode boundary of specified type
+- `\B{}`: Match where corresponding `\b{}` doesn't match
+- `\b`: Word bounary. Match a `\w\W` or `\W\w` boundary
+- `\B`: Non-word boundary. Match except at a `\w\W` or `\W\w` boundary
+- `\A`: Match only at beginning of string
+- `\Z`: Match only at end of string, or before newline at the end
+- `\z`: Match only at end of string
+- `\G`: Match only at `pos()` (e.g. at the end-of-match position of prior `m//g`)
 
 
 
