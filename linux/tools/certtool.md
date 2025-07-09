@@ -48,6 +48,8 @@ apt install gnutls-bin rsyslog-gnutls
 ---
 
 
+## Certificate Terminology
+
 Daisy-chaining CAs:
 - Delegation
 - Parent CA signs lower-order CA's cert, authorizing it to issue certificates.  
