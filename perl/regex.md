@@ -2,8 +2,8 @@
 
 ---
 
-Perl is noted to have the most powerful regular expression engine.  
-It's usually called PCRE (Perl Compatible Regular Expression).  
+Perl is noted to have one of the most powerful regular expression engines.  
+It's usually referenced as PCRE in documentation, which stands for Perl-Compatible Regular Expressions.  
 
 ---
 
@@ -15,6 +15,8 @@ You can reference capture groups (much like `sed`) with variables:
     - Like `${BASH_REMATCH[0]}`
 - `$1`, `$2`, etc.: Capture groups in Regex.  
     - Like `sed` regex captures, but instead of `\1`, it's `$1`.  
+    - When using from the command line, you can use `\1`, `\2`, etc., but it's not perl's 
+      way of doing it.  
 
 
 
@@ -24,6 +26,9 @@ characters they match.
 
 This means they're not used for capturing, they're only used for checking if a 
 condition is true.  
+
+Any characters matched by a lookahead or lookbehind (or "lookarounds") are not
+captured and are not accounted for when performing substitutions.  
 
 ### Lookahead Matching
 Lookaheads check if a pattern comes after another pattern.  
@@ -68,10 +73,11 @@ if ($text =~ /foo(?!\d+)/) {
 ```
 
 Lookbehinds are very useful.  
+
 But:
 
 - They must have a fixed width (can't be variable-width).
-- That means they can not use certain multis (like `*`, `+`, etc).  
+- That means they can not use certain multis/quantifiers (like `*`, `+`, etc).  
   ```perl
   /(?<=abc)\d+/;  # Good because 'abc' is fixed width
   /(?<=a{4})\d+/; # Also good because `a{4}` is fixed width
@@ -372,8 +378,39 @@ sed -i \
     "${FILES[@]}"
 ```
 
+## MetaCharacters
+Perl has some metacharacters that hold special meaning and are not interpretted
+literally.  
+
+Some of the metacharacters only *count* as metacharacters in certain situations.  
+
+| Character | Purpose | When
+|-|-|-
+| `\`  | Escape the next character
+| `^`  | Match the beginning of the string (or line, if `/m` is used)
+| `^`  | Negate the `[]` class when used as the first char `[^...]`
+| `.`  | Match any single character except newline (if using `/s`, includes newline)
+| `$`  | Match the end of the string
+| `\|`  | Alternation (OR)
+| `()`  | Grouping
+| `[`  | Start Bracketed Character class
+| `]`  | End Bracketed Character class
+| `*`  | Matches the preceding element 0 or more times
+| `+`  | Matches the preceding element 1 or more times
+| `?`  | Matches the preceding element 0 or 1 times
+| `{`  | Starts a quantifier that gives number(s) of times the preceding element can be matched
+| `{`  | When following certain escape sequences, starts a modifier to the meaning of the sequence
+| `}`  | End sequence started by `{`
+| `-`  | Indicates a range in `[]` sets
+| `#`  | Beginning of comment, extends to line end (Only with the `/x` modifier)
+
+Some of these (like the quantifiers and anchors) won't count as metacharacters when 
+inside a set (`[...]`).  
+
 
 ## Resources
+
+- `man perlre`
 
 - Unicode character resources
     - <https://unicode.org/charts/>
