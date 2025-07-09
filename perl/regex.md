@@ -10,14 +10,31 @@ It's usually referenced as PCRE in documentation, which stands for Perl-Compatib
 ## Special Variables
 You can reference capture groups (much like `sed`) with variables:
 
-- `$&`: Matched string in last regex.  
-    - Holds the whole matched string from the last regex.  
-    - Like `${BASH_REMATCH[0]}`
 - `$1`, `$2`, etc.: Capture groups in Regex.  
     - Like `sed` regex captures, but instead of `\1`, it's `$1`.  
     - When using from the command line, you can use `\1`, `\2`, etc., but it's not perl's 
       way of doing it.  
 
+
+- `$&`: Matched string in last regex.  
+    - Holds the whole **matched** string from the last successful regex.  
+    - Does not hold the whole *input* string, only the *matched part* of the input
+      string.
+    - Like `${BASH_REMATCH[0]}`
+- ``` $` ```: Holds the text **before the match**. 
+- `$'`: Holds the text **after the match**.  
+
+Those last 3 variables are a little controversial. They're omitted from any scripts
+for performance reasons.  
+
+From `perlre`:
+
+> Once `$&`, `$'`, or ``` $` ``` are used anywhere in the program, Perl has to save 
+> all that extra information for every regex match -- even ones that don’t use it.
+
+So using `$1`, `$2` etc. with capture groups is generally preferred for performance.  
+
+That said, if you're doing one-liners, it doesn't matter.  
 
 
 ## Lookahead and Lookbehind (Lookaround)
@@ -170,15 +187,43 @@ Basic quantifiers:
 - `?`: Zero or one
 - `{n}`: Exactly `n`
 - `{n,}`: At least `n`
+- `{,n}`: At most `n`
+    - If you have trouble with this one, use `{0,n}`
 - `{n,m}`: Match between `n` and `m`.  
-- Note that perl does NOT support `{,m}` syntax. Use `{0,m}`.  
 
 Quantifiers can either be greedy or non-greedy.  
 Greedy quantifiers match as many of the character as 
 possible, whereas non greedy quantifiers match as few as possible.  
 
+You can explicitly set greedy or non-greedy quantifiers using the **quantifier
+modifiers**, `+` and `?`.  
+
+### Non-Greedy Quantifiers
 By default, quantifiers are greedy in perl.  
 To make a quantifier non greedy, just add a `?` after it.  
+
+- `*?`: Match `0` or more times, non-greedy
+- `+?`: Match `1` or more times, non-greedy
+- `??`: Match `0` or `1` time, non-greedy
+- `{n}?`: Match exactly `n` times, non-greedy (redundant)
+- `{n,}?`: Match at least `n` times, non-greedy
+- `{,n}?`: Match at most `n` times, non-greedy
+- `{n,m}?`: Match at least `n` but not more than `m` times, non-greedy
+
+### Possessive Quantifiers
+
+The opposite of non-greedy quantifiers, you can make quantifiers **explicitly greedy** 
+by adding a `+` at the end of the quantifier. This is called the **possessive
+quantifier modifier** in Perl.    
+
+- `*+`: Match `0` or more times and give nothing back
+- `++`: Match `1` or more times and give nothing back
+- `?+`: Match `0` or `1` time and give nothing back
+- `{n}+`: Match exactly `n` times and give nothing back (redundant)
+- `{n,}+`: Match at least `n` times and give nothing back
+- `{,n}+`: Match at most `n` times and give nothing back
+- `{n,m}+`: Match at least `n` but not more than `m` times and give nothing back
+
 
 ## Capture Groups and Non-Capture Groups
 Groups are matches that go inside parentheses.  
@@ -425,7 +470,9 @@ You can use as many modifiers as you want in each match.
 - `/s`: Single-line modifier. Opposite of `/m`. Treats the string as a single line.    
     - This changes `.` to match any character, including newlines.  
 - `/i`: Case-insensitive modifier. Turns off case sensitivity.  
-- `/x` (and `/xx`): Extends legibility. This modifier enables whitespace and comments.
+
+- `/x` (and `/xx`): Extends legibility. This modifier enables whitespace and comments.  
+
     - `/x`: Tells the regex parser to ignore any whitespace that isn't escaped or in a 
       set (`[ ]`). Also enables comments with `#`, which runs to either the end of line or 
       the closing delimiter of the pattern.    
@@ -436,6 +483,7 @@ You can use as many modifiers as you want in each match.
         - If you're using this and you want to match actual whitespace or `#` characters,
           they either need to be escaped or in a set (e.g., `[ #]`), or encode them with
           octal/hex
+
     - `/xx`: Does everything that `/x` does, but also ignores non-escaped tabs or space
       characters in sets/bracketed character classes (`[ ]`).  
         - An example of using `/xx` to add whitespace for readability:
@@ -451,6 +499,7 @@ You can use as many modifiers as you want in each match.
 
 - `-p`: Preserves the string matched.  
     - This is ignored in Perl 5.20 and later.  
+
 - `/n`: Non-capturing groups. Stops capture groups `()` from capturing.  
     - Equivalent to using `(?:)` in all your capture groups.  
     - New in Perl 5.22.  
@@ -463,9 +512,27 @@ You can use as many modifiers as you want in each match.
       ```bash
       perl -ne 'print $1 if m/(?-n:(test))/n' <<< 'test'
       ```
+
 - `/g`: Global modifier. Match the pattern repeatedly in the string.  
+
 - `/c`: Keeps the current position during repeated matching.  
-    <!-- - TODO: What does this mean? -->
+    - If a substitution fails to match, the search position will be reset.  
+    - `/c` preserves the position where the last match left off, without resetting it, so 
+      you can continue matching later.
+    - With `/c` you're basically telling perl, "I'm scanning sequentially, so don't jump backwards."  
+    - Used in conjunction with `\G`, which specifies that the match must start at the
+      current position.  
+      ```bash
+      my $str = "123-456+789";
+      while ($str =~ /\G(\d{3})-?/gc) {
+          print "Got: $1\n";
+      }
+      print "Left: ", substr($str, pos($str)), "\n";
+      ```
+        - `\G`: Anchors the match to the **curent pos** in the string.  
+        - Try running this example without the `/c` modifier and see what happens.  
+
+---
 
 - `/a`, `/d`, `/l`, `/u`: Character set modifiers. New in Perl 5.14. You usually
   won't need to use these.    
