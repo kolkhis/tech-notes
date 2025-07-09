@@ -9,18 +9,29 @@ More often than not, you'll see a compressed archive container (`.tar.gz`).
 
 ## Creating Archives and Unarchiving 
 
-There are a few different formats.  
-
-- `.gz`: Gzip file.  
-    - `gzip` is a compression utility, not an archiving utility.
-    - Compression is often used in conjunction with archives to make the file smaller.  
-- `.tar`: Tar archive file.  
-- `.tar.gz`: Tar archive file compressed with `gzip`.  
-    - Sometimes represented as `.tgz` 
+### tl;dr
 
 ```bash
-# Modern GNU tar options. This works for files compressed
-# with gzip and bzip too
+# Create archives
+tar -czf foo.tar.gz dir/          # gzip
+tar -cjf foo.tar.bz2 dir/         # bzip2
+tar -cJf foo.tar.xz dir/          # xz
+tar --zstd -cf foo.tar.zst dir/   # zstd
+zip -r foo.zip dir/               # zip
+7z a foo.7z dir/                  # 7zip
+
+# Extract
+tar -xzf foo.tar.gz
+tar -xjf foo.tar.bz2
+tar -xJf foo.tar.xz
+tar --zstd -xf foo.tar.zst
+unzip foo.zip
+7z x foo.7z
+```
+
+Unextracting with `tar` on modern Linux systems:
+```bash
+# This works for files compressed with gzip and bzip
 tar --extract --file filename
 
 # Same as above
@@ -36,6 +47,21 @@ gzip -cd filename.tgz | tar xf -
 # same as above, but for bzip2-compressed files
 bunzip2 -cd filename.tar.bz2 | tar xf -
 ```
+
+The uncompression commands usually have options in `tar`. But you can decompress and
+pipe to `tar` if you don't want to remember all the options.  
+
+### Overview of Formats
+There are a few different formats you'll see when working with archives on Linux/Unix.  
+
+- `.gz`: Gzip file.  
+    - `gzip` is a compression utility, not an archiving utility.  
+    - Compression is often used in conjunction with archives to make the file smaller.  
+- `.tar`: Tar archive file.  
+- `.tar.gz`: Tar archive file compressed with `gzip`.  
+    - Sometimes represented as `.tgz` 
+
+
 
 ## Compression Formats
 
@@ -214,22 +240,3 @@ package to use.
 
 ---
 
-## tl;dr
-
-```bash
-# Create
-tar -czf foo.tar.gz dir/          # gzip
-tar -cjf foo.tar.bz2 dir/         # bzip2
-tar -cJf foo.tar.xz dir/          # xz
-tar --zstd -cf foo.tar.zst dir/   # zstd
-zip -r foo.zip dir/               # zip
-7z a foo.7z dir/                  # 7zip
-
-# Extract
-tar -xzf foo.tar.gz
-tar -xjf foo.tar.bz2
-tar -xJf foo.tar.xz
-tar --zstd -xf foo.tar.zst
-unzip foo.zip
-7z x foo.7z
-```
