@@ -9,14 +9,8 @@ This tool is not available in the default RedHat repositories. To get similar
 functionality on RedHat-based systems, look into `inotify-tools`, specifically
 `inotifywait`.  
 
-
-## Table of Contents
-* [Using `entr` with a single file](#using-entr-with-a-single-file) 
-* [Using `entr` with multiple files](#using-entr-with-multiple-files) 
-    * [Example with Golang Project Testing](#example-with-golang-project-testing) 
-* [Other ways to automate](#other-ways-to-automate) 
-    * [Using `watch`](#using-watch) 
-    * [Infinite Loop (Generally a Bad Idea)](#infinite-loop-generally-a-bad-idea) 
+> Note: If you're looking to use `entr` on a logfile to monitor for new logs or
+> changes, you might want `tail -F` instead.  
 
 
 ## Using `entr` with a single file  
