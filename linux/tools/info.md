@@ -1,7 +1,9 @@
-# The Info Command  
+# Info
 
 The `info` command is for reading "Info documents."  
 Lets you read documentation in Info format.  
+
+See `man info`.  
 
 ## Default Navigation Keys  
 `C-n` (`next-line`)  
