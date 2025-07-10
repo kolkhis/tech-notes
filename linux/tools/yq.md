@@ -1,4 +1,4 @@
-# yq - YAML Querying Tool
+# `yq`
 
 `yq` is a YAML processing tool for the command-line.  
 See the [repository from mikefarah](https://github.com/mikefarah/yq)  
