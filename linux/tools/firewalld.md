@@ -1,4 +1,4 @@
-# `firewalld` - The RedHat Flavored Firewall
+# `firewalld`
 
 Firewalld is the firewall that is used on RedHat-based distributions (i.e., Rocky
 Linux, RHEL).  
