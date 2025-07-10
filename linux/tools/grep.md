@@ -1,24 +1,6 @@
-# The Grep Command  
-Print lines that match patterns.  
+# Grep
 
-## Table of Contents
-* [tl;dr:](#tldr) 
-* [Using Grep](#using-grep) 
-    * [Basic vs Extended Regular Expressions:](#basic-vs-extended-regular-expressions) 
-    * [Alternation (matching any one of multiple expressions)](#alternation-matching-any-one-of-multiple-expressions) 
-    * [Other Useful `grep` Options](#other-useful-grep-options) 
-* [Character Classes and Bracket Expressions](#character-classes-and-bracket-expressions) 
-    * [What can go inside the brackets](#what-can-go-inside-the-brackets) 
-    * [Character Classes and Their Matches](#character-classes-and-their-matches) 
-    * [Inverting the Matches (Match Non-Matching)](#inverting-the-matches-match-nonmatching) 
-* [Exmaples](#exmaples) 
-    * [Count Occurrences of a Word:](#count-occurrences-of-a-word) 
-    * [Search Recursively in Directory:](#search-recursively-in-directory) 
-    * [Find Lines Not Containing the Pattern:](#find-lines-not-containing-the-pattern) 
-    * [Search While Ignoring Case:](#search-while-ignoring-case) 
-* [Note on `fgrep` (Fixed Strings)](#note-on-fgrep-fixed-strings) 
-* [Grep Colors](#grep-colors) 
-    * [Breakdown](#breakdown) 
+Grep is a coreutil that prints lines that match patterns.  
 
 ## tl;dr:
 Syntax:
@@ -29,6 +11,7 @@ grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
 # -n: Line Numbers; -r: recusive; -E: Extended Regex
 ```
 
+- `-i`: Ignore case.  
 * `-v` will print the lines that *don't* match the pattern.
     * Matches NON-MATCHING lines.  
 * `-n` will output the line number of the match.
@@ -39,7 +22,6 @@ grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
     * `-R` is the same as `-r` but will follow symlinks.
 * `-l` will only print the filenames of files with matches.
     * `-L` will output the filenames of files WITHOUT matches.
-
 
 ## Using Grep  
 The greps:  
