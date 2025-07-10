@@ -1,4 +1,8 @@
-# `pass` - CLI Password Manager
+# `pass`
+
+The `pass` tool is a command line password manager.  
+
+Also check out KeePassXC, another CLI password manager.  
 
 ## Using GPG with Pass (Password Manager)
 
