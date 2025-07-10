@@ -1,7 +1,7 @@
-# `strace` - The Stack Tracing Tool
+# `strace`
 
 
-Use `strace` to track the system calls that a program makes.  
+Use `strace` (stack trace) to track the system calls that a program makes.  
 This is typically shown as C code on a Linux system, and shows the system call itself
 and its output.  
 
