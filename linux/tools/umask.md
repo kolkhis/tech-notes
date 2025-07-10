@@ -82,6 +82,33 @@ mkdir newdir  # 0777 - 0027 = 0750
 ```
 
 
+## Bitwise Operation
+
+The `umask` is applied as a bitwise operation on new file creation.  
+
+This is done with a bitwise `AND` using the bitwise inverse of the umask.  
+
+An example: 
+```bash
+umask 0022
+```
+
+- File default is `0666` (binary `110 110 110`)
+- `umask` is `0022` (binary `000 010 010`)
+    - It uses the bitwise inverse (`111 101 101`) for this operation under the hood.  
+
+
+We use a bitwise NOT on the umask to get the bitwise inverse of the umask and then 
+use that to bitwise AND with the default file permissions.  
+```bash
+  110 110 110  # Default permissions
+& 111 101 101  # Bitwise NOT of the umask
+-------------
+  110 100 100  # 0644 = -rw-r--r--
+```
+
+That's it.
+
 
 
 
