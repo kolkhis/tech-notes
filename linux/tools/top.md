@@ -1,15 +1,6 @@
-# The `top` Command
+# `top`
 Using `top` will show the current status of the system.  
 Its output is very detailed.  
-
-
-## Table of Contents
-* [`top` Output](#top-output) 
-    * [First Line](#first-line) 
-    * [Second Line](#second-line) 
-    * [Third Line](#third-line) 
-    * [Fourth and Fifth Lines](#fourth-and-fifth-lines) 
-    * [Processes list](#processes-list) 
 
 
 ## `top` Output
