@@ -1,24 +1,8 @@
-# Using `trap` for Error Handling, Debugging, & Other Behavior  
-See the [kill builtin](./kill.md) for more info on signal specs (`SIGSPEC`).
+# `trap`
 
-## Table of Contents
-* [Syntax and Basic Usage](#syntax-and-basic-usage) 
-    * [Syntax](#syntax) 
-    * [Usage](#usage) 
-* [Linux Signals Used with `trap`](#linux-signals-used-with-trap) 
-* [Bash-specific Signals for Scripting and Error Handling](#bashspecific-signals-for-scripting-and-error-handling) 
-* [Signals Available to the `kill` Command](#signals-available-to-the-kill-command) 
-* [Getting a Signal from a Number](#getting-a-signal-from-a-number) 
-* [Use Cases and Examples for `trap`](#use-cases-and-examples-for-trap) 
-    * [Script Cleanup](#script-cleanup) 
-    * [Handling Interruptions](#handling-interruptions) 
-    * [Handling Errors](#handling-errors) 
-    * [Debugging](#debugging) 
-* [Check if a trap is set on a signal](#check-if-a-trap-is-set-on-a-signal) 
-* [Managing Signals Inside Scripts (Handler Functions / Callback Functions)](#managing-signals-inside-scripts-handler-functions--callback-functions) 
-* [Resetting Traps and Signal Actions to Default](#resetting-traps-and-signal-actions-to-default) 
-* [Additional Notes on `trap`](#additional-notes-on-trap) 
-* [Sources](#sources) 
+The `trap` builtin is used for error handling, debugging, and other behavior.  
+
+See the [kill builtin](./kill.md) for more info on signal specs (`SIGSPEC`).
 
 ## Syntax and Basic Usage
 You'll want to set your traps at the top of the script.  
