@@ -52,6 +52,7 @@ The output of:
 shopt | column
 ```
 with a clean `.bashrc`:
+
 | Option            |   Value |      Option      |       Value    |
 |-------------------|-----|----------------------|----------------|
 | autocd            | off |          globstar               | off |
