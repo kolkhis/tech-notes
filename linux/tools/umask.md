@@ -15,7 +15,7 @@ It specifies a *mask* of bits to be removed from a file's **mode** attributes.
 When a file or directory is created, files get base permissions of `0666`
 (`-rw-rw-rw-`), and directories get base permissions of `0777` (`-rwxrwxrwx`).  
 
-Then the `umask` is *subtracted* (bitwise) from these base permissions.  
+Then the `umask` is *subtracted* ([bitwise](#bitwise-operation)) from these base permissions.  
 
 ---
 
@@ -107,9 +107,15 @@ use that to bitwise AND with the default file permissions.
   110 100 100  # 0644 = -rw-r--r--
 ```
 
-That's it.
+So basically this is the formula:
+```bash
+final_perms = default_perms & ~umask
+```
 
+The `&` is a bitwise `AND`, and the `~` is a bitwise `NOT`.  
 
+This operation is done per-bit, so it's more granular than just "subtracting" in
+decimal.  
 
 
 
