@@ -5,7 +5,7 @@ A batch script (or batch file) is a type of shell script on Windows.
 It's a script that runs with `cmd.exe` and uses the `.bat` or `.cmd` file extension.  
 
 
-## Syntax
+## Syntax Overview
 
 The general syntax for batch scripts:
 
@@ -54,6 +54,10 @@ pause
 
 The `@echo off` disables the actual commands themselves from being printed to the
 terminal, only the output of the commands will be printed.  
+
+The `pause` at the end is so that the output can be inspected if running the script
+from the GUI (e.g., double clicking on `disconnect_samba.bat`). Without a `pause`, it
+would not hang to let you read the output.  
 
 ## Special Variables
 
