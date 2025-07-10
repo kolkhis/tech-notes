@@ -1,4 +1,4 @@
-# Shell Options & How to Set Them
+# Shell Options
 
 ## Table of Contents
 * [`set`](#set) 
@@ -61,15 +61,16 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 
 
 
-## Exhaustive List of Shell Options
+## Non-Exhaustive List of Shell Options
 
-### Shell options for `set`:
+### Shell options for `set`
 
 * `-e`: Exit on error.
 * `-f`: Disable filename expansion.
-* `-H`: Enable ! style history substitution.
+* `-H`: Enable `!` style history substitution.
 * `-u`: Treat unset variables as an error.
 * `-x`: Debug mode.
+- `-o`: Specify a named option.  
 
 ### Shell options for `shopt` 
 
@@ -84,6 +85,7 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 
 * `set -e`: Use in scripts where you want to catch errors.
 * `shopt -s nullglob`: Use in scripts where you want to handle cases where a glob doesn't match any filenames.
+
 
 
 
