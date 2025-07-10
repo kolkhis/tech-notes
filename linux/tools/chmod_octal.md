@@ -1,4 +1,4 @@
-# `chmod` With Octal Notation
+# `chmod`
 
 The `chmod` command allows you to change the permissions of a file or directory.  
 You can either use symbolic notation for permissions, or use the octal notation for
@@ -6,17 +6,6 @@ specifying the permissions.
 
 Octal notation is a concise way to set permissions on a file or directory.
 It's based on the octal (base-8) numbering system, which uses digits from `0` to `7`.
-
-
-## Table of Contents
-* [Basics of Octal Notation](#basics-of-octal-notation) 
-* [Permission Values](#permission-values) 
-* [Examples](#examples) 
-* [Special Permissions](#special-permissions) 
-    * [Setuid (Set User ID)](#setuid-set-user-id) 
-    * [Setgid (Set Group ID)](#setgid-set-group-id) 
-    * [Sticky Bit](#sticky-bit) 
-* [Combining Special Permissions](#combining-special-permissions) 
 
 
 ## Basics of Octal Notation
