@@ -1,4 +1,6 @@
-# `iperf3` Network Speed Measurement Tool
+# `iperf3`
+
+## `iperf3` - The Network Speed Measurement Tool
 
 The `iperf3` tool is used to measure network speeds via TCP (default) and UDP.  
 
