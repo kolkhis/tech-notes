@@ -1,22 +1,9 @@
-# `fio` - Benchmarking Utility
+# `fio`
 
 The `fio` tool can be used to perform benchmarking and baselining on a system.  
 
 This tool is recommended over `dd` for disk benchmarking since `dd` does not actually 
 write to disk until its process has completed.  
-
-
-## Table of Contents
-* [Using Fio](#using-fio) 
-    * [Random Read/Write Disk Performance](#random-readwrite-disk-performance) 
-    * [I/O Latency Test](#io-latency-test) 
-    * [Test Under Load](#test-under-load) 
-    * [Analyze System-Level Metrics while testing](#analyze-system-level-metrics-while-testing) 
-    * [Testing Network I/O](#testing-network-io) 
-* [Output Reports](#output-reports) 
-* [Using Config Files](#using-config-files) 
-    * [Direct I/O (bypass page cache)](#direct-io-bypass-page-cache) 
-
 
 ## Using Fio
 

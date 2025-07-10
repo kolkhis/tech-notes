@@ -1,21 +1,8 @@
-# Heredocs / Here Documents in Linux
+# Heredocs/Herestrings
 
+Heredocs are a way to treat a block of text as a file within bash.  
 
-
-## Table of Contents
-* [Heredoc Operators](#heredoc-operators) 
-* [Quickref](#quickref) 
-* [Basic Principles of Here Documents](#basic-principles-of-here-documents) 
-* [Examples](#examples) 
-    * [Basic Heredoc](#basic-heredoc) 
-    * [Printing Literals](#printing-literals) 
-    * [Handling Tab Characters](#handling-tab-characters) 
-    * [Redirecting to a File](#redirecting-to-a-file) 
-    * [Piping the output to another command](#piping-the-output-to-another-command) 
-    * [Passing Parameters to a Function](#passing-parameters-to-a-function) 
-    * [Creating and Sending an Email](#creating-and-sending-an-email) 
-* [Using Heredocs with SSH](#using-heredocs-with-ssh) 
-
+Herestrings do the same thing, but for a single line.  
 
 ## Heredoc Operators
 
@@ -38,10 +25,11 @@
     * The `word` is expanded, anything except pathname expansion (aside from `~`, which is expanded).  
     * This passes the expanded `word` as a single string to the command.  
     * Herestrings do not use `limit_string`s.  
-    ```bash
-    ls -alh <<< "$(which ls)"
-    ```
+      ```bash
+      ls -alh <<< "$(which ls)"
+      ```
 
+Some examples:
 ```bash
 cat << EOF
 This is a basic heredoc. 

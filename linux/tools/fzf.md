@@ -1,30 +1,17 @@
-# Using fzf (Fuzzy Finder) on Linux  
-
-## Table of Contents
-* [Default Options for fzf](#default-options-for-fzf) 
-* [Key Bindings / Event Bindings](#key-bindings--event-bindings) 
-    * [Availble keys for fzf keybinding: `man fzf` -> `/AVAILBLE KEYS`](#availble-keys-for-fzf-keybinding-man-fzf--availble-keys) 
-    * [Available Events:](#available-events) 
-* [Available Actions](#available-actions) 
-* [Replacements for Parentheses](#replacements-for-parentheses) 
-* [Running commands from fzf](#running-commands-from-fzf) 
-* [Previewing with fzf](#previewing-with-fzf) 
-* [Customizing fzf Display](#customizing-fzf-display) 
-    * [Changing the Preview Window's Attributes/Display](#changing-the-preview-windows-attributesdisplay) 
-    * [Changing Main Window's Display](#changing-main-windows-display) 
-* [Multiple Selections with fzf](#multiple-selections-with-fzf) 
-* [Adding Line Numbers to fzf](#adding-line-numbers-to-fzf) 
+# `fzf` (Fuzzy Finder)
 
 
 ## Default Options for fzf  
 
-* By default, fzf will start in "Extended Search Mode"  
-    * This allows regex-like pattern matching.  
-    * You can use `^` and `$` anchors in the patterns.  
-    * Prefixing a pattern with a `'` (single quote) will make it an "Exact Match" (non-fuzzy).  
-    * Prefixing a pattern with a `!` (exclamation) will make it *exclude* lines that match the  
-      pattern.  
-        * This makes it perform an exact match by default.  
+By default, `fzf` will start in "Extended Search Mode"  
+
+* This allows regex-like pattern matching.  
+* You can use `^` and `$` anchors in the patterns.  
+* Prefixing a pattern with a `'` (single quote) will make it an "Exact Match" (non-fuzzy).  
+* Prefixing a pattern with a `!` (exclamation) will make it *exclude* lines that match the  
+  pattern.  
+    * This makes it perform an exact match by default.  
+
 You can specify multiple, space-delimited patterns. E.g.,  
 ```regex  
 'wild ^music .mp3$ sbtrkt !rmx  
