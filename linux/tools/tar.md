@@ -1,5 +1,7 @@
 # tar
 
+> Also see [archives](../archives.md)
+
 The `tar` tool is used to create or extract archives.  
 
 An archive created with `tar` is usually called a "tarball."  
