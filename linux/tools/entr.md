@@ -6,8 +6,8 @@
 It's used for running arbitraty commands when a file is changed.  
 
 This tool is not available in the default RedHat repositories. To get similar
-functionality on RedHat-based systems, look into `inotify-tools`, specifically
-`inotifywait`.  
+functionality on RedHat-based systems, look into [`inotify-tools`](./inotify-tools.md), 
+specifically `inotifywait`.  
 
 > Note: If you're looking to use `entr` on a logfile to monitor for new logs or
 > changes, you might want `tail -F` instead.  

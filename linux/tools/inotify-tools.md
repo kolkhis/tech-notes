@@ -26,6 +26,11 @@ watched_filename EVENT_NAMES event_filename
     - This will hold the name of the file inside that directory which caused the "event."  
 
 ### `inotifywait` Usage
+```bash
+while read -r event; do
+    printf "Event: %s\n" "$event"
+done < <(inotifywait -m -r -e create,modify,delete "$WATCH_FILE")
+```
 
 - `-m`: Monitor mode. Execute indefinitely. The default is to exit after the first event.  
     - You'll probably want to use this inside scripts.  
