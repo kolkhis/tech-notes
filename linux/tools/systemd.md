@@ -1,28 +1,8 @@
 # systemd
 
 `systemd` is a system and service manager for Linux.  
-Many `systemd` functions are available through `systemctl`.  
 
-## Table of Contents
-* [`systemd` File Locations](#systemd-file-locations) 
-* [What `systemd` does](#what-systemd-does) 
-* [Useful `systemd` commands](#useful-systemd-commands) 
-* [Maniuplating Services with `systemctl`](#maniuplating-services-with-systemctl) 
-    * [Start a Service](#start-a-service) 
-    * [Enable a Service](#enable-a-service) 
-    * [Stop a Service](#stop-a-service) 
-    * [Disable a Service](#disable-a-service) 
-    * [Restart a Service](#restart-a-service) 
-    * [Check the Status of a Service](#check-the-status-of-a-service) 
-* [List of `systemd-x` commands](#list-of-systemd-x-commands) 
-* [`systemd`/`systemctl` Cheat Sheets](#systemdsystemctl-cheat-sheets) 
-    * [Service Management](#service-management) 
-    * [Boot Performance](#boot-performance) 
-    * [Listing and Describing Units](#listing-and-describing-units) 
-    * [Custom Service Files](#custom-service-files) 
-    * [Journal Logs](#journal-logs) 
-    * [Additional Systemd Tools](#additional-systemd-tools) 
-
+Many `systemd` functions are available through `systemctl` (systemd control).  
 
 ## `systemd` File Locations
 
@@ -36,30 +16,20 @@ Many `systemd` functions are available through `systemctl`.
 
 
 ## What `systemd` does
+
 It does a number of things on the system:
 
 * Provides parallelization capabilities
-* Uses socket a D-Bus activation for starting services
-* Offers on-demand starting of daemons and services
-* Keeps track of processes using Linux control groups
-* Maintains mount and automount points,
-* Implements an elaborate transactional dependency-based service control logic.
-
-
-The primary roles of `systemd`:
-
-* Parallelization Capabilities
     * Boots up services in parallel to reduce startup times.
-* Socket and D-Bus Activation
+* Uses socket a D-Bus activation for starting services
     * Starts services only when needed, based on socket or D-Bus requests.
-* On-Demand Service Launching
+* Offers on-demand starting of daemons and services
     * Delays the launch of certain services until explicitly required.
-* Process Tracking
-    * Manages processes using Linux control groups (cgroups).
-* Mount and Automount Management
+* Keeps track of processes using Linux control groups
+* Maintains mount and automount points (i.e., `.mount` and `.automount` services)  
     * Controls mount points, allowing automated and on-demand mounting of filesystems.
-* Dependency Management
-    * Uses a dependency-based service control system, allowing ordered and conditional starts of services.
+* Implements a transactional, dependency-based service control logic.
+    - E.g., `Wants=network-online.target`
 
 
 ## Creating a Systemd Service (Service Files)
@@ -69,7 +39,6 @@ These service files contain the instructions and conditions for the service to s
 
 The `/usr/lib/systemd/system/` directory also holds system service files (but
 use `/etc/systemd/system/` when adding new ones).
-
 
 
 An example service file:
