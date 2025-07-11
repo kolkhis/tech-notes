@@ -12,33 +12,42 @@ grep -n -r -E '^#?#\s\s?.*$'  # Get all markdown H1 and H2s
 ```
 
 - `-i`: Ignore case.  
-* `-v` will print the lines that *don't* match the pattern.
-    * Matches NON-MATCHING lines.  
-* `-n` will output the line number of the match.
-    * No effect used with `-r`/`-R`
-* `-E` will enable *Extended* regex.
-* `-r` will recursively search starting from working directory. 
-    * When a file is provided, this doesn't have any effect.
-    * `-R` is the same as `-r` but will follow symlinks.
+* `-v`: In`v`ert the match. Will print the lines that *don't* match the pattern.  
+    * Matches/prints **non-matching** lines.  
+* `-n`: Output the line number of the match.  
+* `-E`: Enable *Extended* regex.
+* `-r`: Recursively search starting from working directory. 
+    * When a regular file is provided, this doesn't have any effect.
+    * `-R` is the same as `-r`, but will also follow symlinks.
+    * Functionally equivalent to `grep -d recurse`
 * `-l` will only print the filenames of files with matches.
     * `-L` will output the filenames of files WITHOUT matches.
+- `-d <ACTION>`: Specify an action to take on directories. Available actions:
+    - `skip`: Silently skip any directories.  
+    - `read`: Read directories as if they were normal files.  
+    - `recurse`: Recurse through directories, reading all files under each directory.  
+- `--exclude=glob`: Skip any files that match the glob pattern.  
+- `--exclude-dir=glob`: Skip any directories that match the glob pattern.  
 
 ## Using Grep  
 The greps:  
 ```bash  
-grep   # Regular grep with 
+grep
 egrep  
 fgrep  
 rgrep 
 ```
 
-* `grep`: Uses Basic Regular Expressions (BRE) by default.  
-* `egrep`: Uses Extended Regular Expressions (ERE).  
+* `grep`: Uses Basic Regular Expressions (BREs) by default.  
+* `egrep`: Uses Extended Regular Expressions (EREs).  
     * Equivalent to `grep -E`
 * `fgrep`: Treats the pattern as a fixed string, not a regular expression.  
     * Equivalent to `grep -F`
 * `rgrep`: Recursively searches directories.  
-    * Equivalent to `grep -r`
+    * Equivalent to `grep -r` or `grep -d recurse`
+
+There's also [`pgrep`](#pgrep), but that's not for searching through files. `pgrep` is used to
+grep through currently running processes and lists the PIDs that match the pattern.  
 
 ###  Basic vs Extended Regular Expressions:  
 
@@ -270,5 +279,109 @@ Note: `grep` takes care of assembling the result into a complete SGR sequence (`
     * Prevents clearing to the end of line using Erase in Line (`EL`) to  
       Right (`\33[K`) each time a colorized item ends.  
     * The default is false (unset). True if set.  
+
+## `pgrep`
+
+`pgrep` (process grep) is a tool that helps you find the PIDs of running processes by
+their names or other attributes.  
+
+It's part of the `procps` package on most Linux distros.  
+
+```bash
+sudo apt-get install procps
+# Or on RedHat-based systems
+sudo dnf install procps-ng
+```
+
+---
+
+- Find the PID of a process by its name:
+  ```bash
+  pgrep bash
+  ```
+  This will return the PIDs of all processes whose name matches `bash`.  
+
+- Find the PIDs of processes owned by a specific user:
+  ```bash
+  pgrep -u root
+  ```
+  This will list all the PIDs of all the running processes that are **owned by `root`**.  
+
+- To get the process name as well as the PID, use `-l`.  
+  ```bash
+  pgrep -u root -l
+  ```
+
+- Or, to get the **entire command used** to invoke the process, use `-a`.  
+  ```bash
+  pgrep -u root -a
+  ```
+
+
+---
+
+A more practical example, finding currently running SSH processes.  
+```bash
+pgrep sshd
+```
+
+You can also narrow this down further by specifying a user with `-u`.  
+```bash
+pgrep -u root sshd
+```
+This will only show the PIDs of the `sshd` processes that are **owned by `root`**.  
+
+You can also specify multiple users, comma-delimited.  
+```bash
+pgrep -u root,daemon sshd
+```
+This will show the PIDs of all processes owned by the users `root` or `daemon` with
+the name `sshd`.  
+
+You can also just view the PIDs that are owned by users without providing a process
+name.  
+```bash
+pgrep -u root,daemon
+```
+
+---
+
+List the process name as well as the PID with `-l`:
+```bash
+pgrep -u root,daemon -l
+```
+
+---
+
+Using `-c` you can count the number of processes instead of listing the PIDs.  
+```bash
+pgrep -c -u root
+```
+
+---
+
+If you need to format the PIDs a certain way, you can specify a delimiter. It
+defaults to newline, printing each PID on its own line.  
+```bash
+pgrep -u root -d,
+```
+This will set the delimiter to a comma (`,`) and output the PIDs as
+comma-delimited.  
+
+
+---
+
+When you specify a process by name, it *only* matches the name of the base process.  
+Using `-f`, you can match the entire command that was run to execute that process.  
+```bash
+pgrep -f 'daemon'
+```
+This will match any options that were used to invoke the process (e.g.,
+`--no-daemon`).  
+
+---
+
+
+
 
 
