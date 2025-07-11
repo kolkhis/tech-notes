@@ -317,10 +317,14 @@ sudo dnf install procps-ng
   pgrep -u root -a
   ```
 
+- To match a process name **exactly**, use `-x`.  
+  ```bash
+  pgrep -x sshd
+  ```
 
 ---
 
-A more practical example, finding currently running SSH processes.  
+A more practical example, finding currently running SSHD processes.  
 ```bash
 pgrep sshd
 ```
@@ -380,6 +384,12 @@ This will match any options that were used to invoke the process (e.g.,
 `--no-daemon`).  
 
 ---
+
+List the oldest and newest processes of a given name with `-o` and `-n` respectively.  
+```bash
+pgrep -o bash # Oldest process named "bash"
+pgrep -n vim  # Newest process named "vim"
+```
 
 
 
