@@ -8,8 +8,9 @@ Many `systemd` functions are available through `systemctl` (systemd control).
 
 * `/var/log/journal/` stores `systemd` logs, and can be accessed with `journalctl`.  
 * `/etc/systemd/system` is where custom service files are stored.  
-    * The files named `*.socket`/`*.service` in `/etc/systemd/system` are called `unit files`.  
-    * You’ll also find `*.wants/` and `*.requires/` directories here, representing dependencies and conditional requirements for services.  E.g.,:
+    * The files in this directory are called **unit files**.  
+    * You’ll also find `*.wants/` and `*.requires/` files/directories here, representing 
+      dependencies and conditional requirements for services. E.g.:  
         * `network-online.target.wants/`: Services that require the network to be online.
         * `multi-user.target.wants/`: Services to start in multi-user mode (non-graphical mode).
 
@@ -32,16 +33,17 @@ It does a number of things on the system:
     - E.g., `Wants=network-online.target`
 
 
-## Creating a Systemd Service (Service Files)
-Service files (or "Unit Files") are what defines a systemd service.  
-Systemd services go in the `/etc/systemd/system/` directory.  
-These service files contain the instructions and conditions for the service to start.
+## Creating a Systemd Service 
+Service files (or "Unit Files") are what define systemd services.  
 
-The `/usr/lib/systemd/system/` directory also holds system service files (but
-use `/etc/systemd/system/` when adding new ones).
+These unit files go in the `/etc/systemd/system/` directory.  
+These files contain the instructions and conditions for the service to start.
+
+The `/usr/lib/systemd/system/` directory holds **system** service files, but
+use `/etc/systemd/system/` when adding new ones.
 
 
-An example service file:
+An example service file, `/etc/systemd/system/example.service`:
 ```ini
 [Unit]
 Description=The Service Name
@@ -58,15 +60,8 @@ Restart=always
 WantedBy=graphical.target
 ```
 
-* `[Unit]`: This section contains directives about when and how this service should start, 
-  and if it should wait for other services.
-    - `Description=`: A short description of the service
-    - `After=network-online.target`: Wait until the network is up.
-    - `Wants=network-online.target`: Try to bring the network up if it's not.
-* `[Service]`: This is the main configuration section for how the service runs.
-    - `Environment=DISPLAY=:0`: Required so Firefox knows to use the Pi's display.
-
 ### Service File Section Entries
+
 
 - The `[Unit]` section has some common directives:
     - `Description=`: A short description of the service
@@ -75,6 +70,9 @@ WantedBy=graphical.target
           dependency is active, it's just a startup order.
     - `Wants=`: Similar to `Requires=`, but softer. If the wanted service fails to
       start, this one will continue.
+
+Every unit file should contain a `[Unit]` section, regardless of what kind of unit
+file it is (`.timer`, `.mount`, etc.).  
 
 - `[Service]`: Main config section for the service:
     * `ExecStart=`: The full command to run to start the service.
@@ -86,7 +84,7 @@ WantedBy=graphical.target
     * `Restart=`: Defines what to do if the service crashes. Common values: no, on-failure, always.
     * `RestartSec=`: How many seconds to wait before restarting the service.
     * `WorkingDirectory=`: Directory to set as the working directory.
-    * `StandardOutput= / StandardError=`: Controls log o
+    * `StandardOutput= / StandardError=`: Controls log output locations.  
 
 - `[Install]`: Used when you enable the service (so it starts at boot). Tells systemd
   which **target** (boot stage) the service should be linked to.
@@ -407,11 +405,117 @@ WantedBy=multi-user.target
 
 
 
+## Types of Unit Files
 
+There are many types of unit files that systemd supports, each with a file extension
+that reflects the type of unit file it is.  
+
+- `.service`: Defines a service or daemon process
+- `.socket`: Describes an IPC or network socket for socket activation
+- `.timer`: Used to schedule service activation (like cron, but systemd)
+    - Muse be paired with `.service` files.  
+- `.mount`: Manages mount points in the filesystem (like `/etc/fstab`, but systemd)
+- `.automount`: Defines automount behavior for on-demand mounting
+    - This requires a corresponding `.mount` unit file.  
+- `.target`: Tracks kernel devices (via `udev`).  
+    - These are rarely user-defined unit files.  
+    - Often used like "runlevels", e.g., `multi-user.target`, `graphical.target`
+- `.swap`: Controls swap devices or files.  
+- `.path`: Triggers a service when a file or directory changes (e.g., `inotify`)
+    - This can be used to set up a kind of tripwire. 
+    - They use the `inotify` Linux kernel API, just like `inotifywait`.  
+- `.slice`: Used for resource control a `cgroups` (control groups) hierarchy
+- `.scope`: Represent an externally created process (e.g., via `systemd-run`)
+    - These are auto-generated when launching transient processes.  
+    - Transient processes are processes that systemd didn't start through a static
+      unit file.  
+- `.busname`: D-Bus name activation unit. These are rare. You won't need to worry 
+  about these unless you're writing a D-Bus daemon.  
+- `.network`: Not a unit file *directly*, these are configuration files for the
+  `systemd-networkd` service. 
+    - Only use these if you're using `systemd-networkd` instead of NetworkManager, and 
+      you're setting up headless servers or containers.  
+    - These would go in `/etc/systemd/network/`.  
+- `.link`: Configures links (NICs) for `systemd-networkd`.  
+- `.netdev`: Defines virtual network devices (`vEth`, `bridge`, etc.)
+    - These can create virtual network devices that can be used on bare metal, VMs,
+      containers, etc.  
+
+
+These different unit file types can be broken down into **user-facing** unit types
+and **advanced/internal** unit types.  
+
+### User-Facing Unit File Types
+
+These are the most relevant to admins or users that are writing systemd services or
+working with other systemd functionality.  
+
+| Unit Type    | Description
+| ------------ | -----------
+| `.service`   | Defines a service or daemon (like `sshd`, `nginx`, or your own script).
+| `.timer`     | Schedules the start of a service, similar to `cron`. Must pair with a `.service`.
+| `.mount`     | Describes a mount point (alternative to `/etc/fstab`).
+| `.automount` | Enables on-demand mounting. Requires a matching `.mount` unit.
+| `.path`      | Watches a file or directory and triggers a `.service` when it changes.
+| `.socket`    | Describes a listening socket that triggers a `.service` on demand.
+| `.target`    | Groups units together for coordination. Like runlevels.
+| `.swap`      | Describes swap files/devices.
+| `.slice`     | For grouping services into resource-control domains (uses cgroups).
+
+### Internal Unit File Types
+
+These unit files are rarely written directly by users or admins. They're usually
+managed dunamically by systemd or udev.  
+
+
+| Unit Type  | Description
+| ---------- | -----------
+| `.scope`   | Represents a transient process started outside systemd's unit control (e.g., `systemd-run bash`).
+| `.busname` | Used for D-Bus name-based activation. Only makes sense for services exposing D-Bus interfaces.
+| `.device`  | Dynamically generated to track kernel devices (via udev).
+| `.link`    | Used by `systemd-networkd` to configure persistent NIC naming, MTU, etc.
+| `.network` | Used by `systemd-networkd` to assign IPs, gateways, etc.
+| `.netdev`  | Defines virtual devices like `veth`, `bridge`, `vxlan`, etc.
+
+
+## `.path` Example
+
+We can watch for a new file in some directory and then process it:  
+```ini
+# file-watcher.path
+[Path]
+PathChanged=/some/dir
+Unit=run-script.service
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Systemd waits for an event (new file, modification, etc.), then triffers the
+`.service`.  
+
+The actual event **is not passed to the service**. 
+You can use the service to determine what happened and why.  
 
 
 ## Resources
 
+- `man systemd`
+- `man 5 systemd.unit` (for `[Unit]` and `[Install]`)
+- `man 5 systemd.service` (for `[Service]`)
+- `man 5 systemd.socket` (for `[Socket]`)
+- `man 5 systemd.device` (for `[Device]`)
+- `man 5 systemd.mount` (for `[Mount]`)
+- `man 5 systemd.automount` (for `[Automount]`)
+- `man 5 systemd.timer` (for `[Timer]`)
+- `man 5 systemd.swap` (for `[Swap]`)
+- `man 5 systemd.target` (for `[Target]`)
+- `man 5 systemd.path` (for `[Path]`)
+- `man 5 systemd.slice` (for `[Slice]`)
+- `man 5 systemd.scope` (for `[Scope]`)
+- `man 5 systemd.kill`
+- `man 5 systemd-system.conf`
+- `man 7 systemd.directives`
 * [Systemd Service Files](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#)
 * [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html)
 
