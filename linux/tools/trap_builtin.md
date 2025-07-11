@@ -96,6 +96,7 @@ This allows actions to be taken just before the function or the sourced script c
 The default signal for kill is TERM (`SIGTERM`).  
 You can just run `kill -l` (or `-L`) to get the list of available signals.  
 Too lazy? Here.  
+
 |   1 - SIGHUP  | 2 - SIGINT | 3 - SIGQUIT | 4 - SIGILL | 5 - SIGTRAP |
 |-|-|-|-|-|
 |  6 - SIGABRT |  7 - SIGBUS |  8 - SIGFPE |  9 - SIGKILL | 10 - SIGUSR1|
@@ -225,8 +226,8 @@ trap - EXIT
 trap "" SIGINT   # Ignore C-c (^C). This is not the same as resetting.  
 ```
 
-## Sources  
+## Resources  
 
 * `man bash`
-* [HowToGeek](https://www.howtogeek.com/814925/linux-signals-bash/)  
+* <https://www.howtogeek.com/814925/linux-signals-bash/>  
 
