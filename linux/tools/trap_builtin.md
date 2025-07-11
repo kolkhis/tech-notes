@@ -47,7 +47,9 @@ Some common signals are:
 
 All Signals have numeric representations (up to 64), along with the "symbolic names" given to them.  
 Use `trap -l` for all of the linux-wide signals.  
+
 Not an exhaustive list:  
+
 |   **SIGNAL**     |      **TRIGGER**   |
 |------------------|--------------------|
 | `SIGHUP (1)`    | Hangup detected on controlling terminal or death of controlling process.  |
