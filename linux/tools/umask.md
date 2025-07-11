@@ -19,6 +19,57 @@ Then the `umask` is *subtracted* ([bitwise](#bitwise-operation)) from these base
 
 ---
 
+## Bitwise Operation
+
+The `umask` is applied as a bitwise operation on new file creation.  
+
+This is done with a bitwise `AND` using the bitwise **inverse** of the umask.  
+
+An example: 
+```bash
+umask 0022
+```
+
+- File default is `0666` (binary `110 110 110`)
+- `umask` is `0022` (binary `000 010 010`)
+    - It uses the bitwise inverse (`111 101 101`) for this operation under the hood.  
+
+
+We use a bitwise `NOT` on the umask to get the bitwise inverse of the umask and then 
+use that to bitwise `AND` with the default file permissions.  
+```bash
+  110 110 110  # Default permissions
+& 111 101 101  # Bitwise NOT (inverse) of the umask (~000 010 010)
+-------------
+  110 100 100  # 0644 = -rw-r--r--
+```
+
+So basically this is the formula:
+```bash
+final_perms = default_perms & ~umask
+```
+
+The `&` is a bitwise `AND`, and the `~` is a bitwise `NOT`.  
+
+
+The bitwise operation is done per-bit, so it's more granular than just "subtracting" in
+decimal.  
+
+---
+
+An easy way to remember what the final permissions will be with any given umask is to
+just substract the umask (per digit) from the default permissions.  
+
+When creating a normal file with a umask of `0022`, we'd subtract `0022` from `0666`
+(per-digit).  
+```bash
+  0666
+- 0022
+------
+  0644
+```
+
+
 ### Examples of `umask`
 
 A common umask is `0022`.  
@@ -81,41 +132,6 @@ touch newfile # 0666 - 0027 = 0640
 mkdir newdir  # 0777 - 0027 = 0750
 ```
 
-
-## Bitwise Operation
-
-The `umask` is applied as a bitwise operation on new file creation.  
-
-This is done with a bitwise `AND` using the bitwise inverse of the umask.  
-
-An example: 
-```bash
-umask 0022
-```
-
-- File default is `0666` (binary `110 110 110`)
-- `umask` is `0022` (binary `000 010 010`)
-    - It uses the bitwise inverse (`111 101 101`) for this operation under the hood.  
-
-
-We use a bitwise NOT on the umask to get the bitwise inverse of the umask and then 
-use that to bitwise AND with the default file permissions.  
-```bash
-  110 110 110  # Default permissions
-& 111 101 101  # Bitwise NOT of the umask
--------------
-  110 100 100  # 0644 = -rw-r--r--
-```
-
-So basically this is the formula:
-```bash
-final_perms = default_perms & ~umask
-```
-
-The `&` is a bitwise `AND`, and the `~` is a bitwise `NOT`.  
-
-This operation is done per-bit, so it's more granular than just "subtracting" in
-decimal.  
 
 
 
