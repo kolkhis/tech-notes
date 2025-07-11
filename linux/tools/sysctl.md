@@ -1,6 +1,7 @@
 # `sysctl`
 
-The `sysctl` tool is used to manage kernel runtime parameters.  
+The `sysctl` tool is used to manage kernel runtime parameters **at runtime** (without
+rebooting).  
 
 It works with parameters located under `/proc/sys`, and changes made via `sysctl` 
 are **immediate but not persistent** unless written to a config file.
@@ -17,7 +18,7 @@ are **immediate but not persistent** unless written to a config file.
   sysctl -a
   ```
 
-* Filter for ipv4:
+* Filter for a specific kernel setting, e.g., `ipv4`:
   ```bash
   sysctl -a | grep -i 'ipv4'  
   ```
@@ -49,6 +50,16 @@ are **immediate but not persistent** unless written to a config file.
   sysctl --system
   ```
 
+---
+
+- Filter kernel parameters by using a regular expression (ERE):  
+  ```bash
+  sysctl -a -r '^net\.ipv[46]\>'
+  ```
+  This will show all kernel parameter that match the pattern.  
+    - start with the word `net`, followed by a `.`, then match either `ipv4` or `ipv6`.  
+
+
 ## Config Files
 
 To configure kernel runtime parameters to **persist** throughout reboots, you need to
@@ -77,3 +88,8 @@ looks for files in this order:
 Once a file has been loaded, any other files with the same name will be ignored. 
 Since files in `/etc/sysctl.d` are loaded first, this is where we put our settings.  
 
+
+## Resources
+
+- `man 8 sysctl`
+- `man 5 sysctl.conf`
