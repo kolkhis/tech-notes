@@ -29,6 +29,15 @@ trap "rm -f ./tmpfile && printf \"Trap triggered!\" " SIGINT SIGTERM EXIT ERR
 ```
 This will remove the file `./tmpfile` when the user presses Ctrl+C, Ctrl+D, or exits the script.  
  
+---
+
+An example, creating a FIFO pipe, using `tail -F` to write to that pipe, then backgrounding the process. We need to clean up the FIFO pipe and the background process when the script is exited so that `tail -F` doesn't turn into a zombie process, and to remove the unused FIFO pipe.  
+```bash
+declare logfile_fifo="./logfile_fifo"
+tail -F "$WATCH_FILE" > "$logfile_fifo" &
+declare TAIL_PID=$!
+trap "kill $TAIL_PID; rm -f $logfile_fifo; exit;" SIGINT SIGTERM SIGHUP SIGILL SIGQUIT EXIT ERR
+```
 
 
 ## Linux Signals Used with `trap`
