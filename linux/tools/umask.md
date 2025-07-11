@@ -124,15 +124,16 @@ touch newfile # 0666 - 0077 = 0600
 mkdir newdir  # 0777 - 0077 = 0700
 ```
 
-Then we have `0027`, which removes access to any users that are the owner or group
-memebers.   
+Then we have `0027`, which removes access to any users that are neither the owner or group
+members.   
 ```bash
 umask 0027
 touch newfile # 0666 - 0027 = 0640
 mkdir newdir  # 0777 - 0027 = 0750
 ```
+This removes all access from "others" (not owner or group member).    
 
-
+---
 
 
 
