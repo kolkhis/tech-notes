@@ -32,6 +32,7 @@ dpkg -i package.deb # Install a .deb package manually
 dpkg -r package     # Remove a package  
 dpkg -l             # List all installed packages  
 dpkg -l | grep -i package_name  # Find out if a package is installed
+dpkg -S command     # Search for the package that installed the command
 ```
 
 ### `dpkg` Output
@@ -103,6 +104,7 @@ dnf info package                # Get detailed information about a package
 dnf list installed              # List all installed packages  
 dnf list available              # List available packages in the enabled repos  
 dnf list package                # Show details about a specific package  
+dnf whatprovides command        # Show the package that provides the given command
 
 # Managing repositories
 dnf repolist                    # List enabled repositories  
@@ -161,4 +163,73 @@ package manager.
   # or, with yum:
   yum history list package_name
   ```
+
+## Find what Package a Tool is From
+
+### `dpkg -S`
+On Debian-based systems, you'd use `dpkg -S` to determine what package a tool came
+from.  
+```bash
+dpkg -S toolname
+```
+This will match the tool name and show you what package installed the tool.  
+
+For instance, finding what package `pgrep` came from:
+```bash
+dpkg -S pgrep
+```
+
+The output would look something like this:
+```bash
+unzip: /usr/share/man/man1/zipgrep.1.gz
+procps: /usr/share/man/de/man1/pgrep.1.gz
+procps: /usr/share/man/man1/pgrep.1.gz
+procps: /usr/share/man/fr/man1/pgrep.1.gz
+procps: /usr/share/man/uk/man1/pgrep.1.gz
+bash-completion: /usr/share/bash-completion/completions/pgrep
+procps: /usr/bin/pgrep
+procps: /usr/share/man/sv/man1/pgrep.1.gz
+unzip: /usr/bin/zipgrep
+```
+
+Then just look for the binary.  
+
+```bash
+procps: /usr/bin/pgrep
+```
+So that tells us that the `procps` package is responsible for installing
+`/usr/bin/pgrep`.  
+
+### `dnf whatprovides`
+
+On a Rocky system (or other RedHat-based distros that use `dnf`), you can use the
+`dnf whatprovides` command to see where a tool came from. This has the added bonus of
+not needing the tool to already be installed. You can use this on any command whether
+it's available or not.  
+```bash
+dnf whatprovides pgrep
+```
+
+The output contains what packages provide the tool *and* which repositories they're
+coming from.  
+
+```bash
+procps-ng-3.3.17-14.el9.i686 : System and process monitoring utilities
+Repo        : baseos
+Matched from:
+Filename    : /usr/bin/pgrep
+
+procps-ng-3.3.17-14.el9.x86_64 : System and process monitoring utilities
+Repo        : @System
+Matched from:
+Filename    : /usr/bin/pgrep
+
+procps-ng-3.3.17-14.el9.x86_64 : System and process monitoring utilities
+Repo        : baseos
+Matched from:
+Filename    : /usr/bin/pgrep
+```
+
+So you can see that the package that provides `pgrep` on Rocky is `procps-ng`, and is 
+available from the `baseos` repository.  
 
