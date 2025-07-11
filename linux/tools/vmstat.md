@@ -1,21 +1,7 @@
-# vmstat
+# `vmstat`
 
 The `vmstat` command provides information about system processes, memory,
-paging, block IO, traps, disks, and CPU activity
-
-
-## Table of Contents
-* [Basic Usage](#basic-usage) 
-    * [Summary of System Resource Usage](#summary-of-system-resource-usage) 
-    * [Getting Disk Statistics](#getting-disk-statistics) 
-* [`vmstat` Output](#vmstat-output) 
-    * [Procs (Processes)](#procs-processes) 
-    * [Memory](#memory) 
-    * [Swap](#swap) 
-    * [IO (Input/Output)](#io-inputoutput) 
-    * [System](#system) 
-    * [CPU](#cpu) 
-
+paging, block device I/O, traps, disks, and CPU activity
 
 ## Basic Usage
 
