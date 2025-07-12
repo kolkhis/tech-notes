@@ -155,16 +155,46 @@ while (<>) {
 
 
 ### Setting the IRS from the CLI
-The IRS (Input Record Separator) determines how perl reads in lines. By default, it's
-set to newline (`\n`).  
+The IRS (Input Record Separator) is a special variable (`$/`) which determines how 
+Perl reads in lines. By default, `$/` is set to newline (`\n`), which means it reads 
+input line-by-line.  
 
 Use the `-0` flag to set the input record separator when running Perl.  
 ```bash
+perl -pi -0<OCTAL_VALUE> 
+```
+The `-0` option accepts any octal or hexadecimal value to use as the IRS.  
+
+If you're specifying a hexadecimal value, add an `x`:
+```bash
+perl -pi -0x<HEX_VALUE>
+```
+When using hexadecimal, you can actually specify a unicode character... if you have
+weirdly-delimited input.  
+
+---
+
+Using `-0` without any arguments will set the IRS (`$/`) to `NUL`.  
+```bash
+perl -pi -0 ...
+```
+This will set the separator to `NUL` (`\0`), which is good for working with tools
+that output `NUL`-delimited text. For example, using `find -print0` or `xargs -0`.  
+
+
+#### Paragraph Mode
+
+```bash
 perl -pi -00 
 ```
-This sets the IRS to the ASCII `NUL` character. This can be useful if you're
-processing files that are `NUL`-delimited (e.g., `find` with `-print0`).  
 
+The `-00` option is special, it causes Perl to "slurp" files in **paragraph mode**, 
+which sets the IRS to an empty string, and forces Perl to read in paragraphs
+separated by one or more blank lines, e.g., **two consecutive newline characters** (`\n\n`).  
+
+One newline to end the paragraph, and another to represent a blank line.  
+
+---
 
 
 ## Variables
@@ -494,7 +524,8 @@ themselves, using the syntax `\@array_name`. This creates a reference to the arr
 Normal `print` statements will flatten any sort of data structures. 
 Arrays, dictionaries/hashes, and nested combinations won't be seen correctly with `print`.  
 
-`Data::Dumper` is used to format these data structures into human-readable strings.  
+The `Data::Dumper` sub from the `Data` module is used to format these data structures 
+into human-readable strings.  
 
 ```perl
 use Data::Dumper;
@@ -578,17 +609,22 @@ Some CLI arguments for perl:
 
 - `-p`: Places a printing loop around your command so that it acts on each line of standard input.
     * Use to loop over the contents of a file line by line and output every line after being processed.  
-    * This is similar to what `awk` does.  
-
-- `-e`: Allows you to provide the perl script as an argument rather than in a file.
-    * Identical to `-c` in Python or Bash.  
-
-- `-i`: Edit the file in place, making a backup of the original.
-    * Allows you to modify files without `{copy, delete-original, rename}`.
+    * This is similar to what `sed` and `awk` do by default.  
 
 - `-n`: Places a non-printing loop around your command.
     * Use to loop over the contents of a file line by line and NOT output anything
       other than what you specify.  
+
+- `-e`: Allows you to provide the perl script as an argument rather than in a file.
+    * Identical to `-c` in Python or Bash.  
+
+- `-E`: Same as `-E` but also enables **all** optional features.  
+    * Identical to `-c` in Python or Bash.  
+
+
+- `-i`: Edit the file in place, making a backup of the original.
+    * Allows you to modify files without `{copy, delete-original, rename}`.
+
 - `-w`: Activates some warnings. 
     * Someone said "Any good Perl coder will use this."
 
