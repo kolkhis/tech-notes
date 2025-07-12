@@ -10,7 +10,8 @@ creates.
 
 The `umask` is like a filter that subtracts permissions from a full set.  
 
-It specifies a *mask* of bits to be removed from a file's **mode** attributes.  
+It specifies a *mask* of bits to be removed from a file's **mode** attributes using
+octal notation.  
 
 When a file or directory is created, files get base permissions of `0666`
 (`-rw-rw-rw-`), and directories get base permissions of `0777` (`-rwxrwxrwx`).  
@@ -18,6 +19,8 @@ When a file or directory is created, files get base permissions of `0666`
 Then the `umask` is *subtracted* ([bitwise](#bitwise-operation)) from these base permissions.  
 
 ---
+
+
 
 ## Bitwise Operation
 
@@ -97,7 +100,7 @@ The base permissions of the directory are `0777`.
 ```bash
 0777 - 0022 = 0755
 ```
-So `newdir` will have the permissions `0755` (`-rwxr-xr-x`)
+So `newdir` will have the permissions `0755` (`drwxr-xr-x`)
 
 ## Common `umask` Values
 
@@ -124,17 +127,31 @@ touch newfile # 0666 - 0077 = 0600
 mkdir newdir  # 0777 - 0077 = 0700
 ```
 
-Then we have `0027`, which removes access to any users that are neither the owner or group
+Then we have `0027`, which removes access to any users that are neither the owner nor group
 members.   
 ```bash
 umask 0027
-touch newfile # 0666 - 0027 = 0640
-mkdir newdir  # 0777 - 0027 = 0750
+touch newfile # 0666 - 0027 = 0640 (-rw-r-----)
+mkdir newdir  # 0777 - 0027 = 0750 (drwxr-x---)
 ```
-This removes all access from "others" (not owner or group member).    
+This umask value removes all access from "others" (not owner or group member), and 
+removes write access from group memebers.    
 
 ---
 
+## Three v. Four Digits
+
+You'll usually see the umask represented as either three or four numbers.  
+
+```bash
+umask 022
+umask 0022
+```
+
+Both of these are valid.  
+The leading `0` on the second example is just indicating the the value is octal.  
+This is good practice, but the leading zero is optional.  
+You can use just three numbers if you want.  
 
 
 
