@@ -58,12 +58,21 @@ perldoc -m data
 
 > `perldoc perlrun`
 
+### Running Perl Scripts
 From the command line, you can run a perl script like any other language.
-Type `perl` then the name of the script.
+Type `perl` then the name of the perl script.
 ```bash
 perl myscript.pl
 ```
+Alternatively, if you have the correct shebang line (e.g., `#!/usr/bin/local/perl` or
+`#!/usr/bin/env perl`) then you can just execute the script directly.  
+```bash
+./myscript.pl
+```
 
+---
+
+### Running Perl One-Liners
 
 To run perl commands from the command line, use the `-e` flag.
 ```bash
@@ -81,8 +90,11 @@ perl -E 'print "Hello, world\n"'
 perl -E 'say "Hello, world"'
 # Hello, world
 ```
+The `-E` option behaves just like `-e` but enables **all** optional features.  
+
 `say` automatically adds a newline at the end of a string.
 Does not work with `-e`, because features are not enabled with `-e`.  
+
 
 ---
 
@@ -90,6 +102,7 @@ Does not work with `-e`, because features are not enabled with `-e`.
 perl -E 'while(<>) { say uc $_ }'
 ```
 - `while(<>)` reads from STDIN
+    - This could also be done with the `-n` option.  
 - `say uc $_` prints (`say`) the uppercase (`uc`) version of the current line (`$_`)
 This will wait for user input and print it back in uppercase.
 
@@ -142,6 +155,8 @@ while (<>) {
 
 
 ### Setting the IRS from the CLI
+The IRS (Input Record Separator) determines how perl reads in lines. By default, it's
+set to newline (`\n`).  
 
 Use the `-0` flag to set the input record separator when running Perl.  
 ```bash
