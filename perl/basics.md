@@ -56,7 +56,7 @@ perldoc -m data
 
 ## Running Perl
 
-###### `perldoc perlrun`
+> `perldoc perlrun`
 
 From the command line, you can run a perl script like any other language.
 Type `perl` then the name of the script.
