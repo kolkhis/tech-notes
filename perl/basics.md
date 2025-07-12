@@ -56,6 +56,8 @@ perldoc -m data
 
 ## Running Perl
 
+###### `perldoc perlrun`
+
 From the command line, you can run a perl script like any other language.
 Type `perl` then the name of the script.
 ```bash
@@ -67,8 +69,10 @@ To run perl commands from the command line, use the `-e` flag.
 ```bash
 perl -e 'print "Hello, world\n"'
 ```
-Double quotes interpolate variables, so single quotes are preferred.  
+If you use double quotes in your `-e` expression, the shell expands variables.  
+Single quotes are preferred for that reason.  
 
+---
 
 Use the `-E` flag to run the commands to enable some of the pro core features (i.e., the `use strict` pragma.)
 ```bash
