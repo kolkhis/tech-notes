@@ -162,17 +162,23 @@ Use the `-0` flag to set the input record separator when running Perl.
 ```bash
 perl -pi -00 
 ```
+This sets the IRS to the ASCII `NUL` character. This can be useful if you're
+processing files that are `NUL`-delimited (e.g., `find` with `-print0`).  
 
 
 
 ## Variables
+See [variables](./variables.md) for more indepth explanations.  
+
+
 Types of variables in perl are:
 
-- Scalar
-- Array
-- Hash
+- Scalar: A single values.  
+- Array: A single-vector list of values.  
+- Hash: An array of key/value pairs.  
 
-Every variable type has its own namespace, along with some non-variable identifiers.  
+Every variable **type** has its own namespace, along with some non-variable identifiers.  
+
 Basically meaning, you can use the same name for a scalar variable and an array
 variable and they won't conflict.  
 ```perl
@@ -187,13 +193,15 @@ print "$var\n"
 Not "technically" variables, but the same rule applies to these:
 
 - Handles
-    - File Handle
-    - Directory Handle  
+    - File handles
+    - Directory handles  
 - Subroutine names
 - Format names
 - Labels
 
 Just because you *can* doesn't mean you *should*.  
+As a best practice, you should always give your variables and functions unique names
+for clarity.  
 
 ### Scalar Variables
 In perl, anything that is a single unit of data is a `scalar` value.  
