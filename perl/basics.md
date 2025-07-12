@@ -209,8 +209,11 @@ That unit of data could be a string, number, or reference.
 Scalars are represented with the dollar `$` sign prefix.  
 
 A scalar always holds one value at a time.  
+
 There's really no need for different types since perl is dynamically typed.  
-So, scalar is kind of its own data type in perl.  
+So, scalar is kind of its own data type in perl. There are still numbers and
+strings, but they're dynamically cast into the correct type based on the context
+they're used in.  
 
 
 ### Examples of Scalars in Perl
