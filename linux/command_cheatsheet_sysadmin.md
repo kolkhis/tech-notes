@@ -1,6 +1,5 @@
 # Cheatsheet for Sysadmins
 
-
 ## Table of Contents
 * [General Information about the System](#general-information-about-the-system) 
 * [File and Directory Management](#file-and-directory-management) 
@@ -87,6 +86,8 @@ Also see [Package Management](./package_management.md).
 apt update  # Update package lists
 apt upgrade  # Upgrade all packages
 apt install package  # Install a package
+apt search package  # Search for a package
+apt show package  # Show details about a package
 apt remove package  # Remove a package
 dpkg -i package.deb  # Install a .deb package manually
 ```
