@@ -235,8 +235,64 @@ trap - EXIT
 trap "" SIGINT   # Ignore C-c (^C). This is not the same as resetting.  
 ```
 
+## Functions Inheriting Traps
+
+There exist two shell options that you can enable to allow shell functions to inherit
+traps.  
+
+1. `-E` / `errtrace`
+   ```bash
+   set -E
+   # or
+   set -o errtrace
+   ```
+
+2. `-T` / `functrace`
+   ```bash
+   set -T
+   # or
+   set -o functrace
+   ```
+
+The `errtrace` shell option forces traps on the `ERR` signal to be inherited by shell
+functions.  
+
+Likewise, the `functrace` shell option forces traps on both the `DEBUG` and `RETURN`
+signals to be inherited by shell functions.  
+
+
+For example:
+```bash
+trap 'printf "Failed.\n"; exit 1' ERR
+fail() {
+    false
+}
+fail  # Won't trigger the trap
+```
+The `fail` function call will return an unnsuccessful result.  
+If you call this function without `set -E`, it will not trigger the trap.  
+
+
+So if we did the same thing with `set -E`, we'll get the intended behavior.  
+```bash
+trap 'printf "Failed.\n"; exit 1' ERR
+set -E
+fail() {
+    false
+}
+fail  # Now the trap will be triggered
+```
+
+---
+
+So use these options if you want your traps to behave in the same way when calling
+shell functions as they do when invoking regular commands.  
+
+
 ## Resources  
 
 * `man bash`
+- `help set`
+- `help trap`
 * <https://www.howtogeek.com/814925/linux-signals-bash/>  
 
