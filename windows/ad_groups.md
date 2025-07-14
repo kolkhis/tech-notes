@@ -126,3 +126,47 @@ foreach ($user in $users) {
 }
 ```
 
+
+## Controlling Linux Access to AD Groups
+
+If a Linux machine is properly joined to an AD domain (e.g., `realmd`/`sssd`) then
+the Linux machines should be smart about recognizing the AD groups.  
+
+You can control group access to SSH via `ssh_config` with `AllowGroups`.  
+```bash
+AllowGroups ssh_users
+```
+This will add `ssh_users` to the list of `AllowGroups`.  
+
+
+Alternatively, if your systems are using PAM (Pluggable Authentication Modules),
+which they should, then you can use an entry in `/etc/security/access.conf` to
+control ingress based on groups. This has the added benefit of not being restricted
+to SSH access control, but any type of logins.  
+
+You'd add an entry with the following syntax:
+```bash
++:@groupname:ALL
+```
+This will allow members of the group `groupname` to log in from any location (e.g.,
+SSH, TTYs, IPs, etc.). The only requirement is that they are part of the group.  
+
+So if our group is called `ssh_users`:
+```bash
++:@ssh_users:ALL
+```
+
+- This requrires the PAM stack to include the line:
+  ```bash
+  account required pam_access.so
+  ```
+  This is usually the default (at least on Debian-based systems). Check:
+  ```bash
+  grep -rin 'pam_access' /etc/pam*
+  ```
+  If it's missing, you can add the line near the top of `/etc/pam.d/sshd`:
+  ```bash
+  account required pam_access.so
+  ```
+
+
