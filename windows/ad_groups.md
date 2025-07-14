@@ -129,6 +129,7 @@ foreach ($user in $users) {
 
 ## Controlling Linux Access to AD Groups
 
+### SSHD
 If a Linux machine is properly joined to an AD domain (e.g., `realmd`/`sssd`) then
 the Linux machines should be smart about recognizing the AD groups.  
 
@@ -139,6 +140,7 @@ AllowGroups ssh_users
 This will add `ssh_users` to the list of `AllowGroups`.  
 
 
+### PAM (`/etc/security/access.conf`)
 Alternatively, if your systems are using PAM (Pluggable Authentication Modules),
 which they should, then you can use an entry in `/etc/security/access.conf` to
 control ingress based on groups. This has the added benefit of not being restricted
@@ -169,4 +171,41 @@ So if our group is called `ssh_users`:
   account required pam_access.so
   ```
 
+### Tie in AD Group to Sudoers
+
+Get the group:
+```bash
+getent group | grep <groupname>
+```
+E.g.,
+```bash
+getent group | grep ssh_users
+# ssh_users:*:10044:DOMAIN\user1,DOMAIN\user2
+```
+
+Edit the sudoers file **safely**
+```bash
+sudo visudo
+```
+
+Then following the `sudoers` file convention, add the rule for the group.  
+```bash
+%ssh_users ALL=(ALL:ALL) ALL
+```
+
+- The `%` represents a group name, and as such is required for this use case.  
+
+> **NOTE**: This entry will give the group `ssh_users` **full `sudo` access**. This 
+> is just an example. Tailor your sudoers entry to meet the needs of your environment 
+> and your users.  
+
+
+
+
+## Resources
+
+- `man 5 access.conf`
+- <https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/windows_integration_guide/sssd-gpo>
+- <https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd-configure-additional-provider-options>
+- <https://jhrozek.wordpress.com/2016/12/09/restrict-the-set-of-groups-the-user-is-a-member-of-with-sssd/>
 
