@@ -14,6 +14,12 @@ You build a wall brick by brick.
     * [ACADEMIC](#academic) 
     * [6 Certs you can get for free](#6-certs-you-can-get-for-free) 
 
+## List
+
+- [Cisco Network Academy (netacad.com)](https://www.netacad.com/catalogs/learn)
+    - This has abunch of free courses on cybersecurity, networking, programming, and
+      a bunch of other stuff.  
+
 * List of cloud native tools for DevOps/SRE/Platform Engineers: 
   [Cloud Native Landscape - landscape.cncf.io](https://landscape.cncf.io)
 
@@ -138,3 +144,5 @@ Data certs you can get for free
 * mongodb - https://learn.mongodb.com/pages/mongodb-associate-developer-exam  
     - This one has a caveat.
     - You can get a free cert if you're a student/teacher and complete a learning path.
+
+
