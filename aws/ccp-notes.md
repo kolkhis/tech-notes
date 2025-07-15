@@ -400,6 +400,137 @@ There are multiple billing options for EC2.
     - Helps with meeting certain compliance/regulatory needs.  
 
 
+### M2 Part 6
+Scaling EC2
+
+Goals:
+- Recognize concepts of scalability and elasticity as they apply to AWS
+- Describe how AWS can help businesses adjust compute capacity based on varying demand
+
+
+---
+
+We might known on average what amount of capacity is needed for a company as it
+grows. But the average can include cyclical traffic with busy and quiet seasons.  
+
+So if peak is only an hour a day, we don't need to provision peak-level resources all
+day.  
+
+We can provision your workload to the exact demand.  
+
+> Coffee shop metaphor:
+> Barista is behind counter taking orders. But not doing all the work there.
+> Someone's baking the drinks. If we lost the order-taking instance (barista) we'd be
+> out of business until we get another person (or instance) up and running
+
+Using the same programmatic method used to create the original barista, we create a
+second copy of the barista.  
+
+If one fails, there's another one already taking orders. Customers don't lose
+service.  
+
+The backend needs redundancy too, someone needs to keep making drinks.  
+
+---
+
+So, to create a HA system with no SPOF (single point of failure), set up redundant
+EC2 instances across multiple AZs in a Region. So if there are issues in one place,
+the instances deployed in the other AZ can pick up the slack.  
+
+As long as the number of customers in line stays the same we're good. But that will
+change. So let's see what happens when we have an increase in demand/traffic.  
+
+---
+
+Two ways to handle growing demands.  
+1. Scale out (horizontal scaling): Add more resources to the pool so you can get more
+   work done in parallel.  
+    - E.g., spinning up more EC2 instances
+2. Scale up (vertical scaling): Add more power to the machines that are running.  
+    - So the individual machine has more power to do the work.  
+    - Can give more power per instance, but not always what you need.
+
+>Coffee shop metaphor:
+> For an increase in customers/requests, a bigger instance won't let you process
+> orders/requests any faster.  
+> 
+> You'd need more instances to handle more customers in parallel.  
+>  
+> But, you're taking more requests, but the drinks are still being made at the
+> same speed. So you need to scale the processing instances as well.   
+
+Why are there more order-taking instances than order-making instances?  
+
+The amount of work getting done is still more than the order-taking instances can 
+send to back-of-house.  
+There isn't a backlog of orders, so there's no reason to add more worker instances.  
+So you can end up with exactly the amount of compute you need to serve all your
+customers.  
+
+Once that rush is cleared, you have extra workers that are idle.  
+If we don't need them, send them home or stop the instances.  
+This is how **Amazon EC2 Auto Scaling** works.  
+
+---
+
+EC2 Auto Scaling adds instances based on demand and key scaling metrics, then
+decommissions instances when that demand goes down.  
+
+You need to be collecting data about the performance of instances, or data around latency
+and other app metrics. You'd use Amazon CloudWatch to collect and monitor these
+metrics. This data is used to determine when scaling needs to happen. Then it happens
+automatically when needed.  
+
+---
+
+EC2 Auto Scaling adjusts the number of EC2 instances based on demand.  
+There are two approaches:
+1. Dynamic scaling: Adjusts in real time to fluctuations in demand
+2. Predective scaling: Preemptively schedules the right number of instances based on
+  anticipated demand.  
+
+With EC2 Auto Scaling, you maintin the desired amount of compute capacity for your
+apps by dynamically adjusting the number of EC2 instances based on demand.  
+
+You can create Auto Scaling groups, which are collections of EC2 instances that can
+scale in or out to meet demand.  
+
+
+An auto scaling group is configured with three key settings.  
+1. Minimum Capacity
+    - This defines the **least** number of EC2 instances required to keep the
+      application running.  
+    - Makes sure that the system never scales below this threshold.  
+    - This is the number of EC2 instances that launch immediately after you create
+      the Auto Scaling group.  
+2. Desired Capacity
+    - The ideal number of instances needed to handle the current workload (which Auto
+      Scaling aims to maintain).  
+    - If not specified, the desired capacity defaults to the minimum capacity.  
+3. Maximum Capacity
+    - This is the upper limit on the number of instances that can be launched.  
+    - Prevents over-scaling and controls costs.  
+
+---
+
+### M2 Part 7
+Goals:
+- Describe the challenge of trafiic distribution and scalability in AWS envs
+- Recognize the benefits of Elastic Load Balancing (ELB) in AWS
+- Explain the relationship between Amazon EC2 Auto Scaling and ELB in managing AWS resources
+
+
+---
+
+
+
+
+
+
+
+
+
+
 
 
 
