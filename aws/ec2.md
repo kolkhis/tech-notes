@@ -24,14 +24,44 @@ Five pricing models to pay for EC2 instances:
 * spot instances  
 * reserved instances  
 
+They're as follows:
+
+- "On-Demand": The most well known option.  
+    - You only pay for the duration that your instance runs (per hour, per second).  
+    - No long-term commitments or upfront cost.  
+    - Best for spinning up servers, playing around, testing workloads
+- "Savings Plan": Lower EC2 prices for a commitment to a consistent amount of usage.  
+    - Measured in dollars per hour for one-year or three-year term.  
+    - Can provide savings up to 72%.  
+    - Can lower prices regardless of instance family, size, OS, tenancy, or Region.  
+    - Applies to AWS Fargate and AWS Lambda usage (serverless compute options).  
+- "Reserved Instances" (RIs): Good for steady-state workloads or ones with
+  predictable usage.  
+    - Offers up to a 75% discount compared to on-demand pricing.  
+    - Qualify for a discount after committing to one-year or three-year term.  
+    - Three payment options for RIs:
+        - All Upfront: Pay in full when you commit.
+        - Partial Upfront: pay for a portion when you commit.  
+        - No Upfront: don't pay anything at the beginning. 
+- "Spot Instances": Make it possible to request spare EC2 capacity for up to 90% off
+  the on-demand price.  
+    - You bid on spare compute.  
+    - The catch: AWS can reclaim the instance at any time.  
+    - You receive a two minute warning so you can save your progress or resume later
+      if needed.  
+    - Make sure your workloads can tolerate being interrupted.  
+- "Dedicated Hosts": Actual physical servers that customers can reserve for exclusive use.  
+    - No other customers workloads can share the server.  
+    - Ideal for security-sensitive or licensing-specific workloads (e.g., Windows or SQL Server).
+    - Helps with meeting certain compliance/regulatory needs.  
+
 
 
 
 ## What is an EC2 Instance?  
 Short answer: a Virtual Machine.  
 There are so many compute options. Tons of instance types. Great for raw compute.  
-Challenge: There's not a great way to make it so the EC2 instance to make it so it's only  
-run when needed.  
+Challenge: There's not a great way to make it so the EC2 instance is only run when needed.  
 
 So, Lambda is better for those types of situations.  
 It's serverless - you don't need to *manage* the underlying server.  
@@ -43,8 +73,6 @@ It's very good at scaling horizontally (spinning up more instances of that lambd
 * It automatically scales when you send traffic to it.  
 * they can scale horizontally with a concurrency limit of 1000  
 
-
-
 ---  
 
 Disaster Recovery (DR) Architecture.  
@@ -52,6 +80,29 @@ Recovery Time Objective (RTO)
 
 
 ## EC2 Instance Types  
+
+The instance types are broken up into "families."  
+
+
+The instance families:
+
+- General Purpose
+    - Provide good balance of compute, memory, and networking resources.
+    - Good for lots of diverse workloads (web services, code repos)
+    - Also a good starting point if you don't know how your workload will perform
+- Compute Optimized
+    - For compute-intensive tasks (gaming servers, HPC, ML tasks, etc)
+- Memory Optimized
+    - For memory-intensive tasks
+    - Deliver fast perf for workloads that process large datasets in memory
+- Accelerated Computing
+    - Good for floating point number calculations, graphics process, or data pattern matching.  
+    - These use hardware accelerators.
+        - Co-processors that perform functions more efficiently than is possible in
+          software running on CPUs
+- Storage Optimized
+    - For workloads that require high performance for locally stored data.  
+
 
 ### General Purpose Instance Types  
 Balance of compute, memory, and networking resources.  
@@ -124,4 +175,29 @@ Services and features Availability: Newer services/features only exist in certai
 
 You can use multiple Regions for one application.
 
+## Creating an EC2 Instance
+
+Creating an EC2 instance from the web UI:
+
+- Go to the AWS Management Console
+- Go to `EC2` Console (search `EC2)`
+- Click "Launch Instance"
+- Name it
+- Choose OS image (called **Amazon Machine Image**, or **AMI**)
+- Choose instance type (compute power)
+    - E.g., `t2.micro`
+- Choose/create a key pair. Controls SSH ingress.  
+- Configure network settings (allow SSH traffic, HTTP traffic, etc)
+- Configure amount of storage
+
+- If you need things installed by default:
+    - Go to "Advanced"
+    - Go down to "User Data"
+    - Paste in a Bash script
+      ```bash
+      #!/bin/bash
+      yum install -y nginx
+      systemctl enable --now nginx
+      ```
+- When everything looks good, click "Launch Instance" (bottom right)
 
