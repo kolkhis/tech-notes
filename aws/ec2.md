@@ -201,3 +201,46 @@ Creating an EC2 instance from the web UI:
       ```
 - When everything looks good, click "Launch Instance" (bottom right)
 
+## EC2 Auto Scaling
+
+EC2 Auto Scaling adds instances based on demand and key scaling metrics, then
+decommissions instances when that demand goes down.  
+
+You need to be collecting data about the performance of instances, or possibly data 
+around latency and other app metrics. You'd use Amazon CloudWatch to collect and 
+monitor these metrics.  
+This data is used to determine when scaling needs to happen. Then scaling happens automatically when needed.  
+
+---
+
+EC2 Auto Scaling adjusts the number of EC2 instances based on demand.  
+There are two approaches:
+
+1. Dynamic scaling: Adjusts in real time to fluctuations in demand
+2. Predective scaling: Preemptively schedules the right number of instances based on
+  anticipated demand.  
+
+With EC2 Auto Scaling, you maintin the desired amount of compute capacity for your
+apps by dynamically adjusting the number of EC2 instances based on demand.  
+
+You can create Auto Scaling groups, which are collections of EC2 instances that can
+scale in or out to meet demand.  
+
+
+An auto scaling group is configured with three key settings.  
+1. Minimum Capacity
+    - This defines the **least** number of EC2 instances required to keep the
+      application running.  
+    - Makes sure that the system never scales below this threshold.  
+    - This is the number of EC2 instances that launch immediately after you create
+      the Auto Scaling group.  
+2. Desired Capacity
+    - The ideal number of instances needed to handle the current workload (which Auto
+      Scaling aims to maintain).  
+    - If not specified, the desired capacity defaults to the minimum capacity.  
+3. Maximum Capacity
+    - This is the upper limit on the number of instances that can be launched.  
+    - Prevents over-scaling and controls costs.  
+
+
+
