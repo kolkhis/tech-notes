@@ -53,6 +53,32 @@ You can also use this flag to read from stdin by giving `-` instead of a filenam
 printf "192.168.1.10,192.168.1.11" | ssh-keyscan -f -
 ```
 
+## Check for Fingerprint 
+
+Usually you'd want to check for a fingerprint before adding it to you `known_hosts`
+file so that you don't end up with a bunch of duplicate entries.  
+
+You can try to `grep` for it, but that can get tricky given the special characters in
+the hash, as well as the multi-line output from the `ssh-keyscan` command.  
+
+To check for the fingerprint for any given host, you can use the `ssh-keygen` tool
+with `-F`. This searches for the specified hostname/IP in the `known_hosts` file.  
+```bash
+ssh-keygen -F 192.168.1.10 
+```
+This will return a successful result if there was a match, and unsuccessful if there
+was no match.  
+
+If you want to check a *specific* `known_hosts` file, specify it with `-f`:
+```bash
+ssh-keygen -F 192.168.1.10 -f /etc/ssh/ssh_known_hosts
+```
+
+
+
+
+
+
 
 
 
