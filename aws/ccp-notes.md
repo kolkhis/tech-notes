@@ -360,7 +360,7 @@ AMIs can be used in 3 ways.
 3. Purchase AMIs from the AWS Marketplace
 
 
-### M2 Part 5
+### M2 Part 5: EC2 Pricing
 Goals:
 - Explain available EC2 pricing options
 - Descirbe when to use each pricing option based on use bases
@@ -400,7 +400,7 @@ There are multiple billing options for EC2.
     - Helps with meeting certain compliance/regulatory needs.  
 
 
-### M2 Part 6
+### M2 Part 6: Scaling EC2
 Scaling EC2
 
 Goals:
@@ -513,14 +513,80 @@ An auto scaling group is configured with three key settings.
 
 ---
 
-### M2 Part 7
+### M2 Part 7: Elastic Load Balancing (ELB)
 Goals:
-- Describe the challenge of trafiic distribution and scalability in AWS envs
+- Describe the challenge of traffic distribution and scalability in AWS envs
 - Recognize the benefits of Elastic Load Balancing (ELB) in AWS
 - Explain the relationship between Amazon EC2 Auto Scaling and ELB in managing AWS resources
 
 
 ---
+
+Even if we scale out, we still need to direct traffic to the new instances.  
+We want to distribute the traffic to each of the instances evenly.  
+
+
+> Coffee shop metaphor:
+> Adding cashiers helps, but if people keep getting in the same line and aren't going
+> to the new cashiers that we added, that's a problem. We can add a host to the
+> coffee shop that keeps an eye on the lines and directs people to the cashiers so
+> that the customers are evenly distributed.  
+
+This is what Elastic Load Balancer (ELB) does. It balances the load.  
+The load balancer takes in requests and routes them to instances.  
+
+Now, you can definitely bring your own load balancer. Using ELB isn't required for 
+load balancing an application hosted on EC2. But you'll have to manage/patch/upgrade
+the load balancer on your own.  
+
+---
+
+AWS will handle all of it with ELB. You just configure it once. It distributes
+network traffic. Elastic means it's able to scale up and down based on traffic without adding to hourly costs.  
+
+---
+
+ELB can handle both internal and external traffic to AWS. 
+It also handles linking backend instances to frontend instances.  
+Since it's regional, it's a single URL that each frontend instance uses to direct to 
+the backend instances.  
+
+If the backend needs to scale, it spins up a new instance. When it's ready, it tells
+the ELB that it's ready.  
+
+The frontend doesn't need to know what's happening. It's done automatically. It
+essentially decouples the architecture.  
+
+---
+
+ELB can distribute traffic across multiple resources, not just EC2.  
+
+ELB and EC2 Auto Scaling work in tandem to enhance perf and ensure HA.  
+
+---
+
+ELB handles maintenance, updates, and failover to reduce operational overhead.  
+
+---
+
+ELB uses several routing methods:
+- "Round Robin": Distributes traffic evenly across all available servers in a cyclical manner.
+- "Least Connections": Routes traffic to the server with the fewest active 
+                       connections, maintaining a balanced workload
+- "IP Hash": Uses the client's IP addr to consistently route traffic to the same server
+- "Least Response Time": Directs traffic to the server with the fastest response time, minimizing latency
+
+
+## M2 Part 8: Messaging and Queueing
+Goals:
+- Describe how Amazon Simple Queue Service (SQS) facilitates message queueing.  
+- Explain how Amazon Simple Notification SErvice (SNS) uses a publish-subscribe model
+  to distribute messages
+- Identify the difference between tightly coupled and loosely coupled architectures
+- Explain how message queues help improve communications between components
+
+
+
 
 
 
