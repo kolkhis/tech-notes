@@ -1,15 +1,8 @@
-
-
 # Git Commit Message Convention
 
-
-## Table of Contents
-* [Git Commit Message Convention](#git-commit-message-convention) 
-* [Git Commit Message Structure](#git-commit-message-structure) 
-    * [type](#type) 
-    * [Description](#description) 
-    * [Body](#body) 
-
+This is a widely debated topic. Everyone has their own way of writing commit
+messages. That said, git commit messages should be in a standardized format.  
+A lot of people follow the standards outlined on this page.  
 
 ## Git Commit Message Structure
 
