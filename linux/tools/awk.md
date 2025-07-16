@@ -588,4 +588,24 @@ This will wait for input, and will replace each
 occurrence of `a`, `e`, or `i` with `x`, and
 output the result.
 
+## Removing Duplicate Lines with Awk
+
+You can use `awk` to remove all duplicate lines from a file by using an associative
+array and creating keys out of the lines.  
+
+
+```bash
+awk '!seen[$0]++' file > file.deduped
+```
+
+- `seen[$0]`: This uses the entire line as a key in the associate array `seen`.  
+- `++`: Increment the count for that line (from `0` to `1`).  
+- `!seen[$0]++`: Returns `true` only for the **first time** a line is seen (before
+  incrementing).  
+    - This will print only the **first** occurrence of each unique line.  
+
+
+
+
+
 
