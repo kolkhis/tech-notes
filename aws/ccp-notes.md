@@ -207,9 +207,9 @@ Instance families:
     - Deliver fast perf for workloads that process large datasets in memory
 - Accelerated computing
     - Good for floating point number calculations, graphics process, or data pattern matching.  
-    - These use hardware accelerators.
-        - Co-processors that perform functions more efficiently than is possible in
-          software running on CPUs
+    - These are equipped with GPUs and hardware accelerators.
+        - Hardware accelerators are co-processors that perform functions more efficiently 
+          than is possible in software running on CPUs
 - Storage optimized
     - For workloads that require high performance for locally stored data.  
 
@@ -584,6 +584,119 @@ Goals:
   to distribute messages
 - Identify the difference between tightly coupled and loosely coupled architectures
 - Explain how message queues help improve communications between components
+
+> Coffee shop metaphor:  
+> Instead of handing coffee orders directly to the barista, the cashiers who take
+> orders post those orders to an order board, where the barista can then pick them up.  
+
+This is the idea behind a message queue.  
+
+Messages are sent into the queue by application A, and are processed by application B.
+If application B fails, application A doesn't experience any disruption. Mesages
+being sent can still be sent into the queue and will remain there until processed.  
+
+This is "loosely coupled."  
+There are two services here:
+
+- AWS SQS (Simple Queue Service)
+- AWS SNS (Simple Notification Service)
+
+---
+
+SQS lets you send, store, and receive messages between software components at any
+volume.  
+
+The coffee orders would be the messages and the order board would be an SQS queue.  
+
+The messages have the person's name, coffee order, and time ordered. The data within
+a message is called a "payload." SQS queues are where the messages are placed until
+they're processed.    
+
+> SQS is a message queueing service that facilitates reliable communication between
+> software components. It can send, store, and receive messages at any scale, making
+> sure none are lost and other services **don't need to be available for processing.**
+
+An app places a message into a queue, a user or service trerieves the message,
+processes it, then removes it from the queue.  
+
+---
+
+SNS is similar. It also sends messages to services, but has a distinction: Sent SNS
+messages aren't held for pickup until the processing service gets to them. SNS
+messages need a response **right now**.  
+
+The SQS is the coffee order board, SNS is the barista yelling "order's up".  
+
+SNS can be used to send out notifications to end users using push notifs, SMS, and email.  
+
+> SNS is a publish-subscribe service that publishers use to send messages to
+> subscribers through SNS topics. **Subscribers can include web servers, email
+> addresses, Lambda functions, and other endpoints**.  
+
+A customer (or "Subscriber") can subscribe to only the topics they care about (e.g., new
+product updates, event notifications, etc.).  
+
+
+---
+
+There's also Amazon EventBridge.  
+EventBridge is a serverless service that helps connect different parts of an app
+using events.  
+This helps build scalable, event-driven systems.  
+
+You route events from sources (e.g., custom apps, AWS services, 3rd party software)
+with EventBridge.  
+It simplifies the process of receiving, filtering, transforming, and delivering
+events.  
+
+> Ex: Events could be:  
+> `Order Placed`,  `Payment Completed`, etc
+
+Those events would be routed to the relevant services (payment, delivery, etc).  
+
+
+---
+
+
+
+### Module 2 Recap
+
+EC2 instances are VMs that you can provision on AWS. Great for all sorts of use
+cases. Running basic web servers, or HPC workloads, and everthing inbetween.  
+
+EC2 offers a high degree of control when it comes to instances, but requires that you
+manage the fleet of instances over time.  
+
+EC2 is an **unmanaged** service. You have control over tasks like patching, scaling,
+manaing the OS, etc. while AWS manages the underlying infrastructure.  
+
+
+
+## Module 3: Exploring Compute Services (Serverless)
+
+With serverless computing, you run applications without managing the underlying
+infrastructure.  
+
+### M3 Part 1: Intro to Serverless Computing
+Goals:
+- Describe the differences between unamanged, managed, and serverless compute
+  services in AWS.  
+- Describe the customer and AWS responsibilities regarding serverless computing
+
+
+AWS offers managed services. Managed services shift more operational responsibilities
+to AWS.  
+
+> Unamanged services are like fancy espresso machines, where you choose the beans and
+> grind them to the desired consistency, and tinker with every knob and lever to your
+> liking. They're all about control.  
+> 
+> Managed services are more about convenience. Like a coffee maker that just uses
+> pods. You choose your setting and press the button.  
+
+
+
+
 
 
 
