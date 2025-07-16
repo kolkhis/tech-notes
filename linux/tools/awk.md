@@ -600,11 +600,21 @@ awk '!seen[$0]++' file > file.deduped
 
 - `seen[$0]`: This uses the entire line as a key in the associate array `seen`.  
 - `++`: Increment the count for that line (from `0` to `1`).  
+- `!`: Check if the condition is false.  
 - `!seen[$0]++`: Returns `true` only for the **first time** a line is seen (before
   incrementing).  
     - This will print only the **first** occurrence of each unique line.  
 
+By default, when using a condition like this, awk will print the whole line (`$0`) if
+there are no other arguments.  
 
+If you wanted to provide arguments to this condition, then you could do so:
+```bash
+awk '!seen[$0]++ { print $1 }'
+```
+This will do the same thing, but only print the first column of unique lines.  
+
+This follows the same `pattern { action }` format that any other awk program does.  
 
 
 
