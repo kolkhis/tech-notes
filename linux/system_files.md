@@ -195,6 +195,29 @@ to add an entry here.
 Remove the entry (even after unmounting) if you want to disable a mount point from
 mounting when the system boots.  
 
+#### `/etc/fstab` Fields
+
+There are six fields in `/etc/fstab` entries.  
+
+```bash
+/dev/mapper/VolGroup-my_lv /space ext4 defaults 0 0
+```
+
+1. Device: The name of the block device file (e.g., `/dev/sda1`)
+    - `/dev/mapper/VolGroup-my_lv` in the example.  
+2. Mountpoint: The directory where the device is attached to the filesystem tree
+    - `/space` in the example.  
+3. Filesystem type: The type of filesystem (e.g., `ext4`, `ntfs`, `cifs`, etc.)
+    - `ext4` in the example.  
+4. Options: The options to mount the device with (e.g., `defaults`, `ro`, `rw`, etc.)
+    - `defaults` in the example.  
+5. Frequency: A number that specifies uf and when a filesystem should be backed up
+   with the `dump` command.  
+    - `0` (never) in the example.  
+6. Order: A nubmer that specifies win what order filesystems hsould be checked with
+   the `fsck` command.  
+    - `0` (never) in the example.  
+
 ### `/boot/grub2/grub.cfg` (or `/boot/grub/grub.cfg`)
 GRUB bootloader config file.  
 Contains kernel and boot options.  
