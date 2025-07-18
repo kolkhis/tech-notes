@@ -1,20 +1,13 @@
-
-## Help for AWS: 
-## SprintTrainingHelp@amazon.com  
-## Whitepages  
-## FAQs  
-
-# What is AWS Lambda?  
+# AWS Lambda  
 Serverless compute.  
 
 Allows you to run code without managing servers.  
 
-No server to manage.  
-
-Provides compute by running code in response to an event.  
+Provides compute by running code in response to an event (event-driven).  
 
 When an event happens, that event will trigger a lambda function.  
-The lambda function will run a function in response to that event.  
+
+The lambda function will run your code in response to that event.  
 
 
 ---  
