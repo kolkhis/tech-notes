@@ -67,12 +67,12 @@ sdb
                                   3035-9085
 ```
 
-Once you've identified your drive, `umount` (unmount) it if it's mounted anywhere.  
+Once you've identified your drive, unmount it (`umount`) if it's mounted anywhere.  
 ```bash
 sudo umount /dev/sdb*
 ```
 
-- The `/dev/sdb*` ensures all partitions are unmounted.  
+- The `/dev/sdb*` glob ensures all partitions are unmounted.  
 
 Then, pick the ISO you want to create bootable media from.  
 I'll use `/ISOs/linuxmint-22.1-xfce-64bit.iso` in this example.  
@@ -89,6 +89,8 @@ sudo dd if=/ISOs/linuxmint-22.1-xfce-64bit.iso of=/dev/sdb bs=4M status=progress
     - Calls `fsync()` on the output file after each block is written.  
     - Ensures that the data written to the kernel buffer is immediately flushed to
       the disk instead of waiting in RAM for the OS to decide when to write.  
+    - You could also use `fdatasync` for this, but `fsync` also writes metadata.  
+
 
 Note we're not writing to the partition `sdb1`, we're writing directly to the block
 device itself.  
@@ -143,7 +145,7 @@ If you **want** to use `mount` instead, you'll need to determine the filesystem 
 ```bash
 lsblk -f
 ```
-Find the filesystem (e.g., `iso9660`).  
+Find the filesystem of the bootable partition (e.g., `iso9660`, `vfat`).  
 
 Create the mountpoint.  
 ```bash
