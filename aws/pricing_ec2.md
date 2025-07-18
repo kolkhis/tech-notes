@@ -1,4 +1,3 @@
-
 # EC2 Pricing Plans  
 
 ## EC2 On-Demand Pricing  
@@ -34,6 +33,7 @@ Steep discounts, run continuously for a set duration at lower price points.
 
 AWS has all that compute capacity (specific region, specific instance type), and  
 it's not *all* in use *all* the time. That's where Spot Instances come in.  
+
 Depending on certain workloads/use cases, e.g., batch processing job 1/week  
 Whenever AWS has UNUSED/SPARE compute capacity, I'm willing to pay this amount 
 for that EC2 instance type.  
