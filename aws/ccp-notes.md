@@ -694,10 +694,143 @@ to AWS.
 > Managed services are more about convenience. Like a coffee maker that just uses
 > pods. You choose your setting and press the button.  
 
+Going back to the AWS Shared Responsibility model, with managed services, AWS takes
+some of those customer responsibilities.  
+
+Shared Responsibility for Managed Resources:
+- Customer: 
+    - Customer data
+    - Clientside data encryption
+    - Serverside encryption
+    - Network traffic protection
+- AWS:
+    - Platform and Application Management
+    - OS, network, firewall config
+    - Software for compute, storage, database, and networking
+    - Hardware, AWS global infra
+
+Some examples of managed services:
+- ELB (Elastic Load Balancer)
+- SQS (Simple Queue Service)
+- SNS (Simple Notification Service)
 
 
+Serverless means that you can't actually see or access the underlying infra or
+instances that are hosting the paplication.  
+
+Then there are "Fully Managed" services.  
+
+Fully managed services (like serverless services) take abstraction even further.
+Literally everything except your code is managed by AWS. Lambda is an exemple of
+this, which is a serverless compute service where AWS handles infra, scaling,
+and availability.    
 
 
+### M3 Part 2: AWS Lambda
+
+Goals:
+- Recall what lambda is and its core functionality as a serverless compute service
+- Identify the key components of lamgda (e.g., triggers, functions, and scaling)
+
+---
+
+Lambda is a serverless compute service.  
+It's also known as a "Function as a Service."  
+
+
+> You have an app where users upload an image, then get notified when the app
+> classifies that image. You need to deploy the app.  
+
+To deploy this app, instead of provisioning everything, scaling, ensuring HA, etc., 
+you can use Lambda to run the code.  
+
+You create a Lambda function, put the code in there, configure a trigger, and the
+function runs in response to that trigger.  
+
+A simple trigger for the app could be when a user uploads a new picture, or when the
+app classifies the image.  
+
+Triggers can be more complex.  
+
+---
+
+Lambda envs are automatically scalable and highly available.  
+
+Lambda will scale up or down to meet the demand **automatically**, whether you get a 
+single trigger or thousands of triggers.  
+
+Great for quick, event-driven processes. E.g., handling website requests, processing
+batches of data, generating expense reports.. 
+
+Lambda supports "any programming language" (NOT BASH THO [by default] smh).  
+
+You can build your own custom rumtimes if you need.  
+Runtimes provide a language-specific environment that relays invocation events,
+context info, and responses between Lambda and the function.  
+
+---
+
+Lambda integrates with other AWS services pretty easily.  
+
+You are charged only for the compute time used in milliseconds. Price depends on the
+amount of memory you allocate to your function.  
+
+---
+
+Lambda use cases:
+
+- Realtime image processing for a social media app
+    - E.g., resizing imgs when users upload, applying filters, saving it to the
+      correct format
+- Personalized content delivery for a news aggergator
+    - When user opens app or searches, functions are triggered to retrieve data, run
+      personalization logic, and return relevant content
+- Realtime event handling for an online game
+    - Each event (scoring a point, unlocking achievement) triggers Lambda fn that
+      updates player data and game status
+
+---
+
+##### Example: Creating a Lambda Function
+Ex: SQS queue that triggers a lambda function when it recieves a message.  
+
+1. From the AWS Management Console, create a SQS and add a few test messages.  
+
+1. Then go to create a Lambda function.  
+
+1. Can use a lambda blueprint that is related to SQS: `Process messages in an SQS queue`
+
+    * The runtime and Architecture should be pre-set when you choose a blueprint.  
+
+1. Configure permissions
+    * We can use a Policy Template for permissions (give the Lambda access to the SQS)
+        - E.g., `Amazon SQS poller permissions`, allows the Lambda fn to pull msgs from the queue
+
+    * Give it a role name
+
+
+1. Set up the trigger.
+    - SQS queue (since it's from a blueprint)
+
+1. Create the fn
+
+The messages should be ingested now. Go to the Lambda -> CloudWatch logs -> Logs -> Log groups
+
+---
+
+### M3 Part 3: Containers and Orchestration on AWS
+
+Goals: 
+- Describe how containers create a consistent and portable runtime env across different systems
+- Explain how Amazon Elacstic Container Registryu (Amazon ECR) is used to store,
+  manage, and version container images
+- Identify how Amazon ECS and Amazon EKS orchestrate containers to deploy, scale, and
+  manage apps
+- Describe how AWS Fargate runs containers without the need to provision or manage
+  servers.  
+
+
+---
 
 
 
