@@ -50,6 +50,9 @@ When you're done, remove the test file to free up space.
 
 ## Creating a Bootable USB Drive with `dd`
 
+> Quick note: This is a destructive operation. Creating a bootable USB drive 
+> will wipe all the data that's on it.  
+
 First locate your USB drive.  
 ```bash
 lsblk -f
