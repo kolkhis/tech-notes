@@ -477,6 +477,55 @@ Use the `-v` option to pass external variables to `awk`:
 awk -v var="value" '{print var, $1}' file.txt  
 ```
 
+## Setting Multiple Field Separators
+
+Usually when using `awk`, you print columns that are separated by a space or other
+delimiter that you specify.  
+```bash
+printf "one, two three\n" | awk '{ print $2 }'
+# output: 
+# two
+```
+The default field separator for `awk` is whitespace.  
+
+Specify a different field separator with either the `-F` command line option, or by
+setting the `FS` variable in the `BEGIN` block.  
+
+```bash
+printf "one, two three - four\n" | awk -F ',' '{ print $2 }'
+# or
+printf "one, two three - four\n" | awk 'BEGIN { FS="," } { print $2 }'
+# Output: 
+# two three - four
+```
+There we set the delimiter to a comma, so it splits the fields based on that
+delimiter instead of whitespace.  
+
+But, what if we wanted to specify multiple field separators?  
+```bash
+printf "one, two three - four\n" | awk -F '[,-]' '{ print $2 }'
+# or
+printf "one, two three - four\n" | awk -F 'BEGIN { FS="[,-]" } { print $2 }'
+# Output: 
+#  two three 
+```
+This splits on both a comma `,` and a dash `-`, which gives us three columns in
+total.  
+
+| Column 1 | Column 2 | Column 3 |
+|-|-|-
+| `one`   | ` two three ` | ` four`
+
+Note the spaces in the second and third column. Those aren't stripped if we're
+splitting fields based on characters other than whitespace.  
+
+The characters that **will** be stripped are the field separators.  
+```bash
+printf "one, two three - four\n" | awk -F '[,-]' '{ print $1 $2 $3 }'
+# Output:
+# one two three  four
+```
+
 
 ## Builtin Functions  
 Anything in square brackets `[ ]` is optional.  
