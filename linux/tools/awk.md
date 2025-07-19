@@ -502,6 +502,8 @@ There we set the delimiter to a comma, so it splits the fields based on that
 delimiter instead of whitespace.  
 
 But, what if we wanted to specify multiple field separators?  
+We can do this by using an array, denoted by square brackets (`[ ... ]`), and putting
+the field separators we want to use into that array.  
 ```bash
 printf "one, two three - four\n" | awk -F '[,-]' '{ print $2 }'
 # or
@@ -526,9 +528,19 @@ printf "one, two three - four\n" | awk -F '[,-]' '{ print $1 $2 $3 }'
 # one two three  four
 ```
 
+If we didn't want to include spaces in the fields, we could do a couple different
+things.  
+
+We could include a space in the field separator array.  
 
 ## Builtin Functions  
-Anything in square brackets `[ ]` is optional.  
+Awk, as a programming language in and of itself, has builtin functions that can be
+used to parse text.  
+
+Below I've listed some of the builtin functions that are available to `awk` by
+default.  
+
+> Note: Anything in square brackets `[ ]` is optional.  
 
 ### Awk String Functions  
 
@@ -553,7 +565,6 @@ Anything in square brackets `[ ]` is optional.
     * If `n` is not supplied, returns the substring from `i` to the end of `s`.  
 9. `tolower(s)`: Returns an all-lowercase copy of the string `s`.  
 10. `toupper(s)`: Returns an all-caps copy of the string `s`.  
-
 
 ### Awk Numeric Functions  
 
@@ -594,7 +605,22 @@ journalctl -u ssh |
     }'
 ```
 
+- Piping through `grep` then to `awk` is a common practice, but it's not necessary.  
+- Instead of piping to `grep`, **then** piping to `awk`, we could use a `/pattern/`
+  inside the `awk` invocation. This prevents the need for extra system calls.  
+  ```bash
+  journalctl -u ssh | awk ' 
+  BEGIN {FS=" "}
+  /invalid/ {
+      printf("Date: %s %d \n\t", $1, $2);
+      gsub("[^0-9 .]", "", $0);
+      printf("IP Address: %s - Port: %d\n", $4, $5); 
+  }'
+  ```
+    - I added another `printf` here to extract the date as well. But the
+      functionality remains the same.    
 
+  journalctl -u ssh | awk ' BEGIN {FS=" "} /invalid/ { gsub("[^0-9 \.]", "", $0); } '
 ## Looping over a Single Line
 Use a `for` loop to loop over a single line when piping through `awk`:
 ```bash
