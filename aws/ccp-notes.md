@@ -812,7 +812,7 @@ Ex: SQS queue that triggers a lambda function when it recieves a message.
 1. Set up the trigger.
     - SQS queue (since it's from a blueprint)
 
-1. Create the fn
+1. Create the function
 
 The messages should be ingested now. Go to the Lambda -> CloudWatch logs -> Logs -> Log groups
 
@@ -820,17 +820,18 @@ The messages should be ingested now. Go to the Lambda -> CloudWatch logs -> Logs
 
 ### M3 Part 3: Containers and Orchestration on AWS
 
-Goals: 
-- Describe how containers create a consistent and portable runtime env across different systems
-- Explain how Amazon Elacstic Container Registryu (Amazon ECR) is used to store,
-  manage, and version container images
-- Identify how Amazon ECS and Amazon EKS orchestrate containers to deploy, scale, and
-  manage apps
-- Describe how AWS Fargate runs containers without the need to provision or manage
-  servers.  
+Goals:  
 
+- Describe how containers create a consistent and portable runtime env across different systems  
+- Explain how Amazon Elacstic Container Registryu (Amazon ECR) is used to store,
+  manage, and version container images  
+- Identify how Amazon ECS and Amazon EKS orchestrate containers to deploy, scale, and
+  manage apps  
+- Describe how AWS Fargate runs containers without the need to provision or manage
+  servers  
 
 ---
+
 
 
 
