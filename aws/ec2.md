@@ -150,26 +150,31 @@ Use Cases:
 
 ---
 
-## Regions, 
-AWS Region: Geographical location that implements it's operations and data centers.
+## Regions
+AWS Regions are geographical location that AWS implements its operations and data centers.
+
 - Region names are usually `region-direction-number` (`us-east-1`)
-- In each region you have Availability Zones (AZ).
+- In each region you have at least three Availability Zones (AZ).
     - AZ are clusters of data centers
-    - an AZ will be a subset of the region (`us-east-1a`, `us-east-1b`)
+    - An AZ will be a subset of the region denoted by a letter (`us-east-1a`, `us-east-1b`)
+
 A VPC is a region-scope service.
-VPC has subnets. So you can have a subnet in `us-east-1a`, and a subnet in `us-east-1b`.  
 
-So if you launch a service in an AZ, you must also launch a mirror of it in another AZ.
+A VPC has subnets. So you can have a subnet in `us-east-1a`, and a subnet in `us-east-1b`.  
+
+So if you launch a service in an AZ, you must also launch a mirror of it in another 
+AZ to ensure high availability.
 
 
+There are several factors to consider when choosing a region:
 
-Choosing region:
-Compliance: If it contains data that is bound by local regulations, then select the appropriate
-region.
-Latency: Choosing an AWS Region with close proximity to your userbase location can achieve lower
-network latency.
-Cost: AWS services are priced differently from one Region to another. Some Regions have lower
-costs than others, which can reult in a cost reduction for the same deployment
+* Compliance: If it contains data that is bound by local regulations, then select the 
+  appropriate region.
+* Latency: Choosing an AWS Region with close proximity to your userbase location can 
+  achieve lower network latency.
+* Cost: AWS services are priced differently from one Region to another. Some Regions 
+  have lower costs than others, which can result in a cost reduction for the same 
+  deployment.  
 
 Services and features Availability: Newer services/features only exist in certain regions.
 
@@ -190,7 +195,7 @@ Creating an EC2 instance from the web UI:
 - Configure network settings (allow SSH traffic, HTTP traffic, etc)
 - Configure amount of storage
 
-- If you need things installed by default:
+- If you need certain programs installed by default:
     - Go to "Advanced"
     - Go down to "User Data"
     - Paste in a Bash script
@@ -199,6 +204,7 @@ Creating an EC2 instance from the web UI:
       yum install -y nginx
       systemctl enable --now nginx
       ```
+
 - When everything looks good, click "Launch Instance" (bottom right)
 
 ## EC2 Auto Scaling
@@ -241,6 +247,11 @@ An auto scaling group is configured with three key settings.
 3. Maximum Capacity
     - This is the upper limit on the number of instances that can be launched.  
     - Prevents over-scaling and controls costs.  
+
+
+## EC2 Instance Naming Convention
+
+<https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-type-names.html>
 
 
 
