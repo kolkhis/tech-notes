@@ -620,7 +620,6 @@ journalctl -u ssh |
     - I added another `printf` here to extract the date as well. But the
       functionality remains the same.    
 
-  journalctl -u ssh | awk ' BEGIN {FS=" "} /invalid/ { gsub("[^0-9 \.]", "", $0); } '
 ## Looping over a Single Line
 Use a `for` loop to loop over a single line when piping through `awk`:
 ```bash
