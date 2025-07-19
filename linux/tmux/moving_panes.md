@@ -10,7 +10,7 @@
     * [Detailed Steps with Tmux Prefix](#detailed-steps-with-tmux-prefix) 
     * [Summary (TL;DR)](#summary-(tl;dr)) 
 
-NOTE: My personal tmux prefix is `Ctrl-a`. The default prefix is `Ctrl-b`.
+> NOTE: My personal tmux prefix is `Ctrl-a`. The default prefix is `Ctrl-b`.
 
 ## Moving Panes 
 * Identify the Target Pane and Window:
@@ -68,7 +68,26 @@ Assuming you want to move pane 1 from window 1 to window 2, here’s how you can
 
 ### Summary (TL;DR)
 
-* Identify the pane and window: Determine the source pane and target window.
-* Attach the pane to another pane in the same window: Use the `join-pane` command, e.g., `tmux join-pane -s 1.1 -t 2`.
-* Move the pane to another pane in a different window: Use the `join-pane` command, e.g., `tmux join-pane -s 1.1 -t 2.1`.
-* Interactive method: Use `prefix`, then `:` to enter command mode and type `join-pane -s 1.1 -t 2`.
+* Determine the source pane and target window.
+
+* Attach the pane to another pane in the same window:
+    - Use the `join-pane` command, e.g., `tmux join-pane -s 1.1 -t 2`.
+      ```bash
+      tmux join-pane -s 1.1 -t 2
+      ```
+
+* Move the pane to another pane in a different window:
+    - Use the `join-pane` command, e.g., `tmux join-pane -s 1.1 -t 2.1`.
+      ```bash
+      tmux join-pane -s 1.1 -t 2.1
+      ```
+      Joins the pane from the source `1.1` (window 1, pane 1) to the target pane
+      `2.1` (window 2, pane 1).  
+
+* Use `prefix`, then `:` to enter command mode and type `join-pane -s 1.1 -t 2`.
+    ```bash
+    [prefix]:join-pane -s 1.1 -t 2
+    ```
+    Moves the pane from the source `1.1` (window 1, pane 1) to the target window
+    `2` (window 2).  
+
