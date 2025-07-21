@@ -2,26 +2,6 @@
 
 Samba is a type of network attached storage that is compatible with both Linux and Windows machines.  
 
-## Table of Contents
-* [Setting up Samba](#setting-up-samba) 
-    * [Installing Samba](#installing-samba) 
-    * [Configuring your Samba Share](#configuring-your-samba-share) 
-    * [Mount / Access the Share](#mount--access-the-share) 
-        * [Access Share from Linux](#access-share-from-linux) 
-        * [Access Share from Windows](#access-share-from-windows) 
-* [Adding Authentication to the Samba Share](#adding-authentication-to-the-samba-share) 
-* [Managing Samba Users](#managing-samba-users) 
-* [Using `sambaclient`](#using-sambaclient) 
-* [Securing Samba Shares](#securing-samba-shares) 
-    * [Limit Access by IP](#limit-access-by-ip) 
-    * [Limit by User](#limit-by-user) 
-    * [Hiding Files from Unauthorized Users](#hiding-files-from-unauthorized-users) 
-    * [Setting Permissions](#setting-permissions) 
-* [Install tl;dr](#install-tldr) 
-* [Linux/Unix Password Sync](#linuxunix-password-sync) 
-* [Clearing SMB Sessions on Windows](#clearing-smb-sessions-on-windows) 
-* [Resources](#resources) 
-
 ## Setting up Samba
 
 This page describes how you'd set up Samba on a Linux machine.  
