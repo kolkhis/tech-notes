@@ -2,6 +2,26 @@
 
 Samba is a type of network attached storage that is compatible with both Linux and Windows machines.  
 
+## Table of Contents
+* [Setting up Samba](#setting-up-samba) 
+    * [Installing Samba](#installing-samba) 
+    * [Configuring your Samba Share](#configuring-your-samba-share) 
+    * [Mount / Access the Share](#mount--access-the-share) 
+        * [Access Share from Linux](#access-share-from-linux) 
+        * [Access Share from Windows](#access-share-from-windows) 
+* [Adding Authentication to the Samba Share](#adding-authentication-to-the-samba-share) 
+* [Managing Samba Users](#managing-samba-users) 
+* [Using `sambaclient`](#using-sambaclient) 
+* [Securing Samba Shares](#securing-samba-shares) 
+    * [Limit Access by IP](#limit-access-by-ip) 
+    * [Limit by User](#limit-by-user) 
+    * [Hiding Files from Unauthorized Users](#hiding-files-from-unauthorized-users) 
+    * [Setting Permissions](#setting-permissions) 
+* [Install tl;dr](#install-tldr) 
+* [Linux/Unix Password Sync](#linuxunix-password-sync) 
+* [Clearing SMB Sessions on Windows](#clearing-smb-sessions-on-windows) 
+* [Resources](#resources) 
+
 ## Setting up Samba
 
 This page describes how you'd set up Samba on a Linux machine.  
@@ -98,6 +118,8 @@ want to write to the shares.
 
 #### Access Share from Windows
 
+##### Accessing the share with File Explorer 
+
 To access the Samba share from Windows, just open the File Explorer and type
 `\\server-ip\ShareName` in the navigation bar.  
 
@@ -106,6 +128,22 @@ select "Map network drive".
 
 Enter the address the same way, `\\server-ip\ShareName`, and select a drive letter,
 then click "Finish".  
+
+---
+
+##### Map the Samba Share with PowerShell
+
+Use the `New-SmbMapping` cmdlet to create a SMB (Server Message Block) mapping on the 
+SMB client to the SMB share.  
+
+```sh
+New-SmbMapping -LocalPath "X:" -RemotePath "\\server-ip\ShareName"
+```
+
+This will mount the Samba share and assign it the drive letter `X`.  
+This cmdlet only maps the Samba share for the current user. If you want the share to
+be accessible to all users on the system, you can use `New-SmbGlobalMapping` instead.  
+
 
 ---
 
@@ -496,7 +534,8 @@ into the File Explorer URI bar, or right click on "Network", then "Map network d
 | Configure Share | Add to `/etc/samba/smb.conf`
 | Restart Samba   | `sudo systemctl restart smbd`
 | Mount Share (Linux)    | `sudo mount -t cifs //server-ip/share /mnt -o guest`
-| Access Share (Windows) | `\\server-ip\sharename`
+| Access Share (Windows/File Explorer) | `\\server-ip\sharename`
+| Access Share (Windows/PowerShell) | `New-SmbMapping -LocalPath "X:" -RemotePath \\server-ip\sharename`
 | Add Samba User         | `sudo smbpasswd -a sambauser`
 | List Samba Users       | `sudo pdbedit -L`
 | Command-Line Client    | `smbclient //server-ip/share -U sambauser`
@@ -560,8 +599,15 @@ File Explorer.
 
 ## Resources
 
+Linux: 
+
 - `man samba`
 - `man 5 smb.conf`
 - <https://linux-training.be/networking/ch21.html>
 - <https://www.tecmint.com/install-samba-rhel-rocky-linux-and-almalinux/>
 - <https://www.suse.com/support/kb/doc/?id=000016742>
+
+Windows:
+- <https://learn.microsoft.com/en-us/powershell/module/smbshare/new-smbmapping?view=windowsserver2025-ps>
+- <https://learn.microsoft.com/en-us/powershell/module/smbshare/new-smbglobalmapping?view=windowsserver2025-ps>
+
