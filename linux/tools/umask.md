@@ -154,5 +154,25 @@ This is good practice, but the leading zero is optional.
 You can use just three numbers if you want.  
 
 
+## Looking at the Docs
+
+If you look into the documentation for the actual system calls being made when
+creating new files, you can see how the permissions are calculated.  
+
+For example, in the `mkdir()` C function (`man 2 mkdir`), you'll see
+in the description how the permissions are calculated for the newly created
+directory.  
+
+```c
+int mkdir(const char *pathname, mode_t mode);
+```
+
+> It is modified by the process's umask in the usual way: in the absence of a default 
+> ACL, the mode of the created directory  is (`mode & ~umask & 0777`).
+
+So we have the `mode`, specified in the function call. That number is then bitwise
+`AND`'d with the inverse (`~`) of the `umask`, and finally bitwise `AND`'d again with
+the default permissions of directories (`0777`).
+
 
 
