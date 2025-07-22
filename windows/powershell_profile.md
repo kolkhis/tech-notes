@@ -254,5 +254,25 @@ $colors = @{
 Set-PSReadLineOption -Colors $colors
 ```
 
+## Troubleshooting
+
+If your profile isn't loading when PowerShell starts, it could be an ExecutionPolicy
+problem.  
+
+Check the current ExecutionPolicy for your user account.  
+```powershell
+Get-ExecutionPolicy -Scope CurrentUser
+```
+If it's set to `Restricted` or even `Undefined`, you can change it to `RemoteSigned` to
+enable running scripts on the system.  
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Try reloading the shell again, and you should see your prompt.  
+To make sure, you can add a short output line to the end of your `$PROFILE`.  
+```powershell
+Write-Host '>>> Profile loaded.'
+```
 
 
