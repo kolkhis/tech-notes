@@ -127,8 +127,8 @@ using `qm list`.
 sudo qm list
 ```
 This will output the VMs' IDs, names, states, resource allocations, and their PIDs.  
-
 We just need the VMID from this output (first column).  
+
 We can use `awk` to extract it:
 ```bash
 sudo qm list | awk '{print $1}'
@@ -144,13 +144,14 @@ Or we could use Perl.
 sudo qm list | perl -ne 'print "$1\n" if m/^\s*(\d{1,})\s/'
 ```
 
+---
+
 Now we loop over the VMIDs and enable the agent in the settings using `qm set`.  
 ```bash
 while IFS= read -r line; do
     printf "Line: %s\n" "$line";
 done < <(sudo qm list | perl -ne 'print "$1\n" if m/^\s*(\d{1,})\s/') 
 ```
-
 
 
 
