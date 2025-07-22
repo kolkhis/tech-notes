@@ -74,14 +74,25 @@ Not an exhaustive list:
 | `SIGTERM (15)`  | Termination signal (can be done with `kill -SIGTERM {PID}`).  |
 | `SIGUSR1 (10) and SIGUSR2 (12)`| User-defined signals.  |
 
-## Bash-specific Signals for Scripting and Error Handling  
+## Bash-specific Signals
+
+Bash has four signals available that are not POSIX-compliant signals.  
+These signals are really useful, as they can basically catch a number of different 
+signals in a programmer-friendly way.  
+
+They're technically "pseudo-signals" since they're not actually real signals. They
+just kind of alias to a bundle of other signals.  
 
 * ### `ERR`  
 
 This pseudo-signal is trapped whenever a command in the script  
 returns a non-zero exit status (indicating failure).  
-It allows you to execute a specific action, like cleanup or logging,
-when an error occurs in the script.  
+
+It allows you to execute a specific action (e.g., cleanup or logging) when an error 
+occurs in the script.  
+
+> Use `set -o errtrace` (or `set -E`) if you want an `ERR` trap to apply to functions 
+> and subshells as well.  
 
 * ### `DEBUG`  
 
@@ -89,12 +100,18 @@ This is used to execute a command before every statement in a script or function
 It's particularly useful for debugging purposes,
 as it can provide detailed insight into the flow of execution.  
 
+> Use `set -o functrace` if you want a `DEBUG` trap to apply to functions 
+> and subshells as well.  
+
 * ### `EXIT`  
 
-This pseudo-signal is trapped when the script exits,
-either normally or through an unhandled signal.  
-It's commonly used for cleanup actions that should occur 
-regardless of how the script terminates.  
+This pseudo-signal is trapped when the script exits, either normally or through an 
+unhandled signal.  
+It's commonly used for cleanup actions that should occur regardless of how the script 
+terminates.  
+
+> The `EXIT` trap will also fire on `SIGINT` and errors when the shell 
+> option `errexit` (`set -e`) is set.  
 
 * ### `RETURN`  
 
@@ -121,12 +138,29 @@ Too lazy? Here.
 | 58 - SIGRTMAX-6 | 59 - SIGRTMAX-5 | 60 - SIGRTMAX-4 | 61 - SIGRTMAX-3 | 62 - SIGRTMAX-2|
 | 63 - SIGRTMAX-1 | 64 - SIGRTMAX |
 
-## Getting a Signal from a Number
+## Translating Signal to Name/Number
+
+If you have the **number** of the signal, but you want the **name**, you can use
+`kill -l` to list the name.  
 ```bash
-kill -l 11
+kill -l 2
 #       ^ the number of the signal you want the name of
+# Output: INT
 ```
 
+This will not print the `SIG` prefix. Here, the signal `2` is the `SIGINT` signal,
+but only `INT` is printed.  
+
+---
+
+Alternatively, if you know the **name** of the signal and want to know the **number**
+that it represents, you can do the same thing:
+
+```bash
+kill -l SIGINT
+#            ^ The name of the signal you want the number for
+# Output: 2
+```
 
 ## Use Cases and Examples for `trap`
 
@@ -295,4 +329,3 @@ shell functions as they do when invoking regular commands.
 - `help set`
 - `help trap`
 * <https://www.howtogeek.com/814925/linux-signals-bash/>  
-
