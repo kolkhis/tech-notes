@@ -1,6 +1,7 @@
 # Samba
 
 Samba is a type of network attached storage that is compatible with both Linux and Windows machines.  
+It is a free software suite (under GPLv3) that re-implements the SMB (Server Message Block) protocol.  
 
 ## Setting up Samba
 
@@ -583,9 +584,11 @@ Linux:
 
 - `man samba`
 - `man 5 smb.conf`
+- `man smbd`
 - <https://linux-training.be/networking/ch21.html>
 - <https://www.tecmint.com/install-samba-rhel-rocky-linux-and-almalinux/>
 - <https://www.suse.com/support/kb/doc/?id=000016742>
+- <https://wiki.samba.org/index.php/Main_Page>
 
 Windows:
 - <https://learn.microsoft.com/en-us/powershell/module/smbshare/new-smbmapping?view=windowsserver2025-ps>
