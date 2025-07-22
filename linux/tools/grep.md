@@ -191,6 +191,18 @@ This means no regular expression is involved, making it faster for plain string 
 For instance, fgrep "example.com" filename will match lines containing "example.com" as a fixed string, not as a regex.  
 
 
+## Show Only the First Match
+
+We can leverage `grep`'s `-m` option to select how many matches we want to print.  
+```bash
+grep -m 1 '^# ' ./file.txt
+```
+This will print the **first match only** that matches the given pattern. In this
+case, the first line that starts with "`# `" will be printed to the terminal, and the
+program will exit.  
+
+
+
 
 ## Grep Colors  
 
