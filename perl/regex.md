@@ -203,7 +203,8 @@ The `\p` class is used in conjunction with `{Unicode Class}` when using the `/u`
 - `\k'name'`: Named backreference
 - `\k{name}`: Named backreference
 
-- `\K`: Keep the stuff left of the `\K`, don't include it in `$&`
+- `\K`: Keep the stuff left of the `\K`, don't include it in `$&` 
+    - `$&` is the variable that holds the entire string matched by the regex.  
 
 - `\N`: Any character but `\n`.  Not affected by the `/s` modifier
     - When of the form `\N{NAME}`, it matches the character or character sequence whose 
