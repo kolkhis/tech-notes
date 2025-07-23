@@ -182,13 +182,14 @@ The `\p` class is used in conjunction with `{Unicode Class}` when using the `/u`
     - Match a character within the custom class.  
 - `[[:...:]]`   Match a character according to the POSIX character class `...` (e.g., `[[:space:]]`.  
 - `(?[...])`: Extended bracketed character class
+
 - `\w` Match a "word" character 
     - Alphanumeric + `_` + other connector punctuation chars + Unicode marks
 - `\W`: Match a non-word character (opposite of `\w`)
 - `\s`: Match a whitespace character
-- `\S`: Match a non-whitespace character
+- `\S`: Match a non-whitespace character (opposite of `\s`)
 - `\d`: Match a decimal digit character
-- `\D`: Match a non-digit character
+- `\D`: Match a non-digit character (opposite of `\d`)
 
 - `\pP`: Match `P`, the named property.  Use `\p{Prop}` for longer names
 - `\PP`: Match non-`P`
@@ -211,9 +212,10 @@ The `\p` class is used in conjunction with `{Unicode Class}` when using the `/u`
       name is `NAME`.  
     - When of the form `\N{U+hex}`, it matches the character whose Unicode code point is `hex`.  
 - `\v`: Vertical whitespace
-- `\V`: Not vertical whitespace
+- `\V`: Not vertical whitespace (opposite of `\v`)
 - `\h`: Horizontal whitespace
-- `\H`: Not horizontal whitespace
+- `\H`: Not horizontal whitespace (opposite of `\h`)
+
 - `\R`: Linebreak
 
 ## Quantifiers
