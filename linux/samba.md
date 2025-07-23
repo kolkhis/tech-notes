@@ -1,6 +1,7 @@
 # Samba
 
 Samba is a type of network attached storage that is compatible with both Linux and Windows machines.  
+
 It is a free software suite (under GPLv3) that re-implements the SMB (Server Message Block) protocol.  
 
 ## Setting up Samba
@@ -442,6 +443,33 @@ Samba shares.
 
 For instance, if you want to give a user write access but you don't want to allow
 them to *set* write permissions on files. That type of control is extremely useful.  
+
+## A Note About Masks in Samba
+
+Samba uses the `mask` attribute to specify the **max allowed permissions** for files
+and directories.  
+
+This is distinct from [`umask`](./tools/umask.md), which specifies permissions that
+are **disallowed**.  
+
+Say we have this:  
+```ini
+[SecureShare]
+    create mask = 0640
+    create mode = 0000
+    directory mask = 0750
+    directory mode = 0000
+```
+
+- `create mask` / `create mode`
+    * The `mask` sets the max **allowed** permissions for **files** to `0640` (`-rw-r-----`).  
+    * The `mode` sets the **default** permissions for **files** to `0000` (`----------`)  
+- `directory mask` / `directory mode`
+    * The `mask` sets the max **allowed** permissions for **directories** to `0750` (`-rwxr-x---`).  
+    * The `mode` sets the **default** permissions for **directories** to `0000` (`----------`)  
+
+Unlike `umask`, the `mask` in Samba does not use the bitwise inverse of the `mask` for
+determining the default file permissions.   
 
 
 ## Install tl;dr
