@@ -155,6 +155,83 @@ while IFS= read -r vmid; do
 done < <(sudo qm list | perl -ne 'print "$1\n" if m/^\s*(\d{1,})\s/') 
 ```
 
+## Getting VM IP Addresses
+
+With the QEMU Guest Agent installed and enabled on all the VMs, we can leverage the
+`qm` tool to get the IP addresses of all the VMs in the environment.  
+
+The information we extract with `qm` usually comes in JSON format.  
+In order to parse this effectively, we can use [the `jq` tool](../linux/tools/jq.md).  
+
+Jump to [IP tl;dr](#ip-tldr) for just the commands you need.  
+
+---
+
+The command we want to use to extract the IPs from our VMs is
+`network-get-interfaces`.  
+```bash
+qm guest cmd 100 network-get-interfaces
+```
+We'll see some json output. Pipe it through `jq` to make it pretty.  
+```bash
+qm guest cmd 100 network-get-interfaces | jq
+```
+
+This outputs information about the network interfaces on the VM, similar to the info 
+we'd get with `ip a`.    
+
+But, we just want to extract the IP addresses from this.  
+
+Let's narrow down the output with a `jq` query.  
+```bash
+qm guest cmd 100 network-get-interfaces | jq '.[]."ip-addresses"[]."ip-address"'
+```
+This prints out our IP addresses. But it also includes the localhost (`127.0.0.1`) 
+and IPv6 addresses.  
+
+We can trim the IPv6 by just grabbing the first element from the `"ip-addresses"`
+list, since the first element holds the IPv4 address we want.  
+
+```bash
+qm guest cmd 101 network-get-interfaces | jq '.[]."ip-addresses"[0]."ip-address"'
+```
+
+This is still outputting the localhost IPv4 address `127.0.0.1`.  
+If we know that it's the second network interface in the list that is connected to
+the local area network, we can just pull the second element in the list (the second
+network interface).  
+
+```bash
+qm guest cmd 101 network-get-interfaces | jq '.[1]."ip-addresses"[0]."ip-address"'
+```
+
+
+---
+
+### Using `grep` Instead of `jq`
+
+If you don't want to rely on `jq`, you can use `grep` with a regular expression.  
+Here I'll use Perl regex (PCRE) with `grep -P`.  
+```bash
+qm guest cmd 101 network-get-interfaces | grep -o -P '^\s*"ip-address"\s*:\s*"\K[0-9.]+'
+```
+
+- The `\K` there discards everything to the left of it in the output.  
+    - In Perl, it would simply not include the pattern to the left of it in the `$&`
+      variable, which holds the entire string matched by the regex.  
+
+### IP tl;dr
+Extract the IP of a host with `jq`:  
+```bash
+qm guest cmd 101 network-get-interfaces | jq '.[1]."ip-addresses"[0]."ip-address"'
+```
+
+Extract the IP of a host with `grep`:  
+```bash
+qm guest cmd 101 network-get-interfaces | grep -o -P '^\s*"ip-address"\s*:\s*"\K[0-9.]+'
+```
+
+
 
 ## Troubleshooting
 
