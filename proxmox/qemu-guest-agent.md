@@ -93,8 +93,9 @@ grep -qi '^agent:' /etc/pve/qemu-server/100.conf || printf "agent: enabled=1\n" 
 You can verify that the guest agent is both running and communicating with the guest
 hosts by running a command against the guest host.  
 ```bash
-qm guest cmd 100 ping
+qm guest cmd 100 get-osinfo
 ```
+
 
 ### Enable with a Script
 To script the process of enabling the QEMU guest agent in your VMs, the `qemu-guest-
@@ -148,10 +149,24 @@ sudo qm list | perl -ne 'print "$1\n" if m/^\s*(\d{1,})\s/'
 
 Now we loop over the VMIDs and enable the agent in the settings using `qm set`.  
 ```bash
-while IFS= read -r line; do
-    printf "Line: %s\n" "$line";
+while IFS= read -r vmid; do
+    printf "Enabling qemu-guest-agent for VMID: %s\n" "$vmid";
+    sudo qm set "$vmid" --agent enabled=1
 done < <(sudo qm list | perl -ne 'print "$1\n" if m/^\s*(\d{1,})\s/') 
 ```
+
+
+## Troubleshooting
+
+If you get an error while trying to enable the `qemu-guest-agent` service, you may
+need to restart the VM before it can be used.  
+
+Try restarting the VM from the PVE host:  
+```bash
+sudo qm shutdown 100
+sudo qm start 100
+```
+
 
 
 
