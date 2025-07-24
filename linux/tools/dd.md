@@ -144,6 +144,11 @@ It also handles the mountpoint.
 If it's available on the system by default (desktop Linux distros), then it's a 
 user-friendly alternative to `mount` and doesn't require `sudo` access.  
 
+When you're done with the inspection, use `udisksctl` to unmount it.  
+```bash
+udisksctl unmount --block-device /dev/sdb
+```
+
 ---
 
 If you **want** to use `mount` instead, you'll need to determine the filesystem type.  
