@@ -78,7 +78,12 @@ Then, pick the ISO you want to create bootable media from.
 I'll use `/ISOs/linuxmint-22.1-xfce-64bit.iso` in this example.  
 
 ```bash
-sudo dd if=/ISOs/linuxmint-22.1-xfce-64bit.iso of=/dev/sdb bs=4M status=progress conv=fsync
+sudo dd \
+    if=/ISOs/linuxmint-22.1-xfce-64bit.iso \
+    of=/dev/sdb \
+    bs=4M \
+    status=progress \
+    conv=fsync
 ```
 
 - `if=`: Input file. The ISO you want to write.  
