@@ -242,6 +242,8 @@ Try restarting the VM from the PVE host:
 ```bash
 sudo qm shutdown 100
 sudo qm start 100
+# Or
+sudo qm reboot 100
 ```
 
 
