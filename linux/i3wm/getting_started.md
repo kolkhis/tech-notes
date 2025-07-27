@@ -1,23 +1,6 @@
-
 # Getting Started with i3
 
-https://i3wm.org/docs/userguide.html
-
-
-## Table of Contents
-* [Introduction to i3wm](#introduction-to-i3wm) 
-* [Getting Started with i3wm](#getting-started-with-i3wm) 
-    * [Installation](#installation) 
-    * [First Launch](#first-launch) 
-    * [Basic Navigation](#basic-navigation) 
-* [Configuring and Customizing i3wm](#configuring-and-customizing-i3wm) 
-    * [Customizing Key Bindings](#customizing-key-bindings) 
-    * [Changing Look and Feel](#changing-look-and-feel) 
-    * [Autostart Applications](#autostart-applications) 
-* [Getting `dmenu` Working](#getting-`dmenu`-working) 
-* [Troubleshooting](#troubleshooting) 
-* [TL;DR](#tl;dr) 
-* [Learning Exercise](#learning-exercise) 
+- See: <https://i3wm.org/docs/userguide.html>
 
 Keys to use with $mod (Alt):
 <img src="https://i3wm.org/docs/keyboard-layer1.png"></img>
@@ -36,14 +19,13 @@ reduces the clutter of windows and maximizes your workspace efficiency.
 
 ### Installation
 
-Since you're on Linux Mint, i3wm can be installed via the package manager.  
+i3wm can be installed via the package manager.  
 Open a terminal and run:
 
 ```bash
 sudo apt update && sudo apt install i3
 ```
 
-This command updates your package lists and installs i3wm.  
 During the installation, you might be prompted to choose a display manager; LightDM 
 is a common choice that works well with i3.
 
@@ -71,9 +53,7 @@ for i3 commands).
 
 ## Configuring and Customizing i3wm
 
-Your i3 configuration file is located at `~/.config/i3/config`.  
-You can edit this file with any text editor (since you prefer nvim/vim, `nvim 
-~/.config/i3/config` would be your go-to command).
+Your i3 config file is located at `~/.config/i3/config`.  
 
 ### Customizing Key Bindings
 
@@ -85,7 +65,7 @@ For example, to bind `dmenu` (which we'll discuss shortly) to `Mod+d`, you'd add
 bindsym Mod1+d exec --no-startup-id dmenu_run
 ```
 
-Make sure to replace `Mod1` with `Mod4` if you're using the Windows key as your Mod key.
+Replace `Mod1` with `Mod4` if you're using the Windows key as your Mod key.
 
 ### Changing Look and Feel
 
@@ -112,31 +92,28 @@ exec --no-startup-id nm-applet
 ## Getting `dmenu` Working
 
 `dmenu` is a dynamic menu for X, which provides a fast way to launch applications.  
-It should work out of the box with i3, but if it's not installed, you can easily install it:
+It should work out of the box with i3, but if it's not installed, you can install it
+via `apt`:
 
 ```bash
 sudo apt install dmenu
 ```
 
 After installing, you can use the binding (`Mod+d` if you've set it as above) to launch `dmenu`.  
-If it doesn't work, ensure the binding is correctly set in your i3 config file and that there are no conflicts or syntax errors.
+If it doesn't work, check that the binding is correctly set in your i3 config file and that there are no conflicts or syntax errors.
 
 ## Troubleshooting
 
 If `dmenu` or any part of your i3 setup isn't working as expected:
+
 * Check the syntax of your `~/.config/i3/config` file for errors.
 * Consult the i3wm documentation and user forums for specific configuration issues.
 * Restart i3 in-place with `od+Shift+R` to apply configuration changes without ending your session.
 
 ## TL;DR
 
-* i3wm is a minimalistic tiling window manager that's highly customizable and aims to improve your productivity.
 * Install i3wm on Linux Mint with `sudo apt update && sudo apt install i3`, and choose your Mod key on first launch.
 * Navigate using the Mod key + defined shortcuts, and customize your setup by editing `~/.config/i3/config`.
 * Install `dmenu` with `sudo apt install dmenu` and bind it to a shortcut for fast application launching.
 * Customize, configure, and troubleshoot using the i3 documentation as needed.
-
-## Learning Exercise
-
-As a learning exercise, try adding a new key binding to launch your favorite text editor or terminal application.
 
