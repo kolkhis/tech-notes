@@ -146,6 +146,9 @@ You can add user-based authentication to the Samba share by modifying the entry 
     - If you specified `@smbusers`, it will allow all users in the group `smbusers`
       access to the share.    
 
+> **Note**: Setting `valid users` in the share's settings will **only** allow users
+> on that list to access the share, even if `guest ok = yes` is set.  
+
 This is mostly the same as the `PublicShare` config, but we are **not** allowing
 guests (`guest ok = no`).   
 We're specifying a single user that's allowed access to the share (username
