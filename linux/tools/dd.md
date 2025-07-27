@@ -22,7 +22,8 @@ dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct
 * `of=testfile`: The output file, which will be created and written to the disk.  
 * `bs=1`: The block size is 1 gigabyte. Can adjust this to test different block sizes.  
 * `count=1`: The number of blocks to write to the disk. In this case, just one.  
-* `oflag=direct`: This bypasses caching to get a more accurate measure of the disk's write speed.  
+* `oflag=direct`: Set the output flag to `direct`.  
+    - This bypasses caching to get a more accurate measure of the disk's write speed.  
 
 
 ### Testing Disk Read Speeds
@@ -83,6 +84,7 @@ sudo dd \
     of=/dev/sdb \
     bs=4M \
     status=progress \
+    oflag=direct \
     conv=fsync
 ```
 
@@ -90,6 +92,8 @@ sudo dd \
 - `of=`: Ouput file. The **block device**, not the partition.  
 - `bs=4M`: Block size of `4M` gives a good speed/safety tradeoff.  
 - `status=progress`: Shows a progress bar.  
+- `oflag=direct`: Skip the caching process entirely.  
+    - More reliable for straight up writing to a disk.  
 - `conv=fsync`: Forces flush to disk after write buffers to ensure all data is written.  
     - Calls `fsync()` on the output file after each block is written.  
     - Ensures that the data written to the kernel buffer is immediately flushed to
