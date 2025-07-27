@@ -373,12 +373,23 @@ can't access.
 ### Setting Permissions
 
 - We can set the **default permissions** for files that are **newly created** in the share.  
-  Use the `create mask` option to specify the permissions they should have.  
+  Use the `create mode` setting to specify the permissions:
   ```ini
   [MyShare]
      guest ok = no
      valid users = sambauser @sambagroup
-     create mask = 640
+     create mode = 0640
+  ```
+  This sets the **default permissions** for newly created files on the share.  
+    - This sets the default permissions to `-rw-r-----` (`640`) for new files.
+
+- We can set the **maximum allowed permissions** for files that are **newly created** in the share.  
+  Use the `create mask` option to limit the permissions:
+  ```ini
+  [MyShare]
+     guest ok = no
+     valid users = sambauser @sambagroup
+     create mask = 0640
   ```
   This sets the **maximum allowed permissions** for new files created on the share.  
     - This limits the maximum permissions to `rw-r-----` (`640`) for new files.
@@ -402,16 +413,17 @@ can't access.
   ```
   This limits which permission bits a client is allowed to modify (e.g., with `chmod`).  
   Clients can only change permission bits that are included in this mask.  
+  This only applies when the **client** tries to change permissions on a file/directory.
 
-
-- We can force certain permission bits on directories.  
+* There are some `force security` settings -- these are removed in Samba 4.0  
+    - We can also force certain permission bits on directories. 
   ```ini
   [MyShare]
      guest ok = no
      valid users = sambauser @sambagroup
-     force security directory mask = 500
+     force directory security mode = 500
   ```
-    - `force security directory mask` forcibly overwrites directory permissions when the 
+    - `force directory security mode` forcibly overwrites directory permissions when the 
       client attempts to change them.
     - This forces the owner to always have `r-x` and others to always have `---`, 
       regardless of what the client tries to set.
@@ -424,28 +436,40 @@ shares.
 
 Below is a table explaining what each option does.  
 
-| Option                          | Purpose                                        |
-| ------------------------------- | ---------------------------------------------- |
-| `directory mask`                | Max allowed permissions for new directories    |
-| `force create mode`             | Forces minimum permissions for new files       |
-| `force directory mode`          | Forces minimum permissions for new directories |
-| `security mask`                 | Limits `chmod` permissions on files            |
-| `directory security mask`       | Limits `chmod` permissions on directories      |
-| `force security mask`           | Forces `chmod` permissions on files            |
-| `force security directory mask` | Forces `chmod` permissions on directories      |
-| `inherit permissions`           | New files inherit parent directory permissions |
-| `inherit owner`                 | New files inherit parent directory ownership   |
-| `force user`                    | Forces all file ownership to a specific user   |
-| `force group`                   | Forces all file ownership to a specific group  |
-| `map archive`                   | Map Windows archive attribute                  |
-| `map hidden`                    | Map Windows hidden attribute                   |
-| `map system`                    | Map Windows system attribute                   |
+| Option                          | Purpose
+| ------------------------------- | ----------------------------------------------
+| `directory mask`                | Max allowed permissions for new directories
+| `force create mode`             | Forces minimum permissions for new files
+| `force directory mode`          | Forces minimum permissions for new directories
+| `security mask`                 | Limits `chmod` permissions on files
+| `directory security mask`       | Limits `chmod` permissions on directories
+| `force security mask`           | Forces `chmod` permissions on files (removed in Samba 4.0.0)
+| `force security directory mask` | Forces `chmod` permissions on directories (removed in Samba 4.0.0)
+| `inherit permissions`           | New files inherit parent directory permissions
+| `inherit owner`                 | New files inherit parent directory ownership
+| `force user`                    | Forces all file ownership to a specific user
+| `force group`                   | Forces all file ownership to a specific group
+| `map archive`                   | Map Windows archive attribute
+| `map hidden`                    | Map Windows hidden attribute
+| `map system`                    | Map Windows system attribute
 
 Using these options gives you very granular control over what a user can do on your
 Samba shares.  
 
 For instance, if you want to give a user write access but you don't want to allow
 them to *set* write permissions on files. That type of control is extremely useful.  
+
+### tl;dr (`mask`/`mode`/`force`/`security`)
+
+- `create mask` and `directory mask` limit what permission bits are allowed when a
+  file or directory is **created**.  
+
+- `force create mode` and `force directory mode` **ensure** that certain bits are
+  **always set** on creation.  
+
+- `security mask` and `force security mode` relate to `chmod` behavior.  
+    - These prohibit a user from `chmod`ing the files to have permissions they shouldn't have.  
+    - `force security mode` and `force security directory mode` are both removed in Samba 4.0.0.  
 
 ## A Note About Masks in Samba
 
