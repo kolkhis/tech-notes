@@ -91,3 +91,70 @@ User Logins to Servers in last 24 hours:
 {% endfor %}
 ```
 
+## Processing a Template with `lookup`
+
+By default, the `template` module writes out to a file. This may not always be what
+you want.  
+
+If you have a template to process but don't want to write it to a new file, you can
+use the `lookup()` filter.  
+
+This will process the template and expand all its variables, execute its `if` blocks,
+etc., and can be saved to a variable or used in another type of task.  
+
+```yaml
+- name: Process a template.
+  ansible.builtin.set_fact:
+    processed_template: "{{ lookup('template', 'template_name.j2') }}"
+```
+
+This will load the template file, populate it appropriately, and then save it to the
+`processed_template` variable (with `set_fact`).  
+
+---
+
+A more practical example. We have a template that contains a single entry for a Samba
+share configuration.  
+
+```ini
+# Template for the smb.conf entry itself, not the whole file
+[{{ samba_share_name }}]
+    path = {{ samba_dir }}
+{% if browsable %}
+    browsable = yes
+{% else %}
+    browsable = no
+{% endif %}
+{% if readonly %}
+    read only = yes
+{% else %}
+    read only = no
+{% endif %}
+{% if guest_ok %}
+    guest ok = yes
+{% else %}
+    guest ok = no
+{% endif %}
+{% if valid_users | length > 0 %}
+    valid users = {{ valid_users | join(' ') }}
+{% endif %}
+```
+
+Now, if we used `ansible.builtin.template` to render this into `/etc/samba/smb.conf`, it would replace the entire contents of the `smb.conf` file (and optionally make a backup), but that's not what needs to happen.  
+
+We want to append this expanded template to the `smb.conf` file.  
+
+We can use the `ansible.builtin.blockinfile` module in conjunction with the
+`lookup()` function.  
+```yaml
+- name: Append the output of the template to smb.conf
+  ansible.builtin.blockinfile:
+    path: /etc/samba/smb.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - {{ samba_share_name }}"
+    block: "{{ lookup('template', 'smb_conf_entry.j2') }}"
+```
+
+This will append the populated Jinja2 template to the `smb.conf` file (or update it, 
+if it's already there) without overwriting the entire file.  
+
+
