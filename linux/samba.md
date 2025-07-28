@@ -415,20 +415,6 @@ can't access.
   Clients can only change permission bits that are included in this mask.  
   This only applies when the **client** tries to change permissions on a file/directory.
 
-* There are some `force security` settings -- these are removed in Samba 4.0  
-    - We can also force certain permission bits on directories. 
-  ```ini
-  [MyShare]
-     guest ok = no
-     valid users = sambauser @sambagroup
-     force directory security mode = 500
-  ```
-    - `force directory security mode` forcibly overwrites directory permissions when the 
-      client attempts to change them.
-    - This forces the owner to always have `r-x` and others to always have `---`, 
-      regardless of what the client tries to set.
-    - It overwrites permission changes on directories, forcing these bits.
-
 ---
 
 There are a bunch of other options for controlling how permissions work in your samba
@@ -461,17 +447,30 @@ them to *set* write permissions on files. That type of control is extremely usef
 
 ### tl;dr (`mask`/`mode`/`force`/`security`)
 
+- `create mask` and `directory mask` define **MAXIMUM** permissions
+- `force create mode` and `force directory mode` **force-set** bits **ON**
+
+---
+
 - `create mask` and `directory mask` limit what permission bits are allowed when a
-  file or directory is **created**.  
+  file or directory is created.  
+    - These also apply to permissions changed with `chmod`.  
+    - If a user tries to `chmod` a permission bit that isn't included in the `mask`,
+      it will not be applied.  
 
 - `force create mode` and `force directory mode` **ensure** that certain bits are
-  **always set** on creation.  
+  **always set**.  
 
-- `security mask` and `force security mode` relate to `chmod` behavior.  
-    - These prohibit a user from `chmod`ing the files to have permissions they shouldn't have.  
-    - `force security mode` and `force security directory mode` are both removed in Samba 4.0.0.  
+- `force security mode` and `force directory security mode` relate to `chmod` behavior.  
+    - These `security mode` settings are removed in Samba 4.0.0+.  
 
 ## A Note About Masks in Samba
+
+> **Note:** Samba uses `mode` and `mask` **interchangeably** for new file creation settings.  
+> 
+> `create mode` is a synonym for `create mask`.  
+> `directory mode` is a synonym for `directory mask`.  
+> 
 
 Samba uses the `mask` attribute to specify the **max allowed permissions** for files
 and directories.  
@@ -479,24 +478,20 @@ and directories.
 This is distinct from [`umask`](./tools/umask.md), which specifies permissions that
 are **disallowed**.  
 
+
 Say we have this:  
 ```ini
 [SecureShare]
     create mask = 0640
-    create mode = 0000
     directory mask = 0750
-    directory mode = 0000
 ```
 
-- `create mask` / `create mode`
-    * The `mask` sets the max **allowed** permissions for **files** to `0640` (`-rw-r-----`).  
-    * The `mode` sets the **default** permissions for **files** to `0000` (`----------`)  
-- `directory mask` / `directory mode`
-    * The `mask` sets the max **allowed** permissions for **directories** to `0750` (`-rwxr-x---`).  
-    * The `mode` sets the **default** permissions for **directories** to `0000` (`----------`)  
+- `create mask`: Sets the **default** permissions for newly created **files** to `0640` (`-rw-r-----`)  
+- `directory mask`: Sets the **default** permissions for **directories** to `0750` (`-rwxr-x---`)  
 
 Unlike `umask`, the `mask` in Samba does not use the bitwise inverse of the `mask` for
 determining the default file permissions.   
+
 
 
 ## Install tl;dr
