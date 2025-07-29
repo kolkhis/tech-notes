@@ -35,6 +35,7 @@ dpkg -l             # List all installed packages
 dpkg -l | grep -i package_name  # Find out if a package is installed
 dpkg -S command     # Search for the package that installed the command
 dpkg-query -l pattern # List all packages matching the pattern
+dpkg-query -s package # See the status of a package (or multiples)
 ```
 
 ### `dpkg` Output
