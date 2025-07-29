@@ -103,13 +103,15 @@
     * Typical input is a list of either files, hosts, users, or tables.  
 * KeePassXC - Password manager or safe. Locked with one master key or key-disk.  
 * traefik - HTTP reverse proxy and load balancer that makes deploying microservices easy.  
-* vault - Product data management (PDM) tool. Integrates with CAD systems. Autodesk product.  
-* Ncat - What's the difference between `netcat` and `Ncat`?  
+* Autodesk `vault` - Product data management (PDM) tool. Integrates with CAD systems. Autodesk product.  
+* Ncat
 * sleuthkit - File and filesystem analysis/forensics toolkit.  
 * ranger - a console file manager (vi hotkeys)  
 * btop - Customizable TUI Resource monitor. See the [github](https://github.com/aristocratos/btop) page  
     * See [example btop.conf](https://github.com/aristocratos/btop?tab=readme-ov-file#configurability)  
     * Goes in `$XDG_CONFIG_HOME/btop/btop.conf` or `$HOME/.config/btop/btop.conf`
+* `pfsense` - A tool for authentication
+* `OpenSCAP` - benchmarking tool
 
 
 ## Preserving Environment Variables when using `sudo`
