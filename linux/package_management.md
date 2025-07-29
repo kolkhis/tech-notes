@@ -27,12 +27,14 @@ Debian-based systems (Ubuntu, Mint, etc.) use `apt` with `dpkg` for package mana
 apt update          # Update package lists  
 apt upgrade         # Upgrade all packages to their newest versions
 apt install package # Install a package  
+apt install package=4.5.0 # Install a specific version of a package  
 apt remove package  # Remove a package  
 dpkg -i package.deb # Install a .deb package manually  
 dpkg -r package     # Remove a package  
 dpkg -l             # List all installed packages  
 dpkg -l | grep -i package_name  # Find out if a package is installed
 dpkg -S command     # Search for the package that installed the command
+dpkg-query -l pattern # List all packages matching the pattern
 ```
 
 ### `dpkg` Output
