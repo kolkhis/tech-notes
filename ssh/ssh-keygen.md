@@ -100,4 +100,17 @@ ssh-keygen -f ~/.ssh/id_ed25519 -y > ~/.ssh/id_ed25519.pub.new
 
 The `-y` prints the corresponding public key to stdout.  
 
+## Removing a Key from Known Hosts
+
+If you have a key in your `known_hosts` file that needs to be removed (i.e., the host
+key has been changed), you can use `ssh-keygen` to remove it from the `known_hosts`.  
+```bash
+ssh-keygen -f ~/.ssh/known_hosts -R destination
+```
+
+- `-f`: Specifies the `known_hosts` file to remove the key(s) from.  
+- `-R`: Tells `ssh-keygen` to remove all keys belonging to the hostname (`destination`).  
+
+
+
 
