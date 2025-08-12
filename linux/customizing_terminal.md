@@ -1,15 +1,6 @@
 # Customizing Your Terminal  
 
 
-## Table of Contents
-* [Config Files](#config-files) 
-    * [`~/.bashrc`](#bashrc) 
-    * [`/etc/profile` and `~/.bash_logout` (system-wide `.bashrc`)](#etcprofile-and-bash_logout-system-wide-bashrc) 
-* [Colors](#colors) 
-* [Customizing Your Prompt](#customizing-your-prompt) 
-    * [Modify the PS1 Environment Variable](#modify-the-ps1-environment-variable) 
-    * [Modifying the PS2 Environment Variable](#modifying-the-ps2-environment-variable) 
-
 
 ## Config Files
 The main file to edit to customize the terminal is `~/.bashrc`.  
@@ -126,12 +117,23 @@ See [ANSI control sequences](./ansi_control_sequences.md) for adding colors.
 `PS2` is the environment variable that controls what the next-line prompt looks like.  
 
 For example when running:  
+
 ```bash  
 user@server $ command "argument" \
 > "another argument"  
 > "The > is the ${PS2} environment variable"  
 ```
+
 In this instance, `PS2="> "`.  
+
+If your `PS2` variable was set to `~> `, it would show those characters on newlines
+within commands:
+```bash  
+user@server $ command "argument" \
+~> "another argument"  
+~> "The > is the ${PS2} environment variable"  
+```
+
 
 
 
