@@ -33,7 +33,7 @@ Make sure that you do not allow root to log in via `/etc/ssh/sshd_config`.
 This speaks to a bigger part of layered security.
 You should only allow your user to log in and then force a "sudo" up to root privilege.
 ```bash
-sudo nvim /etc/ssh/sshd_config
+sudo vi /etc/ssh/sshd_config
 # Search for PermitRootLogin, change it to:
 PermitRootLogin no
 ```
