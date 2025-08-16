@@ -1754,3 +1754,24 @@ hash -r
 Hashes are reloaded when you start a new shell, but this gets around needing to do
 that.  
 
+## Declaring Variables
+
+You can declare variables in a number of ways.  
+The most common way is to use the `declare` builtin.  
+
+```bash
+declare MY_VAR
+MY_VAR=10
+```
+
+Using `declare` is not *required* for declaring variables. You can assign values to
+variables without declaring them first.
+```bash
+MY_VAR=10
+```
+
+However, using `declare`, even on normal variables like this, is a good practice. It 
+makes it clear what variables are being used.  
+
+
+
