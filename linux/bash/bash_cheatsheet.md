@@ -1773,5 +1773,45 @@ MY_VAR=10
 However, using `declare`, even on normal variables like this, is a good practice. It 
 makes it clear what variables are being used.  
 
+---
+
+The `declare` builtin isn't **only** used for saying "hey, this is a variable."  
+
+You can also assign attributes to the variable during the declaration.  
+
+For instance, if you're trying to create a variable to store an **array** in, you can use
+the `-a` option.  
+```bash
+declare -a MY_ARR
+MY_ARR=("one" "two" "three")
+```
+
+The `-a` makes the variable an indexed array (zero-based indexing).  
+
+You can also use `-A` to create an **associative array**.  
+
+```bash
+declare -A MY_ARR
+MY_ARR=(
+    [first_word]="hello"
+    [second_word]="world"
+)
+```
+
+There are a number of options that the `declare` builtin can take to give attributes
+to variables.  
+
+To name a few of the options:
+
+- `-i`: Makes the variable have the "integer" attribute (number).  
+- `-l`: Forces the variable's letters to all be lowercase.  
+- `-r`: Gives the variable the read-only attribute. Cannot be modified.  
+- `-x`: Export the variable.  
+
+For these options, you can also use `+` instead of `-` to **turn off** that
+particular attribute.  
+
+---
+
 
 
