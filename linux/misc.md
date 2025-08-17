@@ -97,6 +97,7 @@
 
 
 ### Other Tools to Check Out  
+- `getent`
 * `parallel` (GNU Parallel) - Shell tool for executing jobs in parallel using one or more machines.  
     * A job is typically a inslge command or small script that has to be run  
       for each line in the input.  
