@@ -53,6 +53,58 @@ podman run --rm -i -v "${PWD}:${PWD}" -w "${PWD}" ghcr.io/jqlang/jq:latest '.ver
 ## `jq` Basics
 
 * `.` (dot): The identity operator. Stands for the current input when used by itself.  
+    - When used in addition to a word, the word is used as a key to extract a value.  
+    - For instance, if the input JSON was this:
+      ```json
+      { "one": 1 }
+      ```
+      Then using `.one` would extract the value that corresponds to the key `"one"`:
+      ```bash
+      jq '."one"' input.json
+      # or without quotes
+      jq '.one' input.json
+      ```
+      Quotes are optional if the key does not contain any spaces or special characters.  
+
+* `[]`: Select the list at the current part of the input (when appropriate).  
+    - For instance, if the input JSON started as a list of items:
+      ```json
+      [ { "one": 1 }, { "two": 2 } ]
+      ```
+      Then using `.[]` would grab the items from the list:  
+      ```bash
+      jq '.[]' input.json
+      # Output:
+      # {
+      #   "one": 1
+      # }
+      # {
+      #   "two": 2
+      # }
+      ```
+    - You can also specify an index within the brackets, e.g., `[0]`, to extract a
+      specific list item.  
+      ```bash
+      jq '.[0]' input.json
+      # Output:
+      # {
+      #    "one": 1
+      # }
+      ```
+
+These few things:
+
+- `.`
+- `.key`
+- `[]`
+- `[idx]`
+
+Can be used to parse and extract almost any JSON data that you need.  
+
+---
+
+Some other options, if you need to pass in some custom values to the JSON data:
+
 * `--arg val 123`: Pass a value into `jq`.
     * This creates the `$val` variable, and assigns its value as `123`.  
 * `--argjson val 123`: Pass a JSON value to `jq`.  
@@ -92,7 +144,7 @@ Just use a redirection to save output to a file.
 echo '{"name": "Alice", "age": 30}' | jq '.' > output.json
 ```
 
-## Filtering Arrays
+## Filtering Arrays (Conditionals)
 Using this json:
 ```json
 [
@@ -106,8 +158,25 @@ If we want to filter people over `30`:
 ```bash
 jq '.[] | select(.age > 30)'
 ```
-TODO: Get explanation of `'.[]'`
 
+- `.[]`: This says take all input `.`, and then enter the list `[...]`.  
+    - This is essentially grabbing all of the list items. Since the JSON starts with
+      a list (`[ ... ]`), this selects and itemizes the list items.  
+
+- `| select(.age > 30)`
+    - `|`: Pipe the selected data through a `jq` filter (or function).  
+    - `select`: Use the `select` function.  
+    - `(.age > 30)`: Argument to the select function.  
+        - `.age`: Select the `age` value from each item.  
+        - `> 30`: Apply this condition to the `"age"` value.  
+
+## Builtin Functions and Operators
+
+The `jq` tool has a bunch of builtin functions that can be used to transmute and
+extract data.  
+
+There are also operators within `jq` that can be used to perform arithmetic operators
+or comparisons.  
 
 
 ---
@@ -147,6 +216,8 @@ This results in the output:
 
 ## `jq` Flags/Options
 
+* `-r`: Raw output. 
+    - If the output is a string, it will not be quoted as it normally is.  
 * `--arg val 123`: Pass a value into `jq`.
     * This creates the `$val` variable, and assigns its value as `123`.  
 * `--sort-keys`/`-S`: Outputs the object with sorted keys.  
@@ -161,7 +232,6 @@ This results in the output:
 * `-M`/`--monochrome-output`: Disable color output.  
 * `-a`/`--ascii-output`: Force output to be pure ASCII, instead of Unicode.  
     * Use this to expand escape sequences.  
-
 
 
 
