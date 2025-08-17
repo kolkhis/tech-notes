@@ -53,7 +53,25 @@ This is much safer than using `$MY_VAR` without quotes.
 
 ## Declaring Variables
 
-TODO
+
+The `declare` command is a bash builtin that declares a variable.  
+Using `declare` for your variables is a good practice, as it makes your programs more
+readable, as well as easier to edit and maintain.  
+
+By default, `declare` will make a **globally-scoped** variable. That means that the
+variable can be accessed in any location within the same script.  
+
+> An exception to this is if you use a subshell. If you use a subshell, the variable
+> **must** be **exported** for the variable to be used.  
+> A variable can be exported with the `export` command, or by giving the `-x` option
+> to the `declare` builtin.  
+> ```bash
+> declare -x MY_VAR
+> # or
+> export MY_VAR
+> ```
+
+
 
 
 
