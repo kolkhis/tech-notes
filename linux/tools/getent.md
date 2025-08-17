@@ -8,11 +8,22 @@ by the Name Switch Service (NSS) libraries.
 
 - NSS behavior is configured in `/etc/nsswitch.conf`.  
 
-
-## Supported Databases
+## Overview
 
 The `getent` command can be used to retrieve a lot of information, but it is most notably
 used for gathering information about users and groups.  
+
+`getent` is **NSS-aware**, unlike `cat /etc/passwd` or `grep`, which only queries
+local files.  
+
+This is why `getent apsswd USER` works even if the user is in LDAP, NIS, SSSD, AD,
+etc.  
+
+If `getent` returns nothing for a query, it usually means that either the entry does
+not exist, *or* NSS is misconfigured in `/etc/nsswitch.conf`.  
+
+
+## Supported Databases
 
 The most common databases you can query with `getent`:
 
@@ -58,5 +69,30 @@ The list depends on your system's `libc` and NSS modules.
   getent services ssh
   ```
   This will print the port and protocol for `ssh` (e.g., `22/tcp`)
+
+
+## Examples
+
+- Show the **full** user database (local **and** remote):
+  ```bash
+  getent passwd
+  ```
+
+- Print only user names (first field) from NSS:
+  ```bash
+  getent passwd | cut -d: -f1
+  ```
+
+- Check which groups a user belongs to:
+  ```bash
+  getent group | grep -i kolkhis
+  ```
+
+- Resolve an IP using NSS rules:
+  ```bash
+  getent hosts 8.8.8.8
+  ```
+
+---
 
 
