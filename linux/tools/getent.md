@@ -95,4 +95,26 @@ The list depends on your system's `libc` and NSS modules.
 
 ---
 
+## tl;dr
+
+- `getent`: "get entries" from NSS databases.  
+- More reliable than grepping `/etc/passwd` or `/etc/group` beacuse it works with
+  remote identity sources.  
+- Databases include: `passwd`, `group`, `shadow`, `hosts`, `services`, and more. 
+- Sources (databases) are configured by `/etc/nsswitch.conf`
+
+## `getent` Cheatsheet
+
+| **Database** | **Example Command**               | **What It Shows**
+| ------------ | --------------------------------- | -----------------
+| `passwd`     | `getent passwd kolkhis`           | User account info: `username:x:UID:GID:comment:home:shell`
+| `group`      | `getent group sudo`               | Group info: `groupname:x:GID:members`
+| `shadow`     | `sudo getent shadow kolkhis`      | Secure password/aging info (root only)
+| `hosts`      | `getent hosts example.com`        | IP <-> hostname mappings (follows `/etc/nsswitch.conf`)
+| `services`   | `getent services ssh`             | Network service to port/protocol mapping (`ssh 22/tcp`)
+| `protocols`  | `getent protocols tcp`            | Protocol numbers (`tcp 6`)
+| `networks`   | `getent networks loopback`        | Network names and addresses (`loopback 127`)
+| `ethers`     | `getent ethers 00:11:22:33:44:55` | Ethernet MAC address database (rare)
+| `aliases`    | `getent aliases postmaster`       | Mail alias database (rare, old-school Unix mail)
+| `netgroup`   | `getent netgroup mygroup`         | Netgroups (used in NIS/LDAP environments)
 
