@@ -62,10 +62,10 @@ MY_VAR=
 ```
 This will both declare the variable and give it a **null** value.  
 
-But, it's better to use either [`declare`](#using-declare) or [`local`](#using-local) 
+But, it's better to use either [`declare`](#declare) or [`local`](#local) 
 to declare your variables, depending on if it's being used in a function or not.  
 
-### Using `declare`
+### `declare` 
 The `declare` command is a bash builtin that declares a variable.  
 
 ```bash
@@ -89,7 +89,11 @@ declare -x MY_VAR
 export MY_VAR
 ```
 
-### Using `local`
+---
+
+#### Options for `declare`
+
+### `local`
 
 The `local` command is also a bash builtin.  
 
