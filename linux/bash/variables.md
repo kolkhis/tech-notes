@@ -53,24 +53,78 @@ This is much safer than using `$MY_VAR` without quotes.
 
 ## Declaring Variables
 
+It's always a good idea to declare your variables at the top of your script.  
+There are several ways to do this.  
 
+As we saw earlier, you can just set a variable:
+```bash
+MY_VAR=
+```
+This will both declare the variable and give it a **null** value.  
+
+But, it's better to use either [`declare`](#using-declare) or [`local`](#using-local) 
+to declare your variables, depending on if it's being used in a function or not.  
+
+### Using `declare`
 The `declare` command is a bash builtin that declares a variable.  
+
+```bash
+declare MY_VAR
+```
+
 Using `declare` for your variables is a good practice, as it makes your programs more
 readable, as well as easier to edit and maintain.  
 
 By default, `declare` will make a **globally-scoped** variable. That means that the
 variable can be accessed in any location within the same script.  
 
-> An exception to this is if you use a subshell. If you use a subshell, the variable
-> **must** be **exported** for the variable to be used.  
-> A variable can be exported with the `export` command, or by giving the `-x` option
-> to the `declare` builtin.  
-> ```bash
-> declare -x MY_VAR
-> # or
-> export MY_VAR
-> ```
+An exception to this is if you use a subshell. If you use a subshell, the variable
+**must** be **exported** for the variable to be used.  
 
+A variable can be exported with the `export` command, or by giving the `-x` option
+to the `declare` builtin.  
+```bash
+declare -x MY_VAR
+# or
+export MY_VAR
+```
+
+### Using `local`
+
+The `local` command is also a bash builtin.  
+
+This command declares a variable inside a **function**. It will make the variable
+**locally-scoped** to that function.  
+
+This basically means that it **limits** that variable so that it can only be seen and
+used inside the function.  
+
+#### Example of `local`
+
+Here's a program that showcases how `local` variables work:
+```bash
+my-func() {
+    local my_var
+    my_var=20
+    printf "Value of my_var: %d\n" "$my_var" 
+}
+my-func
+printf "Value of my_var: %d\n" "$my_var" # Won't work
+```
+Here's the output of that program:
+```text
+Value of my_var: 20
+value of my_var: 0
+```
+
+Here we're creating a function called `my-func`, and within that function we're
+declaring a **local** variable called `my_var` and assigning it the value of `20`.  
+
+Then we print the value of `my_var` at the end of the function.  
+
+After the function finishes, it will go on to the last `printf` statement, which
+tries to access the value of `my_var`. It will not print the value that we set inside
+the function, because it thinks it's a new variable. 
 
 
 
