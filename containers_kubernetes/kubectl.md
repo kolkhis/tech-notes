@@ -109,13 +109,13 @@ kubectl diff -f 'file.yaml'             # Preview differences between current an
 
 ### Troubleshooting
 ```bash
-kubectl describe 'resource-type' 'name'    # Show detailed information about a resource
+kubectl describe 'resource-type' 'name'   # Show detailed information about a resource
 kubectl logs 'pod-name'                   # Get logs for a pod
 kubectl logs -f 'pod-name'                # Follow logs in real time
 kubectl debug 'pod-name' --image='image'  # Debug a pod using a different container image
 kubectl get events                        # Check recent events for issues
 kubectl get pods --field-selector=status.phase!=Running # List non-running pods
-kubectl exec -it 'pod-name' -- /bin/bash  # Access the shell of a running pod
+kubectl exec -it 'pod-name' -- /bin/bash  # Access a shell in a running pod
 ```
 
 ---
@@ -125,7 +125,7 @@ kubectl exec -it 'pod-name' -- /bin/bash  # Access the shell of a running pod
 kubectl apply -k 'directory'            # Apply Kustomize directory configurations
 kubectl get all                         # Get all resource types in the namespace
 kubectl explain 'resource-type'         # Get documentation for a specific resource type
-kubectl label pod 'pod-name' 'key'='value' # Add a label to a pod
+kubectl label pod 'pod-name' 'key'='value'    # Add a label to a pod
 kubectl annotate pod 'pod-name' 'key'='value' # Add an annotation to a pod
 kubectl config view --minify            # View minimal active configuration details
 kubectl drain 'node-name'               # Safely evict all pods from a node
