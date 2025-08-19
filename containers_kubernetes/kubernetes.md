@@ -1,4 +1,5 @@
 # Kubernetes
+
 Kubernetes (or "k8s") is a container orchestration system for automating application 
 deployment, scaling, and management.
 
@@ -24,16 +25,18 @@ To install `k3s`:
 ```bash
 curl -sFL https://get.k3s.io | sh -  # Install k3s
 # or, if that doesn't work
-curl -sL https://get.k3s.io | sh -  # Install k3s
+curl -sL https://get.k3s.io | sh -   # Install k3s
 ```
+
 * `-s`: Silent mode.  
 * `-F`: Emulates pressing `Submit` on a filled-in form.  
 * `-L`: Follows redirects.  
 
 
 ## `kubectl`
-`kubectl` is the command-line interface for interacting with Kubernetes clusters.  
-Also see [kubectl commands](./kubectl.md)
+`kubectl` (Kube Control) is the command-line interface for interacting with Kubernetes clusters.  
+
+> Also see [kubectl commands](./kubectl.md)
 
 ```bash
 kubectl version
@@ -49,6 +52,7 @@ kubectl get pods -n kube-system -o wide --show-labels # scope down to the kube-s
 
 
 ## k3s Exercise: Setting up a Small Cluster
+
 * Create a pod named 'webpage' with the image 'nginx'
   ```bash
   kubectl run webpage --image=nginx  
@@ -90,12 +94,14 @@ kubectl get pods -n kube-system -o wide --show-labels # scope down to the kube-s
 
 
 ## Helm
-Helm is a package manager for kubernetes. Helm charts. 
-Helm charts are a way to define/simplify deployment and management of applications with kubernetes. 
+Helm is a package manager for Kubernetes. 
+Helm uses what they call "Helm Charts."  
 
-A helm chart is a package that contains three components :
+Helm charts are a way to define/simplify deployment and management of applications with Kubernetes. 
 
-* Templates: Yaml files for kubernetes manifests, which can be deployments, services, configMaps, secrets, etc. 
+A helm chart is a package that contains three main components:
+
+* Templates: YAML files for Kubernetes manifests, which can be deployments, services, configMaps, secrets, etc. 
 * Values: Config files that allow for customization without modifying the templates themselves 
 * Metadata: Info about the chart (version, app name, etc.) 
 
@@ -103,3 +109,4 @@ A helm chart is a package that contains three components :
 ---
 
 Bit of history: k8s had an `uwu` version: Kubernetes v1.30: Uwubernetes
+
