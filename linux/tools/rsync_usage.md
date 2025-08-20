@@ -188,4 +188,40 @@ Characters 3-9 represent attribute changes:
 A dot (`.`) in any slot means "no change" for that attribute.  
 
 
+### Itemized Output Example
+
+If you were to run:
+```bash
+rsync -ai /src/dir /backup/dir
+```
+
+You might see something like this:
+```bash
+<f.st...... file1.txt
+<f..t...... file2.txt
+.d..t...... somedir/
+```
+
+- `<f.st...... file1.txt`
+    - `<`: Sent from source to destination (remote host)
+    - `f`: Regular file
+    - `s`: Size changed
+    - `t`: Timestamp changed
+- `<f..t...... file2.txt`
+    - Only `t` changed, so the file was updated just to fix its `mtime` attribute.  
+- `.d..t......`
+    - `.`: No data transfer (dir already existed)
+    - `d`: Directory
+    - `t`: Directory's timestamp was updated
+
+You can use `-n`/`--dry-run` to see what **would** change without actually changing
+anything.  
+
+```bash
+rsync -ain /src/dir /backup/dir
+```
+
+This way you can audit changes before running them.  
+
+
 
