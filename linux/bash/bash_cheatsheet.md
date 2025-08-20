@@ -1163,7 +1163,9 @@ Full list [here](https://web.archive.org/web/20230318164746/https://wiki.bash-ha
 * `$$`: The process ID (PID) of the shell. In an explicit subshell it expands to the PID of the current "main shell", not the subshell. This is different from $BASHPID!  
 * `$!`: The process ID (PID) of the most recently executed background pipeline (like started with command &)  
 * `$-`: Current option flags set by the shell itself, on invocation, or using the set builtin command. It's just a set of characters.  
+
 In a code block for easier reading:  
+
 ```bash  
 ${PIPESTATUS[n]}    # return value of piped commands (array)  
 $#    # Number of arguments  
@@ -1175,6 +1177,7 @@ $0    # The name of the shell or the shell script (filename). Set by the shell i
 $$    # The process ID (PID) of the shell. In an explicit subshell it expands to the PID of the current "main shell", not the subshell. This is different from $BASHPID!  
 $!    # The process ID (PID) of the most recently executed background pipeline (like started with command &)  
 $-    # Current option flags set by the shell itself, on invocation, or using the set builtin command. It's just a set of characters.  
+$?    # The exit code of the last run command.  
 ```
 
 
