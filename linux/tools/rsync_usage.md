@@ -147,4 +147,45 @@ The only things it does not preserve:
 rsync -aiv ./local/directory remote-host:/path/to/destination
 ```
 
+The `-i` makes the output itemized, adding an extra level of verbosity.  
+
+
+## Itemized Output (`-i`)
+
+The `-i` option stands for "itemize changes."  
+
+It will print a change summary for every file it touches rather than just
+copying silently (or with `-v` verbose output)
+
+The output will have a **9-character** string of symbols.  
+These characters correspond to different aspects of the file and what changed.  
+
+1. First character: Y/N/Symbol for update type
+    - `<`: File was transferred to the remote host
+    - `>`: File was transferred to the local host
+    - `c`: Created a new file
+    - `h`: Hard link
+    - `.`: No update was made  
+
+2. Second character (file type)
+    - `f`: Regular file
+    - `d`: Directory
+    - `L`: Symlink
+    - `D`: Device  
+    - `S`: Special file
+
+Characters 3-9 represent attribute changes:  
+
+3. `s`: Size differs  
+4. `t`: Modification time differs  
+5. `p`: Permissions differ  
+6. `o`: Owner differs  
+7. `g`: Group differs  
+8. `a`: ACLs differ  
+9. `x`: Extended attributes differ  
+
+
+A dot (`.`) in any slot means "no change" for that attribute.  
+
+
 
