@@ -104,14 +104,16 @@ rpm -qa  # List all packages
 
 ## Process Management
 ```bash
-ps aux     # View all processes
-top        # Interactive process viewer
-htop       # Enhanced interactive process viewer (often pre-installed)
-kill PID   # Kill a process by PID
+ps aux      # View all processes
+top         # Interactive process viewer
+htop        # Enhanced interactive process viewer (often pre-installed)
+kill PID    # Kill a process by PID
 killall processname  # Kill all instances of a process by name
 pkill -u username  # Kill all processes from a specific user
 nice -n 10 command  # Start a command with a priority (lower values = higher priority)
 renice -n 10 -p PID  # Change the priority of an existing process
+pwdx PID    # Show the current working directory of a process
+prtstat PID # Show the stats of a process (CPU, mem, etc)
 ```
 
 ## System Monitoring and Logging
