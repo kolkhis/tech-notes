@@ -81,7 +81,7 @@ git push origin --delete branch-name
 # or, use the refspec delete syntax
 git push origin :branch-name
 ```
-This only removes the branch `origin/feature/branch-name` on GitHub.  
+This only removes the branch `branch-name` on GitHub.  
 
 - The `:branch-name` syntax is the **refspec delete form**.  
     - It means "push 'nothing' to `branch-name`," which instructs the remote to
