@@ -3,7 +3,6 @@
 Variables are an essential part of Bash scripting, and programming in general.  
 Understanding variables is also vital for interacting with Linux systems in general.  
 
-
 ## Overview
 
 Variables are simply containers for data.  
@@ -78,8 +77,9 @@ Using `declare` for your variables is a good practice, as it makes your programs
 readable, as well as easier to edit and maintain.  
 
 
-By default, `declare` will make a **globally-scoped** variable. That means that the
-variable can be accessed in any location within the same script.  
+By default, `declare` will make a **globally-scoped** variable (when used outside of
+a function). That means that the variable can be accessed in any location within the 
+same script.  
 
 An exception to this is if you use a subshell. If you use a subshell, the variable
 **must** be **exported** for the variable to be used.  
@@ -92,7 +92,12 @@ declare -x MY_VAR
 export MY_VAR
 ```
 
+If `declare` is used **inside** a function, it will make a **locally-scoped**
+variable (just like `local`).  
+
 ---
+
+#### Declaring Multiple Variables
 
 You can use a single `declare` statement to initialize multiple variables.  
 ```bash
@@ -119,6 +124,8 @@ This command declares a variable inside a **function**. It will make the variabl
 
 This basically means that it **limits** that variable so that it can only be seen and
 used inside the function.  
+
+---
 
 #### Example of `local`
 
@@ -174,19 +181,28 @@ the value of `0`.
 
 ### `declare` Options
 
+You can use `declare` options to assign attributes to variables when initializing
+them.  
+
 Below are the `declare` options that set attributes for variables:
 
 - `-a`: Array attribute.  
-    - Makes the variable(s) indexed arrays (if supported)
+    - Makes the variable(s) indexed arrays (if supported).  
+    - Only available in Bash v2.0+.  
+
 - `-A`: Associative Array attribute.  
-    - Makes the variable(s) associative arrays (if supported)
+    - Makes the variable(s) associative arrays (if supported).  
+    - Only available in Bash v4.0+.  
+    - Associative arrays are always **unordered** in Bash.  
+
 - `-i`: Integer attribute.  
-    - Makes the variable(s) have the `integer' attribute
+    - Makes the variable(s) have the `integer` attribute.  
+    - The variable(s) can not hold any value that is not an integer.  
 
 - `-l`: Lowercase attribute.  
-    - Converts the value of each the variable(s) to lower case on assignment
+    - Converts the value of each the variable(s) to lowercase on assignment.  
 - `-u`: Uppercase attribute.  
-    - Converts the value of each the variable(s) to uppercase on assignment
+    - Converts the value of each the variable(s) to uppercase on assignment.  
 
 - `-n`: Named Reference attribute.  
     - Make the variable(s) a reference to the variable named by its value
@@ -197,14 +213,18 @@ Below are the `declare` options that set attributes for variables:
       ```
     - I haven't seen this one used very much.  
 
-- `-r`: Read-Only attribute.
-    - Makes the variable(s) readonly
+- `-r`: Read-Only attribute.  
+    - Makes the variable(s) readonly.  
 
 - `-t`: Trace attribute.  
-    - Makes the variable(s) have the `trace` attribute
+    - This is only useful for functions. It has no effect on variables.  
+    - Makes the function have the `trace` attribute.  
+    - With this attribute, the function inherits the `DEBUG` and `RETURN` traps.  
 
 - `-x`: Export attribute.  
-    - Exports the variable(s) 
+    - Exports the variable(s)  
+
+Using `+` instead of `-` on the option explicitly **removes** that attribute.  
 
 
 
