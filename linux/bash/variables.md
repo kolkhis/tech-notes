@@ -72,8 +72,11 @@ The `declare` command is a bash builtin that declares a variable.
 declare MY_VAR
 ```
 
+This is what's known as **intializing** a variable.  
+
 Using `declare` for your variables is a good practice, as it makes your programs more
 readable, as well as easier to edit and maintain.  
+
 
 By default, `declare` will make a **globally-scoped** variable. That means that the
 variable can be accessed in any location within the same script.  
@@ -91,7 +94,21 @@ export MY_VAR
 
 ---
 
-#### Options for `declare`
+You can use a single `declare` statement to initialize multiple variables.  
+```bash
+declare MY_VAR MY_OTHER_VAR ANOTHA_ONE
+```
+
+This will initialize all 3 of those variables.  
+Any options that are passed to `declare` will apply to all variables within this
+declaration.  
+
+For example, if you used `-x`, all three would be exported.  
+```bash
+# Export all 3 variables
+declare -x MY_VAR MY_OTHER_VAR ANOTHA_ONE
+```
+
 
 ### `local`
 
@@ -129,6 +146,65 @@ Then we print the value of `my_var` at the end of the function.
 After the function finishes, it will go on to the last `printf` statement, which
 tries to access the value of `my_var`. It will not print the value that we set inside
 the function, because it thinks it's a new variable. 
+
+
+## Variable Attributes
+
+The `declare` and `local` builtins have options that allow you to set **attributes**
+for variables.  
+
+For instance, the `-i` flag sets the **integer attribute**.  
+
+This attribute will **only** allow the variable to store **integers**.  
+
+An example:
+```bash
+declare -i test
+test=hello
+echo $test
+# Output: 0
+```
+The assignment `test=hello` does not actually assign the value `'hello'` to the
+`test` variable. It can't.  
+
+Trying to assign it a value other than an integer fails, and is instead assigned
+the value of `0`.  
+
+---
+
+### `declare` Options
+
+Below are the `declare` options that set attributes for variables:
+
+- `-a`: Array attribute.  
+    - Makes the variable(s) indexed arrays (if supported)
+- `-A`: Associative Array attribute.  
+    - Makes the variable(s) associative arrays (if supported)
+- `-i`: Integer attribute.  
+    - Makes the variable(s) have the `integer' attribute
+
+- `-l`: Lowercase attribute.  
+    - Converts the value of each the variable(s) to lower case on assignment
+- `-u`: Uppercase attribute.  
+    - Converts the value of each the variable(s) to uppercase on assignment
+
+- `-n`: Named Reference attribute.  
+    - Make the variable(s) a reference to the variable named by its value
+      ```bash
+      declare MY_VAR=10
+      declare -n my_ref='MY_VAR'
+      echo $my_ref # 10
+      ```
+    - I haven't seen this one used very much.  
+
+- `-r`: Read-Only attribute.
+    - Makes the variable(s) readonly
+
+- `-t`: Trace attribute.  
+    - Makes the variable(s) have the `trace` attribute
+
+- `-x`: Export attribute.  
+    - Exports the variable(s) 
 
 
 
