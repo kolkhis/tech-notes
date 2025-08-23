@@ -1,5 +1,4 @@
-
-# Misc Kubernetes/Podman/Container Notes
+# Misc K8s/Podman/Container Notes
 * [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 
 ## Security Practices with Containers
@@ -15,8 +14,8 @@
       versa, without some sort of virtualization.  
 
 
+<!-- difference between containers and pods -->
 ## Pods vs. Containers
-
 Containers and pods are two different concepts.  
 
 Containers are individual instances of an application, focused on running a single
@@ -57,7 +56,7 @@ This enables them to work closely together as parts of a single service.
 In Kubernetes, a pod is the smallest deployable unit. Not a container. 
 Even if there is only one container, it will still be part of a pod.  
 Pods enable better organization and scaling of applications by allowing multiple
-containers to function as a single unit. 
+containers to function as a single unit.  
 
 ---
 
