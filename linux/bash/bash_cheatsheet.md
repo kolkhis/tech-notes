@@ -143,6 +143,23 @@
 * `ss` or `netstat` are internal with elevated permissions for viewing  
     * Used locally with elevated permissions, it's better than `nmap`?  
 
+## Version Compatibility
+
+When writing a bash script, you need to be mindful of what environments your script
+is going to be running in.  
+
+If your script needs to run on an older system that only has Bash v4.2, then some
+features may not be available.  
+
+- `[[ ... =~ ... ]]` (regex comparison): requires Bash ≥ 3.0
+- `local -n ref` (name references): requires Bash ≥ 4.3
+- Associative arrays (`declare -A`): requires Bash ≥ 4.0
+- `mapfile` / `readarray`: requires Bash ≥ 4.0
+    - `mapfile -d DELIMITER`: Requires Bash ≥ 4.3
+- `${var,,}` or `${var^^}` (case modifications/variable transformations): requires Bash ≥ 4.0
+- `coproc`: requires Bash ≥ 4.0
+- `printf -v VAR`: requires Bash ≥ 3.1
+
 ## CDPATH  
 
 `CDPATH`: The search path for the `cd` command.  
@@ -1815,6 +1832,8 @@ For these options, you can also use `+` instead of `-` to **turn off** that
 particular attribute.  
 
 ---
+
+
 
 
 
