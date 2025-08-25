@@ -65,9 +65,6 @@ Below is a list of versions and the features they introduced.
 
 * `echo -e` behavior changed (no longer expands `\c` by default)
 * `PIPESTATUS` array
-* `;;&` and `;&` in `case` statements **NOT** yet (that's 4.0!)
-
-<!-- What are these two things doing? You include them here but you say they're not implemented in 3.2? Please clarify -->
 
 ---
 
