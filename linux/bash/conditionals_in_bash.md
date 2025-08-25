@@ -205,17 +205,63 @@ See `man://bash 2069`.
 | `string1 > string2` | True if string1 sorts after string2 lexicographically (alphabetically).  
 
 
----  
+## `case`
 
-mapfile  
+Case statements in Bash are a way to check the value of a single variable against
+multiple values.  
 
-```help  
-*mapfile* [-d delim] [-n count] [-O origin] [-s count]  
-        [-t] [-u fd] [-C callback] [-c quantum] [array]  
+The general syntax is:
+```bash
+case "$var" in
+    one)
+        printf "Var is 'one'!\n"
+        ;;
+    two)
+        printf "Var is 'two'!\n"
+        ;;
+    *)
+        printf "Var is not 'one' OR 'two'!\n"
+        ;;
+esac
 ```
 
-Read lines from the standard input into the indexed array variable array, or  
-from file descriptor `fd` if the `-u` option is supplied.  
-The variable `MAPFILE` is the default array.  
+This will check the value of `var` against the **patterns** specified in each of the
+cases, each followed with a closing parenthese `)`.  
+
+Each case is terminated with double semicolons (`;;`).  
+
+The last case `*` is the **default case**. This will only be triggered if no other
+cases matched.  
+
+This is functionally equivalent to:
+```bash
+if [[ $var == one ]]; then 
+    printf "Var is 'one'!\n"
+elif  [[ $var == two ]]; then
+    printf "Var is 'two'!\n"
+else
+    printf "Var is not 'one' OR 'two'!\n"
+fi
+```
+
+Once a case pattern is matched, the block of code inside will run and the `case`
+statement will stop testing that value against the cases.  
+
+
+### Other Case Terminators
+
+Instead of using double semicolons to terminate cases (`;;`), you can use others to
+change how the `case` statement behaves.  
+
+- `;&`: After executing the current pattern's block, continue testing the **next
+  pattern** with the **same input**.  
+    - It will use the same input and continue testing it against each case.  
+
+- `;&`: After executing the current pattern's block, **unconditionally** execute the
+  **next pattern's block** (without re-testing).  
+    - This could potentially be useful as a handler... but at that point, just write
+      a handler function (in my opinion).  
+
+---  
 
 
