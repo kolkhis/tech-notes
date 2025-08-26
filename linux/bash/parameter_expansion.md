@@ -171,24 +171,32 @@ Bash supports the use of `^` and `,` for making values uppercase/lowercase.
 
 * `^`: Uppercase
 * `,`: Lowercase
+* `~`: Toggle
+    - Lowercase becomes uppercase, and uppercase becomes lowercase.  
+    - Like using `~` in vim.  
 
 ```bash
 ${@^} # Capitalize the first character of each value in the array
 ${@,} # Lowercase the first character of each value in the array
 ${@^^} # Capitalize all characters of each value in the array
 ${@,,} # Lowercase all characters of each value in the array
+${@~}  # Toggle the case of the first char of each value
+${@~~} # Toggle the case of the all chars of each value
 
 ${*^} # Capitalize the first character in the string
 ${*,} # Lowercase the first character in the string
 ${*^^} # Capitalize all characters in the string
 ${*,,} # Lowercase all characters in the string
+${@~}  # Toggle the case of the first char in the string
+${@~~} # Toggle the case of the all chars in the string
 ```
 
+These are called "case modifications" in the Bash man page.  
 
 
 ### Table of Examples using Special Characters
 
-| Syntax       | Description           | Example Output (for `hello world bash`)   |
+| Syntax       | Description           | Example Output (for `"hello" "world" "bash"`)   |
 |--------------|-------------------------------------------------|--------------------  
 | `${@^}` | Capitalizes each parameter                            | `Hello World Bash`
 | `${*^}` | Capitalizes only the first letter of the combined string | `Hello world bash`
@@ -196,10 +204,14 @@ ${*,,} # Lowercase all characters in the string
 | `${*^^}`| Uppercases the entire combined string                 | `HELLO WORLD BASH`
 | `${@,}` | Lowercases the first character of each parameter      | `hello world bash`
 | `${*,}` | Lowercases only the first character of the combined string | `hello world bash`
+| `${@~}` | Toggle the first character of each parameter                | `Hello World Bash`
+| `${@~~}` | Toggle all characters of each parameter               | `HELLO WORLD BASH`
+| `${*~}` | Toggle only the first character of the combined string | `Hello world bash`
+| `${*~~}` | Toggle all characters of the combined string          | `HELLO WORLD BASH`
 | `${@@Q}` | Quotes each parameter individually                    | `'hello' 'world' 'bash'`
 | `${*@Q}` | Quotes the entire combined string                     | `'hello world bash'`
 
-* Typically `*` will combine the parameters into one string, whereas `@` will split the parameters into an array.  
+* `*` will combine the parameters into one string, whereas `@` will split the parameters into an array.  
 
 * Both `${@^^}` and `${*^^}` make everything uppercase, but `${@^^}` applies it to each parameter individually.  
 * `${@^}` applies the uppercase transformation to each argument individually.  
