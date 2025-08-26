@@ -139,6 +139,7 @@ Each operator is a single letter.
 
 
 ### Parameter Transformation on Arrays
+
 Just like using `$@` or `$*`, you can use parameter transformation on multiple 
 positional parameters or arguments at once by using `${@}` or `${*}`.  
 
@@ -159,7 +160,9 @@ all_args_lowercase_str="${*@L}"   # This will be a single string
 ```
 
 
-If you use `${array[@]}` or `${array[*]}`, Bash applies the transformation to each element of the array, one by one. The result is also a list with each array item transformed individually.  
+If you use `${array[@]}` or `${array[*]}`, Bash applies the transformation to each
+element of the array, one by one. The result is also a list with each array item
+transformed individually.  
 
 If enabled, the final transformed output might go through word splitting (separating by spaces) 
 and pathname expansion (turning wildcard characters like `*` into matching filenames),
@@ -175,6 +178,8 @@ Bash supports the use of `^` and `,` for making values uppercase/lowercase.
     - Lowercase becomes uppercase, and uppercase becomes lowercase.  
     - Like using `~` in vim.  
 
+These are called "case modifications" in the Bash man page.  
+
 ```bash
 ${@^} # Capitalize the first character of each value in the array
 ${@,} # Lowercase the first character of each value in the array
@@ -183,15 +188,25 @@ ${@,,} # Lowercase all characters of each value in the array
 ${@~}  # Toggle the case of the first char of each value
 ${@~~} # Toggle the case of the all chars of each value
 
-${*^} # Capitalize the first character in the string
-${*,} # Lowercase the first character in the string
-${*^^} # Capitalize all characters in the string
-${*,,} # Lowercase all characters in the string
-${@~}  # Toggle the case of the first char in the string
-${@~~} # Toggle the case of the all chars in the string
+${*^} # Capitalize the first character of each value in the array
+${*,} # Lowercase the first character of each value in the array
+${*^^} # Capitalize all characters of each value in the array
+${*,,} # Lowercase all characters of each value in the array
+${*~}  # Toggle the case of the first char of each value in the array
+${*~~} # Toggle the case of the all chars of each value in the array
 ```
 
-These are called "case modifications" in the Bash man page.  
+When using `*`, the return value will be a single string, even though the
+transformation is being applied to each element individually.  
+
+If you want to save the output into an array, use `@` instead of `*`:
+```bash
+declare -a arr=('one' 'two' 'three')
+all_upper=("${arr[@]^^}")
+echo "${all_upper[@]@Q}"
+# 'ONE' 'TWO' 'THREE'
+```
+
 
 
 ### Table of Examples using Special Characters
