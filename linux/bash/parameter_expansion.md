@@ -199,23 +199,25 @@ These are called "case modifications" in the Bash man page.
 | Syntax       | Description           | Example Output (for `"hello" "world" "bash"`)   |
 |--------------|-------------------------------------------------|--------------------  
 | `${@^}` | Capitalizes each parameter                            | `Hello World Bash`
-| `${*^}` | Capitalizes only the first letter of the combined string | `Hello world bash`
+| `${*^}` | Capitalizes each parameter                            | `Hello World Bash`
 | `${@^^}`| Uppercases each parameter completely                  | `HELLO WORLD BASH`
-| `${*^^}`| Uppercases the entire combined string                 | `HELLO WORLD BASH`
+| `${*^^}`| Uppercases each parameter completely                  | `HELLO WORLD BASH`
 | `${@,}` | Lowercases the first character of each parameter      | `hello world bash`
-| `${*,}` | Lowercases only the first character of the combined string | `hello world bash`
-| `${@~}` | Toggle the first character of each parameter                | `Hello World Bash`
-| `${@~~}` | Toggle all characters of each parameter               | `HELLO WORLD BASH`
-| `${*~}` | Toggle only the first character of the combined string | `Hello world bash`
-| `${*~~}` | Toggle all characters of the combined string          | `HELLO WORLD BASH`
-| `${@@Q}` | Quotes each parameter individually                    | `'hello' 'world' 'bash'`
-| `${*@Q}` | Quotes the entire combined string                     | `'hello world bash'`
+| `${*,}` | Lowercases the first character of each parameter      | `hello world bash`
+| `${@~}` | Toggle the first character of each parameter          | `Hello World Bash`
+| `${@~~}` | Toggle/invert all characters of each parameter       | `HELLO WORLD BASH`
+| `${*~}`  | Toggle/invert the first character of each parameter  | `Hello world bash`
+| `${*~~}` | Toggle/invert all characters of each parameter       | `HELLO WORLD BASH`
+| `${@@Q}` | Quotes each parameter individually                   | `'hello' 'world' 'bash'`
+| `${*@Q}` | Quotes each parameter individually                   | `'hello' 'world' 'bash'`
 
-* `*` will combine the parameters into one string, whereas `@` will split the parameters into an array.  
+* Typically, `*` will combine the parameters into one string, whereas `@` will split the parameters into an array.  
+    - However, in the case of these parameter expansions, `*` and `@` behave the same way.  
 
-* Both `${@^^}` and `${*^^}` make everything uppercase, but `${@^^}` applies it to each parameter individually.  
+* Both `${@^^}` and `${*^^}` make everything uppercase, applying the modification to
+  each element of the array.  
 * `${@^}` applies the uppercase transformation to each argument individually.  
-* `${*^}` treats all arguments as a single string and capitalizes only the first character of that combined string.  
+* `${*^}` does the same thing as `${@^}`.  
 
 ## Parameter Transformation Examples  
 
@@ -279,25 +281,25 @@ echo "${files[@]^}"   # Expands "*.sh" to match any shell scripts in the directo
 echo "${@^}"       # Capitalizes each argument: "Hello World Bash"  
 
 # Using ${*} with U  
-echo "${*^}"       # Capitalizes the first letter of the combined string: "Hello world bash"  
+echo "${*^}"       # Capitalizes each argument: "Hello World Bash"  
 
 # Using ${@} with U for full uppercase  
 echo "${@^^}"      # Outputs: "HELLO WORLD BASH"  
 
 # Using ${*} with U for full uppercase  
-echo "${*^^}"      # Outputs: "HELLO WORLD BASH" (treated as a single string but still fully uppercase)  
+echo "${*^^}"      # Outputs: "HELLO WORLD BASH"  
 
 # Using ${@} with L  
 echo "${@,}"       # Converts first character of each argument to lowercase  
 
 # Using ${*} with L  
-echo "${*,}"       # Converts only the first character of the combined string to lowercase  
+echo "${*,}"       # Converts first character of each argument to lowercase  
 
 # Using ${@} with Q  
-echo "${@Q}"       # Quotes each argument individually, e.g., "'hello' 'world' 'bash'"  
+echo "${@@Q}"       # Quotes each argument individually, e.g., "'hello' 'world' 'bash'"  
 
 # Using ${*} with Q  
-echo "${*Q}"       # Quotes the entire combined string: "'hello world bash'"  
+echo "${*@Q}"       # Quotes each argument individually, e.g., "'hello' 'world' 'bash'"  
 ```
 
 ## Using Default Values
