@@ -27,8 +27,6 @@ ${variable<operator><args>}
 
 The operator sometimes requires arguments, sometimes it doesn't.  
 
-
-
 Replace strings and variables in place with parameter expansion.  
 
 ### Slicing  
@@ -148,21 +146,24 @@ positional parameters or arguments at once by using `${@}` or `${*}`.
       arguments, `$1`, `$2`, etc) as separate arguments.
     * They're processed one by one and the transformation is applied to each.  
     * The output is a list with each item transformed according to the specified operator.  
-* `${*}` (like `$*`): Treats all positional parameters as a single, combined string. 
-    * Transformations apply to the entire combined string, not each parameter individually.  
-    * With `${*}`, it combines all postitional arguments into a space-separated string and applies the transformation to the whole string.  
-    * The output is a single string with the transformation applied to the entire string.  
+* `${*}` (like `$*`): Also applies the transformations to each item separately, but
+  returns a single string. 
+    * With `${*}`, it applies the transformations to each element, *then* combines all postitional arguments into a space-separated string.  
+    * The output is a single string with the transformation applied to each element.  
 
 Ex:  
 ```bash
-all_args_lowercase_arr=("${@@L}") # This will be an array
-all_args_lowercase_str="${*@L}"   # This will be a single string
+all_args_lowercase_arr=("${@@L}") # Output will be an array
+all_args_lowercase_str="${*@L}"   # Output will be a single string
 ```
 
 
 If you use `${array[@]}` or `${array[*]}`, Bash applies the transformation to each
-element of the array, one by one. The result is also a list with each array item
-transformed individually.  
+element of the array, one by one. 
+
+The result is either an array (`${arr[@]}`) with each array item transformed 
+individually, or a single string (`${arr[*]}`) with each array item transformed 
+individually.  
 
 If enabled, the final transformed output might go through word splitting (separating by spaces) 
 and pathname expansion (turning wildcard characters like `*` into matching filenames),
@@ -174,7 +175,7 @@ Bash supports the use of `^` and `,` for making values uppercase/lowercase.
 
 * `^`: Uppercase
 * `,`: Lowercase
-* `~`: Toggle
+* `~`: Toggle/invert case
     - Lowercase becomes uppercase, and uppercase becomes lowercase.  
     - Like using `~` in vim.  
 
@@ -196,7 +197,7 @@ ${*~}  # Toggle the case of the first char of each value in the array
 ${*~~} # Toggle the case of the all chars of each value in the array
 ```
 
-When using `*`, the return value will be a single string, even though the
+When using `*`, the return value will be a single string, but the
 transformation is being applied to each element individually.  
 
 If you want to save the output into an array, use `@` instead of `*`:
