@@ -38,4 +38,45 @@ files will be in sync with.
 
 
 
+## Cloning a Project with Submodules
+
+When you clone a project that contains submodules, it will not populate those
+submodule directories by default.  
+```bash
+git clone git@github.com:me/my-repo.git
+```
+If we look at the `repo-name` submodule [that we added earlier](#adding-a-submodule),
+we can see if we have the files:
+```bash
+ls -alh ./my-repo/repo-name
+```
+Empty!
+
+However, you can use the `--recurse-submodules` option when cloning to populate the
+submodule.  
+```bash
+git clone --recurse-submodules git@github.com:me/my-repo.git
+```
+This will populate any and all submodules nested inside the project.  
+
+---
+
+If you've already cloned the repository but you forgot to use `--recurse-submodules`,
+you can use `git submodule update` with `--init` and `--recursive` to populate the
+submodules:  
+```bash
+git submodule update --init --recursive
+```
+
+This is identical to running:
+
+```bash
+git submodule init
+git submodule update
+```
+
+- `git submodule init`: Initialize your local configuration file.  
+- `git submodule update`: Fetch all the data from that project and check out the 
+  appropriate commit listed in the parent project.  
+
 
