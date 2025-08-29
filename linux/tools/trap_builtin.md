@@ -23,28 +23,53 @@ a `SIGSPEC` is invalid or an invalid option is given.
 
 
 ### Usage
+
 Anything inside the quotes will be executed when the signal is triggered.  
 ```bash
-trap "rm -f ./tmpfile && printf \"Trap triggered!\" " SIGINT SIGTERM EXIT ERR
+trap "rm -f ./tmpfile && printf 'Trap triggered.\n'" SIGINT SIGTERM EXIT ERR
 ```
 This will remove the file `./tmpfile` when the user presses Ctrl+C, Ctrl+D, or exits the script.  
- 
+
+- The `trap` is triggered when any of the `SIGNALS` are encountered.  
+  The signals being `trap`ped here:
+    - `SIGINT`: Interrupt (e.g., `^C`)
+    - `SIGTERM`: Terminate (e.g., `kill`)
+    - `EXIT`: Special signal in Bash. Any time the program exits.  
+    - `ERR`: Special signal in Bash.  
+
 ---
 
-An example, creating a FIFO pipe, using `tail -F` to write to that pipe, then backgrounding the process. We need to clean up the FIFO pipe and the background process when the script is exited so that `tail -F` doesn't turn into a zombie process, and to remove the unused FIFO pipe.  
+### Trap Usage Example
+
+An example, creating a FIFO pipe, using `tail -F` to write to that pipe, then 
+backgrounding the process. We need to clean up the FIFO pipe and the background 
+process when the script is exited so that `tail -F` doesn't turn into a zombie 
+process, and to remove the unused FIFO pipe.  
 ```bash
+trap 'kill $TAIL_PID; rm -f $logfile_fifo; exit;' SIGINT SIGTERM SIGHUP SIGILL SIGQUIT EXIT ERR
 declare logfile_fifo="./logfile_fifo"
-tail -F "$WATCH_FILE" > "$logfile_fifo" &
+tail -F "$WATCH_FILE" >> "$logfile_fifo" &
 declare TAIL_PID=$!
-trap "kill $TAIL_PID; rm -f $logfile_fifo; exit;" SIGINT SIGTERM SIGHUP SIGILL SIGQUIT EXIT ERR
 ```
+
+- That the `trap` command is using single quotes.
+
+    - This is because we want the `$TAIL_PID` variable to expand when the
+      trap is **triggered**, *not* when the trap is **defined**.  
+
+    - Prefer single quotes when referencing variables that are not defined when
+      you're defining the trap.  
+
+- Each command in the `trap` string is delimited by a semicolon.  
+
+    - This is how you run multiple commands in a single line.  
 
 
 ## Linux Signals Used with `trap`
 ```bash  
 trap -l  
 ```
-The above command **`-l`ists** all signals that Linux uses.  
+The above command **`-l`ists** all signals that Linux uses (also see `kill -l`).  
 
 Some common signals are:  
 
