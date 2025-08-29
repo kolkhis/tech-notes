@@ -3,6 +3,40 @@ GitHub Actions is GitHub's integrated CI/CD pipeline.
 Using Actions, you can set up automated builds and deployments every time a new
 commit is pushed to the repository.  
 
+## Checkout
+
+- <https://github.com/actions/checkout>
+
+The `checkout` action pulls the contents of the repository so that it is available
+inside the action.  
+
+Without using `checkout`, the action doesn't have access to any of the files in the
+repository.  
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+```
+
+- `actions/checkout@v4`
+    - This checks out the entire repository at the latest commit of the branch it's
+      being called from.  
+
+This action is required for **any** workflow that references or uses files 
+inside the repository.  
+
+> **Note**: If your repository contains submodules that you need access to inside the
+> GitHub Action workflow, you also need to include:
+> ```yaml
+> - uses: actions/checkout@v4
+>   with:
+>     submodules: recursive
+> ```
+> This will populate any submodules in your repository.  
+
 
 ## Caching Dependencies
 GitHub Actions allows for caching dependencies to help speed up deployments.  
