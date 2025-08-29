@@ -78,14 +78,15 @@ Major jump. Introduced **a ton** of features:
 * `**` globstar updated & stabilized
 * Case modification expansions:
 
-  * `${var,,}` → lowercase
-  * `${var^^}` → uppercase
-  * `${var~}` → toggle first char
+    * `${var,,}`: lowercase
+    * `${var^^}`: uppercase
+    * `${var~}`: toggle first char
+
 * `${parameter@Q}` quoting operator
 * New `case` fall-through operators:
 
-  * `;&` → continue execution with next pattern
-  * `;;&` → test next pattern list
+    * `;&` → continue execution with next pattern
+    * `;;&` → test next pattern list
 
 ---
 
