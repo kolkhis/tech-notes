@@ -79,4 +79,7 @@ git submodule update
 - `git submodule update`: Fetch all the data from that project and check out the 
   appropriate commit listed in the parent project.  
 
+## Resources
+
+- <https://git-scm.com/book/en/v2/Git-Tools-Submodules>
 
