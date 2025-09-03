@@ -234,6 +234,9 @@ print "Item3";
 ## Practical Usage Examples
 
 ### Print the Current Line Number
+
+The `$.` variable stores the current line number while looping over a file.  
+
 ```bash
 perl -ne 'print "$. $_"' file.md
 ```
