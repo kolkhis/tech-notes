@@ -31,9 +31,19 @@ The set built-in command is used to set or unset shell options and positional pa
 * `set +o option`: Disables an option.
 * `set --`: Unsets all positional parameters.
 * `set -`: Turns off -v and -x options, among others.
+
+Some shell options have shorthands that can be used (e.g., `set -e` instead of
+`set -o errexit`).  
+
 * `set -e`: Exit immediately if a command exits with a non-zero status.
+    - Same as `set -o errexit`
 * `set -u`: Treat unset variables as an error when substituting.
+    - Same as `set -o nounset`
+* `set -o pipefail`: If any command in a pipeline fails, the whole pipeline fails.  
+    - Failure in this case is any non-zero exit status.  
 * `set -x`: Print commands and their arguments as they are executed.
+    - Usually used for debugging purposes.  
+* `set -o vi`: Use vi keybindings for regular command-line interactions.  
 
 ### `set` Uses
 
@@ -42,16 +52,17 @@ The set built-in command is used to set or unset shell options and positional pa
 * `set -x`: Helpful for debugging scripts.
 
 
-
 ## `shopt`
 
 The shopt built-in allows you to change additional shell optional behavior. It's more flexible than set in some ways.
 
 ### `shopt` Options and Arguments
 
-* `shopt -s option`: Enables an option.
-* `shopt -u option`: Disables an option.
+* `shopt -s option`: Enables (`-s`ets) an option.
+* `shopt -u option`: Disables (`-u`nsets) an option.
 * `shopt -q`: Quiet mode. Nothing is output.
+    - Can be used to check if an option is set. It will return zero if all
+      options are set, and non-zero if there are any that are unset.  
 
 ### `shopt` Uses
 
@@ -65,12 +76,14 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 
 ### Shell options for `set`
 
-* `-e`: Exit on error.
-* `-f`: Disable filename expansion.
-* `-H`: Enable `!` style history substitution.
-* `-u`: Treat unset variables as an error.
-* `-x`: Debug mode.
+* `-e`, `errexit`: Exit on error.
+* `-f`, `noglob`: Disable filename expansion.
+* `-H`, `histexpand`: Enable `!` style history substitution.
+* `-u`, `nounset`: Treat unset variables as an error.
+* `-x`, `xtrace`: Debug mode.
 - `-o`: Specify a named option.  
+
+Run `help set` for a full list.  
 
 ### Shell options for `shopt` 
 
@@ -81,11 +94,7 @@ The shopt built-in allows you to change additional shell optional behavior. It's
 * `extglob`: Enables extended pattern matching.
 * `nullglob`: Allows patterns to return a null string if no match is found.
 
-### Uses for Shell Options
-
-* `set -e`: Use in scripts where you want to catch errors.
-* `shopt -s nullglob`: Use in scripts where you want to handle cases where a glob doesn't match any filenames.
-
+Check `man bash` for a full list under the `SHELL BUILTIN COMMANDS` section.  
 
 
 
