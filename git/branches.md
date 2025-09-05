@@ -51,9 +51,13 @@ If you've ever switched to the branch before, it might still exist in the Git re
 git reflog expire --expire=now --all
 git gc --prune=now
 ```
-* `git reflog --expire=now --all`: 
+
+* `git reflog --expire=now --all`: Prunes entries older than the specified
+  time. 
+    * `--expire=now` prunes all reflog entries older than today.
 * `git gc --prune=now`: This cleans up unnecessary files.  
-    * `--prune` prunes "loose" objects. This is on by default.  
+    * `--prune` prunes "loose" objects (objects older than the `time` given).
+    * This is on by default, but the `time` is set to 2 weeks.  
 
 Check if the branch still exists.  
 ```bash
