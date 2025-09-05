@@ -150,4 +150,19 @@ It's important to cache **before** the actual install step. That way you can che
 for it before installing it.  
 
 ```yaml
+if: steps.cache-mdbook.outputs.cache-hit != 'true'
 ```
+
+We're tapping into the **step** with the `cache-mdbook` ID, and we're
+checking its output. We can step into the output using dot notation.
+The `actions/cache@v3` action will have the `outputs` key, which contains 
+the `cache-hit` key. This contains the value of whether or not the cache with
+the given `key` was present, and will be either `true` or `false`.  
+
+
+
+## Resources
+
+- `actions/checkout`
+    - <https://github.com/actions/checkout>
+    - <https://graphite.dev/guides/github-actions-checkout>
