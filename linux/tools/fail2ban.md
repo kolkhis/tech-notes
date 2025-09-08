@@ -59,6 +59,11 @@ This will show a list of IPs that are banned (from SSH).
 
 ## Unbanning an IP
 
+The `fail2ban-client` command is provided to configure and control the fail2ban
+server.  
+
+We can use this to unban an IP.
+
 ```bash
 fail2ban-client set sshd unbanip <banned_IP>
 ```
