@@ -8,27 +8,39 @@ The tools used to manage packages on your system heavily depends on your operati
 
 | Command    | Description  
 | ---| ---
-| `dpkg`     | The `dpkg` is a tool to install, build, remove and manage debian packages. The primary, user-friendly front-end for `dpkg` is `apt`  
+| `dpkg`     | `dpkg` is a tool to install, build, remove and manage debian packages. The primary front-end for `dpkg` is `apt`  
 | `apt`      | `apt` provides a high-level command line interface for the package management system  
 | `yum`      | Yum is the older package management tools used on RedHat family systems.  
 | `dnf`      | Dandified Yum, the newer package management tools used on RedHat family systems.  
-| `rpm`      | RedHat Package Manager. Similar to Debian's `dpkg`, used to find and manage packages
-| `aptitude` | `aptitude` is an alternative to `apt` and is a high-level package manager  
+| `rpm`      | RedHat Package Manager. Similar to Debian's `dpkg`, used to find and manage packages, with `dnf` or `yum` as a front-end
 | `snap`     | Install, configure, refresh and remove `snap` packages. Snaps enable the secure distribution of the latest apps.  
+| `aptitude` | `aptitude` is an alternative to `apt` and is a high-level package manager  
 | `gem`      | `gem` is the front-end to RubyGems, the standard package manager for ruby  
 | `pip`      | Python package manager  
 | `git`      | Git is a revision control system commonly used to store source code for application or tools for easier development  
+| `zypper`   | A package manager for SUSE
 
 
 
 ## Package Management on Debian-based systems
 Debian-based systems (Ubuntu, Mint, etc.) use `apt` with `dpkg` for package management.    
+
+The `apt` command is sort of a wrapper for all the `apt-` family commands.  
+For instance:
+
+- `apt install` is `apt-get install`  
+- `apt show` is `apt-cache show`  
+- etc.
+
 ```bash  
-apt update          # Update package lists  
-apt upgrade         # Upgrade all packages to their newest versions
-apt install package # Install a package  
-apt install package=4.5.0 # Install a specific version of a package  
-apt remove package  # Remove a package  
+apt update          # Update package lists  (apt-get update)
+apt upgrade         # Upgrade all packages to their newest versions (apt-get upgrade)
+apt install package # Install a package (apt-get install)  
+apt install package=4.5.0 # Install a specific version of a package (apt-get install)  
+apt remove package  # Remove a package (apt-get remove) 
+apt search package  # Search for a package in the repositories (apt-cache search)
+apt show package    # Show a specific package in the repositories (apt-cache show)
+apt-cache showpkg package  # Show a package and its dependencies in the repositories
 dpkg -i package.deb # Install a .deb package manually  
 dpkg -r package     # Remove a package  
 dpkg -l             # List all installed packages  
@@ -37,6 +49,7 @@ dpkg -S command     # Search for the package that installed the command
 dpkg-query -l pattern # List all packages matching the pattern
 dpkg-query -s package # See the status of a package (or multiples)
 ```
+
 
 ### `dpkg` Output
 When using `dpkg -l`, you'll see 5 main columns.  
@@ -235,4 +248,18 @@ Filename    : /usr/bin/pgrep
 
 So you can see that the package that provides `pgrep` on Rocky is `procps-ng`, and is 
 available from the `baseos` repository.  
+
+## Resources
+
+- `man`
+    - `apt`
+    - `apt-get`
+    - `apt-cache`
+    - `apt-mark`
+    - `dpkg`
+    - `dnf`
+    - `yum`
+    - `rpm`
+
+- <https://en.opensuse.org/Package_management>
 
