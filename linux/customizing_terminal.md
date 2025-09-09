@@ -10,7 +10,6 @@ This will be run on every interactive login shell (for the specific user).
 If you want to customize a certain thing for all users, there are some global files
 you can edit.  
 
-
 ### `~/.bashrc`
 This is the runtime configuration file for bash, and it will be executed every time a
 new interactive shell is loaded.  
@@ -30,7 +29,9 @@ The `~/.bash_logout` file will be read/executed every time a shell exits (with t
 
 ---
 
-So the order in which bash loads config files:
+### Config File Load Order
+
+The order in which bash loads config files:
 
 * Non-interactive
     - `/etc/profile` (always)
@@ -40,7 +41,7 @@ So the order in which bash loads config files:
         - `~/.profile`
     - `~/.bash_logout` when the shell `exit`s.  
 
-* Interactive shell
+* Interactive shell (e.g., a login shell)
     - `/etc/profile` (always)
     - `/etc/bash.bashrc` (always)
     - First one found (in this order):
@@ -50,6 +51,8 @@ So the order in which bash loads config files:
     - `~/.bashrc`
     - `~/.bash_logout` when the shell `exit`s.  
 
+The `/etc/profile` file is **always** evaluated, regardless of whether a shell
+is interactive or not.  
 
 ## Colors
 
