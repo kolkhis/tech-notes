@@ -1,8 +1,10 @@
-
-
 # Getting User Public Keys for Github
 
-## Github
+You can retrieve a user's public SSH and GPG keys from GitHub.  
+
+If you ever find the need to do this, these notes outline how you can.  
+
+## Github Endpoints
 
 To get a specific user's public keys from Github,
 you just need to execute a `curl` command.
