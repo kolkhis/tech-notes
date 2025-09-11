@@ -1,4 +1,4 @@
-# podman
+# Podman
 
 Podman is a container engine for developing, managing, and running OCI Containers on a Linux System.
 OCI (Open Container Initiative) Containers are a kind of package that encapsulate your application and all its dependencies.
@@ -34,7 +34,7 @@ OCI (Open Container Initiative) Containers are a kind of package that encapsulat
 ```bash
 cd /var/lib/containers/storage/       # Where container images are stored for root
 cd ~/.local/share/containers/storage/ # The default image storage location for normal users
-vi /var/lib/containers/storage.conf   # Edit the storage configuration file.  
+vi /var/lib/containers/storage.conf   # The storage configuration file.  
 
 # Basic Container Commands
 podman ps                       # Show running containers
@@ -51,9 +51,9 @@ podman build -t imageName .     # Build a container image from a Dockerfile (in 
 podman run 'image'              # Run a container from an image
 podman run -d 'image'           # Run a container in detached mode
 podman run -dt 'image'          # Run a container in detached mode and give it its own TTY
-podman run --name 'name' *image* # Run container with a specific name, without, the name is random
-podman run -p 'host_port':*container_port* *image*  # Map ports between host and container
-podman run -v 'host_path':*container_path* *image*  # Mount a host directory in the container
+podman run --name 'name' image # Run container with a specific name. Without --name, the name is random
+podman run -p 'host_port':container_port image  # Map ports between host and container
+podman run -v 'host_path':container_path image  # Mount a host directory in the container
 
 # Image Management
 podman images                   # List all images
@@ -165,7 +165,10 @@ Once the image is downloaded, you'll need to manually remove it.
 
 
 ## List of Podman Commands
-`man://podman 330`
+`man://podman /^COMMANDS`
+
+You can run `man podman-subcommand`, where `subcommand` is any of the commands
+below to see the man page for that specific command (e.g., `man podman-image`).  
 
 | Command | Description
 |-|-|
@@ -211,7 +214,7 @@ Once the image is downloaded, you'll need to manually remove it.
 | `podman rename`      |  Rename an existing container.
 | `podman restart`     |  Restart one or more containers.
 | `podman rm`          |  Remove one or more containers.
-| `podman rmi`         |  Remove one or more locally stored images. 
+| `podman rmi`         |  Remove one or more locally stored images (`podman image rm`). 
 | `podman run`         |  Run a command in a new container.
 | `podman save`        |  Save image(s) to an archive.
 | `podman search`      |  Search a registry for an image.
@@ -230,6 +233,18 @@ Once the image is downloaded, you'll need to manually remove it.
 | `podman version`     |  Display the Podman version information.
 | `podman volume`      |  Simple management tool for volumes.
 | `podman wait`        |  Wait on one or more containers to stop and print their exit codes.
+
+
+Many of these subcommands have their own subcommands.  
+
+For instance, `podman image` has several subcommands:
+```bash
+podman image rm imageName   # remove an image
+podman image diff imageName # inspect changes on and image's filesystem
+podman image mount          # List all mounted images
+```
+This is not an exhaustive list, but all subcommands can be found on the specific
+command's `man` page.  
 
 
 ## Managing Image Storage with Podman
