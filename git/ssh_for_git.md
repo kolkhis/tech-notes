@@ -1,9 +1,13 @@
 # SSH with Git
+
 You can use SSH for both authenticating with GitHub as well as signing commits.  
 This can be done with GPG, but SSH is way more straightforward.  
 
 ## Generate a New SSH Key
-GitHub recently ended support for RSA keys.  
+
+GitHub does not recommend using RSA keys. The `ed25519` encryption algorithm is
+more secure than RSA.  
+
 So, generate a key that uses `ed25519` encryption.  
 ```bash
 ssh-keygen -t ed25519 -C "Optional Comment"
@@ -19,12 +23,22 @@ Never share your private key with anyone.
 
 The public key is the one that you will be using.  
 
+> **Note**: **Never** share your private key with anyone.  
+
 
 ## SSH for GitHub Authentication
 * [Generate a new ssh key](#generate-a-new-ssh-key) if you don't have one.  
 * Add your SSH public key (`.pub` suffix) to GitHub as an "Authentication Key" (default).  
     * Settings -> GPG and SSH Keys -> Add SSH Key -> Dropdown -> Authentication Key
 * Then use `ssh git@github.com` to test if it worked.  
+* You can then test if it worked on your command line:
+  ```bash
+  ssh git@github.com
+  ```
+  If you set it up properly, you will get the message: 
+  ```plaintext
+  Hi <your_name>! You've successfully authenticated, bit GitHub does not provide shell access.
+  ```
 
 
 ## SSH for Signing Commits
@@ -43,7 +57,6 @@ mkdir -p ~/.config/git
 touch ~/.config/git/allowed_signers
 echo "YOUR_USERNAME $(cat ~/.ssh/id_ed25519.pub)" > ~/.config/git/allowed_signers
 git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
-
 ```
 
 Now you can test.  
