@@ -1,5 +1,8 @@
 # Dockerfiles and Builds Best Practices
 
+These are my notes on best practices for building container images with a
+Dockerfile/Containerfile.  
+
 * [source: docker docs](https://docs.docker.com/build/building/best-practices/)
 
 ## Table of Contents
