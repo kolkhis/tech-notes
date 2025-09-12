@@ -52,15 +52,17 @@ The `repo` subcommand also has a number of other subcommands.
     Some of these commands (e.g., `clone`) will affect your local system.  
 
 - `archive`: Archives a repository.  
-- `clone`
-- `create`
-- `delete`
-- `edit`
-- `fork`
-- `list`
-- `rename`
-- `sync`
-- `view`
+- `clone`: Clone a repo to your local system (`user/repo-name`)
+- `create`: Create a new repo on GitHub.  
+- `delete`: Delete a repo on GitHub.  
+- `edit`: Edit the description of a repository on GitHub.  
+- `fork`: Create a fork of a repo on GitHub.  
+- `list`: List repos owned by the user or organization.  
+- `rename`: Rename a repository on GitHub.  
+- `sync`: Sync a repository.  
+    - By default, it syncs the local repository with the remote repository.  
+- `view`: View a GitHub repostiory (description and `README.md`).  
+    - Use `--web` to open the repo in a web browser (requires GUI).  
 
 These subcommands are pretty self-explanatory for what they do.  
 
