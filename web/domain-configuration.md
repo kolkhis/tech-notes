@@ -67,32 +67,44 @@ dig docs.kolkhis.dev +short
 ## Types of DNS Records
 
 - `A` (Address Record): Maps a hostname to a specific IPv4 address.  
+
 - `AAAA` (IPv6 Address Record): Maps a hostname to a specific IPv6 address.  
+
 - `CAA` (Certificate Authority Authorization): Restricts which Certificate
   Authorities (CAs) can issue TLS/SSL certs for your domain.  
+
 - `CNAME` (Canonical Name Record): Makes one hostname an alias for another.  
     - Use to point subdomains at services (e.g., GitHub Pages, Netlify)
+
 - `ALIAS` (`CNAME` Flattening Record): Point a hostname to another hostname without
   breaking the root domain.  
+
     - Like a `CNAME`, but works at the apex/root domain, where a `CNAME` isn't
       allowed.
       ```lua
       example.com.    ALIAS    kolkhis.github.io.
       ```
+
 - `HTTPS` (HTTPS Service Record): Lets you publish preferred endpoints, alt
   names, or even enable encrypted SNI.  
     - Like SVCB, but specifically for HTTPS services.
+
 - `MX` (Mail Exchange Record): Tells the world which mail servers accept email for your domain.  
+
 - `NA` (Name Server Record): Lists the authoritative DNS servers for your domain.  
     - Tells the internet where to go for DNS lookups on the domain.  
+
 - `SRV` (Service Record): Specifies the location (host+port) of specific services.  
     - Usually used for SIP, XMPP, LDAP, etc.
+
 - `SVCB` (Service Binding Record): Generalized "service" record type. Lets you
   advertise multiple endpoints, protocols, and priorities.
     - Used as a modern replacement for `SRV` in some cases.  
+
 - `TLSA` (TLS Authentication Record): Associates a TLS server certificate with
   the domain.  
     - Part of DANE (DNS-based Authentication of Named Entities)
+
 - `TXT` (Text Record): Arbitrary text data in DNS.  
     - Common for SPF, DKIM, DMARC, and domain verification.  
 
