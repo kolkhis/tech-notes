@@ -117,29 +117,45 @@ Now `/mnt/real_data` and `var/chroot/mnt_data` point to the *same exact* data.
 
 ---
 
+### Bind Mounting a Single File
+
 You can also bind mount a single file if you want.  
 ```bash
 mkdir /var/chroot/etc
 mount --bind /etc/hosts /var/chroot/etc/hosts
 ```
 
-### Making a Bind Mount Read-Only
+### Setting Attributes on Bind Mounts
 
-You can remount a bind mount as read-only.  
+You **must** use `--bind` before you can set attributes.  
 
-This is great for security, especially in jailed environments where you might want to
-give the user access to certain files (like `/etc/hosts`, `/bin/bash`, `/usr/bin/ssh`), 
-but not allow them to change those files.
+You will need to run the `mount --bind` **first** before you can set 
+attributes (e.g., `ro` for readonly), *then* do a `remount` step.   
 
 For example, mounting `/bin` into a chroot jail as read-only:
 ```bash
 mkdir -p /var/chroot/bin
-mount --bind /bin/var/chroot/bin
+mount --bind /bin /var/chroot/bin
 mount -o remount,bind,ro /bin /var/chroot/bin
 ```
+You must remount the bind mount as read-only.  
 
-> **Note**: You *must* do the `--bind` first, then a second `-o remount,bind,ro` to
-> make it readonly. Linux doesn't allow `--bind` and `ro` together in the same step.  
+???+ note "Execute Permissions"
+
+    When you remount with `-o ro`, that means **no writes** are allowed through
+    that path. However, the user will still be able to execute these files if the 
+    file is executable (`x` permission bit set).  
+
+Readonly bind mounts are great for security, especially in jailed environments 
+where you might want to give the user access to certain 
+files (e.g., `/etc/hosts`, `/bin/bash`, `/usr/bin/ssh`), but not allow them to 
+change those files.
+
+???+ note "Bind First!"
+
+    You *must* do the `--bind` first, then a second `-o remount,bind,ro` to
+    make it readonly. Linux doesn't allow `--bind` and `ro` together in the same step.  
+
 
 This is really useful for when mounting single files that are not meant to be
 changed, like `/etc/hosts`:
@@ -149,6 +165,28 @@ mount --bind /etc/hosts /var/chroot/etc/hosts
 mount -o remount,bind,ro /etc/hosts /var/chroot/etc/hosts
 ```
 
+That's how you can bind mount files and directories and give them attributes.  
 
+### Making Bind Mounts Persistent
+
+If you want your bind mount to be persistent, you'll need to give it an entry
+in `/etc/fstab`.  
+
+In the entry, it must have the `bind` attribute.  
+```plaintext
+/etc/hosts   /var/chroot/etc/hosts   none   bind,ro   0  0
+```
+
+!!! warning "Remount!"
+
+    Sometimes `ro,bind` doesn't take effect on the initial mount.  
+    To be safe, do the mount process as you would on the command line.  
+
+```plaintext
+/etc/hosts   /var/chroot/etc/hosts   none   bind   0  0
+/etc/hosts   /var/chroot/etc/hosts   none   remount,bind,ro   0  0
+```
+
+This will make sure it comes up as read-only after boot.  
 
 
