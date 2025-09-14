@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 docs/
 venv/
+site/
 mkdocs.yml
-
