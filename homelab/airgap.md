@@ -1,8 +1,9 @@
-# Airgapping the Homelab
+# Bastion Host
 
-To improve security, the system will be air-gapped.
-This will be done with a bastion node that contains a user account that is jailed to
-a chrooted environment.  
+To improve security, the system will be air-gapped by utilizing a bastion.  
+
+This bastion node will contain a user account that is jailed to a chrooted
+environment.  
 
 
 ## Table of Contents
@@ -17,6 +18,7 @@ a chrooted environment.
     * [Create the User Account](#create-the-user-account) 
         * [Create a Custom Shell](#create-a-custom-shell) 
 * [High Level Steps](#high-level-steps) 
+* [Setting up Logging](#setting-up-logging) 
 * [Enhancements (TODO)](#enhancements-todo) 
 * [Resources](#resources) 
 
@@ -31,7 +33,7 @@ This node will be responsible for taking input from the user to determine where 
 The jailed user will have a custom shell script as their shell, set in `/etc/passwd`.  
 
 Likely `rbash` will be used as the background shell that runs the custom shell script 
-to minimize the potential of the user breaking out of the jail.  
+to minimize the potential blast radius if the user manages to break out of the jail.  
 
 
 ```plaintext
@@ -45,9 +47,14 @@ The concepts implemented here:
 
 - Strong security posture
 
-    - Using a chroot jail with a custom shell (and possibly `rbash`) enforces the
+    - Using a chroot jail with a custom shell (which runs on `rbash`) enforces the
       rule of least privilege and containment.  
-        - `rbash` cannot redirect output.  
+        - `rbash` places a number of limitations on users.  
+          It disallows many things, such as:
+            - Changing directories
+            - Modifying key environment variables (`PATH`, `SHELL`, `ENV`, etc.)
+            - Using slashes in commands (e.g., `/bin/bash -l`)
+            - The list goes on...
 
     - Air-gapping the internal network by forcing access through a bastion host is a
       standard practice in secure enterprise environments.  
@@ -61,7 +68,7 @@ Tools used:
 - `bash`/`rbash`
 - `ldd` (binary dependencies)
 - `mknod`, character devices (special files)
-- SSH `Match` blocks.  
+- `Match` blocks in `sshd_config`.  
 
 
 ## Building a Chroot Jail
@@ -113,7 +120,7 @@ cp /usr/bin/bash /var/chroot/bin/bash
 Now, the binary won't be able to work by itself.  
 Binaries typically have linked libraries that they use as dependencies.  
 
-We can get a list of those linked libraries by using the `ldd` program.  
+We can get a list of a binary's linked libraries by using the `ldd` program.  
 
 ```bash
 ldd /bin/bash
@@ -123,24 +130,25 @@ properly.
 
 Copy them over to the chroot environment.  
 
-Extract them however you want.  
+Extract the paths to the linked libraries from the `ldd` output however you want, 
+and use those paths to copy them.  
 <!-- ldd /bin/bash | perl -pe 's/.*?(\/.*?)\(.*?\)$/\1/' # filter the paths -->
 <!-- ldd /bin/bash | perl -pe 's/.*?(\/.*?)\(.*/$1/' -->
 <!-- ldd /bin/bash | sed -E 's/^[^\/]*(\/.*)\(.*$/\1/' -->
 ```bash
 # extract only paths with perl
 for LLIB in $(ldd /bin/bash | perl -ne 'print $1 . "\n" if s/^[^\/]*(\/.*)\(.*$/\1/'); do
-    cp $LLIB /var/chroot/$LLIB
+    cp "$LLIB" "/var/chroot/$LLIB"
 done 
 
 # Using grep -o ('-o'nly print match)
 for LLIB in $(ldd /bin/bash | grep -o '/[^ ]*'); do
-    cp $LLIB /var/chroot/$LLIB
+    cp "$LLIB" "/var/chroot/$LLIB"
 done 
 
 # or use awk (will see an error)
 for LLIB in $(ldd /bin/bash | awk '{print $(NF -1)}'); do
-    cp $LLIB /var/chroot/$LLIB
+    cp "$LLIB" "/var/chroot/$LLIB"
 done
 ```
 
@@ -162,6 +170,12 @@ for binary in {bash,ssh,curl}; do
 done
 ```
 
+???+ note "Which Binaries?"
+
+    This list (`{bash,ssh,curl}`) is just an example. In practice, I use `rbash` 
+    instead of `bash`, because my custom shell runs with `rbash`.  
+    `ssh` is needed to connect to other nodes.  
+    `curl` is used to check connectivity before trying to SSH in.  
 
 ---
 
@@ -176,14 +190,15 @@ Certain system files also need to be present to get the expected functionality.
 
 Copy them over to the chroot jail:  
 ```bash
-for file in "passwd" "group" "nsswitch.conf" "hosts"; do
+for file in {passwd,group,nsswitch.conf,hosts}; do
     cp "/etc/$file" "/var/chroot/etc/$file"
 done
 ```
 
-Now those base files are in the jail. 
+Now those base files are in the jailed environment. 
 
 ### Create Special Files
+
 A functional shell expects to have certain system files.  
 For example, in the SSH program, it may redirect something to `/dev/null`, but what
 if there is no `/dev/null` in the user's environment? Things will break.  
@@ -296,9 +311,6 @@ sudo sed -i '/jaileduser/s,/bin/sh,/bin/bastion.sh,' /etc/passwd
 
 
 ## High Level Steps
-
-###### > Steps taken from het-tanis' [lab on Killercoda](https://killercoda.com/het-tanis/course/Linux-Labs/210-building-a-bastion-host)
-
 Make sure you're on the bastion host.  
 ```bash
 ssh bastion
@@ -320,9 +332,9 @@ cp /usr/bin/curl /var/chroot/bin/curl
 ```
 Copy in their link libraries.
 ```bash
-for pkg in $(ldd /bin/bash | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
-for pkg in $(ldd /usr/bin/ssh | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
-for pkg in $(ldd /usr/bin/curl | grep -o '/[^ ]*'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /bin/bash | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /usr/bin/ssh | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
+for pkg in $(ldd /usr/bin/curl | awk '{print $(NF-1)}'); do; cp $pkg /var/chroot/$pkg; done
 ```
 
 Move in system files.
@@ -471,6 +483,14 @@ tail -n 1 /var/log/auth.log
 
 Note that this will not write to `/var/log/secure` on RedHat-based systems, it will write to `/var/log/messages` (tested on Rocky).  
 
+
+We can perform dry runs with `logger` to see how the log message will be formatted:
+```bash
+logger -t bastion -p auth.info --no-act --stderr "Test message"
+# Output:
+# <38>Jun  6 20:59:53 bastion: Test message
+```
+
 ---
 
 Ultimately, `logger` sends log entries to the system logger (`/dev/log` or
@@ -493,7 +513,7 @@ the default system log location with our log collection tool (promtail/alloy, et
 
 ## Enhancements (TODO)
 
-* [ ] Log all external access attempts to a file (inside the jail).
+- [ ] Log all external access attempts to a file (inside the jail).
 
   E.g., when a user tries to connect to an external host from within the jump server.  
   ```bash
@@ -504,19 +524,19 @@ the default system log location with our log collection tool (promtail/alloy, et
         - `man logger`
         - `man rsyslog`
 
-* [ ] Set up fail2ban for jumpserver.
+- [ ] Set up fail2ban for jumpserver.
 
-* [x] Support multiple destinations
-    * [x] Read from an SSH config file for destinations. Dynamically generate prompt for user
+- [ ] Support multiple destinations
+    - [ ] Read from an SSH config file for destinations. Dynamically generate prompt for user
           based on that.
-    * [ ] Read from `/etc/hosts` by default for addresses.  
+        - Parse `~/.ssh/config` file and print out shortnames? Hostnames? User@Hostname?
 
-* Add more defense-in-depth
-    * [ ] `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
+- Add more defense-in-depth
+    - [ ] `Seccomp` or `AppArmor`/`SELinux`: You could optionally add AppArmor/SELinux 
       restrictions on the jailed shell or rbash.
-    * [ ] `iptables`/`nftables` rule to restrict the jailed user to only be able to SSH out 
+    - [ ] `iptables`/`nftables` rule to restrict the jailed user to only be able to SSH out 
       to certain IPs (destination hosts).
-    * [ ] Read-only bind mounts for even more restricted jail environments (advanced).
+    - [ ] Read-only bind mounts for even more restricted jail environments.  
       ```bash
       # Example
       mount --bind /bin /var/chroot/bin
@@ -529,29 +549,28 @@ the default system log location with our log collection tool (promtail/alloy, et
           mount -o remount,bind,ro,nosuid,nodev,noexec /bin /var/chroot/bin
           ```
 
-* [x] Copy over `~/.ssh/config` file to give access to all local inventory's
+- [ ] Copy over `~/.ssh/config` file to give access to all local inventory's
   hostnames, IPs, etc.  
     - Run script from host user environment?
 
-* [ ] Make jail setup script idempotent
+- [ ] Make jail setup script idempotent
 
-    * [x] Before copying libraries and binaries, check stat on the destination path and skip 
+    - [x] Before copying libraries and binaries, check stat on the destination path and skip 
       if already present.
 
-    * [ ] Use `install -Dm755` for cleaner binary copying with permission setting in one go.
+    - [ ] Use `install -Dm755` for cleaner binary copying with permission setting in one go.
 
-* [ ] Automate the whole setup with Ansible (great for portfolio).
+- [ ] Automate the whole setup with Ansible (great for portfolio).
     - Create ansible role for this.  
 
 ---
 
-* Testing coverage ideas
+- Testing coverage ideas
 
-    * [ ] SSH login succeeds and shows menu
-    * [ ] Restricted to menu options (try to run commands like `ls`, `cd /`, `echo`)
-    * [ ] User cannot escape the chroot via symlinks, process manipulation, or `scp`
-    * [ ] Confirm logs or alerts on each access (build a log watcher or Promtail integration)
-
+    - [ ] SSH login succeeds and shows menu
+    - [ ] Restricted to menu options (try to run commands like `ls`, `cd /`, `echo`)
+    - [ ] User cannot escape the chroot via symlinks, process manipulation, or `scp`
+    - [ ] Confirm logs or alerts on each access (build a log watcher or Promtail integration)
 
 ## Future Improvements
 
@@ -578,6 +597,5 @@ the default system log location with our log collection tool (promtail/alloy, et
 - [ProLUG Chroot Jail Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/204-building-a-chroot-jail)
 - [ProLUG Bastion Host Killercoda Lab](https://killercoda.com/het-tanis/course/Linux-Labs/210-building-a-bastion-host)
     * [gh](https://github.com/het-tanis/prolug-labs/tree/main/Linux-Labs/210-building-a-bastion-host)
-
 
 
