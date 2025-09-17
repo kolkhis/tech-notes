@@ -82,6 +82,37 @@ images) fail.
 
 I will try to clear the errors and resume I/O.  
 
+- Command run to clear the errors:
+  ```bash
+  sudo zpool clear vmdata
+  ```
+  This command produced no output and seemingly ran without error.  
+
+- Command to verify I/O:
+  ```bash
+  sudo zpool status vmdata
+  ```
+  Output:
+  ```bash
+    pool: vmdata
+   state: ONLINE
+    scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
+  config:
+  
+          NAME        STATE     READ WRITE CKSUM
+          vmdata      ONLINE       0     0     0
+            sdb       ONLINE       0     0     0
+            sdc       ONLINE       0     0     0
+  
+  errors: No known data errors
+  ```
+
+This appears to have revived the `vmdata` ZFS pool.  
+
+---
+
+After clearing errors and resuming I/O, I was able to go back and create the
+clone that I attempted before troubleshooting. Problem resolved.  
 
 
 
