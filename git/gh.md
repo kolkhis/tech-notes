@@ -119,6 +119,15 @@ create a GitHub repository out of it.
 It will also create a new `git remote` called `upstream`, which points towards
 the newly created GitHub repository.  
 
+---
+
+To simply push up your local repository to a new, private, remote GitHub
+repository:
+```bash
+gh repo create repo-name --source=. --push --private
+```
+This automatically creates the repo and pushes up all commits in the local 
+repository that you're currently in.  
 
 
 
