@@ -79,4 +79,59 @@ done
 ```
 
 
+## `select` Loops
+
+`select` is a bash builtin that's used to handle user input.  
+
+The `select` builtin is used to create interactive menus for the user to select
+a specific thing.  
+
+It creates a loop that continues to prompt the user for input.  
+
+```bash
+select word in {one,two,three}; do
+    echo "Input: $word"
+done
+```
+
+It prompts the user with a menu containing the items given:
+```plaintext
+1) one
+2) two
+3) three
+#? 
+```
+
+- The `#?` is what the user's prompt will be by default.  
+    - This prompt can be changed by modifying the `PS3` variable.  
+- The user must select one of the **numbers** on the itemized list.  
+
+This loop will run indefinitely unless you put in a `break`.  
+You'd want to handle the user input anyway, so that's where you'd `break`.    
+```bash
+select word in {apple,orange,banana}; do
+    echo "Input: $word"
+    case $word in
+        1)
+            printf "You chose 'apple'.\n"
+            break
+            ;;
+        2)
+            printf "You chose 'orange'.\n"
+            break
+            ;;
+        3)
+            printf "You chose 'banana'.\n"
+            break
+            ;;
+        *)
+            printf "Bad selection!\n" # Don't break here
+            ;;
+    esac
+done
+```
+
+The `word` variable will contain the number that the user selected.  
+
+This is yet another method you can use to interactively get user input.  
 
