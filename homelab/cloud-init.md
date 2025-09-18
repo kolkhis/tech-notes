@@ -107,7 +107,10 @@ sudo poweroff
 ---
 
 ## 4. Convert the VM into a Proxmox Cloud-Init Template
-If you're using Proxmox, create a template for future Terraform use.
+On the Proxmox node, create a template for future Terraform use.
+
+This can either be done with the `qm` command line tool, or with the Proxmox
+Web UI.  
 
 ###  Convert the VM to a Template
 1. Locate the VM ID:
@@ -120,17 +123,17 @@ If you're using Proxmox, create a template for future Terraform use.
    qm template <VM_ID>
    ```
 
-3. Create a Cloud-Init Disk:
+3. Create a `cloud-init` disk:
    ```bash
    qm set <VM_ID> --ide2 local-lvm:cloud-init
    ```
 
-4. Configure Boot Options for Cloud-Init:
+4. Configure boot options for `cloud-init`:
    ```bash
    qm set <VM_ID> --boot c --bootdisk scsi0
    ```
 
-5. Resize the Disk (If Needed):
+5. Optionally, resize the disk if you need to:
    ```bash
    qm resize <VM_ID> scsi0 +10G
    ```
@@ -138,7 +141,7 @@ If you're using Proxmox, create a template for future Terraform use.
 ---
 
 ## 5. Use Terraform to Deploy the Cloud-Init Image
-After setting up the cloud-init template, you can use Terraform to deploy VM instances.
+After setting up the `cloud-init` template, you can use Terraform to deploy VM instances.
 
 ### Terraform Configuration
 ```hcl
@@ -172,10 +175,27 @@ resource "proxmox_vm_qemu" "cloud_vm" {
   ciuser  = "kolkhis"
   cipassword = "your-password"
   sshkeys = <<EOT
-ssh-rsa AAAAB3...your-public-ssh-key...
+ssh-ed25519 AAAAC3...your-public-ssh-key...
 EOT
 }
 ```
+
+Fill in the information in the appropriate fields.  
+
+- `provider "proxmox"`: This should be your PVE node's info.  
+    - `pm_api_url`: Should be the IP to your proxmox node, pointing towards the
+      Proxmox API endpoint.  
+    - `pm_user`: Default login for the root user on PVE is `root@pam`.  
+    - `pm_password`: The password for your root login.  
+- `resource "proxmox_vm_qemu" "cloud_vm"`: The new resource to be created.  
+    - `name`: The name of your new VM.  
+    - `target_node`: The Proxmox node that it should be created on.  
+    - `clone`: The `cloud-init` template that you are using.  
+    - `disks`: Fill in the disk information here (size and name of storage pool).  
+    - `ciuser`/`cipassword`: The username to create on the new VM and its
+      password.  
+    - `sshkeys`: The **public** SSH keys to upload to the `authorized_keys` file.  
+
 
 ---
 
@@ -205,5 +225,5 @@ sudo cloud-init analyze
 ## tl;dr
 * `cloud-init` automates VM initialization for Terraform in Proxmox.
 * Using `cloud-localds`, you preconfigure VM settings (users, SSH keys, packages).
-* Converting a base VM to a Proxmox Cloud-Init template allows dynamic deployment via Terraform.
+* Converting a base VM to a Proxmox `cloud-init` template allows dynamic deployment via Terraform.
 
