@@ -1,5 +1,4 @@
-# Parsing Command Line Arguments
-
+# Parsing CLI Arguments
 
 ## Table of Contents
 * [The `shift` Command](#the-shift-command) 
@@ -97,8 +96,10 @@ You'd want to do some additional checks when parsing flags that take
 arguments (e.g., `-s STRING`), but this is a minimal way to do it.  
 
 
-## Flags that take a value  
-If you have a flag that takes a value, use the `shift` command to get the value:  
+## Options that take a value  
+
+If you have a flag/option that takes a value, use the `shift` command to get the value:  
+
 ```bash  
     case $1 in  
         -i|--input-file)  
@@ -108,6 +109,25 @@ If you have a flag that takes a value, use the `shift` command to get the value:
             ;;  
     esac
 ```
+
+You should also probably do some input sanitization to make sure that the next
+argument is a valid argument to the option.  
+
+```bash  
+    case $1 in  
+        -i|--input-file)  
+            if [[ -n $2 && ! $2 =~ ^- ]]; then
+                shift;  # Pop the -i or --input-file flag out of the argument list  
+                INPUT_FILE="$1";  
+            fi
+            shift;  # shift no matter what
+            ;;  
+    esac
+```
+
+This will verify that the next argument exists and isn't another option
+(doesn't start with a dash `-`).  
+
 
 ### Requiring Arguments
 
