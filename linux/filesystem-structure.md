@@ -5,6 +5,24 @@ system.
 
 These notes are about the purpose of the various directories on a Linux system.  
 
+## `/` (root)
+The root directory contains everything.  
+All files on a system are either in root or a subdirectory of root.  
+
+## `/dev`
+The `/dev` directory contains **device files**.  
+
+These are [special files](./special_files.md) that are either **character
+special files**, **block special files**, or **pipe special files**.  
+
+A few examples:
+
+- `/dev/null`: A character special file used to discard data.  
+- `/dev/zero`: A character special file used to generate zeroes indefinitely.  
+- `/dev/random`: A character special file used to generate random values.  
+
+The list goes on.  
+
 ## `/bin`
 
 The `/bin` directory stores **essential** user command binaries, which should (will) 
@@ -72,6 +90,21 @@ correct command.
 
 These are all optional.  
 
+## `/usr`
+
+The `/usr` directory contains all the executables and libraries that the user should
+have access to.  
+
+This directory is **not required** by the Linux Foundation's File Hierarchy
+Specification.  
+
+`/usr` will contain a few subdirectories:
+
+- `/usr/bin`: Basic user-executable binaries (like `/bin`)
+- `/usr/sbin`: More binaries for admins.  
+- `/usr/lib`: The system libraries needed for binaires.  
+
+
 ## `/opt`
 This directory is usually used for **self-contained** third-party applications.  
 Self-contained meaning that the application's files aren't spread across the rest of
@@ -104,7 +137,8 @@ The `/boot` directory contains the static files of the bootloader (e.g., GRUB).
 It contains everything required for the boot process, with the exception of config
 files that aren't needed at boot time or needed by the map installer.  
 
-All the binaires needed by the bootloader to boot a **file** go in `/sbin`.  
+All the binaires needed by the bootloader to boot a **file** go 
+in `/sbin` (system binaries directory).  
 
 The config files not needed at boot time go in `/etc`.  
 
