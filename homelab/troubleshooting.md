@@ -233,7 +233,20 @@ ZFS has marked them as permanently corrupted (the `<0x1>` is an object number).
 Any VM using these virtual disks will experience data loss, or possibly even be
 unbootable.  
 
-**Conclusion**: Disk `/dev/sdc` is corrupted and must be replaced. Affected VMs
+### Conclusion
+Disk `/dev/sdc` is corrupted and must be replaced. Affected VMs
 can only be restored from backup, but since this ZFS pool has no redundancy
 (hardware limitations on my part), they are lost.  
+
+Going forward, I'll need to build any ZFS pools with redundancy.  
+Mirroring will be sufficient (software RAID 1), striping is not necessary.
+`raidz1/2/3` is also an option.  
+
+I'll also need to monitor `zpool status` on a regular basis to check for such
+issues.  
+
+In addition to `zpool status`, I will do `zpool scrub vmdata` to verify all
+checksums. If the device `vmdata` is replicated, the `scrub` will repair any
+damage discovered from the backup.    
+
 
