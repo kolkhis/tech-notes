@@ -28,12 +28,19 @@ GitHub works with the repo.
       ```
   
 ## Templates
+
+
 * `ISSUE_TEMPLATE/` (directory): Add custom issue templates in markdown for how to format issues.  
     - e.g., `ISSUE_TEMPLATE/bug_report.md`
 * `PULL_REQUEST_TEMPLATE.md`: Add a custom PR template in markdown for how to format pull requests.  
 
+More about [issue templates here](./issue-templates.md).  
+
 
 ## Contributions
+
+- `CONTRIBUTING.md`: Contains guidelines for contributing to the project.  
+
 - `FUNDING.yml`: Add sponsorship buttons for the current repository.  
     - Example format:
       ```yaml
