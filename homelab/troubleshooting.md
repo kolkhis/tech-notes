@@ -115,6 +115,122 @@ After clearing errors and resuming I/O, I was able to go back and create the
 clone that I attempted before troubleshooting. Problem resolved.  
 
 
+### Suspended ZFS Take 2
 
+Same error as before, more errors.  
+
+- Command run:
+  ```bash
+  sudo zpool status vmdata
+  ```
+
+    - Output:
+      ```bash
+        pool: vmdata
+       state: SUSPENDED
+      status: One or more devices are faulted in response to IO failures.
+      action: Make sure the affected devices are connected, then run 'zpool clear'.
+         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
+        scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
+      config:
+      
+              NAME        STATE     READ WRITE CKSUM
+              vmdata      UNAVAIL      0     0     0  insufficient replicas
+                sdb       ONLINE       0     0     0
+                sdc       FAULTED     10   176     0  too many errors
+      
+      errors: 96 data errors, use '-v' for a list
+      ```
+
+There are 96 data errors, previously 67.  
+
+- Command run: 
+  ```bash
+  sudo zpool status -v vmdata
+  ```
+
+    - Output:
+      ```bash
+        pool: vmdata
+       state: SUSPENDED
+      status: One or more devices are faulted in response to IO failures.
+      action: Make sure the affected devices are connected, then run 'zpool clear'.
+         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
+        scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
+      config:
+      
+              NAME        STATE     READ WRITE CKSUM
+              vmdata      UNAVAIL      0     0     0  insufficient replicas
+                sdb       ONLINE       0     0     0
+                sdc       FAULTED     10   176     0  too many errors
+      
+      errors: List of errors unavailable: pool I/O is currently suspended
+      ```
+
+Just as before, we cannot read the errors due to the suspended I/O.  
+
+- Clear the errors and resume I/O again.  
+  ```bash
+  sudo zpool clear vmdata
+  ```
+
+This cleared the errors and resumed I/O, but now there are some new permanent
+errors in the `zpool status`.  
+
+- Command run:
+  ```bash
+  sudo zpool status -v vmdata
+  ```
+
+    - Output:
+
+      ```bash
+        pool: vmdata
+       state: ONLINE
+      status: One or more devices has experienced an error resulting in data
+              corruption.  Applications may be affected.
+      action: Restore the file in question if possible.  Otherwise restore the
+              entire pool from backup.
+         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-8A
+        scan: resilvered 0B in 00:00:00 with 4 errors on Thu Sep 18 19:06:07 2025
+      config:
+      
+              NAME        STATE     READ WRITE CKSUM
+              vmdata      ONLINE       0     0     0
+                sdb       ONLINE       0     0     0
+                sdc       ONLINE       0     0     8
+      
+      errors: Permanent errors have been detected in the following files:
+      
+              vmdata/vm-100-disk-0:<0x1>
+              vmdata/vm-204-disk-0@clean-cluster-init:<0x1>
+              vmdata/vm-201-disk-0:<0x1>
+              vmdata/vm-204-disk-0:<0x1>
+              vmdata/vm-201-disk-0@clean-cluster-init:<0x1>
+      ```
+
+The status:
+```plaintext
+One or more devices has experienced an error resulting in data corruption.  Applications may be affected.
+```
+This implies that some data is corrupted and may not be recoverable.  
+
+The files that are corrupted are listed.  
+
+```plaintext
+vmdata/vm-100-disk-0:<0x1>
+vmdata/vm-204-disk-0@clean-cluster-init:<0x1>
+vmdata/vm-201-disk-0:<0x1>
+vmdata/vm-204-disk-0:<0x1>
+vmdata/vm-201-disk-0@clean-cluster-init:<0x1>
+```
+
+VMs with the VMIDs `100`, `201`, and `204` are nuked. they contain blocks that
+failed checksums and could not be repaired.  
+
+ZFS has marked them as permanently corrupted (the `<0x1>` is an object number).  
+
+Any VM using these virtual disks will experience data loss, or possibly even be
+unbootable.  
 
 
