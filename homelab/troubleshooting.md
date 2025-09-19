@@ -233,4 +233,7 @@ ZFS has marked them as permanently corrupted (the `<0x1>` is an object number).
 Any VM using these virtual disks will experience data loss, or possibly even be
 unbootable.  
 
+**Conclusion**: Disk `/dev/sdc` is corrupted and must be replaced. Affected VMs
+can only be restored from backup, but since this ZFS pool has no redundancy
+(hardware limitations on my part), they are lost.  
 
