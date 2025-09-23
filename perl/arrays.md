@@ -519,3 +519,79 @@ my %unit_resources = (
     ...
 ```
 
+## Reading Filenames into an Array
+
+Saving a list of files into an array is a pretty important thing to know.  
+
+There are a few ways to do this.  
+
+### Filename Globbing
+This is probably the easiest method of getting a list of filenames in Perl.  
+We can use globbing in Perl just like in Bash.  
+
+Use a glob inside the diamond operator to make it expand into the filenames.  
+
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my @filenames = <*.md>;
+for my $file (@filenames) {
+    chomp($file);
+    print("File: $file\n");
+}
+```
+The `*.md` will grab all files with the `.md` extension in **the current
+directory**.
+
+Then we loop over the filenames and do whatever we need to do with them.  
+
+---
+
+We can also use recursive globbing to grab all markdown files in the current
+directory and **all subdirectories**.  
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my @filenames = <**/*.md>;
+for my $file (@filenames) {
+    chomp($file);
+    print("File: $file\n");
+}
+```
+
+---
+
+We can also just loop over the filenames without saving to an array just by
+using the diamond operator.  
+
+```perl
+for my $file (<**/*.md>) {
+    chomp($file);
+    print("File: $file");
+}
+```
+
+
+### Passing Filesnames as CLI Args
+We can pass in the filesnames as command line arguments
+```bash
+./example.pl file1.txt file2.txt
+```
+
+Then we'd save them into an array via the `@ARGV` array.  
+```perl
+my @filenames = @ARGV;
+```
+
+### Reading Filenames from a Directory
+We can also use some Perl builtin functions to get a list of filenames by
+reading them from a directory.  
+Use the `opendir()` function to get a directory handle, then use `readdir()` to
+get the contents.  
+
+
+
