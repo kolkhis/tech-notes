@@ -129,8 +129,11 @@ sudo sysctl --system
 ```
 
 ### Install k8s on Ubuntu/Debian-based
-[docs](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management)
+
+Also see the [docs](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management).  
+
 This is for k8s v1.32.  
+
 ```bash
 # disable swap (required for k8s)
 sudo swapoff -a
@@ -181,33 +184,38 @@ sudo sysctl --system
 ```
 
 ### Next Steps for both RedHat and Debian
-Verify the installtion
-```bash
-kubeadm version
-kubelet --version
-kubectl version --client
 
-# Generate bash completion script for kubectl 
-kubectl completion bash
-# enable kubectl autocompletion in .bashrc (requires `bash-completion`)
-echo 'source <(kubectl completion bash)' >> ~/.bashrc
+- Verify the installtion
+  ```bash
+  kubeadm version
+  kubelet --version
+  kubectl version --client
+  ```
+  If you get version output for all 3 of those commands, the installation is
+  verified.  
 
-# if you have an alias for kubectl, you can extend the compltion to work with the alias
-echo 'alias k=kubectl' >> ~/.bashrc
-echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
+- Optionally, enable bash completion for `kubectl`
+  ```bash
+  # Generate bash completion script for kubectl (optional)
+  kubectl completion bash
+  # enable kubectl autocompletion in .bashrc (optional, requires `bash-completion`)
+  printf "source <(kubectl completion bash)\n" >> ~/.bashrc
+
+  # if you have an alias for kubectl, you can extend the compltion to work with the alias
+  printf "alias k=kubectl\n" >> ~/.bashrc
+  printf "complete -o default -F __start_kubectl k\n" >> ~/.bashrc
+
+  # Or combine all of those into a heredoc
+  cat << 'EOF' >> ~/.bashrc
+  source <(kubectl completion bash)
+  alias k=kubectl
+  complete -o default -F __start_kubectl k
+  EOF
+  ```
+
+- Initialize the cluster (done later).  
 
 
-	    # cat <<- 'EOF' >> ~/.bashrc
-            # source <(kubectl completion bash)
-            # alias k=kubectl
-            # complete -o default -F __start_kubectl k
-		# EOF
-
-```
-
-
-
-* Initialize the cluster (done later).  
 ### Set up `kubeconfig`
 ```bash
 mkdir -p "$HOME/.kube"
