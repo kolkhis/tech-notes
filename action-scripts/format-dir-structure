@@ -35,7 +35,7 @@ declare -a EXCLUDE_KEYWORDS=(
 add-newlines-before-lists(){
     shopt -s globstar
     perl -pi -e '
-    my $newline_pattern=qr/^(?:\s*[*-]|[|])/;
+    my $newline_pattern=qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
     print "\n" if ((m/$newline_pattern/) && $prev !~ (m/$newline_pattern/));
     $prev = $_' ./docs/**/*.md
 }
