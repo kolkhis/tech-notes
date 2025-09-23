@@ -519,6 +519,34 @@ my %unit_resources = (
     ...
 ```
 
+## Printing the Contents of an Array
+
+When printing out the contents of an array, you can use a `for` loop.  
+
+```perl
+for my $element (@my_array) {
+    print "Element: $element\n"
+}
+```
+This loops over the values in `my_array`, and saves each value to `$element`
+for each iteration.  
+
+If we excluded the `my $element`, we'd be able to use the default variable
+instead.  
+```perl
+for (@my_array) {
+    print "Element: $_\n";
+}
+```
+
+---
+
+The easiest and cleanest way to output the contents of an array on a single
+line is to use an inline for-loop.  
+```bash
+print "Element: $_\n" for @my_array;
+```
+
 ## Reading Filenames into an Array
 
 Saving a list of files into an array is a pretty important thing to know.  
@@ -575,6 +603,19 @@ for my $file (<**/*.md>) {
 }
 ```
 
+---
+
+If we only wanted to print the filenames, we can do this with an inline
+for-loop.  
+```perl
+print "File: $_\n" for <**/*.md>;
+```
+
+This would also work if we saved them into an array.  
+```perl
+print "File: $_\n" for @filenames;
+```
+
 
 ### Passing Filesnames as CLI Args
 We can pass in the filesnames as command line arguments
@@ -593,5 +634,17 @@ reading them from a directory.
 Use the `opendir()` function to get a directory handle, then use `readdir()` to
 get the contents.  
 
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my $dir = '.';
+opendir(my $dh, $dir) or die("Can't open $dir: $!");
+
+my @files = grep { -f "$dir/$_" } readdir($dh);
+closedir($dh);
+print "$_\n" for @files;
+```
 
 
