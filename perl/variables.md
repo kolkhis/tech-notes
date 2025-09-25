@@ -19,7 +19,6 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
 - [Perl Special Variable Cheatsheet](#perl-special-variable-cheatsheet) 
 
 
-
 ## List of Special Variables
 
 - `$_`: Default variable. Holds the current line when processing text or the
@@ -80,21 +79,24 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
 ### Advanced/Less Common Special Vars
 
 - `$^I`: Stores the in-place edit extension (used with the `-i` flag).  
-    * Like using `sed -i.bak`, perl supports the same thing.  
+    - Define this variable to enable in-place editing. Use `undef $^I` to
+      disable in-place editing.  
+    - Like using `sed -i.bak`, perl supports the same thing.  
     - `$^I` stores the backup extension you set (`perl -p -i.bak -e '..'`).
-    * If you set it to `.bak`, Perl will create a backup of the original file.  
-    * Example: 
+    - If you set it (e.g., `our $^I = '.bak'`), Perl will create a backup of the original file.  
+    - Example from the command-line: 
       ```bash
       perl -pi.bak -e 's/foo/bar/' file.txt
       ```
       will back up the original file to `file.txt.bak`.
 
 - `$^W`: Current value of `warnings`.
-    * Shows if warnings are enabled.
+    - Shows if warnings are enabled.
     - Rarely used directly. Instead, use `use warnings;`.
+
 - `$.`: Line number in the current input file.  
 - `$/`: Input record separator (default is newline).  
-    * Changing it lets you change how Perl reads input.
+    - Changing it lets you change how Perl reads input.
     - You can change it to read whole files in one go.  
     - Example: `undef $/;` reads the entire file at once.
 - `$\`: Output record separator. 
@@ -110,7 +112,7 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
       ```
       (Every print automatically ends with `\n`.)
 - `$"`: Separator when interpolating arrays (default is a space `" "`).
-    * Default is a space `" "`. Example:  
+    - Default is a space `" "`. Example:  
       ```perl
       my @arr = (1, 2, 3);
       print "@arr\n";  # Outputs: 1 2 3
@@ -409,4 +411,39 @@ Sigils are what come before variables to define what kind of variable they are.
 | `&`   | Subroutines (code) |
 
 
+
+## Keywords for Declaring Variables
+
+There are three main keywords used to declare variables.  
+
+- `my`: The most common one. Makes a new lexical variable (which is privately
+  scoped to the current block).  
+  ```perl
+  my $var = 1;
+  ```
+  This is what you'll use 99% of the time in a perl script.  
+
+- `our`: Makes a lexical **alias** to a **package global**. The real global
+  lives in a package, usually `main::`.  
+  ```bash
+  our @ARGV = ('file1.txt', 'file2.txt');
+  ```
+
+- `local`: Temporarily changes the value of a package global for the duration
+  of a block (then it auto-restores).  
+
+When we're creating normal variables for your script, use `my`.  
+When we want to **permanently** change a global, e.g., `@ARGV`, we can use `our`.  
+When we want to **temporarily** change a global, e.g., `@ARGV` or `$^I`, we can use `local`.  
+
+```bash
+for my $file (<*.md>) {
+    local $^I = '.bak';
+    local @ARGV = ($file);
+    while (<>) {
+        s/old/new/g;
+        print;
+    }
+}
+```
 
