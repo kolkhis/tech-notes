@@ -23,7 +23,6 @@ declare -a EXCLUDE_DIRS=(
     "./linux/labs/linux"
     "./linux/labs/hashicorp"
     "./aws/cloud_quest"
-    ""
 )
 
 declare -a EXCLUDE_KEYWORDS=(
@@ -60,7 +59,7 @@ copy-to-docs() {
     fi
 
     for FILE in "${FILES[@]}"; do
-        if [[ "${EXCLUDE_DIRS[*]}" =~ [[:space:]]${FILE}[[:space:]] ||
+        if [[ " ${EXCLUDE_DIRS[*]} " =~ [[:space:]]${FILE}[[:space:]] ||
             "${EXCLUDE_KEYWORDS[*]}" =~ ${FILE} ]]; then
             printf "Found exlusion directory: %s\n" "$FILE" && continue
         fi
