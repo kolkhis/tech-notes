@@ -52,7 +52,7 @@ sudo systemctl restart ssh
 ```
 
 
-You'll need a local public and private SSH key. See [ssh-keygen](./ssh_keygen.md).  
+You'll need a local public and private SSH key. See [ssh-keygen](./ssh-keygen.md).  
 * In `~/.ssh/` you should have 2 files.
     * `id_*` where `*` is `rsa`, `ed25519`, etc. This is your private key.  
     * `id_*.pub`, same as above. This is your public key.  
