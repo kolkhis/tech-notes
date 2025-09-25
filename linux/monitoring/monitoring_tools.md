@@ -1,4 +1,4 @@
-# Monitoring in Linux  
+# Monitoring Tools
 
 There are a lot of ways to monitor Linux systems.  
 Manual inspection of system resource usage and logs is valid for one or two systems, but tedious and not valid at scale.  
@@ -74,24 +74,26 @@ For both logs and system metrics
 
 ### Real-time Monitoring and Alerts  
 Real-time system and application monitoring:  
-* `nagios`: Classic tool for monitoring systems and infrastructure.  
-    * Provides real-time alerts based on thresholds. 
-`zabbix`: Robust monitoring system for networks, servers, and applications.  
-    * Inlucdes bultin alerting and vizualization tools.  
-* `monit`: Lightweight monitoring and process management tool. 
-    * Can automatically restart failing services.  
-* `glances`: Terminal-based real-time system monitoring tools.  
-    * Displays metrics like CPU, memory, and disk usage with a user-friendly interface.  
-* `htop`: Interactive process viewer. Similar to `top` but more visual and user-friendly.  
+
+- `nagios`: Classic tool for monitoring systems and infrastructure.  
+    - Provides real-time alerts based on thresholds. 
+- `zabbix`: Robust monitoring system for networks, servers, and applications.  
+    - Inlucdes bultin alerting and vizualization tools.  
+- `monit`: Lightweight monitoring and process management tool. 
+    - Can automatically restart failing services.  
+- `glances`: Terminal-based real-time system monitoring tools.  
+    - Displays metrics like CPU, memory, and disk usage with a user-friendly interface.  
+- `htop`: Interactive process viewer. Similar to `top` but more visual and user-friendly.  
 
 ### Cloud-Native Monitoring Tools  
 Specifically designed for containerized and distributed environments:  
-* `promtail`: A log collection agent that works with Loki in cloud-native environments.  
-* `cAdvisor`: Monitors container resource usage and performance. 
-    * Often used with Docker and Kubernetes.  
-* `kubectl top`: Part of the Kubernetes CLI.  
-    * Provides real-time resource usage metrics for pods and nodes.  
-* `thanos`: Highly available, scalable, and long-term storage solution for Prometheus metrics.  
+
+- `promtail`: A log collection agent that works with Loki in cloud-native environments.  
+- `cAdvisor`: Monitors container resource usage and performance. 
+    - Often used with Docker and Kubernetes.  
+- `kubectl top`: Part of the Kubernetes CLI.  
+    - Provides real-time resource usage metrics for pods and nodes.  
+- `thanos`: Highly available, scalable, and long-term storage solution for Prometheus metrics.  
 
 ### Tools Specialized for Logging  
 Specifically for log aggregation, processing, and storage:  
