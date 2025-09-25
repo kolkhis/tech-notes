@@ -579,4 +579,51 @@ while (<STDIN>) {
 ```
 The `STDIN` is a constant filehandle, so it works with the diamond operator.  
 
+## In-Place Editing (Emulating `-i` Behavior)
+
+The edit-in-place behavior that is enabled via the `-i` option (`man perlrun`)
+can also be enabled by setting the `$^I` variable (`man perlvar`).  
+
+This method **only** works on the `ARGV` file handle.  
+
+So, you must either manually insert the file into `ARGV`, or pass the file(s)
+as command-line arguments to the perl script itself.  
+
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+for my $file (<*.md>) {
+    our $^I = '.bak';
+    our @ARGV = ($file);
+    while(<>) {
+        s/old/new/g; 
+        print;
+    }
+}
+
+```
+
+Note that we're using `our` instead of `my` for the variables. This is because
+they're global, and `my` creates a lexical variable for the current scope only,
+and won't be recognized by the diamond operator.  
+
+Using `local` would also work for this operation. This method is probably 
+better, since it doesn't modify the global `ARGV`.  
+
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+for my $file (<*.md>) {
+    our $^I = '.bak';
+    our @ARGV = ($file);
+    while(<>) {
+        s/old/new/g; 
+        print;
+    }
+}
+```
 
