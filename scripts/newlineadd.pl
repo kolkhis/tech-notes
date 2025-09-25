@@ -25,6 +25,7 @@ if (!@markdown_files) {
 }
 
 my $newline_pattern = qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
+my $prev_pattern = qr/$newline_pattern|^\n/;
 
 for my $file (@markdown_files) {
     local $^I = '';
@@ -32,7 +33,7 @@ for my $file (@markdown_files) {
 
     my $prev = '';
     while (<>) {
-        if (m/$newline_pattern/ && $prev !~ m/($newline_pattern|^\n)/) {
+        if (m/$newline_pattern/ && $prev !~ m/($prev_pattern)/) {
             print "\n";
         }
         print;
