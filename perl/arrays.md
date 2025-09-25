@@ -29,10 +29,38 @@ Associative arrays, called "Hashes" in Perl, are denoted with the `%` symbol.
     * [Hash tl;dr](#hash-tldr) 
 * [Example of Accessing Arrays in a Hash](#example-of-accessing-arrays-in-a-hash) 
 
+## Defining an Array
+
+You define an array in Perl by using the `@` variable prefix, and then list the
+elements in parentheses, separated by commas.  
+```perl
+my @nums = ('one', 'two', 'three');
+```
+
+You can also create array from sequences using `..` to specify ranges.  
+```perl
+my @nums = (1..10);
+my @letters = (a..z);
+```
+This will create a `@nums` array that contains the numbers 1 through 10, and a
+`@letters` array that contains the entire lowercase alphabet.  
+
 ## Accessing Variables in Arrays
+
 Each element of an array is usually a scalar value (a single unit of data).  
 
-If you have an array `@days`, you can access its elements:
+Access individual elements with the square bracket notation `[ ]`.
+```perl
+my @lines = ('line one', 'line two', 'line three', 'line four', 'line five')
+print $lines[0];        # first element
+print $lines[-1];       # last element
+print $lines[$#lines];  # last element
+```
+The last one (`$lines[$#lines]`) uses the `$#lines` syntax.  
+This is used to get the last index of the array.  
+It will evaluate to the length of the array minus 1.  
+
+---
 
 ## Reading Data into an Array
 
@@ -107,31 +135,33 @@ my @uppercased = map { uc($_) } @lines;
 
 ## Array Operations
 
-Loop over an array with a `foreach` loop.
+Loop over an array with a `for`/`foreach` loop.
 ```perl
 foreach my $line (@lines) {
     print "$line\n";
 }
+# or, just use `for` (does the same thing)
+for my $line (@lines) {
+    print "$line\n";
+}
 ```
 
----
+This will store each element in the `$line` variable for each iteration.  
 
-Access individual elements with the square bracket notation `[ ]`.
+If you omit `my $line`, you can simply use the default variable (`$_`) to
+access the current element.
 ```perl
-print $lines[0];        # first element
-print $lines[-1];       # last element
-print $lines[$#lines];  # last element
+for (@lines) {
+    print "$_\n";
+}
 ```
-The last one - `$lines[$#lines]` - uses the `$#lines` syntax.  
-This is used to get the last index of the array.  
-It will evaluate to the length of the array minus 1.  
 
 ---
 
 Loop over only a select number of elements:
 ```perl
 my @first_5 = @lines[0..4]
-foreach my $line (@first_5) {
+for my $line (@first_5) {
     print "Line: $line\n"
 }
 ```
