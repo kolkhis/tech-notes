@@ -2,10 +2,7 @@
 
 These are personal notes from troubleshooting errors in my homelab.  
 
-- Running Proxmox (Debian GNU/Linux 12 (bookworm))
-
-
-
+- Running Proxmox VE (Debian GNU/Linux 12 (bookworm))
 
 ## ZFS State Suspended (Storage)
 
@@ -123,24 +120,23 @@ Same error as before, more errors.
   ```bash
   sudo zpool status vmdata
   ```
-
-    - Output:
-      ```bash
-        pool: vmdata
-       state: SUSPENDED
-      status: One or more devices are faulted in response to IO failures.
-      action: Make sure the affected devices are connected, then run 'zpool clear'.
-         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
-        scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
-      config:
-      
-              NAME        STATE     READ WRITE CKSUM
-              vmdata      UNAVAIL      0     0     0  insufficient replicas
-                sdb       ONLINE       0     0     0
-                sdc       FAULTED     10   176     0  too many errors
-      
-      errors: 96 data errors, use '-v' for a list
-      ```
+  Output:
+  ```bash
+    pool: vmdata
+   state: SUSPENDED
+  status: One or more devices are faulted in response to IO failures.
+  action: Make sure the affected devices are connected, then run 'zpool clear'.
+     see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
+    scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
+  config:
+  
+          NAME        STATE     READ WRITE CKSUM
+          vmdata      UNAVAIL      0     0     0  insufficient replicas
+            sdb       ONLINE       0     0     0
+            sdc       FAULTED     10   176     0  too many errors
+  
+  errors: 96 data errors, use '-v' for a list
+  ```
 
 There are 96 data errors, previously 67.  
 
@@ -148,24 +144,23 @@ There are 96 data errors, previously 67.
   ```bash
   sudo zpool status -v vmdata
   ```
-
-    - Output:
-      ```bash
-        pool: vmdata
-       state: SUSPENDED
-      status: One or more devices are faulted in response to IO failures.
-      action: Make sure the affected devices are connected, then run 'zpool clear'.
-         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
-        scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
-      config:
-      
-              NAME        STATE     READ WRITE CKSUM
-              vmdata      UNAVAIL      0     0     0  insufficient replicas
-                sdb       ONLINE       0     0     0
-                sdc       FAULTED     10   176     0  too many errors
-      
-      errors: List of errors unavailable: pool I/O is currently suspended
-      ```
+  Output:
+  ```bash
+    pool: vmdata
+   state: SUSPENDED
+  status: One or more devices are faulted in response to IO failures.
+  action: Make sure the affected devices are connected, then run 'zpool clear'.
+     see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-HC
+    scan: resilvered 0B in 00:00:02 with 0 errors on Wed Sep 17 17:03:48 2025
+  config:
+  
+          NAME        STATE     READ WRITE CKSUM
+          vmdata      UNAVAIL      0     0     0  insufficient replicas
+            sdb       ONLINE       0     0     0
+            sdc       FAULTED     10   176     0  too many errors
+  
+  errors: List of errors unavailable: pool I/O is currently suspended
+  ```
 
 Just as before, we cannot read the errors due to the suspended I/O.  
 
@@ -181,33 +176,31 @@ errors in the `zpool status`.
   ```bash
   sudo zpool status -v vmdata
   ```
-
-    - Output:
-
-      ```bash
-        pool: vmdata
-       state: ONLINE
-      status: One or more devices has experienced an error resulting in data
-              corruption.  Applications may be affected.
-      action: Restore the file in question if possible.  Otherwise restore the
-              entire pool from backup.
-         see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-8A
-        scan: resilvered 0B in 00:00:00 with 4 errors on Thu Sep 18 19:06:07 2025
-      config:
-      
-              NAME        STATE     READ WRITE CKSUM
-              vmdata      ONLINE       0     0     0
-                sdb       ONLINE       0     0     0
-                sdc       ONLINE       0     0     8
-      
-      errors: Permanent errors have been detected in the following files:
-      
-              vmdata/vm-100-disk-0:<0x1>
-              vmdata/vm-204-disk-0@clean-cluster-init:<0x1>
-              vmdata/vm-201-disk-0:<0x1>
-              vmdata/vm-204-disk-0:<0x1>
-              vmdata/vm-201-disk-0@clean-cluster-init:<0x1>
-      ```
+  Output:
+  ```bash
+    pool: vmdata
+   state: ONLINE
+  status: One or more devices has experienced an error resulting in data
+          corruption.  Applications may be affected.
+  action: Restore the file in question if possible.  Otherwise restore the
+          entire pool from backup.
+     see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-8A
+    scan: resilvered 0B in 00:00:00 with 4 errors on Thu Sep 18 19:06:07 2025
+  config:
+  
+          NAME        STATE     READ WRITE CKSUM
+          vmdata      ONLINE       0     0     0
+            sdb       ONLINE       0     0     0
+            sdc       ONLINE       0     0     8
+  
+  errors: Permanent errors have been detected in the following files:
+  
+          vmdata/vm-100-disk-0:<0x1>
+          vmdata/vm-204-disk-0@clean-cluster-init:<0x1>
+          vmdata/vm-201-disk-0:<0x1>
+          vmdata/vm-204-disk-0:<0x1>
+          vmdata/vm-201-disk-0@clean-cluster-init:<0x1>
+  ```
 
 The status:
 ```plaintext
