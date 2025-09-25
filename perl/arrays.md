@@ -677,4 +677,40 @@ closedir($dh);
 print "$_\n" for @files;
 ```
 
+## Grepping over an Array
+<!-- conditionals on arrays extract element based on condition grep arrays grep array elements -->
+
+We can extract elements from an array based on conditions using `grep`.  
+
+For example, if you have an array of filenames, and you only want to extract
+those files that exist and are regular files, you can use the `-f` condition.  
+```perl
+my @files = ('./loops.md', './regex.md', './operators.md', './nonexistent.md');
+my @real_files = grep { -f $_ } @files;
+print "Real files:\n" . join("\n", @real_files), "\n";
+```
+- `my @real_files`: Defines a new array variable.  
+- `grep { ... } @files`: Use `grep` with a condition inside the braces `{ ... }`.  
+    - Iterates over the `@files` array and applies the conditional check to
+      each element.  
+    - `-f`: File exists and is a regular file.  
+
+Instead of creating an entirely new array, we can also just use the same one
+and modify it in-place.  
+```perl
+my @files = ('./loops.md', './regex.md', './operators.md', './nonexistent.md');
+@files = grep { -f $_ } @files;
+print "Real files:\n" . join("\n", @real_files), "\n";
+```
+
+The right-hand side is evaluated first, so the `@files` array won't be
+overwritten until that's done.  
+
+We can also check that the filename matches a given pattern.  
+This is done within the braces `{ ... }`.
+```perl
+@files = grep { -f $_ && /\.md$/ } @files;
+```
+This checks that the filename ends with `.md`.  
+
 
