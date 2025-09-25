@@ -438,6 +438,7 @@ When we want to **temporarily** change a global, e.g., `@ARGV` or `$^I`, we can 
 
 ```bash
 for my $file (<*.md>) {
+    chomp($file);
     local $^I = '.bak';
     local @ARGV = ($file);
     while (<>) {

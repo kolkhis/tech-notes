@@ -595,6 +595,7 @@ use strict;
 use warnings;
 
 for my $file (<*.md>) {
+    chomp($file);
     our $^I = '.bak';
     our @ARGV = ($file);
     while(<>) {
@@ -618,6 +619,7 @@ use strict;
 use warnings;
 
 for my $file (<*.md>) {
+    chomp($file);
     our $^I = '.bak';
     our @ARGV = ($file);
     while(<>) {
