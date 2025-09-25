@@ -2204,6 +2204,44 @@ sudo mount /dev/sdb1 /mnt/usb
 
 * Flow Engineering (DevOps)
 
+## Reset Root Password
+
+Knowing how to reset the password of the `root` user is **super** important for syadmins.  
+
+Boot in recovery mode.
+```bash
+reboot
+```
+Then when we get into GRUB, select the kernel, and hit `E`. Choose the line
+that starts with `linux`.
+Go to the end of the line and type in `rd.break`.  
+Hit Ctrl-X. Then you'll be booted into emergency mode.
+
+Then run the commands:
+```bash
+mount -o remount,rw /sysroot/
+chroot /sysroot
+```
+This will bring the root filesystem back online. 
+
+Now, change the password itself.
+```bash
+passwd
+```
+Then, run:
+```bash
+touch /.autorelabel
+```
+This is for SELinux. It will ensure that your SELinux setup boots the way that
+it's supposed to.  
+
+Exit the chrooted environment and reboot. 
+```bash
+exit
+reboot
+```
+
+
 
 ## Resources
 * [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
