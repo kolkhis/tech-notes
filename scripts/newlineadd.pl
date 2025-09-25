@@ -15,7 +15,7 @@ if (!@ARGV) {
     @markdown_files = <./docs/**/*.md>;
 } else {
     print "File arguments found. Using filenames provided.\n";
-    @markdown_files = @ARGV;
+    @markdown_files = grep { -f $_ && /\.md$/ } @ARGV;
 }
 
 print "Markdown files being converted:\n" . Data::Dump::dump(\@markdown_files) . "\n";
