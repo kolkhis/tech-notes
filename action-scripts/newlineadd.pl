@@ -4,7 +4,11 @@
 # Can be used as a rough translator for GitHub flavored Markdown
 # to MkDocs flavored Markdown.  
 
-my @markdown_files = <./**/*.md>;
+my @markdown_files = <./docs/**/*.md>;
+if (!@markdown_files) {
+    die "[ERROR]: No files found for perl to modify!\n";
+}
+
 my $newline_pattern = qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
 
 for my $file (@markdown_files) {
