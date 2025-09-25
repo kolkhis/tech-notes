@@ -14,7 +14,7 @@ for my $file (@markdown_files) {
 
     my $prev = '';
     while (<>) {
-        if (m/$newline_pattern/ && $prev !~ m/$newline_pattern/) {
+        if (m/$newline_pattern/ && $prev !~ m/($newline_pattern|^\n)/) {
             print "\n";
         }
         print;
