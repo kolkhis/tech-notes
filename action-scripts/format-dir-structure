@@ -34,10 +34,18 @@ declare -a EXCLUDE_KEYWORDS=(
 
 add-newlines-before-lists(){
     shopt -s globstar
-    perl -pi -e '
-    my $newline_pattern=qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
-    print "\n" if ((m/$newline_pattern/) && $prev !~ (m/$newline_pattern/));
-    $prev = $_' ./docs/**/*.md
+    if ! type perl >/dev/null 2>&1; then
+        printf >&2 "[ERROR]: Perl not found on the system.\n"
+        return 1
+    fi
+    if [[ -f ./action-scripts/newlineadd.pl ]]; then
+        /usr/bin/perl ./action-scripts/newlineadd.pl
+    else
+        perl -pi -e '
+            my $newline_pattern=qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
+            print "\n" if ((m/$newline_pattern/) && $prev !~ (m/$newline_pattern|^\n/));
+            $prev = $_' ./docs/**/*.md
+    fi
 }
 
 
