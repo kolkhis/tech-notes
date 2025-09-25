@@ -30,10 +30,10 @@ jobs:
         run: pip install -U mkdocs mkdocs-material
 
       - name: Set up directory structure
-        run: ./action-scripts/format-dir-structure
+        run: ./scripts/format-dir-structure
 
       - name: Set up directory structure
-        run: ./action-scripts/generate-mkdocs-config
+        run: ./scripts/generate-mkdocs-config
 
       - name: Build MkDocs
         run: mkdocs build
