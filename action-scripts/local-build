@@ -1,0 +1,152 @@
+#!/bin/bash
+# shellcheck disable=SC2317
+#===============================================================================
+#
+#          FILE:  local-build
+#
+#         USAGE:  ./scripts/local-build [OPTIONS]
+#                 Must be run from the root of the MkDocs project.
+#
+#   DESCRIPTION:  Sets up a Python virtual environment and serves the current
+#                 directory as a MkDocs site locally on port 8000.
+#                 Installs and verifies required MkDocs dependencies, then launches 
+#                 a local MkDocs server with hot-reloading enabled.
+#
+#       OPTIONS:  -rm, --remove-venv   Remove virtual environment on exit
+#                 -h,  --help          Show a help message and exit
+#
+#  REQUIREMENTS:  bash >= 4.4,
+#                 python3 >= 3.10 with 'venv' and 'pip' modules,
+#
+#        AUTHOR:  Connor W. (https://github.com/kolkhis)
+#       CREATED:  2025-09-06
+#
+#===============================================================================
+
+printf "Setting up local build for MkDocs project...\n"
+
+declare -i REMOVE_VENV=0
+declare -a PIP_DEPS=(
+    "mkdocs"
+    "mkdocs-material"
+    # "mkdocs-glightbox"
+)
+
+cleanup() {
+    [[ $REMOVE_VENV -gt 0 && -d ./venv ]] && 
+        rm -rf ./venv &&
+        printf "[INFO]: Removed virtual environment.\n"
+}
+trap 'printf "Cleaning up...\n"; cleanup; exit 0;' EXIT
+trap 'exit 130' SIGINT
+trap 'exit 129' SIGHUP
+trap 'exit 143' SIGTERM
+
+usage() {
+    cat <<- EOF
+Usage: ./scripts/local-build [OPTIONS] [--]
+
+       To be run from the root directory of the project.
+
+Set up a Python virtual environment and serve the MkDocs project locally
+for development. Automatically installs required dependencies and launches 
+a hot-reloading MkDocs server bound to the host IP.
+
+OPTIONS:
+  -rm, --remove-venv       Remove the virtual environment on exit.
+                           Useful for one-off testing.
+
+  -h,  --help              Display this help message and exit.
+
+NOTES:
+  - Must be run from the root of the project directory.
+  - Requires bash >= 4.4, python3 >= 3.10 with the 'venv' module.
+  - Dependencies installed into the venv: mkdocs, mkdocs-material
+  - The server binds to "\$(hostname -I | cut -d' ' -f1):8000" by default.
+
+EXAMPLES:
+  ./scripts/local-build             # set up venv if needed, then serve
+  ./scripts/local-build -rm         # remove venv after exit
+  ./scripts/local-build --help      # show this help message and exit
+
+EOF
+}
+
+if [[ ! -d ./docs && ! -f ./mkdocs.yml ]]; then
+    printf >&2 "[ERROR]: You must invoke this script from the root of the project:\n\n\t./scripts/local-build\n\n"
+    exit 1
+fi
+
+while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
+    case $1 in
+        -rm|--remove-venv)
+            printf "[INFO]: Virtual environment will be removed on exit.\n"
+            REMOVE_VENV=1
+            shift;
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            printf >&2 "[ERROR]: Unknown option argument: %s\n" "$1"
+            usage
+            exit 1
+            ;;
+    esac
+done
+[[ $1 == '--' ]] && shift;
+
+setup-venv(){
+    printf "Attempting to set up virtual environment...\n"
+    if ! [[ -d ./venv ]]; then
+        python3 -m venv venv || {
+            printf >&2 "[ERROR]: Failed to set up Python virtual environment.\n\n"
+            printf >&2 "\tIf you're on a Debian-based distro, run:\n\tsudo apt install -y python3.10-venv\n\n"
+            return 1
+        }
+    else
+        printf "[INFO]: Virtual environment found. Activating...\n"
+    fi
+
+    \. ./venv/bin/activate || {
+        printf >&2 "[ERROR]: Couldn't activate the virtual environment!\n"
+        return 1
+    }
+
+    printf "[INFO]: Python virtual environment successfully activated.\n"
+
+    printf "[INFO]: Installing dependencies...\n"
+    pip install -U "${PIP_DEPS[@]}" > /dev/null || {
+        printf >&2 "[ERROR]: Failed to install dependencies!\n"
+        return 1
+    }
+    printf "[INFO]: Dependencies successfully installed.\n"
+    printf "[INFO]: Virtual environment setup complete.\n"
+    return 0
+}
+
+serve-mkdocs(){
+    if ! type mkdocs > /dev/null 2>&1; then
+        printf >&2 "[ERROR]: No 'mkdocs' in PATH. Is the virutal environment set up correctly?\n";
+        return 1;
+    fi
+    printf "[INFO]: Building and serving site via HTTP...\n"
+    printf "[INFO]: The site will hot-reload changes as they're made.\n"
+    mkdocs serve -a "$(hostname -I | cut -d' ' -f1):8000" || {
+        printf >&2 "[ERROR]: Failed serve mkdocs site! \n"; 
+        return 1;
+    }
+    return 0
+}
+
+setup-venv || {
+    printf >&2 "[ERROR]: Failed to set up python virtual environment!\n"
+    exit 1
+}
+
+serve-mkdocs || {
+    printf >&2 "[ERROR]: Ran into a problem when building/serving mkdocs site.\n"
+    exit 1
+}
+exit 0
