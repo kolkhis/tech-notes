@@ -4,7 +4,22 @@
 # Can be used as a rough translator for GitHub flavored Markdown
 # to MkDocs flavored Markdown.  
 
-my @markdown_files = <./docs/**/*.md>;
+use strict;
+use warnings;
+use Data::Dump;
+
+my @markdown_files;
+
+if (!@ARGV) {
+    print "No arguments provided. Searching docs/...\n";
+    @markdown_files = <./docs/**/*.md>;
+} else {
+    print "File arguments found. Using filenames provided.\n";
+    @markdown_files = @ARGV;
+}
+
+print "Markdown files being converted:\n" . Data::Dump::dump(\@markdown_files) . "\n";
+
 if (!@markdown_files) {
     die "[ERROR]: No files found for perl to modify!\n";
 }
@@ -14,7 +29,6 @@ my $newline_pattern = qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
 for my $file (@markdown_files) {
     local $^I = '';
     local @ARGV = ($file);
-    print "Converting File: $file\n";
 
     my $prev = '';
     while (<>) {
@@ -26,3 +40,5 @@ for my $file (@markdown_files) {
     }
 }
 
+print "Conversion is complete.\n";
+exit 0;
