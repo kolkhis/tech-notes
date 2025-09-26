@@ -448,3 +448,68 @@ for my $file (<*.md>) {
 }
 ```
 
+---
+
+There's also `use vars`, which can be used to declare **package global
+variables**.  
+
+This does **the same exact thing as `our`**, but pre-dates `our`.  
+
+```perl
+use vars qw(@markdown_files)
+# same as
+our @markdown_files;
+```
+
+This one basically tells perl that "there's going to be a **global** variable
+named `@markdown_files` available in this package, don't warn me about it."
+
+We can specify multiple different variable names here in this statement as
+well.  
+```perl
+use vars qw(@markdown_files $some_scalar %some_hash)
+```
+
+## Globrefs and Typeglobs
+
+A globref is a *reference* to a **typeglob**, which can hold multiple variable
+types.  
+
+A typeglob is a special kind of variable that can hold multiple values of
+multiple types (incl. scalars, arrays, hashes). Allows you to access all the 
+variables associated with a particular name in a single reference.    
+
+The main use of typeglobs in modern Perl is to create symbol table aliases.
+
+### Using a Typeglob for Aliases
+
+A single globref can reference multiple values of different types.
+
+For instance:
+```perl
+*this = *that;
+```
+
+This makes:
+
+- `$this` an alias for `$that`
+- `@this` an alias for `@that`
+- `%this` an alias for `%that`
+- `&this` an alias for `&that`
+- etc...
+
+It's generally safer to use a **reference**/**alias**.  
+```perl
+local *Here::blue = \$There::green;
+```
+This `$Here::blue` (scalar) a temporary alias for `$There::green` (scalar) but 
+does not apply to other types/values. E.g., It does not alias `@Here::blue`
+(array) to `@There::green`, and does not apply to the other types either.  
+
+<!-- TODO: Is this due to the `local` keyword? -->
+
+
+
+<https://perldoc.perl.org/perldata>
+[Symbol Tables](https://perldoc.perl.org/perlmod#Symbol-Tables)
+
