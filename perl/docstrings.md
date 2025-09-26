@@ -20,13 +20,15 @@ use Pod::Usage;
 print "This is the perl program\n"
 
 __END__
+=pod
+
 =head1 NAME
 
 foo.pl - Does the things
 
 =head1 SYNOPSIS
 
-foo.pl [options]
+  foo.pl [options]
 
  Options:
     --help      Print this help text
@@ -41,6 +43,9 @@ foo.pl [options]
     - The text underneath will be displayed in the terminal.  
 
 
+## Resources
+
+- [`perlpod` Documentation](https://perldoc.perl.org/perlpod)
 
 
 
