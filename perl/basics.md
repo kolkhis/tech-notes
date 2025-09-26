@@ -54,6 +54,60 @@ For perl modules, use `perldoc -m module`
 perldoc -m data
 ```
 
+## Importing Modules
+To import a module, use the `use` keyword.
+```perl
+use Data::Dumper;
+```
+This loads the module *and* imports its default symbols into our namespace.  
+
+So, then we could use the `Dumper` subroutine from this module by simply calling
+it by name (since it's in our namespace):
+```perl
+my @arr = ('one', 'two', 'three');
+print "Array contents:\n" . Dumper(\@arr);
+```
+
+The fully scoped path to this subroutine would normally be 
+`Data::Dumper::Dumper()`. But since the `use` populates our namespace, we don't
+have to fully scope in.  
+
+---
+
+If we want to load the module but **not** pollute the namespace with all the
+module's symbols, we can add an empty import list.  
+```perl
+use Data::Dumper ();
+```
+
+This will require you to call the module with the fully qualified (scoped)
+name.  
+```perl
+Data::Dumper::Dumper(\@arr)
+```
+
+This method keeps things cleaner.
+
+### Importing as an Alias
+
+You can alias your imports. You can also alias specific subroutines that are
+available from a module.  
+```perl
+*dumper = \&Data::Dumper;     # Alias a module
+*dump = \&Data::Dumper::dump; # Alias a specific subroutine
+```
+
+- `*dumper = ...`: Assigns a globref (glob reference) to the typeglob `*dumper`.  
+    - This creates a new symbol in the current package.  
+    - A globref is 
+    - A typeglob is a special kind of variable that can hold multiple values of
+      multiple types (incl. scalars, arrays, hashes). Allows you to access all the 
+      variables associated with a particular name in a single reference.    
+- `\&Data::Dumper;`: A **reference** to the module `Data::Dumper`.  
+
+
+
+
 ## Running Perl
 
 > `perldoc perlrun`
@@ -382,18 +436,25 @@ print "Hello, world!\n";
 ```
 
 Each line in a Perl script should be ended with a semicolon `;`.  
-A perl file will start with a shebang line (`#!/bin/perl` or `/usr/bin/env perl`).
+A perl file will start with a shebang line (`#!/usr/bin/perl` or `#!/usr/bin/env perl`).
 
-The lines starting with `use` are called **pragmas**.
-There are a lot of pragmas that can be used to enable or disable certain features
+The lines starting with `use` are imports. Any modules imported with all
+lowercase names are called **pragmas** (in Perl itself). Any imports with 
+uppercase letters are regular modules.
+
+There are a lot of pragmas that can be used to enable or disable certain features.  
 
 The return code can be stated at the bottom.  
 
 
 
 
-## Pragmas
-Pragmas in perl change the way the code behaves.  
+### Pragmas
+
+Pragmas (pragmatic modules) in perl change the way the code behaves. These are
+written in all lowercase, because all lowercase module names are reserved for
+Perl itself.  
+
 They're compiler directives. Instructions that modify the behavior of Perl during compilation.  
 They're not functions or modules, but rather flags that control the compilation and
 execution of the script.  
@@ -730,5 +791,5 @@ open(my $fh, '<', 'file.txt') or die $!;
 ## Resources
 
 - [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
-
+- [List of Pragmas (Pragmatic Modules)](https://perldoc.perl.org/modules#Pragmatic-Modules)
 
