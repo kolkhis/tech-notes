@@ -470,16 +470,31 @@ well.
 use vars qw(@markdown_files $some_scalar %some_hash)
 ```
 
-## Globrefs and Typeglobs
-
-A globref is a *reference* to a **typeglob**, which can hold multiple variable
-types.  
+## Typeglobs and Globrefs
 
 A typeglob is a special kind of variable that can hold multiple values of
 multiple types (incl. scalars, arrays, hashes). Allows you to access all the 
 variables associated with a particular name in a single reference.    
 
+It basically **globs** all variables of the same name together, regardless of what
+**type** they are.  
+
 The main use of typeglobs in modern Perl is to create symbol table aliases.
+
+A globref is a *reference* to a **typeglob**, which can hold multiple variable
+types.  
+
+- Basic syntax for a typeglob:
+  ```perl
+  *glob_name = *target_name;
+  ```
+  Globs all variables with `target_name` to the typeglob `glob_name`.  
+
+- Basic syntax for a globref:
+  ```perl
+  \*glob_name
+  ```
+  The backslash in perl is how we pass a **reference** to something.
 
 ### Using a Typeglob for Aliases
 
@@ -498,18 +513,93 @@ This makes:
 - `&this` an alias for `&that`
 - etc...
 
-It's generally safer to use a **reference**/**alias**.  
+All variables of all types sharing the same name will be aliased.  
+
+It's generally safer to use a **single reference**/**alias**.  
 ```perl
 local *Here::blue = \$There::green;
 ```
+We're passing a reference to the scalar value, `$There::green`.  
+
 This `$Here::blue` (scalar) a temporary alias for `$There::green` (scalar) but 
 does not apply to other types/values. E.g., It does not alias `@Here::blue`
 (array) to `@There::green`, and does not apply to the other types either.  
 
-<!-- TODO: Is this due to the `local` keyword? -->
+This way you're *only* aliasing the thing you need, with very few side effects.  
+
+If we wanted to use the `this`/`that` example again:
+```perl
+*this = \$that;
+```
+Now, `*this` will **only** be a reference for `$that`, a scalar value.  
 
 
+### Typeglob Terminology
 
-<https://perldoc.perl.org/perldata>
-[Symbol Tables](https://perldoc.perl.org/perlmod#Symbol-Tables)
+- Typeglob (`*name`): A single entry in a package's **symbol table** for the
+  bareword `name`.  
+- Globref (`\*name`)
+    - Useful when you want to pass a handle to the bundle around (e.g., passa
+      filehandle to a subroutine).  
+- Symbol Table: A package's symbol table is itself a hash: 
+    - `%Package::`
+    - It maps names to typeglobs.  
+    - `*{"Package::foo"}` fetches the typeglob for `foo`.  
+
+### Accessing Specific Typeglob Slots
+
+You can fetch references to the individual slots of a typeglob by putting the
+type in braces `{...}`.  
+```perl
+*myvar{SCALAR};  # Ref to $myvar
+*myvar{ARRAY};   # Ref to @myvar
+*myvar{HASH};    # Ref to %myvar
+*myvar{CODE};    # Ref to &myvar
+*myvar{IO};      # Ref to I/O (filehandle) for myvar
+*myvar{FORMAT};  # Ref to FORMAT slot
+*myvar{GV};      # Ref to the glob itself
+*myvar{NAME};    # "myvar" - expands to the name of the glob
+*myvar{PACKAGE}; # The current package name for *myvar
+```
+
+For instance, if we wanted to set the scalar value of the `myvar` typeglob:
+```perl
+# Create the (global) vars and typeglob
+our $test;
+our @test;
+*myvar = *test;
+
+# Modify via the typeglob
+${ *myvar{SCALAR} } = 42;         # Set the scalar value of myvar ($test)
+push @{ *myvar{ARRAY} }, 1, 2, 3; # Add to the array value of myvar (@test)
+```
+
+### Temporarily Redirecting Output with Typeglobs
+
+The same type of syntax is used when you want to redirect `STDOUT` or `STDERR`.  
+```perl
+{
+    local *STDERR = *LOG; ...;
+}
+```
+When used within a **block** (`{...}`), the `local` change to `STDERR` will not
+persist once the block exits. So this is a way to temporarily change where
+output goes.  
+
+### Passing a Filehandle as a Globref
+
+When you need to pass a filehandle to a subroutine, this is where globrefs come
+in handy.  
+```perl
+sub say_to {
+    my ($fh_globref, $msg) = @_;
+    print {$fh_globref} "$msg\n";
+}
+say_to(\*STDERR, "Error message");
+```
+
+## Resources
+
+- <https://perldoc.perl.org/perldata>
+- [Symbol Tables](https://perldoc.perl.org/perlmod#Symbol-Tables)
 
