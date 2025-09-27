@@ -91,8 +91,11 @@ It creates a loop that continues to prompt the user for input.
 ```bash
 select word in {one,two,three}; do
     echo "Input: $word"
+    break
 done
 ```
+
+- `break`: Breaks out of the loop. The prompt will keep running unless we use `break`.  
 
 It prompts the user with a menu containing the items given:
 ```plaintext
@@ -110,28 +113,48 @@ This loop will run indefinitely unless you put in a `break`.
 You'd want to handle the user input anyway, so that's where you'd `break`.    
 ```bash
 select word in {apple,orange,banana}; do
-    echo "Input: $word"
-    case $word in
-        1)
-            printf "You chose 'apple'.\n"
-            break
-            ;;
-        2)
-            printf "You chose 'orange'.\n"
-            break
-            ;;
-        3)
-            printf "You chose 'banana'.\n"
-            break
-            ;;
+    printf "You chose: %s\n" "$word"
+    case $REPLY in
+        1) break ;;
+        2) break ;;
+        3) break ;;
         *)
-            printf "Bad selection!\n" # Don't break here
+            printf "Bad selection: %d\n" "$REPLY" # Don't break here
             ;;
     esac
 done
 ```
 
-The `word` variable will contain the number that the user selected.  
+The `word` variable will contain the **actual value of the string** that 
+corresponds to the number that the user selected.  
+
+If you want the number that the user selected, that is stored in the `REPLY`
+variable.  
+```bash
+select word in {apple,orange,banana}; do
+    printf "You chose number %d: %s\n" "$REPLY" "$word"
+    break
+done
+```
+
+---
+
+We can also use a single case to check if the number that was inputted is
+within a specific range.  
+```bash
+select word in {apple,orange,banana}; do
+    printf "You chose number %d: %s\n" "$REPLY" "$word"
+    case $REPLY in
+        [1-3])
+            printf "Valid selection: %d\n" "$REPLY"
+            break
+            ;;
+        *)
+            printf "Invalid selection: %d\n" "$REPLY"
+            ;;
+    esac
+done
+```
 
 This is yet another method you can use to interactively get user input.  
 
