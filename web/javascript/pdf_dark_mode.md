@@ -1,3 +1,9 @@
+# PDF Dark Mode Script
+
+These scripts/functions can be run in the browser to convert a PDF into dark 
+mode for easier reading.  
+
+```javascript
 /*
  *  This function will invert the colors of the current page.
  *  Useful for viewing PDF files in dark mode.
@@ -22,3 +28,4 @@ javascript: (function () {
   var el = typeof viewer !== "undefined" ? viewer : document.body;
   el.style.filter = "";
 })();
+```
