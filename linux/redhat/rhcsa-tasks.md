@@ -112,4 +112,20 @@ We can see the previous logging to `/run/log/journal`, then we see our
 `--flush` command being logged, and finally we see our `/var/log/journal`
 directory being written to.  
 
+These journal databases will now persist across reboots.  
+
+Reboot the machine to verify.  
+
+```bash
+reboot
+```
+
+Check the journal with `-b -1` to check the previous boot.  
+```bash
+journalctl -b -1
+```
+
 ---
+
+
+
