@@ -32,8 +32,8 @@ jobs:
       - name: Set up directory structure
         run: ./scripts/format-dir-structure
 
-      - name: Set up directory structure
-        run: ./scripts/generate-mkdocs-config
+      # - name: Set up directory structure
+      #   run: ./scripts/generate-mkdocs-config
 
       - name: Build MkDocs
         run: mkdocs build

@@ -39,24 +39,27 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-- For setting up a user's access on a server, the key should go to `/root/.ssh/username_ed25519`.  
+- For setting up a root user's access on a server, the key should go 
+  to `/root/.ssh/username_ed25519`, with their username in the place of `id`.  
 
 - When this is added to `~/.ssh/authorized_keys` it will have generic comments.  
 
-- To configure SSH access for GitHub, check [here](../git/ssh_for_git.md).  
-
-
-
+- To configure SSH access for GitHub, check out [SSH for Git/GitHub](../git/ssh_for_git.md).  
 
 ## Generating a Temporary SSH Key
 
 Sometimes a generic SSH key pair is needed for testing or other purposes where using a user's
-specific key is less desirable. In these cases, just overwrite the comment and force the key pair
-to be written in some place else. That key can then be used with `ssh -i <path>`. 
+specific key is less desirable.  
+
+In these cases, just overwrite the comment and force the key pair to be written 
+in some place else with `-f /path/to/new/privkey`.  
+That key can then be used with `ssh -i <path>`.  
+
 ```bash
 ssh-keygen -C mycomment -f /tmp/somekey -t ed25519
 ssh -i /tmp/somekey server
 ```
+
 The `-i` flag specifies the identity file to use.
 This has the advantage of not giving up user-specific information in examples and such.
 
@@ -77,7 +80,7 @@ ssh-keygen -l -f id_ed25519.pub
 
 - `-y`: Reads a private OpenSSH file format and prints a public key to stdout.  
 - `-e`: Reads a public or private OpenSSH key file and prints a public key to
-  stdout in the format specified by `-m` (defaults to `RFC4716`). 
+        stdout in the format specified by `-m` (defaults to `RFC4716`). 
 
 - `-l`: Prints the fingerprint of a public key file.  
     - If used with a private key, it will print the fingerprint of the
@@ -101,12 +104,15 @@ If you lose a public key, you can regenerate it using the private key.
 ssh-keygen -f ~/.ssh/id_ed25519 -y > ~/.ssh/id_ed25519.pub.new
 ```
 
-The `-y` prints the corresponding public key to stdout.  
+The `-y` prints the corresponding public key to stdout, which can then be
+redirected into a new public key file.  
 
 ## Removing a Key from Known Hosts
 
 If you have a key in your `known_hosts` file that needs to be removed (i.e., the host
-key has been changed), you can use `ssh-keygen` to remove it from the `known_hosts`.  
+key has been changed), you can use `ssh-keygen` to remove it from the `known_hosts` by
+using the `-R` flag.  
+
 ```bash
 ssh-keygen -f ~/.ssh/known_hosts -R destination
 ```
