@@ -1,4 +1,7 @@
-# Generating a SSH Key For Github
+# `ssh-keygen`
+
+The `ssh-keygen` tool is used to manage your local host's SSH keys, generate
+new ones, and manage your `known_hosts` file.  
 
 ## Generating a Permanent SSH Key
 
@@ -109,8 +112,25 @@ ssh-keygen -f ~/.ssh/known_hosts -R destination
 ```
 
 - `-f`: Specifies the `known_hosts` file to remove the key(s) from.  
-- `-R`: Tells `ssh-keygen` to remove all keys belonging to the hostname (`destination`).  
+- `-R`: Tells `ssh-keygen` to remove all keys belonging to the hostname (`destination`)
+        from the `known_hosts` file.  
 
+
+## Generating Host Keys
+
+Each SSH server has host keys, usually one of each type (rsa, dsa, ecdsa,
+ed25519). These host keys live in `/etc/ssh/ssh_host_*`.  
+
+If you happen to get the "Host Key Verification Failed" error, simply removing
+the host key from your `known_hosts` file should get rid of this error (see
+above).  
+
+However, if the server's keys are somehow lost, or for some other reason you 
+need to generate new host keys, this can be done with the `-A` option.  
+```bash
+ssh-keygen -A
+```
+This will regenerate the host keys as if it were a fresh installation.  
 
 
 
