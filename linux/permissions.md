@@ -1,11 +1,5 @@
 # Permissions
 
-## Table of Contents
-* [Parts of the Permission String](#parts-of-the-permission-string) 
-* [File Type Indicator Bit (first bit)](#file-type-indicator-bit-first-bit) 
-* [Permission Bits](#permission-bits) 
-* [Special Permission Bits](#special-permission-bits) 
-
 ## Parts of the Permission String
 
 There are 4 parts in the permission string.  

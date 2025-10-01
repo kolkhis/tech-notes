@@ -8,13 +8,6 @@ or `.zip` on Windows.
 Public-source or open-source repositories can also be cloned directly with Git
 without downloading an archived version.  
 
-## Table of Contents
-* [Quickref](#quickref) 
-* [Tarballs/Archives](#tarballsarchives) 
-    * [Creating your Own Tarball](#creating-your-own-tarball) 
-* [Download the Source Code](#download-the-source-code) 
-    * [Extracting an Archive](#extracting-an-archive) 
-
 ## Quickref
 Options for extracting tarballs:
 ```bash

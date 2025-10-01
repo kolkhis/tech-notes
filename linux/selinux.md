@@ -1,30 +1,8 @@
-
 # SELinux (Security Enhanced Linux)  
 
 SELinux is a Linux Security Module (LSM) that provides an additional security layer for the  
 system.  
 This module implements a Mandatory Access Control (MAC) security model.  
-
-
-## Table of Contents
-* [tl;dr](#tldr) 
-* [How SELinux Works](#how-selinux-works) 
-* [SELinux Contexts](#selinux-contexts) 
-    * [Contexts in Files](#contexts-in-files) 
-    * [Context Examples](#context-examples) 
-* [SELinux Modes](#selinux-modes) 
-    * [Disabled](#disabled) 
-    * [Permissive](#permissive) 
-    * [Enforcing](#enforcing) 
-* [Configuring SELinux Contexts](#configuring-selinux-contexts) 
-    * [The Files where SELinux Contexts are Stored](#the-files-where-selinux-contexts-are-stored) 
-    * [Important SELinux Commands for Managing Contexts](#important-selinux-commands-for-managing-contexts) 
-    * [Managing Contexts Across Reboots](#managing-contexts-across-reboots) 
-    * [Viewing SELinux Logs for Troubleshooting](#viewing-selinux-logs-for-troubleshooting) 
-* [SELinux Troubleshooting](#selinux-troubleshooting) 
-* [Resources](#resources) 
-
-
 
 ## tl;dr
 

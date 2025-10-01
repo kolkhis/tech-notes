@@ -1,34 +1,4 @@
-
-
 # User Management
-
-
-## Table of Contents
-* [Commands for User and Group Management](#commands-for-user-and-group-management) 
-* [Show Default User Settings](#show-default-user-settings) 
-    * [Changing the Default User Settings](#changing-the-default-user-settings) 
-* [Creating a New User](#creating-a-new-user) 
-* [Setting up Password Change Policies](#setting-up-password-change-policies) 
-* [User Files](#user-files) 
-* [The Shadow Password Suite](#the-shadow-password-suite) 
-* [Manually Adding Users Through `/etc/passwd`](#manually-adding-users-through-etcpasswd) 
-    * [Add a new line for the user](#add-a-new-line-for-the-user) 
-    * [Create the user's home directory](#create-the-users-home-directory) 
-    * [Set permissions for the home directory](#set-permissions-for-the-home-directory) 
-    * [Set the user's password](#set-the-users-password) 
-    * [Test the new user account](#test-the-new-user-account) 
-* [Determining the UID and GID for a New User](#determining-the-uid-and-gid-for-a-new-user) 
-    * [Finding an Available UID](#finding-an-available-uid) 
-    * [Determining the **GID (Group ID)**](#determining-the-gid-group-id) 
-* [The GECOS Field (General Electric Comprehensive Operating System)](#the-gecos-field-general-electric-comprehensive-operating-system) 
-* [Useful User and Group Management Commands](#useful-user-and-group-management-commands) 
-    * [Lock or Unlock a User Account](#lock-or-unlock-a-user-account) 
-    * [Change a user's login shell](#change-a-users-login-shell) 
-    * [Add a User to a Group](#add-a-user-to-a-group) 
-    * [Change a User's Home Directory](#change-a-users-home-directory) 
-* [Best Practices for User and Group Management](#best-practices-for-user-and-group-management) 
-* [Backing up User Configuration Files](#backing-up-user-configuration-files) 
-* [Resources](#resources) 
 
 
 ## Commands for User and Group Management

@@ -1,20 +1,5 @@
 # Run Processes in the Background  
 
-## Table of Contents
-- [Background Processes with `&`](#background-processes-with-) 
-- [Directing Output of Background Processes](#directing-output-of-background-processes) 
-- [Backgrounding Subshells and Subshell Commands](#backgrounding-subshells-and-subshell-commands) 
-    - [Using `&` with Subshells (Inside vs. Outside)](#using--with-subshells-inside-vs-outside) 
-    - [`&` Inside the Subshell `(command &)`](#-inside-the-subshell-command-) 
-        - [Scope of Background Process](#scope-of-background-process) 
-        - [Subshell Environment](#subshell-environment) 
-        - [Immediate Return](#immediate-return) 
-    - [`&` Outside the Subshell `(command) &`](#-outside-the-subshell-command-) 
-        - [Entire Subshell in Background](#entire-subshell-in-background) 
-        - [Parent Script Continuation](#parent-script-continuation) 
-        - [Subshell Benefits](#subshell-benefits) 
-- [Using `nohup`](#using-nohup) 
-
 ## Background Processes with `&`
  
 You can background any process by appending `&` to the end.  

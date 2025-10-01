@@ -2,43 +2,6 @@
 
 Also see [the linux sysadmin cheatsheet](./command_cheatsheet_sysadmin.md).  
 
-
-## Table of Contents
-* [Linux Cheatsheet](#linux-cheatsheet) 
-* [General System Information](#general-system-information) 
-    * [User and Group Management](#user-and-group-management) 
-    * [Permissions and Ownership](#permissions-and-ownership) 
-    * [Package Management](#package-management) 
-        * [For **Debian-based systems** (like Ubuntu)](#for-debian-based-systems-like-ubuntu) 
-        * [For **Red Hat-based systems** (like CentOS, Fedora)](#for-red-hat-based-systems-like-centos-fedora) 
-    * [Process Management](#process-management) 
-    * [System Monitoring and Logging](#system-monitoring-and-logging) 
-    * [Network Management](#network-management) 
-    * [Disk and Filesystem Management](#disk-and-filesystem-management) 
-    * [Archive and Compression](#archive-and-compression) 
-    * [Task Automation and Scheduling](#task-automation-and-scheduling) 
-* [Disk and System Information](#disk-and-system-information) 
-    * [vmstat](#vmstat) 
-    * [mpstat](#mpstat) 
-    * [Check which version of linux is running](#check-which-version-of-linux-is-running) 
-    * [nproc](#nproc) 
-    * [Getting Resource Usage Information](#getting-resource-usage-information) 
-        * [Processes](#processes) 
-        * [Listing Files and Ports Opened by Processes](#listing-files-and-ports-opened-by-processes) 
-        * [Kernel](#kernel) 
-        * [Uptime](#uptime) 
-        * [Memory, CPU, Disk, and Network Usage](#memory-cpu-disk-and-network-usage) 
-        * [Software Packages](#software-packages) 
-* [Disk and Device Information](#disk-and-device-information) 
-* [Logging and Monitoring](#logging-and-monitoring) 
-* [Limiting resources](#limiting-resources) 
-* [Analyze System Startup Parameters](#analyze-system-startup-parameters) 
-* [Tracking Down a Service](#tracking-down-a-service) 
-* [Verifying File Integrity](#verifying-file-integrity) 
-* [Check if a System Needs Reboot](#check-if-a-system-needs-reboot) 
-
-
-
 ## General System Information
 Use `lshw` to list the hardware on the system
 ```bash

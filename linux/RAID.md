@@ -1,4 +1,3 @@
-
 # Linux RAID (Redundant Array of Independent Disks)  
 RAID is a method of combining multiple physical disks into a single logical unit for 
 the purposes of redundancy, performance, or both.  
@@ -6,22 +5,6 @@ the purposes of redundancy, performance, or both.
 It can help protect against hardware failure or improve read/write speeds depending on how it's configured.  
 
 Linux supports RAID through the `mdadm` utility, which allows you to create, manage, and monitor software RAID arrays.  
-
-
-## Table of Contents
-* [RAID Levels](#raid-levels) 
-    * [RAID 0 (Striping)](#raid-0-striping) 
-    * [RAID 1 (Mirroring)](#raid-1-mirroring) 
-    * [RAID 5 (Striping with Parity)](#raid-5-striping-with-parity) 
-    * [RAID 6 (Striping with Double Parity)](#raid-6-striping-with-double-parity) 
-    * [RAID 10 (1+0)](#raid-10-10) 
-* [`mdadm` - The Utility for Managing Linux RAID](#mdadm---the-utility-for-managing-linux-raid) 
-* [Creating a RAID Array](#creating-a-raid-array) 
-    * [Example: Creating a RAID 0 (Striping) Array](#example-creating-a-raid-0-striping-array) 
-    * [Example: Creating a RAID 5 (Striping with Parity) Array](#example-creating-a-raid-5-striping-with-parity-array) 
-        * [Verifying the RAID Array](#verifying-the-raid-array) 
-* [How Striping/RAID 0 Improves Performance](#how-stripingraid-0-improves-performance) 
-
 
 ## RAID Levels  
 RAID has 5 common levels:  

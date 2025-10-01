@@ -1,19 +1,4 @@
-
-
 # strftime - Datetime Formatting on Linux
-
-
-## Table of Contents
-* [Formatting Dates and Times](#formatting-dates-and-times) 
-* [Format Specifiers](#format-specifiers) 
-    * [Seconds](#seconds) 
-    * [Minutes](#minutes) 
-    * [Hours](#hours) 
-    * [Days](#days) 
-    * [Weeks](#weeks) 
-    * [Months](#months) 
-    * [Years](#years) 
-    * [Others](#others) 
 
 
 ## Formatting Dates and Times

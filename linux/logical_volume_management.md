@@ -1,33 +1,5 @@
 # Logical Volume Management (LVM)
 
-## Table of Contents
-* [What is LVM?](#what-is-lvm) 
-* [How does LVM work?](#how-does-lvm-work) 
-* [Where Logical Volumes are Stored](#where-logical-volumes-are-stored) 
-* [LVM Tools Cheatsheet](#lvm-tools-cheatsheet) 
-* [LVM, Step by Step](#lvm-step-by-step) 
-    * [Raw Disks and Physical Volumes](#raw-disks-and-physical-volumes) 
-        * [Checking the Type of a Disk](#checking-the-type-of-a-disk) 
-    * [Physical Volumes and Volume Groups](#physical-volumes-and-volume-groups) 
-    * [Volume Groups and Logical Volumes](#volume-groups-and-logical-volumes) 
-    * [Formatting and Mounting Logical Volumes](#formatting-and-mounting-logical-volumes) 
-    * [Implementing RAID on Logical Volumes with mdadm](#implementing-raid-on-logical-volumes-with-mdadm) 
-    * [Creating a Logical Volume from Raw Disks](#creating-a-logical-volume-from-raw-disks) 
-* [Resizing Logical Volumes](#resizing-logical-volumes) 
-* [Tools for Managing Physical Volumes, Volume Groups, and Logical Volumes (PV, VG, LV)](#tools-for-managing-physical-volumes-volume-groups-and-logical-volumes-pv-vg-lv) 
-    * [Physical Volume Management](#physical-volume-management) 
-    * [Volume Group Management](#volume-group-management) 
-    * [Logical Volume Management](#logical-volume-management) 
-    * [Other Useful LVM Commands](#other-useful-lvm-commands) 
-* [More LVM Actions](#more-lvm-actions) 
-    * [Check available free space in a volume group](#check-available-free-space-in-a-volume-group) 
-    * [Filesystem resizing](#filesystem-resizing) 
-    * [LVM snapshots](#lvm-snapshots) 
-    * [LVM Thin Provisioning](#lvm-thin-provisioning) 
-* [Reverting a Logical Volume back to Raw Disks](#reverting-a-logical-volume-back-to-raw-disks) 
-
-
-
 ## What is LVM?
 Logical Volume Management (LVM) allows flexible management of disk storage by 
 abstracting the physical hardware and creating an easier-to-manage virtual storage layer.

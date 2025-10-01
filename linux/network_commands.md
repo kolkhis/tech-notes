@@ -1,30 +1,7 @@
-
-
 # Network Commands on Linux
 
 
 A list of useful network commands and how to use them.
-
-
-## Table of Contents
-* [Commands](#commands) 
-    * [`ip`](#ip) 
-    * [`ifconfig`](#ifconfig) 
-    * [`route`](#route) 
-    * [`netstat`](#netstat) 
-    * [`ss`](#ss) 
-    * [`ping`](#ping) 
-    * [`traceroute`](#traceroute) 
-    * [`mtr`](#mtr) 
-    * [`nc` (`netcat`)](#nc-netcat) 
-    * [`curl`](#curl) 
-    * [`wget`](#wget) 
-    * [`dig`](#dig) 
-    * [`nslookup`](#nslookup) 
-    * [`nsupdate`](#nsupdate) 
-    * [`host`](#host) 
-* [Choosing Which Tool to Use](#choosing-which-tool-to-use) 
-
 
 
 ## Commands

@@ -1,17 +1,5 @@
 # Manually Adding User Accounts
 
-## Table of Contents
-* [Adding Users Through /etc/passwd](#adding-users-through-etcpasswd) 
-    * [Add a new line for the user](#add-a-new-line-for-the-user) 
-    * [Create the user's home directory](#create-the-users-home-directory) 
-    * [Set permissions for the home directory](#set-permissions-for-the-home-directory) 
-    * [Set the user's password](#set-the-users-password) 
-    * [Test the new user account](#test-the-new-user-account) 
-* [Determining the UID and GID for a New User](#determining-the-uid-and-gid-for-a-new-user) 
-    * [Finding an Available UID](#finding-an-available-uid) 
-    * [Determining the **GID (Group ID)**](#determining-the-gid-group-id) 
-* [The GECOS Field (General Electric Comprehensive Operating System)](#the-gecos-field-general-electric-comprehensive-operating-system) 
-
 ## Adding Users Through /etc/passwd  
 Each line in the `/etc/passwd` file represents a user account.  
 

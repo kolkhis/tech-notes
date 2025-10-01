@@ -1,21 +1,8 @@
-
-
 # System Logs on Linux
 
 
 Logs are typically stored in `/var/log`, and categorized by function, like system 
 messages, authentication attempts, kernel events, and application-specific logs.  
-
-## Table of Contents
-* [Important Log Files](#important-log-files) 
-* [Working with Log Files](#working-with-log-files) 
-    * [Viewing Logs in Real-Time](#viewing-logs-in-real-time) 
-    * [Searching and Filtering Logs](#searching-and-filtering-logs) 
-    * [Rotating Logs](#rotating-logs) 
-    * [Clearing Logs](#clearing-logs) 
-    * [Viewing Logs with `journalctl`](#viewing-logs-with-journalctl) 
-    * [Related](#related) 
-
 
 ## Important Log Files
 

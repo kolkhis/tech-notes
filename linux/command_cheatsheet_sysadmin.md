@@ -1,21 +1,5 @@
 # Cheatsheet for Sysadmins
 
-## Table of Contents
-* [General Information about the System](#general-information-about-the-system) 
-* [File and Directory Management](#file-and-directory-management) 
-* [User and Group Management](#user-and-group-management) 
-* [Permissions and Ownership](#permissions-and-ownership) 
-* [Package Management](#package-management) 
-    * [For **Debian-based systems** (like Ubuntu)](#for-debian-based-systems-like-ubuntu) 
-    * [For **Red Hat-based systems** (like CentOS, Fedora)](#for-red-hat-based-systems-like-centos-fedora) 
-* [Process Management](#process-management) 
-* [System Monitoring and Logging](#system-monitoring-and-logging) 
-* [Network Management](#network-management) 
-* [Disk and Filesystem Management](#disk-and-filesystem-management) 
-* [Archive and Compression](#archive-and-compression) 
-* [Task Automation and Scheduling](#task-automation-and-scheduling) 
-
-
 ## General Information about the System
 Use `lshw` to list the hardware on the system
 ```bash
@@ -31,10 +15,6 @@ ethtool  # Show info on the network interfaces
 ip a     # Show info on the network interfaces
 ip r     # Show the routing table (shows network gateway)
 ```
-
-
-
-
 
 
 ## File and Directory Management
