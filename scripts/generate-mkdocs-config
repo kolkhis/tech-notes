@@ -41,6 +41,21 @@ theme:
   name: material
   palette:
     scheme: slate
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tabs
+    - navigation.footer
+    - content.tabs.link
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+
+plugins:
+  - search
 
 markdown_extensions:
   - codehilite
@@ -69,11 +84,6 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-
-features:
-  - navigation.sections
-  - navigation.expand
-  - toc.integrate
 
 nav:
   - Home: index.md
