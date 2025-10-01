@@ -26,6 +26,10 @@ Actions, and the `mkdocs.yml` file (which determines the layout of the website) 
 procedurally generated using a [Bash script](https://github.com/kolkhis/tech-notes/blob/main/scripts/generate-mkdocs-config). I did it this way so that the website would
 automatically update each time I add a new file or delete/rename an existing one.  
 
+I originally wrote all these notes in GitHub-flavored Markdown. This was not
+fully compliant with MkDocs-flavored Markdown. To address this issue, I wrote a 
+[Perl script](https://github.com/kolkhis/tech-notes/tree/main/scripts/mdfix_mkdocs.pl) that
+can convert Markdown files to be MkDocs-compliant.  
 
 ## Disclaimer
 
