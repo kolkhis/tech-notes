@@ -971,30 +971,3 @@ Use Case:
 Wait for a signal on myChannel.
 
 
-## Tips for Increasing Productivity with Tmux
-
-1. Session Management
-
-Example:
-Create a script that automatically sets up a development environment with multiple windows and panes.
-
-2. Pane Layouts
-
-Example:
-Use tmux select-layout to quickly switch between different pane layouts like even-horizontal, even-vertical, main-horizontal, and main-vertical.
-
-3. Quick Commands
-
-Example:
-Bind Ctrl+b, Ctrl+e to open your preferred text editor.
-
-4. Clipboard Integration
-
-Example:
-Use tmux-yank plugin for seamless clipboard integration between tmux and your system.
-
-5. Status Bar Customization
-
-Example:
-Show the current Git branch in the status bar.
-
