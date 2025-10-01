@@ -201,3 +201,32 @@ access_provider = ldap
 ldap_access_filter = (memberOf=cn=ssh_users,ou=Groups,dc=your,dc=domain)
 ```
 
+## Remapping Port on SELinux
+
+If you happen to change the `Port` option in your `sshd_config` file, and the
+system has SELinux enabled, you will need to add the port to the SELinux 
+context.  
+
+You will likely also need to add a firewall rule.  
+
+If you changed the port to `2222` on a server with SELinux:
+```bash
+perl -pi -e 's/^#?(Port )\d+/$1 2222/' /etc/ssh/sshd_config # or edit with vi
+systemctl restart sshd
+```
+
+You'll need the `semanage` tool to add the port to SELinux. This is provided by 
+the `policycoreutils-python-utils` package.  
+
+```bash
+dnf install -y policycoreutils-python-utils  # Install the semanage util
+semanage port -a -t ssh_port_t -p tcp 2222   # Add port 2222 as SSH port
+systemctl restart sshd
+```
+
+To add the port to firewalld:
+```bash
+firewall-cmd --permanent --add-port 2222 # Make it persistent
+firewall-cmd --reload
+```
+
