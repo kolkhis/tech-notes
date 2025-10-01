@@ -1,6 +1,7 @@
 #!/bin/bash
 
 declare -a EXCLUDE_DIRS=(
+    "./scripts"
     "./docs"
     "./venv"
     "./.git"
@@ -37,8 +38,8 @@ add-newlines-before-lists(){
         printf >&2 "[ERROR]: Perl not found on the system.\n"
         return 1
     fi
-    if [[ -f ./action-scripts/newlineadd.pl ]]; then
-        /usr/bin/perl ./action-scripts/newlineadd.pl
+    if [[ -f ./scripts/mdfix_mkdocs.pl ]]; then
+        /usr/bin/perl ./scripts/mdfix_mkdocs.pl
     else
         perl -pi -e '
             my $newline_pattern=qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
