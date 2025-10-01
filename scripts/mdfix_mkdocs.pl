@@ -15,8 +15,6 @@ local *dump = \&Data::Dumper::Dumper;
 my @markdown_files;
 
 print "File arguments found. Using filenames provided.\n" if @ARGV;
-print "No arguments provided. Searching docs/...\n" unless @ARGV;
-
 @markdown_files = @ARGV if @ARGV;
 if (!@markdown_files) {
     print "No arguments passed. Finding files...\n";
