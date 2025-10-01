@@ -62,9 +62,10 @@ Awk recognizes two types of separators:
 2. The record separator, which is the character or string that  
     separates **records** (lines) in a file.  
 
-* By default, `awk` uses any whitespace as the field separator 
-  and a newline as the record separator.  
-* You can specify a field separator using the `-F` option:  
+By default, `awk` uses any whitespace as the field separator 
+and a newline as the record separator.  
+
+You can specify a field separator using the `-F` option:  
 ```bash  
 awk -F: '{print($1)}' /etc/passwd  
 ```
