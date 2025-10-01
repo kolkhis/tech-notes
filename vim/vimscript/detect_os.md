@@ -1,4 +1,6 @@
+# Detect the OS in Vimscript
 
+```vim
 function! detect_os#get_os()
   return systemlist('uname') " ['sysname']
 endfunction
@@ -21,3 +23,4 @@ endfunction
 " let g:is_neither = detect_os#get_os() != 'Windows_NT' && detect_os#get_os() != 'Linux'
 
 " echo("is windows: " + g:is_windows)
+```
