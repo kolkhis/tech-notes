@@ -1,18 +1,5 @@
 # `passwd`
 
-## Table of Contents
-* [Using `passwd`](#using-passwd) 
-    * [Change a user's password:](#change-a-users-password) 
-    * [Lock a user's password:](#lock-a-users-password) 
-    * [Unlock a user's password:](#unlock-a-users-password) 
-    * [Set passwords to expire:](#set-passwords-to-expire) 
-    * [Set how often a user can change their password](#set-how-often-a-user-can-change-their-password) 
-    * [Display a warning that a password is going to expire](#display-a-warning-that-a-password-is-going-to-expire) 
-* [Options](#options) 
-    * [`-k, --keep-tokens`](#k-keeptokens) 
-    * [`-r, --repository`](#r-repository) 
-    * [`-R, --root CHROOT_DIR`](#r-root-chrootdir) 
-
 ## Using `passwd`
 Using passwd is the easiest way to change a user's password or 
 perform other actions around user passwords.

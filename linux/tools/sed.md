@@ -4,18 +4,6 @@ The `sed` tool is a hallmark in Linux systems.
 It's used to manipulate text using regular expressions.  
 
 
-## Table of Contents
-* [Common Options](#common-options) 
-* [Edit a file in-place](#edit-a-file-in-place) 
-* [Matching a Line, then Performing a Substitution](#matching-a-line-then-performing-a-substitution) 
-* [Editing from Stdout with Pipes](#editing-from-stdout-with-pipes) 
-* [Capture Groups](#capture-groups) 
-* [Different Commands](#different-commands) 
-    * [Delete Whole Lines](#delete-whole-lines) 
-    * [Change Whole Lines](#change-whole-lines) 
-* [Case-insensitive Matching](#case-insensitive-matching) 
-
-
 ## Common Options
 
 * `-E`: Use extended regex instead of basic regex.  

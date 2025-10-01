@@ -4,29 +4,6 @@ GPG (GNU Privary Guard) implements the PGP (Pretty Good Privacy) standard.
 It's used to encrypt and decrypt data.  
 It's also used for integrity validation for security.  
 
-
-## Table of Contents
-* [Installing GPG](#installing-gpg) 
-* [Generating a New GPG Key](#generating-a-new-gpg-key) 
-* [Exporting the Public Key](#exporting-the-public-key) 
-    * [Using the Key ID](#using-the-key-id) 
-    * [Using the Email Address](#using-the-email-address) 
-* [Encrypting a File](#encrypting-a-file) 
-* [Decrypting a File](#decrypting-a-file) 
-* [Signing and Verifying Files](#signing-and-verifying-files) 
-* [Other GPG Information](#other-gpg-information) 
-    * [Revoking Keys (Creating a Revocation Certificate)](#revoking-keys-creating-a-revocation-certificate) 
-    * [Trust Levels](#trust-levels) 
-    * [Back Up Your GPG Keys](#back-up-your-gpg-keys) 
-    * [Using GPG Agent](#using-gpg-agent) 
-    * [GPG in Different Environments](#gpg-in-different-environments) 
-* [The Keyring](#the-keyring) 
-* [Keyservers](#keyservers) 
-* [File Types](#file-types) 
-* [Quickref](#quickref) 
-
-
-
 ## Installing GPG
 GPG is usually already pre-installed on most major Linux distros.  
 

@@ -6,11 +6,6 @@ rebooting).
 It works with parameters located under `/proc/sys`, and changes made via `sysctl` 
 are **immediate but not persistent** unless written to a config file.
 
-## Table of Contents
-* [Basic Usage](#basic-usage) 
-* [Config Files](#config-files) 
-    * [`sysctl` Priority Order](#sysctl-priority-order) 
-
 ## Basic Usage
 
 * View all kernel runtime parameters as they're currently set:

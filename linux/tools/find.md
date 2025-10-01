@@ -3,43 +3,6 @@
 The bulk of this file is notes on the `find` command.  
 Before that, some other commands to find files.  
 
-
-
-## Table of Contents
-* [`tree`](#tree) 
-* [`ls`](#ls) 
-* [`which`](#which) 
-* [The `find` Command](#the-find-command) 
-* [Quick Overview of File Timestamps](#quick-overview-of-file-timestamps) 
-* [tl;dr: Examples](#tldr-examples) 
-    * [Skipping directories (Omitting directories)](#skipping-directories-omitting-directories) 
-        * [If `-prune` doesn't work use an Operator instead](#if--prune-doesnt-work-use-an-operator-instead) 
-    * [Finding files that match multiple conditions](#finding-files-that-match-multiple-conditions) 
-    * [Searching files by age](#searching-files-by-age) 
-* [Executing commands on found file(s)](#executing-commands-on-found-files) 
-    * [Executing a command for *each* file found](#executing-a-command-for-each-file-found) 
-        * [Grep inside Found Files](#grep-inside-found-files) 
-    * [Executing a command on *all* files *simultaneously*](#executing-a-command-on-all-files-simultaneously) 
-    * [Searching files by permissions](#searching-files-by-permissions) 
-        * [Conditional Search Examples](#conditional-search-examples) 
-* [`find` Options](#find-options) 
-    * [Global Options](#global-options) 
-    * [Change How `find` Handles Symbolic Links](#change-how-find-handles-symbolic-links) 
-    * [Get Diagnostic Information from `find`](#get-diagnostic-information-from-find) 
-    * [`find` Query Optimization](#find-query-optimization) 
-* [Testing Files with `find`](#testing-files-with-find) 
-    * [Users and Groups](#users-and-groups) 
-    * [Permissions](#permissions) 
-* [Testing Timestamps of Files with `find`](#testing-timestamps-of-files-with-find) 
-    * [Other Tests That Use Timestamps](#other-tests-that-use-timestamps) 
-* [Performing Actions on Files Using `find`](#performing-actions-on-files-using-find) 
-* [Operators For Multiple Conditions](#operators-for-multiple-conditions) 
-    * [Searching with and/or Examples](#searching-with-andor-examples) 
-* [Permission Searching](#permission-searching) 
-    * [Searching for Permissions Examples](#searching-for-permissions-examples) 
-* [Timestamps Explained](#timestamps-explained) 
-
-
 ## `tree`
 * `tree -I '.git'` - Tree view of current directory and subdirectories.  
     * `-I`(gnore) the `.git` directory.  

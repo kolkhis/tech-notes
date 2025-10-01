@@ -2,17 +2,6 @@
 Any system that doesn't have tmux will almost always have screen.  
 
 
-## Table of Contents
-* [Building from Source](#building-from-source) 
-* [Basics](#basics) 
-* [Default Keybindings:](#default-keybindings) 
-    * [Copy mode](#copy-mode) 
-* [Regions](#regions) 
-    * [Working with regions (called panes in tmux):](#working-with-regions-called-panes-in-tmux) 
-* [Screen Sharing with Multiuser Sessions](#screen-sharing-with-multiuser-sessions) 
-    * [Useful Commands for Multiuser Sessions](#useful-commands-for-multiuser-sessions) 
-
-
 ## Building from Source
 Build from source to enable 256color support.  
 ```bash

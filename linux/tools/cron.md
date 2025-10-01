@@ -1,18 +1,5 @@
 # `cron`
 
-## Table of Contents
-* [Quickref](#quickref) 
-* [What is Cron?](#what-is-cron) 
-    * [Basic Terms](#basic-terms) 
-* [How to Use Cron](#how-to-use-cron) 
-* [Special Strings for Scheduling Jobs](#special-strings-for-scheduling-jobs) 
-* [Basic Commands](#basic-commands) 
-* [Logging with Cron Jobs](#logging-with-cron-jobs) 
-    * [Environment Variables with Cron Jobs](#environment-variables-with-cron-jobs) 
-* [System-wide Crontab Files - `/etc/crontab` and `/etc/cron.d/`](#system-wide-crontab-files---etccrontab-and-etccrond) 
-
-
-
 ## Quickref
 
 Examples

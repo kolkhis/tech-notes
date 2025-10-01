@@ -1,16 +1,6 @@
 # Mount
 The `mount` command is used to mount a file system to a directory.  
 
-
-## Table of Contents
-* [What Mount does](#what-mount-does) 
-* [Syntax](#syntax) 
-    * [Making a New File System and Mounting It](#making-a-new-file-system-and-mounting-it) 
-* [Weird things about mount](#weird-things-about-mount) 
-* [mount and fstab](#mount-and-fstab) 
-
-
-
 ## What Mount does
 Without args, `mount` will dump every file system that's mounted, in the order they were mounted.  
 

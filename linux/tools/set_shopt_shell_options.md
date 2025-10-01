@@ -1,18 +1,5 @@
 # Shell Options
 
-## Table of Contents
-* [`set`](#set) 
-    * [`set` Options and Arguments](#set-options-and-arguments) 
-    * [`set` Uses](#set-uses) 
-* [`shopt`](#shopt) 
-    * [`shopt` Options and Arguments](#shopt-options-and-arguments) 
-    * [`shopt` Uses](#shopt-uses) 
-* [Exhaustive List of Shell Options](#exhaustive-list-of-shell-options) 
-    * [Shell options for `set`:](#shell-options-for-set) 
-    * [Shell options for `shopt`](#shell-options-for-shopt) 
-    * [Uses for Shell Options](#uses-for-shell-options) 
-
-
 > `PAGER='less "+/^ *The list of shopt"' man bash`
 > Opens the bash man page to the `shopt` options and descriptions.
 
