@@ -394,7 +394,9 @@ Note: `-t` is usually `target`.
     * channel: Channel to wait for  
 
 ### Table of `tmux list-commands` Output  
+
 This table does not explain what each option does, but it is exhaustive.  
+
 |  Command            |Shorthand   |Options                                                 
 |---------------------|------------|--------------------------------------------------------
 | `tmux attach-session` |  `attach` | `[-dErx] [-c working-directory] [-f flags] [-t target-session]` 
