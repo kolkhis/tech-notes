@@ -629,3 +629,66 @@ for my $file (<*.md>) {
 }
 ```
 
+## Using `File::Find` 
+
+Perl core comes with a `File::Find` module that is meant to be fully portable
+across operating systems and shells.  
+
+This is preferred for getting a list of filenames over globbing (via `glob()`
+or `<*>`), since globbing is less portable.  
+
+For example, if we wanted to find all the markdown files in the current
+directory and all its subdirectories and save them into an array:
+```perl
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use File::Find;
+
+my @markdown_files;
+
+find(
+    sub { push @markdown_files, $File::Find::name if /\.md$/ },
+    './'
+);
+print "Markdown files in the current directory:\n" . @markdown_files;
+```
+
+The `find` subroutine basically recursively searches through the directory
+given, loops over the filenames, and passes them through the anonymous 
+subroutine given.  
+
+It takes in an anonymous subroutine as an argument, "wants", which defines 
+we do with the input. Each filename (and directory name) is passed through this
+subroutine as the default argument.  
+
+So, within that subroutine we define what we want to do with the files that we
+find.  
+
+This anonymous subroutine:
+```perl
+sub { push @markdown_files, $File::Find::name if /\.md$/ }
+```
+Adds the file to the `@markdown_files` array if the conditions are met.  
+
+!!! note
+
+    Using `$File::Find::name` produces the **full path** to the file. If we only
+    needed the basenames of the files, we could use `$_` (the default variable).  
+
+    The `$_` variable stores only the name of the file without any directory
+    path.  
+
+
+This is functionally equivalent to doing something like this with a glob:
+```perl
+
+for (<./**/*>) {
+    push(@markdown_files, $_) if /\.md$/;
+}
+
+print "Markdown files in the current directory:\n" . @markdown_files;
+```
+
+
