@@ -1,27 +1,14 @@
 # Bastion Host
 
-To improve security, the system will be air-gapped by utilizing a bastion.  
+To improve security, the homelab's ingress will be air-gapped by utilizing a 
+bastion host. This host will essentially act as a jumpbox. All traffic must 
+pass through this node in order to enter the homelab environment.  
 
 This bastion node will contain a user account that is jailed to a chrooted
-environment.  
+environment with minimal binaries and a custom shell.  
 
-
-## Table of Contents
-* [Overview](#overview) 
-* [Building a Chroot Jail](#building-a-chroot-jail) 
-    * [Create the Directory Structure](#create-the-directory-structure) 
-    * [Copy over Binaries (and Linked Libraries)](#copy-over-binaries-and-linked-libraries) 
-        * [Copy all of the Binaries](#copy-all-of-the-binaries) 
-    * [Copy over Required System Files](#copy-over-required-system-files) 
-    * [Create Special Files](#create-special-files) 
-    * [Copy Name Switch Service Files](#copy-name-switch-service-files) 
-    * [Create the User Account](#create-the-user-account) 
-        * [Create a Custom Shell](#create-a-custom-shell) 
-* [High Level Steps](#high-level-steps) 
-* [Setting up Logging](#setting-up-logging) 
-* [Enhancements (TODO)](#enhancements-todo) 
-* [Resources](#resources) 
-
+I've fully automated this process using Bash in my [lab-utils
+repo](https://github.com/kolkhis/lab-utils/tree/main/bastion).  
 
 ## Overview
 
