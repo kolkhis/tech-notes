@@ -1,14 +1,14 @@
-#!/usr/bin/env python3
-"""
-Python 3.10+ has the `match` keyword which can 
-be used like `switch` in other languages.
+# Match/Case in Python
 
-case _: 
-    This is the default case (case * in other languages)
+Python 3.10+ has the `match` keyword which can be used like `switch` in other 
+languages.
+
+- `case _`: This is the default case (`case *` in other languages)
 
 A `break` statement isn't needed in any case.
-"""
 
+```python
+#!/usr/bin/env python3
 import string
 
 if __name__=='__main__':
@@ -26,5 +26,4 @@ if __name__=='__main__':
                 print('other')
                 break
                 # Break out of the loop
-
-    
+```

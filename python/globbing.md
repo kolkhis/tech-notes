@@ -1,10 +1,14 @@
+# Using Globs in Python
+
+Python provides a `glob` module in its standard library.  
+
+There are two different ways to loop over files with `glob`:
+
+- `glob.iglob('*')`: Returns an iterator  
+- `glob.glob('*')`: Returns a list of matching filenames  
+
+```python
 #!/usr/bin/env python3
-"""
-Two different ways to loop over files with glob:
-    glob.iglob('*'): Returns an iterator
-    glob.glob('*'): Returns a list of matching filenames
-    
-"""
 import glob
 
 if __name__ == '__main__':
@@ -34,4 +38,5 @@ if __name__ == '__main__':
                 print(f"Markdown File found: {item}")
             case _:
                 print(f"Other file found: {item}")
+```
 
