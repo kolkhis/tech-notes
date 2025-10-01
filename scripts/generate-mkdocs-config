@@ -82,7 +82,7 @@ EOF
 
 sanitize_title() {
     # Lowercase, replace _ or - with spaces
-    echo "$1" | sed -E 's/[-_]/ /g' | awk '{for(i=1;i<=NF;++i) $i=(substr($i,1,1)) substr($i,2)} 1'
+    tr -- '-_' ' ' <<< "$1" | awk '{for(i=1;i<=NF;++i) $i=(substr($i,1,1)) substr($i,2)} 1'
 }
 
 generate_nav_entries() {
@@ -131,7 +131,7 @@ generate_nav_entries() {
             fi
         fi
 
-    done < <(find "$base_dir" -type d ! -path '*skilstak/*' | sort)
+    done < <(find "$base_dir" -type d | sort)
 }
 
 main() {
