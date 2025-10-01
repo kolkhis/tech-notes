@@ -1,5 +1,3 @@
-
-
 # Lua Standard Library
 
 1. The Nvim Lua "standard library" (stdlib) is the `vim` module.
@@ -49,5 +47,14 @@ See `:h watch-file`
     end
     vim.api.nvim_command(
       "command! -nargs=1 Watch call luaeval('watch_file(_A)', expand('<args>'))")
+```
+
+## Add 'Edit with Nvim' in Windows
+
+```ini
+[HKEY_CLASSES_ROOT\*\shell\Edit with Neovim\command]
+@="C:\Users\username\AppData\Local\Programs\Neovim\bin\nvim-qt.exe" "%1"
+# OR, if installed globally:
+@="C:\Program Files\Neovim\bin\nvim-qt.exe" "%1"
 ```
 
