@@ -3,6 +3,7 @@
 ## System Information
 
 A list of useful system commands:
+
 | Command    | Description                                                                           |
 | ---------- | ------------------------------------------------------------------------------------- |
 | `whoami`   | Displays current username                                                             |

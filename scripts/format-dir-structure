@@ -39,7 +39,7 @@ add-newlines-before-lists(){
         return 1
     fi
     if [[ -f ./scripts/mdfix_mkdocs.pl ]]; then
-        /usr/bin/perl ./scripts/mdfix_mkdocs.pl
+        /usr/bin/perl ./scripts/mdfix_mkdocs.pl ./docs/**/*.md
     else
         perl -pi -e '
             my $newline_pattern=qr/^(?:\s*[*-]|\s*\d{1,}\.|[|])/;
