@@ -8,6 +8,8 @@
 use strict;
 use warnings;
 use Data::Dumper ();
+use File::Find ();
+local *find = \&File::Find::find;
 local *dump = \&Data::Dumper::Dumper;
 
 my @markdown_files;
@@ -15,9 +17,14 @@ my @markdown_files;
 print "File arguments found. Using filenames provided.\n" if @ARGV;
 print "No arguments provided. Searching docs/...\n" unless @ARGV;
 
-@markdown_files = @ARGV 
-    ? grep { -f $_ && /\.md$/ } @ARGV 
-    : <./docs/**/*.md>;
+@markdown_files = @ARGV if @ARGV;
+if (!@markdown_files) {
+    print "No arguments passed. Finding files...\n";
+    find(
+        sub { push @markdown_files, $File::Find::name if -f && /\.md$/ },
+        './docs'
+    );
+}
 
 print "Markdown files being converted:\n" . main::dump(\@markdown_files) . "\n";
 
