@@ -8,7 +8,7 @@ theme:
     - navigation.sections
     # - navigation.expand
     - navigation.top
-    - navigation.tabs
+    # - navigation.tabs
     - navigation.footer
     - content.tabs.link
     - content.action.edit
