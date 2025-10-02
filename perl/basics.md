@@ -570,6 +570,48 @@ sub file_exists {
 }
 ```
 
+### Passing `@_` to Subroutines
+
+There are two ways to call a subroutine.  
+
+1. The first one is the most obvious way:
+   ```perl
+   file_exists "somefile";
+   file_exists("somefile");
+   ```
+
+2. Then, we can use `&` to also call the subroutine, but this can have side
+   effects. It passes the current `@_` (default array), unless prentheses are
+   used. It also bypasses [prototypes](#subroutine-prototypes).  
+   ```bash
+   &file_exists;  # Pass in the current `@_`
+   &file_exists("somefile");  # Bypass prototypes
+   ```
+    - Subroutine prototypes define the expected number and types of arguments for a subroutine.  
+
+| Syntax  |  Action                            
+|---------|------------------------------------
+| foo()   |  Calls sub `foo`                      
+| &foo    |  Calls sub `foo` with current `@_`        
+| \&foo   |  Reference to subfoo(for callbacks)
+
+### Subroutine Prototypes
+
+Subroutine prototypes define the expected number and types of arguments for a 
+subroutine.  
+
+In the subroutine definition, you specify one sigil per argument that is 
+expected within the parentheses after the sub name.  
+For example, one `$` per scalar, one `@` per array, etc.  
+
+```perl
+sub test($$) { print "Args: @_"; } # Expects two scalar arguments
+test("one", "two")
+&test("one")
+```
+
+- This subroutine expects two scalar arguments.  
+
 ## Using Arrays in Perl
 Also see [arrays.md](./arrays.md).  
 
