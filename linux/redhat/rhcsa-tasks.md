@@ -128,4 +128,108 @@ journalctl -b -1
 ---
 
 
+## Managing Basic Networking
+
+An entire section in the RHCSA exam objectives is "Manage basic networking".  
+
+NetworkManager in RHEL systems is a dynamic network control and configuration
+daemon. It's used to keep network devices and connections up and active when
+they're available.  
+
+There are two main tools used to configure NetworkManager.  
+
+1. `nmcli`: Command-line tool
+    - `man nmcli`
+    - `man nmcli-examples`
+2. `nmtui`: TUI tool (nicer UX)
+
+The more powerful choice is `nmcli`.  
+
+
+### Configure Static IP Addresses
+
+There are a few main objectives in this part.  
+
+1. Identify which interface to configure
+2. Create/modify a NetworkManager connection profile for that interface.  
+
+check interfaces.  
+```bash
+ip a
+```
+Identify the interface to configure (e.g., `ens18`).  
+
+Check NM profiles.  
+```bash
+nmcli con show
+```
+See if we have a profile that already matches the network interface (e.g., `ens18`).  
+
+!!! note
+
+    The name of the profile should not be confused with the name of the interface.  
+    The name of the NM profile is named **after** the interface.  
+
+The connection profile is located in `/etc/NetworkManager/system-connections`
+```bash
+ls /etc/NetworkManager/system-connections/
+# ens18.nmconncection
+```
+
+!!! warning "Deprecated Config Directory"
+
+    The `/etc/sysconfig/network-scripts` directory that used to be used to
+    configure NetworkManager is deprecated in RHEL 9+.  
+
+Follow the address configuration instructions from the cloud provider.  
+
+#### Using NMTUI
+```bash
+sudo nmtui
+# > select connection
+# > Edit connection
+# > Switch from "Automatic" to "Manual" and enter all details
+```
+After setting up with `nmtui`, run:
+```bash
+nmcli con reload
+systemctl restart NetworkManager
+```
+
+Check the IP address again:
+```bash
+ip a
+```
+See if your new IP is correctly configured.  
+
+#### Using NMCLI
+
+```bash
+nmcli con del ens3  # Delete the current profile
+systemctl restart NetworkManager
+```
+Now check the `man nmcli-examples` page.  
+
+Example 11 shows how to add an ethernet connection profile with a manaual IP
+config.  
+```bash
+nmcli con add type ethernet con-name MyNet ifname ens18 \
+    ip4 142.202.190.187/26 \
+    gw4 142.202.190.129    \
+    ipv4.dns "8.8.8.8 8.8.4.4" \
+    ip6 2600:c05:2010:50:184::1/64 \
+    gw6 2600:c05:2010:50:1 \
+    ipv6.dns "2001:4860:4860::8888 2001:4870:4860::8844"
+```
+
+Now check.
+```bash
+nmcli con show
+nmcli con reload
+systemctl restart NetworkManager
+ip a
+curl example.org
+```
+
+
 
