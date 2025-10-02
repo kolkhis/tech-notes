@@ -655,13 +655,12 @@ find(
 print "Markdown files in the current directory:\n" . @markdown_files;
 ```
 
-The `find` subroutine basically recursively searches through the directory
-given, loops over the filenames, and passes them through the anonymous 
-subroutine given.  
+The `find` subroutine recursively searches through the directory given, loops 
+over the filenames, and passes them through the anonymous subroutine given.  
 
-It takes in an anonymous subroutine as an argument, "wants", which defines 
-we do with the input. Each filename (and directory name) is passed through this
-subroutine as the default argument.  
+It takes in a subroutine as the first argument, the "wanted" function, which 
+defines what happens with the input. Each filename (and directory name) is 
+passed through this subroutine as the default argument.  
 
 So, within that subroutine we define what we want to do with the files that we
 find.  
@@ -680,6 +679,15 @@ Adds the file to the `@markdown_files` array if the conditions are met.
     The `$_` variable stores only the name of the file without any directory
     path.  
 
+We can also define our own subroutine beforehand to use as the "wanted function."  
+```perl
+sub addfile {
+    push (@markdown_files, $File::Find::name) if m/\.md$/ && -f;
+}
+File::Find::find(\&addfile, './');
+```
+
+- Note that we're passing a **reference** to the subroutine.  
 
 This is functionally equivalent to doing something like this with a glob:
 ```perl
