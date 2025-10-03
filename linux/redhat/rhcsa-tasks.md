@@ -292,8 +292,11 @@ The current order for `hosts` name resolution:
 #### `/etc/hosts` (files)
 Check `/etc/hosts` (the first source).  
 ```bash
-vi /etc/hosts
+vi /etc/hosts #(1)!
 ```
+
+1. This file has a `man` entry: `man 5 hosts`
+
 The file should look something like this:
 ```bash
 # Loopback entries; do not change.
