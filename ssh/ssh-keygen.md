@@ -121,6 +121,27 @@ ssh-keygen -f ~/.ssh/known_hosts -R destination
 - `-R`: Tells `ssh-keygen` to remove all keys belonging to the hostname (`destination`)
         from the `known_hosts` file.  
 
+## Checking for a Host in `known_hosts`
+
+If you want to check if a remote host is already in your `known_hosts` file,
+you can use the `-F` option along with the hostname.  
+```bash
+ssh-keygen -F 192.168.1.100
+```
+This will print out the entries in `known_hosts` if they exist. If they don't
+exist, nothing will be printed and the exit code will be non-zero.  
+
+This can be used to programmatically check if a host's fingerprints need to be 
+added.  
+```bash
+if ! ssh-keygen -F MYHOST; then
+    printf "Needs to be added!\n"
+    ssh-keyscan -H 192.168.1.100 2> /dev/null >> ~/.ssh/known_hosts
+fi
+```
+If the remote host's keys are not in the `known_hosts` file, we use
+`ssh-keyscan` to retrieve them, then append to the `known_hosts` file.  
+
 
 ## Generating Host Keys
 
