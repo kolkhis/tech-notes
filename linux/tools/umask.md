@@ -175,4 +175,34 @@ So we have the `mode`, specified in the function call. That number is then bitwi
 the default permissions of directories (`0777`).
 
 
+## Default UMASK for New Users
+
+The `umask` values are stored in `/etc/login.defs`.  
+
+This is where `pam_umask` gets its value. It sets the **default umask for new
+home directories** when creating users via `useradd`.  
+
+Modifying the umask here will not modify it for accounts that already exist.  
+
+```bash
+grep -in 'umask' /etc/login.defs
+```
+You'll see a line that says:  
+```bash
+UMASK		022
+```
+
+This is the default umask. Your number may be different, `022` is the
+"historical" default umask value for Debian.  
+
+!!! notes
+
+    If `HOME_MODE` is also set in `/etc/login.defs,` that will take priority when 
+    adding a new user. If that setting is not present in `/etc/login.defs`, then the 
+    `UMASK` value is used to calculate the mode.  
+
+Check for the `HOME_MODE` setting:
+```bash
+grep -in '^HOME_MODE' /etc/login.defs
+```
 
