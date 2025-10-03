@@ -1,6 +1,6 @@
 # Ansible-Doc
 
-The `ansible-doc` tool is shipped with Ansible, and contains Ansible documentation.  
+The `ansible-doc` tool is shipped with Ansible core, and contains Ansible documentation.  
 
 It allows you to reference ansible documentation without leaving the command line.  
 
@@ -45,4 +45,31 @@ ansible-doc amazon.aws.ec2
 ```
 
 This shows you the documentation for the `amazon.aws.ec2` module.  
+
+## Module Snippets
+
+Use `ansible-doc -s` to get a "snippet" of the documentation.  
+
+It shows a playbook snippet of how a task would look when using this module.  
+```bash
+ansible-doc -s ansible.builtin.copy
+```
+
+Using builtin short names also works.  
+```bash
+ansible-doc -s copy
+```
+
+This shows us what a task looks like, along with very descriptive comments as
+to what each argument is for.  
+```yaml
+- name: Copy files to remote locations
+  copy:
+    attributes:     # The attributes the resulting filesystem should have.  
+```
+
+These go into great detail about what the arguments do, and in what format they
+should be.  
+
+
 
