@@ -378,17 +378,64 @@ I will have to wipe and rebuild from scratch.
   the VMs that are currently able to run rely on this.  
 
 - Let's look at the disk used for each running VM.  
-  ```bash
-  sudo qm list 100
-  ```
-  Output:
-  ```plaintext
-  ipcc_send_rec[1] failed: Unknown error -1
-  ipcc_send_rec[2] failed: Unknown error -1
-  ipcc_send_rec[3] failed: Unknown error -1
-  Unable to load access control list: Unknown error -1
+  I wrote a small script to loop over VMIDs and grep for disk in their configs.  
+  ```bash title="check-storage"
+  #!/bin/bash
+
+  if [[ $EUID -ne 0 ]]; then
+      printf >&2 '[ERROR]: Run script as root.\n'
+      exit 1
+  fi
+
+  if ! command -v qm > /dev/null 2>&1; then
+      printf >&2 '[ERROR]: Could not find the qm command.\n'
+      exit 1
+  fi
+
+  declare -a VMID_LIST
+  IFS=$'\n' read -r -d '' -a VMID_LIST < <(sudo qm list | awk 'NR > 1 {print $1}')
+
+  for vmid in "${VMID_LIST[@]}"; do
+      printf "Checking VMID: %d - %s\n" "$vmid" \
+          "$(qm config "$vmid" | grep -i disk | grep -v 'agent:')"
+  done
   ```
 
+- Ran script:
+  ```bash
+  sudo ./check-storage
+  ```
+  The output:
+  ```plaintext
+  Checking VMID: 100 - scsi0: vmdata:vm-100-disk-0,iothread=1,size=80G
+  Checking VMID: 101 - scsi0: vmdata:vm-101-disk-0,iothread=1,size=60G
+  Checking VMID: 102 - scsi0: local-lvm:vm-102-disk-0,iothread=1,size=32G
+  Checking VMID: 103 - scsi0: vmdata:base-103-disk-0,iothread=1,size=32G
+  Checking VMID: 104 - scsi0: local-lvm:vm-104-disk-0,iothread=1,size=80G
+  Checking VMID: 105 - scsi0: local-lvm:base-105-disk-0,iothread=1,size=80G
+  Checking VMID: 106 - scsi0: local-lvm:vm-106-disk-0,size=32G
+  Checking VMID: 201 - scsi0: vmdata:base-103-disk-0/vm-201-disk-0,iothread=1,size=32G
+  Checking VMID: 202 - scsi0: vmdata:base-103-disk-0/vm-202-disk-0,iothread=1,size=32G
+  Checking VMID: 203 - scsi0: vmdata:base-103-disk-0/vm-203-disk-0,iothread=1,size=32G
+  Checking VMID: 204 - scsi0: vmdata:base-103-disk-0/vm-204-disk-0,iothread=1,size=32G
+  Checking VMID: 205 - scsi0: vmdata:base-103-disk-0/vm-205-disk-0,iothread=1,size=32G
+  Checking VMID: 1010 - scsi0: local-lvm:vm-1010-disk-0,iothread=1,size=80G
+  Checking VMID: 1020 - scsi0: local-lvm:vm-1020-disk-0,iothread=1,size=80G
+  Checking VMID: 9000 - scsi0: local-lvm:base-9000-disk-0,size=32G
+  Checking VMID: 9001 - scsi0: vmdata:base-9001-disk-0,iothread=1,size=32G
+  ```
+  The output was a little bit long, but incredibly informative. 
+
+- It seems that the affected disks include a template (`103`), and any VMs that
+  were linked clones of that template are now useless.
+    - These are VMs with the IDs `201-205`.  
+    - So in addition to those 5, we have `100`, `101`, `103`, and `9001` that were
+      reliant on the `vmdata` ZFS pool.  
+
+- In total, 9 VMIDs relied on `vmdata`.   
+  ```bash
+  sudo ./check-storage | grep -ic 'vmdata'
+  ```
 
 ## Rebuilding Storage with Redundancy
 
