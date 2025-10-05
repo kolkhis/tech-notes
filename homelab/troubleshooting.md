@@ -242,4 +242,167 @@ In addition to `zpool status`, I will do `zpool scrub vmdata` to verify all
 checksums. If the device `vmdata` is replicated, the `scrub` will repair any
 damage discovered from the backup.    
 
+### Followup 
+
+The disk was undetectable for a bit. I reseated the drive in the caddy and ran
+a `zpool clear` against `vmdata`. It managed to bring the pool back online just 
+long enough to run `status -v` see errors:
+```bash
+kolkhis@home-pve:~$ sudo zpool status -v vmdata
+  pool: vmdata
+ state: ONLINE
+status: One or more devices has experienced an error resulting in data
+        corruption.  Applications may be affected.
+action: Restore the file in question if possible.  Otherwise restore the
+        entire pool from backup.
+   see: https://openzfs.github.io/openzfs-docs/msg/ZFS-8000-8A
+  scan: scrub in progress since Mon Sep 29 15:10:13 2025
+        3.48G / 75.7G scanned at 8.37K/s, 0B / 75.7G issued
+        0B repaired, 0.00% done, no estimated completion time
+config:
+
+        NAME        STATE     READ WRITE CKSUM
+        vmdata      ONLINE       0     0     0
+          sdb       ONLINE       0     0     0
+          sdc       ONLINE       0     0     0
+
+errors: Permanent errors have been detected in the following files:
+
+        vmdata/vm-100-disk-0:<0x1>
+        vmdata/vm-100-disk-0@pre-playbooks-with-ansible:<0x1>
+        vmdata/vm-203-disk-0:<0x1>
+        vmdata/vm-204-disk-0@clean-cluster-init:<0x1>
+        vmdata/vm-100-disk-0@pre-playbooks:<0x1>
+        <0x1420>:<0x1>
+        <0x1d22a>:<0x1>
+        <0x1e231>:<0x1>
+        <0x294d>:<0x1>
+        <0x1ca7e>:<0x1>
+        <0x1299>:<0x1>
+        <0x27cc>:<0x1>
+        <0x27d8>:<0x1>
+        <0x1d1de>:<0x1>
+```
+
+This did give some insight as to which VMs are affected.  
+I can plan my migration to the new disk accordingly. I will need to delete the
+affected VMs.  
+
+- `100`
+- `203`
+- `204`
+
+### Killing Fdisk
+
+When trying to use `fdisk -l` to inspect the disks, it hangs. Tried on several
+instances.  
+Trying to use `killall`, it reports successful kills on 2 of the processes, but
+they're still running in `ps -ef`.  
+
+Trying to use a different signal produced the same results.  
+
+Solution was to use `pkill` instead of `kill` or `killall`:  
+```bash
+sudo pkill -9 -f fdisk
+```
+
+This killed most of the errant processes but not all of them.  
+
+On using `ps aux` to examine the process states, they were found to have had a
+state of `D`, which is "uninterruptible sleep (usually IO)." Only a reboot or
+hardware fix can stop these.  
+
+
+### Removing the Drive from the ZFS Pool
+
+I physically removed the drive that was causing issues.  
+
+The drive was: FIKWOT FX815 512GB. I guess it tracks that a $20 drive on Amazon only lasts for 8 months.  
+
+
+I want to keep the data that's on `/dev/sdb`. The pool was set up as a stripe,
+with no redundancy.  
+ZFS can't detach a disk from a striped pool.  
+
+The `/dev/sdb` disk is a single stripe with no redundancy so it's unrecoverable.  
+
+I will have to wipe and rebuild from scratch.  
+
+- I will stop anything touching the pool.  
+  ```bash
+  sudo systemctl stop pvedaemon.service pvestatd.service pveproxy.service
+  ```
+  Then wipe and rebuild.
+  ```bash
+  sudo zpool destroy -f vmdata
+  #cannot open 'vmdata': pool I/O is currently suspended
+  ```
+  Can't do that. I will wipe the disk itself of all zfs labels.  
+  ```bash
+  sudo wipefs -a /dev/sdb
+  #wipefs: error: /dev/sdb: probing initialization failed: Device or resource busy
+  ```
+  Can't do that either. Something is still using the disk.  
+  I will reboot. Uptime is 25 days, haven't rebooted since removing the new
+  disk.  
+
+- After rebooting, the disk is no longer seen as being part of a pool.  
+  ```bash
+  cat /proc/mounts | grep -i vmdata
+  zfs list # no datasets available
+  sudo zpool status # no pools available
+  ```
+  Some of our VMs are still available. I was able to launch a RHEL 10 VM.  
+  I will check what disks are in use and make backups before wiping anything.  
+
+### Making Backups
+
+- I'll check what storage devices the VMs are using before wiping anything.  
+  ```bash
+  sudo pvesm status
+  ```
+  Output:
+  ```plaintext
+  zfs error: cannot open 'vmdata': no such pool
+
+  zfs error: cannot open 'vmdata': no such pool
+  
+  could not activate storage 'vmdata', zfs error: cannot import 'vmdata': no such pool or dataset
+  
+  Name             Type     Status           Total            Used       Available        %
+  local             dir     active        67169672        25986616        37725216   38.69%
+  local-lvm     lvmthin     active       136593408       130118880         6474527   95.26%
+  vmdata        zfspool   inactive               0               0               0    0.00%
+  ```
+  The `vmdata` ZFS pool is shown as inactive. So that *should* imply that none of
+  the VMs that are currently able to run rely on this.  
+
+- Let's look at the disk used for each running VM.  
+  ```bash
+  sudo qm list 100
+  ```
+  Output:
+  ```plaintext
+  ipcc_send_rec[1] failed: Unknown error -1
+  ipcc_send_rec[2] failed: Unknown error -1
+  ipcc_send_rec[3] failed: Unknown error -1
+  Unable to load access control list: Unknown error -1
+  ```
+
+
+## Rebuilding Storage with Redundancy
+
+### Suggested Rebuild
+
+Wipe and rebuild
+```bash
+wipefs -a /dev/sdb # clear old zfs labels
+wipefs -a /dev/sdd # clear new Kingston SSD 
+```
+
+Create a mirrored pool
+```bash
+zpool create vmdata mirror /dev/sdb /dev/sdd
+zpool status
+```
 
