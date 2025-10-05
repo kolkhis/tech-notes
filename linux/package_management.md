@@ -249,6 +249,67 @@ Filename    : /usr/bin/pgrep
 So you can see that the package that provides `pgrep` on Rocky is `procps-ng`, and is 
 available from the `baseos` repository.  
 
+## Package Management on SUSE
+
+SUSE Linux distributions use the RPM package format, just like RHEL, Rocky, and
+other RedHat-based distros.  
+
+The primary front-ends for RPM in SUSE distros are `zypper` and YaST.  
+
+- YaST: This is SUSE's graphical (and text-based) sysadmin suite for managing
+  software, system settings, and repositories.  
+    - This is for admins that prefer using a GUI.  
+
+- `zypper`: The CLI package manager for SUSE systems.  
+    - Used to install, update, and remove packages, and "refresh" package
+      sources (repos).  
+
+- `rpm`: The same tool used on RedHat-based systems.    
+    - Mainly used to query package databases or interact with RPM files
+      directly.  
+
+### Zypper
+
+Zypper has some pretty robust help text/documentation.  
+```bash
+####### Getting help #######
+zypper help         # show all main options/subcmds
+zypper help install # help text for a subcmd
+
+####### Search for packages #######
+zypper search PKG_NAME/KEYWORD  # Find pkg matching a name or keyword
+zypper se PKG_NAME/KEYWORD      # Short form for 'search'
+
+####### Installing packages #######
+zypper install PKG_NAME # basic install (auto-resolves deps)
+zypper in PKG_NAME      # Short form for 'install'
+
+zypper --non-interactive install PKG_NAME # Skip prompts (like -y)
+zypper -n in PKG_NAME   # Short form/Skip prompts (like -y)
+
+zypper install --from REPONAME PKG_NAME # Install from specific repository
+# '--repo' is an alias for '--from'
+
+####### Removing packages #######
+zypper remove PKG_NAME # Uninstall package
+zypper rm PKG_NAME     # Short form
+zypper remove --dry-run PKG_NAME  # Do a dry run to simulate
+
+####### Update Packages/System #######
+zypper update   # Update package 
+zypper up       # Short form
+zypper patch    # apply all patches
+
+####### Managing repos #######
+zypper repos    # List repos
+zypper lr       # Short form
+
+# Add a new repo
+zypper addrepo URL_OR_PATH REPO_ALIAS  # Add a new repository
+zypper refresh  # Refresh repos
+```
+
+
 ## Resources
 
 - `man`
