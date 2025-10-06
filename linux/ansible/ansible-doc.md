@@ -4,6 +4,9 @@ The `ansible-doc` tool is shipped with Ansible core, and contains Ansible docume
 
 It allows you to reference ansible documentation without leaving the command line.  
 
+All modules that are currently installed/available will have their 
+documentation in `ansible-doc`.  
+
 ## Module Documentation
 
 You can use `ansible-doc <builtin-module>` to get the documentation for a specific 
