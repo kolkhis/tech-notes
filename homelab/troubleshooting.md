@@ -530,16 +530,23 @@ pvesm add zfspool vmdata -pool vmdata
 pvesm status
 ```
 
-### Setting up RAID1 for Boot Drive
-This is what we'll do to set up RAID1 for our boot drive, in case that ever
-fails. We don't want to have to reinstall and reconfigure Proxmox as a whole if
-our boot drive fails.  
+### Setting up RAID1 for Root Filesystem
+When Proxmox was installed intially, we used LVM instead of ZFS.  
 
+If we had used ZFS, we could have leveraged the internal mirroring that it
+supports. But, we didn't, so we're going to set up RAID1 mirroring for the LVM.  
+
+This is what we'll do to set up RAID1 for our boot drive, in case that ever
+fails. 
+
+If the boot drive fails, we still want to maintain our data.   
 
 
 #### Backup and Mirror Partition Table
 Create a mirror of the main boot drive's partition table on the new backup drive.  
-Here we'll use `sgdisk` to save the GUID partition table 
+Here we'll use `sgdisk` to save the GUID partition table.  
+
+This will create the same partitions on the backup disk that the main boot disk has.  
 ```bash
 sudo sgdisk --backup=table.sda /dev/sda
 sudo sgdisk --load-backup=table.sda /dev/sdb
@@ -561,77 +568,79 @@ sudo sgdisk --randomize-guids /dev/sdb
     These are example disks. `/dev/sda` is the main boot drive, but `/dev/sdb`
     will likely not be the backup drive when we get one.  
 
-#### Create RAID1 Arrays for `/boot` and `/`
-We'll need at least two partitions for this.  
+#### Create RAID1 Array for Root Filesystem
+We'll need one partition for this.
 
-- `/boot`: Small, `ext4`, no LVM
-- `/` (root): The rest, will hold the LVM
+- `/` (root): All the data in the root filesystem, will hold the LVM
 
+- `/boot`: Not needed on UEFI boot systems.  
+    - This is **ONLY FOR SYSTEMS WITH BIOS/LEGACY BOOT MODE.**
+    - If the `/dev/sda2` is UEFI (mounted at `/boot/efi`) then we do **NOT**
+      create a RAID array for it.  
+
+!!! warning
+
+    We need to create the array **degraded** first, using **only the new disk**, 
+    so we don't touch the live boot disk. We do this by providing `missing` in
+    place of the live partition.  
+
+    If we use the live disk when creating the array, they'll be clobbered first.  
+    This will cause data loss.  
+
+    The new, empty disk is `/dev/sdb` in this example. Don't put in the `/dev/sda3`
+    partition, or it will be wiped.
+
+Create the RAID array (degraded) with the new backup disk's `3` partition.  
 ```bash
-sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sda2 /dev/sdb2
-sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sda3 /dev/sdb3
+sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb3 missing
 ```
 
-???+ note "Adjust Parition Numbers"
-
-    We'll need to adjust the partition numbers accordingly.  
-    If we look at the `lsblk` output for `/dev/sda`, we'll see the paritions we
-    need to back up:
-    ```plaintext
-    ├─sda1                                                  8:1    0  1007K  0 part
-    ├─sda2                                                  8:2    0     1G  0 part /boot/efi
-    └─sda3                                                  8:3    0 222.6G  0 part
-      ├─pve-swap                                          252:0    0     8G  0 lvm  [SWAP]
-      ├─pve-root                                          252:1    0  65.6G  0 lvm  /
-      ├─pve-data_tmeta                                    252:2    0   1.3G  0 lvm
-      │ └─pve-data-tpool                                  252:4    0 130.3G  0 lvm
-      │   ├─pve-data                                      252:5    0 130.3G  1 lvm
-      │   ├─pve-vm--102--state--clean--install--with--ssh 252:6    0   4.5G  0 lvm
-      │   ├─pve-vm--102--state--clean--install--ansible   252:7    0   4.5G  0 lvm
-      │   ├─pve-vm--102--disk--0                          252:8    0    32G  0 lvm
-      │   ├─pve-vm--104--disk--0                          252:9    0    80G  0 lvm
-      │   ├─pve-vm--104--state--clean--install            252:10   0   8.5G  0 lvm
-      │   ├─pve-vm--1010--disk--0                         252:11   0    80G  0 lvm
-      │   ├─pve-vm--1020--disk--0                         252:12   0    80G  0 lvm
-      │   ├─pve-vm--106--disk--0                          252:13   0    32G  0 lvm
-      │   └─pve-vm--106--state--clean                     252:14   0   8.5G  0 lvm
-      └─pve-data_tdata                                    252:3    0 130.3G  0 lvm
-        └─pve-data-tpool                                  252:4    0 130.3G  0 lvm
-          ├─pve-data                                      252:5    0 130.3G  1 lvm
-          ├─pve-vm--102--state--clean--install--with--ssh 252:6    0   4.5G  0 lvm
-          ├─pve-vm--102--state--clean--install--ansible   252:7    0   4.5G  0 lvm
-          ├─pve-vm--102--disk--0                          252:8    0    32G  0 lvm
-          ├─pve-vm--104--disk--0                          252:9    0    80G  0 lvm
-          ├─pve-vm--104--state--clean--install            252:10   0   8.5G  0 lvm
-          ├─pve-vm--1010--disk--0                         252:11   0    80G  0 lvm
-          ├─pve-vm--1020--disk--0                         252:12   0    80G  0 lvm
-          ├─pve-vm--106--disk--0                          252:13   0    32G  0 lvm
-          └─pve-vm--106--state--clean                     252:14   0   8.5G  0 lvm
-    ```
-    We see that `/dev/sda2` is the boot partition and `/dev/sda3` is the partition
-    with all the logical volumes.  
+???+ note "What about `/dev/sda1`?"
 
     The `/dev/sda1` partition is the BIOS boot partition, used by GRUB when the
     disk uses GPT partitioning on a system booting in legacy BIOS (not UEFI).  
-    
+    This partition is a tiny raw area that GRUB uses to stash part of its own
+    boot code. It has no filesystem, no files, no mountpoint.  
 
-#### Add `/dev/md1` as a PV to LVM, mirror LVs or rebuild them
+    In UEFI boot systems, `/dev/sda1` will contain BIOS boot instructions for
+    backwards compatibility, even if the disk is in EUFI mode. Make sure to
+    check it.  
 
-We could also boot from a live CD and reinstall GRUB on both disks.  
+Check to make sure the new array exists and is healthy.  
 ```bash
-sudo grub-install /dev/sda
-sudo grub-install /dev/sdb
-update-grub
+sudo mdadm --detail /dev/md1
+```
+Output should look like:
+```plaintext
+/dev/md1 : active raid1 sdb3[0]
+      [U_]
 ```
 
-- `grub-install`: Install GRUB boot code and points it to our `/boot` and `/boot/efi` partitions.  
-    - `/dev/sda`: current system
-    - `/dev/sdb`: backup/mirror drive
+#### Migrate the Root Filesystem LVM to RAID1
 
-- `update-grub`: Rebuilds `/boot/grub/grub.cfg` (the GRUB menu),
+1. Use `pvcreate` on the array and extend the VG.  
+   ```bash
+   sudo pvcreate /dev/md1
+   ```
+   This adds `/dev/md1` to LVM as a physical volume.  
+   
+2. Add the array to the `pve` Volume Group.  
+   ```bash
+   sudo vgextend pve /dev/md1
+   ```
 
-This makes sure that both drives are bootable. If `/dev/sda` dies, we can boot
-directly from `/dev/sdb` in BIOS or UEFI.  
+3. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array
+   ```bash
+   sudo pvs # confirm PV names
+   sudo pvmove /dev/sda3 /dev/md1
+   ```
+
+4. Remove `/dev/sda3` from the volume group.  
+   ```bash
+   sudo vgreduce pve /dev/sda3
+   ```
+
+This should have migrated all of the data on `/dev/sda3` to `/dev/md1`.  
 
 #### Save RAID Config
 ```bash
@@ -653,26 +662,131 @@ update-initramfs -u
     - Without doing this, the system might fail to boot because the RAID
       wouldn't be assembled early enough.  
 
+#### UEFI ESP Boot Redundancy (No `mdadm`)
+This is how you'd also create redundancy for the **OS boot**. This step is
+optional if all you want is data backup.  
+
+Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not read
+`md` metadata.  
+
+```bash
+sudo mkfs.vfat -F32 /dev/sdb2
+sudo mkdir -p /boot/efi2
+sudo mount /dev/sdb2 /boot/efi2
+sudo rsync -a --delete /boot/efi/ /boot/efi2/
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox  --recheck
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
+sudo update-grub
+```
+
+??? notes "What is ESP?"
+
+    ESP stands for EFI System Partition. It's the FAT32 partition (in this
+    layout, it's `/dev/sda2) that UEFI firmware reads at boot time to find
+    bootloader files (e.g., `/EFI/BOOT/BOOT64.EFI` or
+    `/EFI/proxmox/grubx64.efi`)
+
 
 #### Reboot and Confirm
 Reboot the machine.  
 ```bash
 sudo reboot
 ```
-Then check `/proc/mdstat`.  
+Then check that root `/` is on `md1`.  
+```bash
+lsblk
+```
+
+#### Finish the Mirror
+Add the **old** partition (`/dev/sda3`) to the array now.  
+```bash
+sudo mdadm --add /dev/md1 /dev/sda3
+```
+
+Keep checking the `/proc/mdstat` file for `UU`.  
 ```bash
 cat /proc/mdstat
 ```
 
-Look for the entries related to the new RAID arrays:
+Look for the entry related to the new RAID array:
 ```plaintext
 Personalities : [raid1]
-md0 : active raid1 sda2[0] sdb2[1]
-      1047552 blocks super 1.2 [2/2] [UU]
-
 md1 : active raid1 sda3[0] sdb3[1]
       234376192 blocks super 1.2 [2/2] [UU]
 
 unused devices: <none>
 ```
+
+The `[UU]` at the end means the mirror is healthy and synchronized.  
+
+---
+
+#### Replacing a Failed Boot Disk
+If `/dev/sda` fails, we'll still have the backup to boot from. But we'll want
+to replace the disk with a new one to maintain redundancy.  
+
+1. Replace it with a new disk of equal or larger size.
+
+2. Clone the partition table:
+   ```bash
+   sudo sgdisk --backup=table.sdb /dev/sdb  # Use the original backup disk
+   sudo sgdisk --load-backup=table.sdb /dev/sda
+   sudo sgdisk --randomize-guids /dev/sda
+   ```
+
+3. Add its partitions back into the arrays:
+   ```bash
+   sudo mdadm --add /dev/md1 /dev/sda3
+   ```
+
+4. Recreate and sync the EFI partition:
+   ```bash
+   mkfs.vfat -F32 /dev/sda2
+   mount /dev/sda2 /boot/efi2
+   rsync -a --delete /boot/efi/ /boot/efi2/
+   grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
+   ```
+
+5. Wait for `md` to show `[UU]`.
+
+## Boot Filesystem
+
+```plaintext
+kolkhis@home-pve:~/lab-utils/pve$ sudo fdisk -l /dev/sda
+Disk /dev/sda: 223.57 GiB, 240057409536 bytes, 468862128 sectors
+Disk model: INTEL SSDSC2BB24
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: DBBB07FB-37D6-4248-B7F7-2284ABC256E9
+
+Device       Start       End   Sectors   Size Type
+/dev/sda1       34      2047      2014  1007K BIOS boot
+/dev/sda2     2048   2099199   2097152     1G EFI System
+/dev/sda3  2099200 468862094 466762895 222.6G Linux LVM
+```
+
+This uses UEFI boot. Since `/boot/efi` is on `/dev/sda2`.  
+Don't put EFI system partition data on mdadm RAID. UEFI firmware generally
+can't read `md` metadata.  
+
+So we can't make the actual OS boot into a RAID1 array.  
+However, we can make the root filesystem data (the LVM) into a RAID array.  
+
+Instead, make two independent ESPs and keep them in sync.  
+
+### Creating a Redundant UEFI Boot
+Instead of creating a RAID1 mirror, we make a partition and add all the boot
+data to that.  
+```bash
+mkfs.vfat -F32 /dev/sdb2
+mkdir -p /boot/efi2
+mount /dev/sdb2 /boot/efi2
+rsync -a --delete /boot/efi/ /boot/efi2/
+grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox
+grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2
+update-grub
+```
+
 
