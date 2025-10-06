@@ -501,6 +501,14 @@ Using `smartctl`, I discovered that the disk had seen 7 years of active use (61,
 First Error: 
 `The installer could not find any supported hard disks.` 
 
+??? info "Spoiler Alert (Fix)"
+
+    Fix: Boot into BIOS (F11 on startup), go to "Device Settings".  
+    There is an option in the BIOS in the "Device Settings", under the "Hardware 
+    RAID Controller", that says "Convert to Non-RAID Disk". 
+
+    This must be done for each disk.  
+
 I have an 800GB SSD in drive bay 0.  
 
 I hit "OK" and was dropped into a bash shell on the Proxmox VE system.
@@ -568,6 +576,7 @@ Select HTTPS for the update method, this will search for firmware from Dell.
 #### Hardware RAID Controller Device settings
 Under "device settings" (after hitting F2 for system setup at boot), I checked the "disk settings" and finally found signs of life for the two SSDs I have in the system. It seems they were configured for RAID. This does make sense considering they as used devices that were formerly used in enterprise environments.  
 There are some options here for operations to perform on the disks:
+
 * `blink` 
 * `unblink` 
 * `clear`
