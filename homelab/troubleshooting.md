@@ -355,7 +355,9 @@ I will have to wipe and rebuild from scratch.
   Some of our VMs are still available. I was able to launch a RHEL 10 VM.  
   I will check what disks are in use and make backups before wiping anything.  
 
-### Making Backups
+### Cleanup 
+
+The VMs that were using `vmdata` are gone. They need to be removed.  
 
 - I'll check what storage devices the VMs are using before wiping anything.  
   ```bash
@@ -396,10 +398,12 @@ I will have to wipe and rebuild from scratch.
   IFS=$'\n' read -r -d '' -a VMID_LIST < <(sudo qm list | awk 'NR > 1 {print $1}')
 
   for vmid in "${VMID_LIST[@]}"; do
-      printf "Checking VMID: %d - %s\n" "$vmid" \
+      printf "VMID: %d - %s\n" "$vmid" \
           "$(qm config "$vmid" | grep -i disk | grep -v 'agent:')"
   done
   ```
+  Utilizes `qm config` to list out the VM config and greps for the `disk`
+  setting, showing what storage disk is being used for each VM.  
 
 - Ran script:
   ```bash
@@ -407,39 +411,99 @@ I will have to wipe and rebuild from scratch.
   ```
   The output:
   ```plaintext
-  Checking VMID: 100 - scsi0: vmdata:vm-100-disk-0,iothread=1,size=80G
-  Checking VMID: 101 - scsi0: vmdata:vm-101-disk-0,iothread=1,size=60G
-  Checking VMID: 102 - scsi0: local-lvm:vm-102-disk-0,iothread=1,size=32G
-  Checking VMID: 103 - scsi0: vmdata:base-103-disk-0,iothread=1,size=32G
-  Checking VMID: 104 - scsi0: local-lvm:vm-104-disk-0,iothread=1,size=80G
-  Checking VMID: 105 - scsi0: local-lvm:base-105-disk-0,iothread=1,size=80G
-  Checking VMID: 106 - scsi0: local-lvm:vm-106-disk-0,size=32G
-  Checking VMID: 201 - scsi0: vmdata:base-103-disk-0/vm-201-disk-0,iothread=1,size=32G
-  Checking VMID: 202 - scsi0: vmdata:base-103-disk-0/vm-202-disk-0,iothread=1,size=32G
-  Checking VMID: 203 - scsi0: vmdata:base-103-disk-0/vm-203-disk-0,iothread=1,size=32G
-  Checking VMID: 204 - scsi0: vmdata:base-103-disk-0/vm-204-disk-0,iothread=1,size=32G
-  Checking VMID: 205 - scsi0: vmdata:base-103-disk-0/vm-205-disk-0,iothread=1,size=32G
-  Checking VMID: 1010 - scsi0: local-lvm:vm-1010-disk-0,iothread=1,size=80G
-  Checking VMID: 1020 - scsi0: local-lvm:vm-1020-disk-0,iothread=1,size=80G
-  Checking VMID: 9000 - scsi0: local-lvm:base-9000-disk-0,size=32G
-  Checking VMID: 9001 - scsi0: vmdata:base-9001-disk-0,iothread=1,size=32G
+  VMID: 100 - scsi0: vmdata:vm-100-disk-0,iothread=1,size=80G
+  VMID: 101 - scsi0: vmdata:vm-101-disk-0,iothread=1,size=60G
+  VMID: 102 - scsi0: local-lvm:vm-102-disk-0,iothread=1,size=32G
+  VMID: 103 - scsi0: vmdata:base-103-disk-0,iothread=1,size=32G
+  VMID: 104 - scsi0: local-lvm:vm-104-disk-0,iothread=1,size=80G
+  VMID: 105 - scsi0: local-lvm:base-105-disk-0,iothread=1,size=80G
+  VMID: 106 - scsi0: local-lvm:vm-106-disk-0,size=32G
+  VMID: 201 - scsi0: vmdata:base-103-disk-0/vm-201-disk-0,iothread=1,size=32G
+  VMID: 202 - scsi0: vmdata:base-103-disk-0/vm-202-disk-0,iothread=1,size=32G
+  VMID: 203 - scsi0: vmdata:base-103-disk-0/vm-203-disk-0,iothread=1,size=32G
+  VMID: 204 - scsi0: vmdata:base-103-disk-0/vm-204-disk-0,iothread=1,size=32G
+  VMID: 205 - scsi0: vmdata:base-103-disk-0/vm-205-disk-0,iothread=1,size=32G
+  VMID: 1010 - scsi0: local-lvm:vm-1010-disk-0,iothread=1,size=80G
+  VMID: 1020 - scsi0: local-lvm:vm-1020-disk-0,iothread=1,size=80G
+  VMID: 9000 - scsi0: local-lvm:base-9000-disk-0,size=32G
+  VMID: 9001 - scsi0: vmdata:base-9001-disk-0,iothread=1,size=32G
   ```
   The output was a little bit long, but incredibly informative. 
 
-- It seems that the affected disks include a template (`103`), and any VMs that
+- It seems that the affected disks include templates (`103`, `9001`), and any VMs that
   were linked clones of that template are now useless.
     - These are VMs with the IDs `201-205`.  
     - So in addition to those 5, we have `100`, `101`, `103`, and `9001` that were
       reliant on the `vmdata` ZFS pool.  
 
-- In total, 9 VMIDs relied on `vmdata`.   
+- In total, 9 VMIDs relied on `vmdata`.  
   ```bash
-  sudo ./check-storage | grep -ic 'vmdata'
+  sudo ./check-storage | grep -ic 'vmdata' # 9
   ```
+  Extracting the VMIDs:
+  ```bash
+  sudo ./check-storage | grep -i 'vmdata' | cut -d' ' -f2
+  ```
+  We get the VMID list of affected VMs:
+  ```plaintext
+  100
+  101
+  103
+  201
+  202
+  203
+  204
+  205
+  9001
+  ```
+
+- Added those VMIDs to a small script to decommission/destroy all of them:
+  ```bash
+  declare -a DELETE=( 100 101 103 201 202 203 204 205 9001 )
+  for vmid in "${DELETE[@]}"; do 
+      if [[ $(sudo qm status "$vmid") == "status: running" ]]; then
+          qm stop "$vmid"
+      fi
+      qm destroy "$vmid" || {
+          printf >&2 '[ERROR]: Failed to destroy VM with ID: %d\n' "$vmid"
+          continue
+      }
+  done
+  ```
+
+!!! note
+
+    I expanded on this script to be more of a utility, allowing the user to pass in
+    VMIDs as arguments. Additionally added verification guards to make sure the
+    user does not delete anything unintentionally.  
+    Full script:
+    <https://github.com/kolkhis/lab-utils/blob/main/pve/destroy-vms>
+
+- Two of the VMIDs failed to destroy. 
+    - The ones that did not get removed with `qm destroy` are templates (`103` and `9001`).  
+    - They're 
+    - Command:
+      ```bash
+      sudo qm destroy 103
+      ```
+      Output:
+      ```plaintext
+      zfs error: cannot open 'vmdata': dataset does not exist
+      ```
+      The same error appears when trying to remove the template via the web UI.  
+
+- To remove the kaput templates, we'll need to manually delete their
+  configuration files (stored in `/etc/pve/qemu-server/<VMID>.conf`).  
+  ```bash
+  sudo rm /etc/pve/qemu-server/{103,9001}.conf
+  ```
+  This removed the two templates.  
 
 ## Rebuilding Storage with Redundancy
 
-### Suggested Rebuild
+### Suggested ZFS Rebuild
+This approach uses ZFS internal mirroring rather than traditional software RAID 
+through `mdadm`.  
 
 Wipe and rebuild
 ```bash
@@ -447,9 +511,14 @@ wipefs -a /dev/sdb # clear old zfs labels
 wipefs -a /dev/sdd # clear new Kingston SSD 
 ```
 
-Create a mirrored pool
+Create new, **mirrored** pool.  
 ```bash
-zpool create vmdata mirror /dev/sdb /dev/sdd
-zpool status
+sudo zpool create vmdata mirror /dev/sdb /dev/sdd
+sudo zpool status
 ```
 
+Add to Proxmox, then verify.  
+```bash
+pvesm add zfspool vmdata -pool vmdata
+pvesm status
+```
