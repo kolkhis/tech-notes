@@ -5,7 +5,7 @@ theme:
   palette:
     scheme: slate
   features:
-    - navigation.sections
+    # - navigation.sections
     # - navigation.expand
     - navigation.top
     # - navigation.tabs
