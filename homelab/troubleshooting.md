@@ -77,7 +77,7 @@ images) fail.
 
 ### Recovery Attempt
 
-I will try to clear the errors and resume I/O.  
+We'll try to clear the errors and resume I/O.  
 
 - Command run to clear the errors:
   ```bash
@@ -231,14 +231,14 @@ Disk `/dev/sdc` is corrupted and must be replaced. Affected VMs
 can only be restored from backup, but since this ZFS pool has no redundancy
 (hardware limitations on my part), they are lost.  
 
-Going forward, I'll need to build any ZFS pools with redundancy.  
+Going forward, we'll need to build any ZFS pools with redundancy.  
 Mirroring will be sufficient (software RAID 1), striping is not necessary.
 `raidz1/2/3` is also an option.  
 
-I'll also need to monitor `zpool status` on a regular basis to check for such
+We'll also need to monitor `zpool status` on a regular basis to check for such
 issues.  
 
-In addition to `zpool status`, I will do `zpool scrub vmdata` to verify all
+In addition to `zpool status`, we'll do `zpool scrub vmdata` to verify all
 checksums. If the device `vmdata` is replicated, the `scrub` will repair any
 damage discovered from the backup.    
 
@@ -285,12 +285,16 @@ errors: Permanent errors have been detected in the following files:
 ```
 
 This did give some insight as to which VMs are affected.  
-I can plan my migration to the new disk accordingly. I will need to delete the
+I can plan my migration to the new disk accordingly. We'll need to delete the
 affected VMs.  
 
 - `100`
 - `203`
 - `204`
+
+!!! note "Spoiler Alert"
+
+    There were more than 3 affected VMs.  
 
 ### Killing Fdisk
 
@@ -319,16 +323,13 @@ I physically removed the drive that was causing issues.
 
 The drive was: FIKWOT FX815 512GB. I guess it tracks that a $20 drive on Amazon only lasts for 8 months.  
 
-
-I want to keep the data that's on `/dev/sdb`. The pool was set up as a stripe,
-with no redundancy.  
-ZFS can't detach a disk from a striped pool.  
+The pool was set up as a stripe, with no redundancy. ZFS can't detach a disk from a striped pool.  
 
 The `/dev/sdb` disk is a single stripe with no redundancy so it's unrecoverable.  
 
-I will have to wipe and rebuild from scratch.  
+We'll have to wipe and rebuild from scratch.  
 
-- I will stop anything touching the pool.  
+- We'll stop anything touching the pool.  
   ```bash
   sudo systemctl stop pvedaemon.service pvestatd.service pveproxy.service
   ```
@@ -337,13 +338,13 @@ I will have to wipe and rebuild from scratch.
   sudo zpool destroy -f vmdata
   #cannot open 'vmdata': pool I/O is currently suspended
   ```
-  Can't do that. I will wipe the disk itself of all zfs labels.  
+  Can't do that. We'll wipe the disk itself of all zfs labels.  
   ```bash
   sudo wipefs -a /dev/sdb
   #wipefs: error: /dev/sdb: probing initialization failed: Device or resource busy
   ```
   Can't do that either. Something is still using the disk.  
-  I will reboot. Uptime is 25 days, haven't rebooted since removing the new
+  We'll reboot. Uptime is 25 days, haven't rebooted since removing the new
   disk.  
 
 - After rebooting, the disk is no longer seen as being part of a pool.  
@@ -353,13 +354,14 @@ I will have to wipe and rebuild from scratch.
   sudo zpool status # no pools available
   ```
   Some of our VMs are still available. I was able to launch a RHEL 10 VM.  
-  I will check what disks are in use and make backups before wiping anything.  
+  We will check what disks are in use and make backups (if we can) before wiping anything.  
 
 ### Cleanup 
 
-The VMs that were using `vmdata` are gone. They need to be removed.  
+The VMs that were using `vmdata` are gone, there is no chance for recovery.  
+They need to be removed.  
 
-- I'll check what storage devices the VMs are using before wiping anything.  
+- We'll check what storage devices the VMs are using before wiping anything.  
   ```bash
   sudo pvesm status
   ```
@@ -399,7 +401,7 @@ The VMs that were using `vmdata` are gone. They need to be removed.
 
   for vmid in "${VMID_LIST[@]}"; do
       printf "VMID: %d - %s\n" "$vmid" \
-          "$(qm config "$vmid" | grep -i disk | grep -v 'agent:')"
+          "$(qm config "$vmid" | grep -i 'disk' | grep -v 'agent:')"
   done
   ```
   Utilizes `qm config` to list out the VM config and greps for the `disk`
@@ -499,11 +501,16 @@ The VMs that were using `vmdata` are gone. They need to be removed.
   ```
   This removed the two templates.  
 
+
+
 ## Rebuilding Storage with Redundancy
 
 ### Suggested ZFS Rebuild
 This approach uses ZFS internal mirroring rather than traditional software RAID 
 through `mdadm`.  
+
+Although, once we can afford a new disk, we will set up software RAID1 (mirror)
+on the main PVE boot drive.  
 
 Wipe and rebuild
 ```bash
@@ -522,3 +529,150 @@ Add to Proxmox, then verify.
 pvesm add zfspool vmdata -pool vmdata
 pvesm status
 ```
+
+### Setting up RAID1 for Boot Drive
+This is what we'll do to set up RAID1 for our boot drive, in case that ever
+fails. We don't want to have to reinstall and reconfigure Proxmox as a whole if
+our boot drive fails.  
+
+
+
+#### Backup and Mirror Partition Table
+Create a mirror of the main boot drive's partition table on the new backup drive.  
+Here we'll use `sgdisk` to save the GUID partition table 
+```bash
+sudo sgdisk --backup=table.sda /dev/sda
+sudo sgdisk --load-backup=table.sda /dev/sdb
+sudo sgdisk --randomize-guids /dev/sdb
+```
+
+- `sgdisk`: Command-line GUID partition table (GPT) manipulator for Linux/Unix
+
+- `--backup=table.sda /dev/sda`: Save `/dev/sda` partition data to a backup file.
+    - The partition backup file is `table.sda`.  
+- `--load-backup=table.sda /dev/sdb`: Load the `/dev/sda` partition data from the backup file.
+- `--randomize-guids /dev/sdb`:
+    - Randomize the disk's GUID and all partitions' unique GUIDs (but not their  
+      partition type code GUIDs).  
+    - Used after cloning a disk in order to render all GUIDs unique once again.
+
+!!! note
+
+    These are example disks. `/dev/sda` is the main boot drive, but `/dev/sdb`
+    will likely not be the backup drive when we get one.  
+
+#### Create RAID1 Arrays for `/boot` and `/`
+We'll need at least two partitions for this.  
+
+- `/boot`: Small, `ext4`, no LVM
+- `/` (root): The rest, will hold the LVM
+
+```bash
+sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sda2 /dev/sdb2
+sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sda3 /dev/sdb3
+```
+
+???+ note "Adjust Parition Numbers"
+
+    We'll need to adjust the partition numbers accordingly.  
+    If we look at the `lsblk` output for `/dev/sda`, we'll see the paritions we
+    need to back up:
+    ```plaintext
+    ├─sda1                                                  8:1    0  1007K  0 part
+    ├─sda2                                                  8:2    0     1G  0 part /boot/efi
+    └─sda3                                                  8:3    0 222.6G  0 part
+      ├─pve-swap                                          252:0    0     8G  0 lvm  [SWAP]
+      ├─pve-root                                          252:1    0  65.6G  0 lvm  /
+      ├─pve-data_tmeta                                    252:2    0   1.3G  0 lvm
+      │ └─pve-data-tpool                                  252:4    0 130.3G  0 lvm
+      │   ├─pve-data                                      252:5    0 130.3G  1 lvm
+      │   ├─pve-vm--102--state--clean--install--with--ssh 252:6    0   4.5G  0 lvm
+      │   ├─pve-vm--102--state--clean--install--ansible   252:7    0   4.5G  0 lvm
+      │   ├─pve-vm--102--disk--0                          252:8    0    32G  0 lvm
+      │   ├─pve-vm--104--disk--0                          252:9    0    80G  0 lvm
+      │   ├─pve-vm--104--state--clean--install            252:10   0   8.5G  0 lvm
+      │   ├─pve-vm--1010--disk--0                         252:11   0    80G  0 lvm
+      │   ├─pve-vm--1020--disk--0                         252:12   0    80G  0 lvm
+      │   ├─pve-vm--106--disk--0                          252:13   0    32G  0 lvm
+      │   └─pve-vm--106--state--clean                     252:14   0   8.5G  0 lvm
+      └─pve-data_tdata                                    252:3    0 130.3G  0 lvm
+        └─pve-data-tpool                                  252:4    0 130.3G  0 lvm
+          ├─pve-data                                      252:5    0 130.3G  1 lvm
+          ├─pve-vm--102--state--clean--install--with--ssh 252:6    0   4.5G  0 lvm
+          ├─pve-vm--102--state--clean--install--ansible   252:7    0   4.5G  0 lvm
+          ├─pve-vm--102--disk--0                          252:8    0    32G  0 lvm
+          ├─pve-vm--104--disk--0                          252:9    0    80G  0 lvm
+          ├─pve-vm--104--state--clean--install            252:10   0   8.5G  0 lvm
+          ├─pve-vm--1010--disk--0                         252:11   0    80G  0 lvm
+          ├─pve-vm--1020--disk--0                         252:12   0    80G  0 lvm
+          ├─pve-vm--106--disk--0                          252:13   0    32G  0 lvm
+          └─pve-vm--106--state--clean                     252:14   0   8.5G  0 lvm
+    ```
+    We see that `/dev/sda2` is the boot partition and `/dev/sda3` is the partition
+    with all the logical volumes.  
+
+    The `/dev/sda1` partition is the BIOS boot partition, used by GRUB when the
+    disk uses GPT partitioning on a system booting in legacy BIOS (not UEFI).  
+    
+
+#### Add `/dev/md1` as a PV to LVM, mirror LVs or rebuild them
+
+We could also boot from a live CD and reinstall GRUB on both disks.  
+```bash
+sudo grub-install /dev/sda
+sudo grub-install /dev/sdb
+update-grub
+```
+
+- `grub-install`: Install GRUB boot code and points it to our `/boot` and `/boot/efi` partitions.  
+    - `/dev/sda`: current system
+    - `/dev/sdb`: backup/mirror drive
+
+- `update-grub`: Rebuilds `/boot/grub/grub.cfg` (the GRUB menu),
+
+This makes sure that both drives are bootable. If `/dev/sda` dies, we can boot
+directly from `/dev/sdb` in BIOS or UEFI.  
+
+#### Save RAID Config
+```bash
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+update-initramfs -u
+```
+
+- `mdadm --detail --scan`: Scans all active RAID arrays (`/dev/md*`) and prints
+  their config.  
+    - Then we save those RAID array configs to `/etc/mdadm/mdadm.conf` to make
+      them persistent/permanent and they'll auto-mount on boot.  
+
+- `update-initramfs -u`: Rebuilds the `initramfs` and makes sure RAID modules and
+  `mdadm.conf` are baked in.  
+    - The `initramfs` is the small Linux image the kernel loads before the root 
+      filesystem is ready.
+    - It needs to include the `mdadm` tools and RAID metadata so it can assemble 
+      RAID arrays before mounting `/`.  
+    - Without doing this, the system might fail to boot because the RAID
+      wouldn't be assembled early enough.  
+
+
+#### Reboot and Confirm
+Reboot the machine.  
+```bash
+sudo reboot
+```
+Then check `/proc/mdstat`.  
+```bash
+cat /proc/mdstat
+```
+
+Look for the entries related to the new RAID arrays:
+```plaintext
+Personalities : [raid1]
+md0 : active raid1 sda2[0] sdb2[1]
+      1047552 blocks super 1.2 [2/2] [UU]
+
+md1 : active raid1 sda3[0] sdb3[1]
+      234376192 blocks super 1.2 [2/2] [UU]
+
+unused devices: <none>
+```
+
