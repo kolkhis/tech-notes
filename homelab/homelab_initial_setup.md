@@ -60,6 +60,7 @@ Create bootable media (flash drive) with Proxmox VE.
 ---
 
 System setup highlights:
+
 * Choose disk: Choose the disk you want to install Proxmox VE on.
     * This will be your boot drive.  
 * Set password: The password you'll use for root user access to the system.  
@@ -332,7 +333,7 @@ That's the end of the system setup portion of this.
 
 ## Setting up Monitoring
 
-See [monitoring setup](./fp_monitoring_setup.md)
+See [monitoring setup](../linux/monitoring/monitoring_tools.md)
 
 ---
 
@@ -342,7 +343,9 @@ See [monitoring setup](./fp_monitoring_setup.md)
 ## Troubleshooting Write-ups
 ### Troubleshooting Logical Volume Management (LVM) Commands
 
-When trying to create a new logical volume from the second disk, I ran into a problem where I did not have the `pvs`/`pvdisplay`, `vgs`/`vgdisplay`, or `lvs`/`lvdisplay` commands on the system.
+When trying to create a new logical volume from the second disk, I ran into a 
+problem where I did not have the `pvs`/`pvdisplay`, `vgs`/`vgdisplay`, or 
+`lvs`/`lvdisplay` commands on the system.
 
 With a quick `apt search lvdisplay` I find the package:
 ```plaintext
@@ -391,7 +394,8 @@ export PATH="$PATH:/usr/sbin"
 ---
 
 ### Troubleshooting the Disk - Creating the Logical Volume 
-After finding the executables, I tried to create the logical volume again, but got an error when running `lvcreate`:
+After finding the executables, I tried to create the logical volume again, but 
+got an error when running `lvcreate`:
 ```plaintext
 kolkhis@home-pve:~/scratch$ sudo lvcreate vg1 -n storage -l 100%FREE
 [sudo] password for kolkhis:
@@ -415,7 +419,8 @@ sudo lvcreate vg1 -n storage -l 100%FREE  # try creating again
 ```
 Same error.
 
-After some research I decided to wipe the disk to make sure all signatures and metadata, like LVM/RAID/filesystem data, was removed.  
+After some research I decided to wipe the disk to make sure all signatures and 
+metadata, like LVM/RAID/filesystem data, was removed.  
 
 Clear the signatures using `wipefs`:  
 ```bash
@@ -460,9 +465,13 @@ When using `lvdisplay` I get the following output:
   Allocation             inherit
   Read ahead sectors     auto
 ```
+
 * `LV Status` is `NOT available`. 
 
-The logical volume storage is visible in the output of `lvs` with the expected size after the disk reseat, it does indicate that `lvcreate` partially succeeded... but the recurring errors and need to reseat the disk are serious red flags.
+The logical volume storage is visible in the output of `lvs` with the expected 
+size after the disk reseat, it does indicate that `lvcreate` partially 
+succeeded... but the recurring errors and need to reseat the disk are serious 
+red flags.
 
 I manually activated the LV with `lvchange`
 ```bash
