@@ -24,7 +24,9 @@ If the boot drive fails, we still want to maintain our data.
 Create a mirror of the main boot drive's partition table on the new backup drive.  
 Here we'll use `sgdisk` to save the GUID partition table.  
 
-This will create the same partitions on the backup disk that the main boot disk has.  
+This will create the same partitions on the backup disk that the main boot disk 
+has, essentially mirroring the drive's partition layout. All partitions on the
+new disk will be the same size as the original.  
 ```bash
 sudo sgdisk --backup=table.sda /dev/sda
 sudo sgdisk --load-backup=table.sda /dev/sdc
