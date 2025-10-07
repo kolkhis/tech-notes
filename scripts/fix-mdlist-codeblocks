@@ -1,0 +1,46 @@
+#!/bin/bash
+# shellcheck disable=SC2016
+#
+# Recursively scan all markdown files.  
+# Check for code blocks that have been indented, preceded by a blank line
+# (defined as a line that starts with a newline).
+# The indented code block assumes that it belongs under a list item.
+# The preceded newline causes formatting errors in MkDocs, causing ordered
+# lists to reset and the code block will not be indented to the same level as
+# the list item it belongs to.  
+#
+# The line numbers will be read into an array for each file, `DELETE_LINES`,
+# formatted as `line:N'.
+# They will be sorted in reverse, so we delete the higher number lines to
+# prevent line shifting, causing the extracted line numbers to be rendered
+# inaccurate.
+
+shopt -s globstar
+
+declare -a DELETE_LINES=()
+declare -r PERL_SCRIPT='
+my $dpattern = qr/^\s+(?:```bash)/;
+print "line:" . ($.-1) . "\n" if (m/$dpattern/ && $prev =~ /^\n/);
+$prev = $_;
+'
+
+for file in **/*.md; do
+    # format as 'line:N' where N is line num to delete (current line minus 1 if
+    # it's an indented code block preceded by a blank line)
+    IFS=$'\n' read -r -d '' -a DELETE_LINES < <(perl -ne "$PERL_SCRIPT" "$file";)
+    [[ -n "${DELETE_LINES[*]}" ]] || continue
+
+    # Reverse list of lines so that the other targeted lines don't shift inplace
+    IFS=$'\n' read -r -d '' -a DELETE_LINES < <(
+        printf "%s\n" "${DELETE_LINES[@]##*:}" | tac
+    )
+    printf "File: %s\n" "$file"
+    printf "Sorted: %s\n" "${DELETE_LINES[@]}"
+    
+    for l in "${DELETE_LINES[@]}"; do
+        printf "Deleting line: %s in file: %s\n" "${l##*:}" "${file}"
+        # sed "566d" "docs/lac/u6lab.md"
+        sed -i "${l##*:}d" "${file}"
+    done
+done
+
