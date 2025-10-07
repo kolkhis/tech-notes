@@ -17,6 +17,8 @@ fails.
 
 If the boot drive fails, we still want to maintain our data.   
 
+- `/dev/sda` is the main boot disk that contains the root filesystem.  
+- `/dev/sdc` is the disk that I'll be using for the backup.  
 
 ### Backup and Mirror Partition Table
 Create a mirror of the main boot drive's partition table on the new backup drive.  
@@ -25,23 +27,23 @@ Here we'll use `sgdisk` to save the GUID partition table.
 This will create the same partitions on the backup disk that the main boot disk has.  
 ```bash
 sudo sgdisk --backup=table.sda /dev/sda
-sudo sgdisk --load-backup=table.sda /dev/sdb
-sudo sgdisk --randomize-guids /dev/sdb
+sudo sgdisk --load-backup=table.sda /dev/sdc
+sudo sgdisk --randomize-guids /dev/sdc
 ```
 
 - `sgdisk`: Command-line GUID partition table (GPT) manipulator for Linux/Unix
 
 - `--backup=table.sda /dev/sda`: Save `/dev/sda` partition data to a backup file.
     - The partition backup file is `table.sda`.  
-- `--load-backup=table.sda /dev/sdb`: Load the `/dev/sda` partition data from the backup file.
-- `--randomize-guids /dev/sdb`:
+- `--load-backup=table.sda /dev/sdc`: Load the `/dev/sda` partition data from the backup file.
+- `--randomize-guids /dev/sdc`:
     - Randomize the disk's GUID and all partitions' unique GUIDs (but not their  
       partition type code GUIDs).  
     - Used after cloning a disk in order to render all GUIDs unique once again.
 
 !!! note
 
-    These are example disks. `/dev/sda` is the main boot drive, but `/dev/sdb`
+    These are example disks. `/dev/sda` is the main boot drive, but `/dev/sdc`
     will likely not be the backup drive when we get one.  
 
 ### Create RAID1 Array for Root Filesystem
@@ -67,12 +69,12 @@ If we were using BIOS (Legacy boot), we'd need one more.
     If we use the live disk when creating the array, they'll be clobbered first.  
     This will cause data loss.  
 
-    The new, empty disk is `/dev/sdb` in this example. Don't put in the `/dev/sda3`
+    The new, empty disk is `/dev/sdc` in this example. Don't put in the `/dev/sda3`
     partition, or it will be wiped.
 
 Create the RAID array (degraded) with the new backup disk's `3` partition.  
 ```bash
-sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb3 missing
+sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
 ```
 
 ???+ note "What about `/dev/sda1`?"
@@ -150,9 +152,9 @@ Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not r
 `md` metadata.  
 
 ```bash
-sudo mkfs.vfat -F32 /dev/sdb2
+sudo mkfs.vfat -F32 /dev/sdc2
 sudo mkdir -p /boot/efi2
-sudo mount /dev/sdb2 /boot/efi2
+sudo mount /dev/sdc2 /boot/efi2
 sudo rsync -a --delete /boot/efi/ /boot/efi2/
 sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox  --recheck
 sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
@@ -209,7 +211,7 @@ to replace the disk with a new one to maintain redundancy.
 
 2. Clone the partition table:
    ```bash
-   sudo sgdisk --backup=table.sdb /dev/sdb  # Use the original backup disk
+   sudo sgdisk --backup=table.sdb /dev/sdc  # Use the original backup disk
    sudo sgdisk --load-backup=table.sdb /dev/sda
    sudo sgdisk --randomize-guids /dev/sda
    ```
@@ -229,6 +231,19 @@ to replace the disk with a new one to maintain redundancy.
 
 5. Wait for `md` to show `[UU]`.
 
+### If GRUB Fails to Find Root Device
+
+If GRUB is failing to find the root device when booting, we can specifically
+add RAID as a preload module in `/etc/default/grub`.  
+
+```bash
+GRUB_PRELOAD_MODULES="lvm mdraid1x"
+```
+Then run:
+```bash
+sudo update-grub
+```
+
 ---
 
 ## ZFS Rebuild (for `vmdata`)
@@ -244,13 +259,13 @@ on the main PVE boot drive.
 
 Wipe and rebuild
 ```bash
-wipefs -a /dev/sdb # clear old zfs labels
+wipefs -a /dev/sdc # clear old zfs labels
 wipefs -a /dev/sdd # clear new Kingston SSD 
 ```
 
 Create new, **mirrored** pool.  
 ```bash
-sudo zpool create vmdata mirror /dev/sdb /dev/sdd
+sudo zpool create vmdata mirror /dev/sdc /dev/sdd
 sudo zpool status
 ```
 
@@ -259,4 +274,6 @@ Add to Proxmox, then verify.
 pvesm add zfspool vmdata -pool vmdata
 pvesm status
 ```
+
+
 
