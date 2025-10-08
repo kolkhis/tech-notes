@@ -5,8 +5,10 @@ lab's storage setup to be redundant.
 
 When Proxmox was installed intially, we used LVM instead of ZFS.  
 
-If we had used ZFS, we could have leveraged the internal mirroring that it
-supports. But, we didn't, so we're going to set up RAID1 mirroring for the LVM.  
+If we had used ZFS for the root filesystem/boot drive, we could have leveraged 
+the internal mirroring that it supports.  
+
+But, we didn't, so we're going to set up RAID1 mirroring for the LVM.  
 
 We did use ZFS for `vmdata`, but that came later.  
 
@@ -19,6 +21,142 @@ If the boot drive fails, we still want to maintain our data.
 
 - `/dev/sda` is the main boot disk that contains the root filesystem.  
 - `/dev/sdc` is the disk that I'll be using for the backup.  
+
+## Table of Contents
+* [Setting up RAID1 for Root Filesystem](#setting-up-raid1-for-root-filesystem) 
+    * [High Level Overview](#high-level-overview) 
+    * [Backup and Mirror Partition Table](#backup-and-mirror-partition-table) 
+    * [Create RAID1 Array for Root Filesystem](#create-raid1-array-for-root-filesystem) 
+    * [Migrate the Root Filesystem LVM to RAID1](#migrate-the-root-filesystem-lvm-to-raid1) 
+    * [Save RAID Config](#save-raid-config) 
+    * [UEFI ESP Boot Redundancy (No `mdadm`)](#uefi-esp-boot-redundancy-no-mdadm) 
+    * [Reboot and Confirm](#reboot-and-confirm) 
+    * [Finish the Mirror](#finish-the-mirror) 
+    * [Replacing a Failed Boot Disk](#replacing-a-failed-boot-disk) 
+    * [If GRUB Fails to Find Root Device](#if-grub-fails-to-find-root-device) 
+* [ZFS Rebuild (for `vmdata`)](#zfs-rebuild-for-vmdata) 
+
+### High Level Overview
+
+- Create RAID1 array for the root filesystem.  
+
+    1. Add new physical disk to server.
+        - In my case, I also needed to use passthrough mode for the disk by rebooting into 
+          BIOS and changing the device settings to "Convert to Non-RAID disk" (the hardware 
+          RAID controller in my server would prevent the OS from using it).  
+
+    1. Copy the boot drive's disk partition table to the new drive.
+       ```bash
+       sgdisk --backup=table.sda /dev/sda
+       sgdisk --load-backup=table.sda /dev/sdc
+       sgdisk --randomize-guids /dev/sdc # To make the GUIDs unique
+       ```
+        - This mirrors the boot drive's partitions so we don't need to create them
+          manually.  
+
+    1. Create a **degraded** RAID1 array using the new disk.  
+       ```bash
+       sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
+       cat /proc/mdstat # confirm it's created ([U_])
+       ```
+        - Degraded, in this context, means leaving the second disk out of the array ("`missing`").  
+        - `/dev/sda3` is where the root filesystem LVM lives, so we use `/dev/sdc3`
+          (the backup disk's equivalent).
+
+    1. Add the RAID device to LVM.
+       ```bash
+       pvcreate /dev/md1
+       pvs # confirm it's there
+       ```
+        - This adds the RAID array as a physical volume (PV) to be used by LVM.  
+
+    1. Add the array to the `pve` Volume Group.  
+       ```bash
+       vgextend pve /dev/md1
+       pvs # confirm
+       vgs # confirm
+       ```
+        - We can transfer all the data from the `/dev/sda` disk to the
+          `/dev/md1` RAID array now that they're in the same volume group.
+
+    1. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array.  
+       ```bash
+       sudo pvs # confirm PV names
+       sudo pvmove /dev/sda3 /dev/md1
+       ```
+        - This should have migrated all of the data on `/dev/sda3` to `/dev/md1`.  
+        - Make sure to confirm the migration succeeded.
+          ```bash
+          vgdisplay pve
+          vgdisplay pve | grep -iP "free\s+pe\s+/\s+size"
+          lvs -o +devices
+          ```
+
+    1. Remove `/dev/sda3` from the volume group.  
+       ```bash
+       sudo vgreduce pve /dev/sda3
+       ```
+        - At this point, LVM only uses `/dev/md1`. The LV root now physically
+          lives in the RAID array.  
+
+    1. Save the RAID configuration.
+       ```bash
+       sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+       update-initramfs -u
+       ```
+        - These make sure that the array is assembled during early boot.  
+        - `update-initramfs -u` might be `dracut --regenerate-all --force` on
+          some RedHat distros. We're on Proxmox, though, so that's not relevant here, but
+          should be noted.  
+
+    1. Verify before reboot.
+       ```bash
+       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
+       ```
+       You should see:
+       ```plaintext
+       md1        222G lvm
+       └─pve-root  65G ext4 /
+       ```
+        - This confirms the LV for `/` is built on top of `/dev/md1` instead of
+          `/dev/sda3`.  
+
+    1. Reboot the system.
+       ```bash
+       sudo reboot
+       ```
+       Check that the root filesystem is mounted with the RAID device.  
+       ```bash
+       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
+       cat /proc/mdstat
+       findmnt /
+       mount | grep ' / '
+       ```
+
+    1. Once we've comfirmed that everything boots correctly and the RAID array
+       is healthy, we can finally add the old boot disk to the mirror.  
+       ```bash
+       sudo mdadm --add /dev/md1 /dev/sda3
+       ```
+       Then confirm:
+       ```bash
+       watch -n 2 "cat /proc/mdstat"
+       ```
+       Wait until it finishes syncinc. When we see `[UU]`, it means both disks are in sync.  
+
+
+#### Troubleshooting
+
+If GRUB fails to find the root device, we can modify `/etc/default/grub` to
+preload RAID by adding `mdraid1x` to `GRUB_PRELOAD_MODULES`.
+
+```bash title="/etc/default/grub"
+GRUB_PRELOAD_MODULES="lvm mdraid1x"
+```
+
+If the RAID root doesn't boot, we can use a rescue/live CD to re-check
+`/etc/fstab` (shouldn't be an issue with LVM) and bootloader settings.
+
 
 ### Backup and Mirror Partition Table
 Create a mirror of the main boot drive's partition table on the new backup drive.  
@@ -189,7 +327,7 @@ sudo mdadm --add /dev/md1 /dev/sda3
 
 Keep checking the `/proc/mdstat` file for `UU`.  
 ```bash
-cat /proc/mdstat
+watch -n 2 "cat /proc/mdstat"
 ```
 
 Look for the entry related to the new RAID array:
@@ -205,7 +343,7 @@ The `[UU]` at the end means the mirror is healthy and synchronized.
 
 ---
 
-### Replacing a Failed Boot Disk
+### Replacing a Failed Boot Disk (DR)
 If `/dev/sda` fails, we'll still have the backup to boot from. But we'll want
 to replace the disk with a new one to maintain redundancy.  
 
