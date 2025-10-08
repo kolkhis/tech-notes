@@ -372,6 +372,7 @@ and mounts it to the directory `/directory`
     This will list all partitions of a particular type (`xvd` in this example).  
     - This can be used with many disk partition table formats: `GPT`, `MBR`, `Sun`, `SGI` and `BSD` partition tables.
         - `GPT` (GUID Partition Table) is part of the UEFI specification. This is the modern replacement for the older `MBR` partitioning system.  
+            - GUID: Globally Unique Indentifier  
         - `MBR` (Master Boot Record) was used on older BIOS-based systems.  
         - `Sun` is used on Solaris-based systems or on SPARC architecture.   
         - `SGI` (Silicon Graphics Inc) partition tables are specific to `IRIX`. Used in legacy SGI hardware and systems runnin IRIX.  
