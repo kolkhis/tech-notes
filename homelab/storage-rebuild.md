@@ -210,10 +210,14 @@ sudo sgdisk --randomize-guids /dev/sdc
       partition type code GUIDs).  
     - Used after cloning a disk in order to render all GUIDs unique once again.
 
-!!! note
+!!! info "Check your own disks!"
 
-    These are example disks. `/dev/sda` is the main boot drive, but `/dev/sdc`
-    will likely not be the backup drive when we get one.  
+    These are the disks that I used.  
+    `/dev/sda` is *my* main boot drive, it may not be *your* main boot drive.  
+    `/dev/sdc` is *my* backup drive, it may not be *your* backup drive.  
+    
+    If you're using these notes as a guide, check which disks you need to be
+    using on your machine.  
 
 ### Create RAID1 Array for Root Filesystem
 We'll need one partition for this.
@@ -223,7 +227,7 @@ We'll need one partition for this.
 If we were using BIOS (Legacy boot), we'd need one more.  
 
 - `/boot`: Not needed on UEFI boot systems.  
-    - This is **ONLY FOR SYSTEMS WITH BIOS/LEGACY BOOT MODE.**
+    - This is **only for systems that use BIOS/Legacy Boot mode.**
     - If `/dev/sda2` is UEFI (mounted at `/boot/efi`) then we do **NOT**
       create a RAID array for it.  
     - UEFI firmware does not play well with `md` metadata, so it's backed up in
