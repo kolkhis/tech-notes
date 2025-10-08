@@ -120,12 +120,27 @@ migration.
       ```bash
       vgdisplay pve
       vgdisplay pve | grep -iP "free\s+pe\s+/\s+size"
-      lvs -o +devices
+      lvs -o +devices | grep md1
       ```
+    - Check the free space for the old physical volume.
+      ```bash
+      sudo pvs
+      ```
+      Notice the `PFree` column in relation to `PSize`.  
+      ```plaintext
+      PV         VG  Fmt  Attr PSize    PFree
+      /dev/md1   pve lvm2 a--   222.44g  <15.88g
+      /dev/sda3  pve lvm2 a--  <222.57g <222.57g
+      ```
+      The `/dev/sda3` PV now is 100% free.  
 
 1. Remove the original (`/dev/sda3`) from the `pve` volume group.  
    ```bash
    vgreduce pve /dev/sda3
+   ```
+   Output you should get:
+   ```plaintext
+   Removed "/dev/sda3" from volume group "pve"
    ```
     - At this point, LVM only uses `/dev/md1`. The LV root now physically
       lives in the RAID array.  
@@ -146,10 +161,13 @@ migration.
    ```
    You should see:
    ```plaintext
-   md1        222G lvm
-   └─pve-root  65G ext4 /
+   └─sdc3                                                  222.6G part
+     └─md1                                                 222.4G raid1
+       ├─pve-swap                                              8G lvm   [SWAP]
+       ├─pve-root                                           65.6G lvm   /
+       ...
    ```
-    - This confirms the LV for `/` is built on top of `/dev/md1` instead of
+    - This confirms the LV for `/` is built on top of `/dev/md1` (in `/dev/sdc3`) instead of
       `/dev/sda3`.  
 
 1. Reboot the system.
@@ -175,6 +193,90 @@ migration.
    ```
    Wait until it finishes syncinc. When we see `[UU]`, it means both disks are in sync.  
 
+
+### Setting up Redundant Boot
+
+This is optional, if your boot drive fails and you've already set up the RAID
+array, your data is safe. But, you may need to boot from a recovery image in
+that situation if you don't set up redundant boot.  
+
+This part assumes you've already done the steps above to migrate the root LVM 
+into a RAID array.  
+
+1. Identify the partitions. The `/dev/sda2` partition on my machine is mounted
+   to `/boot/efi`.
+   ```bash
+   findmnt /boot/efi
+   #TARGET    SOURCE    FSTYPE OPTIONS
+   #/boot/efi /dev/sda2 vfat   rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname
+   ```
+
+1. Format the redundant boot partition as FAT32. It'll be `/dev/sdc2` for me.  
+   ```bash
+   sudo mkfs.vfat -F32 /dev/sdc2
+   ```
+
+1. Mount the new ESP (EFI System Partition). Just a temp location to sync the
+   boot files.
+   ```bash
+   sudo mkdir -p /boot/efi2
+   sudo mount /dev/sdc2 /boot/efi2
+   ```
+
+1. Sync the EFI contents from the original boot partition.  
+   ```bash
+   rsync -aiv --delete /boot/efi /boot/efi2
+   ```
+
+1. Install GRUB on both paritions.
+   ```bash
+   sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=proxmox --recheck
+   sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox --recheck
+   ```
+    - You can use the same `bootloader-id` for both entires. If you want it to
+      be more specific (to be able to boot from a specific disk), give the two
+      disks distinct `bootloader-id` values.  
+
+1. Rebuild the GRUB menu.
+   ```bash
+   sudo update-grub
+   ```
+
+1. Add firmware boot entries for both drives to make sure UEFI firmware can
+   boot from either disk.  
+   ```bash
+   sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\grubx64.efi'
+   sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\grubx64.efi'
+   ```
+    - Verify with:
+      ```bash
+      sudo efibootmgr
+      ```
+      You should see them as:
+      ```plaintext
+      Boot00006* Proxmox (sda2)
+      Boot00007* Proxmox (sdc2)
+      ```
+      Numbers may vary.  
+    - We can also add removable fallback loaders to act as a safety net if
+      NVRAM entries are ever lost (this part is optional).  
+      ```bash
+      sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
+      sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --removable
+      ```
+      This writes a standard fallback loader to `\EFI\BOOT\BOOTX64.EFI`.  
+
+1. Check that both ESPs exist and are populated. 
+   ```bash
+   sudo find /boot/efi{,2}/EFI -maxdepth 2 -type f
+   ```
+   Then check boot entries again.
+   ```bash
+   sudo efibootmgr -v
+   ```
+
+1. Test by rebooting. If we really want to test failover, we can test by
+   disconnecting one disk at a time.  
 
 ### Troubleshooting
 
@@ -325,6 +427,56 @@ update-initramfs -u
       RAID arrays before mounting `/`.  
     - Without doing this, the system might fail to boot because the RAID
       wouldn't be assembled early enough.  
+    - If you skip this step and your system boots fine, it's possible your RAID
+      array may be given a random name (e.g., `md127`). If that happens, you
+      can simply run the command and reboot to get the name you gave it.  
+
+### Reboot and Confirm
+Reboot the machine.  
+```bash
+sudo reboot
+```
+Then check that root `/` is on `md1`.  
+```bash
+lsblk
+```
+Check for this section:
+```plaintext
+└─sdc3                                                    8:35   0 222.6G  0 part
+  └─md1                                                   9:1    0 222.4G  0 raid1
+    ├─pve-swap                                          252:0    0     8G  0 lvm   [SWAP]
+    ├─pve-root                                          252:1    0  65.6G  0 lvm   /
+    ...
+```
+That shows us that the root filesystem `pve-root`, mounted on `/`, lives on the
+new `md1` RAID array.  
+
+
+### Finish the Mirror
+Add the **old** partition (`/dev/sda3`) to the array now.  
+```bash
+sudo mdadm --add /dev/md1 /dev/sda3
+```
+
+Keep checking the `/proc/mdstat` file for `UU`.  
+```bash
+watch -n 2 "cat /proc/mdstat"
+```
+
+Look for the entry related to the new RAID array:
+```plaintext
+Personalities : [raid1]
+md1 : active raid1 sda3[0] sdb3[1]
+      234376192 blocks super 1.2 [2/2] [UU]
+
+unused devices: <none>
+```
+
+The `[UU]` at the end means the mirror is healthy and synchronized.  
+
+---
+
+
 
 ## UEFI ESP Boot Redundancy (No `mdadm`)
 This is how you'd create redundancy for the **OS boot**. This step is
@@ -351,39 +503,6 @@ sudo update-grub
     `/EFI/proxmox/grubx64.efi`)
 
 
-### Reboot and Confirm
-Reboot the machine.  
-```bash
-sudo reboot
-```
-Then check that root `/` is on `md1`.  
-```bash
-lsblk
-```
-
-### Finish the Mirror
-Add the **old** partition (`/dev/sda3`) to the array now.  
-```bash
-sudo mdadm --add /dev/md1 /dev/sda3
-```
-
-Keep checking the `/proc/mdstat` file for `UU`.  
-```bash
-watch -n 2 "cat /proc/mdstat"
-```
-
-Look for the entry related to the new RAID array:
-```plaintext
-Personalities : [raid1]
-md1 : active raid1 sda3[0] sdb3[1]
-      234376192 blocks super 1.2 [2/2] [UU]
-
-unused devices: <none>
-```
-
-The `[UU]` at the end means the mirror is healthy and synchronized.  
-
----
 
 ### Replacing a Failed Boot Disk (DR)
 If `/dev/sda` fails, we'll still have the backup to boot from. But we'll want
