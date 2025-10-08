@@ -339,6 +339,7 @@ nav:
     - podman/dockerfile-builds-best-practices.md
     - podman/podman.md
   - Homelab:
+    - homelab/storage-rebuild.md
     - homelab/bastion.md
     - homelab/cloud-init.md
     - homelab/homelab_initial_setup.md
