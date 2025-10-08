@@ -12,7 +12,6 @@ But, we didn't, so we're going to set up RAID1 mirroring for the LVM.
 
 We did use ZFS for `vmdata`, but that came later.  
 
-
 ## Setting up RAID1 for Root Filesystem
 This is what we'll do to set up RAID1 for our boot drive, in case that ever
 fails. 
@@ -22,159 +21,162 @@ If the boot drive fails, we still want to maintain our data.
 - `/dev/sda` is the main boot disk that contains the root filesystem.  
 - `/dev/sdc` is the disk that I'll be using for the backup.  
 
-## Table of Contents
-* [Setting up RAID1 for Root Filesystem](#setting-up-raid1-for-root-filesystem) 
-    * [High Level Overview](#high-level-overview) 
-    * [Backup and Mirror Partition Table](#backup-and-mirror-partition-table) 
-    * [Create RAID1 Array for Root Filesystem](#create-raid1-array-for-root-filesystem) 
-    * [Migrate the Root Filesystem LVM to RAID1](#migrate-the-root-filesystem-lvm-to-raid1) 
-    * [Save RAID Config](#save-raid-config) 
-    * [UEFI ESP Boot Redundancy (No `mdadm`)](#uefi-esp-boot-redundancy-no-mdadm) 
-    * [Reboot and Confirm](#reboot-and-confirm) 
-    * [Finish the Mirror](#finish-the-mirror) 
-    * [Replacing a Failed Boot Disk](#replacing-a-failed-boot-disk) 
-    * [If GRUB Fails to Find Root Device](#if-grub-fails-to-find-root-device) 
-* [ZFS Rebuild (for `vmdata`)](#zfs-rebuild-for-vmdata) 
+## High Level Overview
 
-### High Level Overview
+These are the basic steps I took to migrate my root filesystem, which was 
+installed via the Proxmox VE installer with LVM, to a RAID1 array.    
 
-These are the steps I took to migrate my root filesystem, which was installed
-via the Proxmox VE installer with LVM, to a RAID1 array.    
+These steps would also work with any other Debian-based Linux system
+installation that was done with LVM. The names of the volume groups will
+change, but the same fundamental principles will work.  
 
-These command assume root access. Use `sudo` if you're not on the root user.  
 
-- Create RAID1 array for the root filesystem.  
+### Creating a RAID1 Array for the Root Filesystem  
 
-    1. Add new physical disk to server.
-        - In my case, I also needed to use passthrough mode for the disk by rebooting into 
-          BIOS and changing the device settings to "Convert to Non-RAID disk" (the hardware 
-          RAID controller in my server would prevent the OS from using it).  
+This is the truncated version of the writeup. Contains just the basic commands
+used and brief explanations on what they're doing and the state of the
+migration.  
 
-    1. Copy the boot drive's disk partition table to the new drive.
-       ```bash
-       sgdisk --backup=table.sda /dev/sda
-       sgdisk --load-backup=table.sda /dev/sdc
-       sgdisk --randomize-guids /dev/sdc # To make the GUIDs unique
-       ```
-        - This mirrors the boot drive's partitions so we don't need to create them
-          manually.  
+!!! info "Root Access Required"
 
-    1. Create a **degraded** RAID1 array using the new disk.  
-       ```bash
-       mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
-       ```
-        - Degraded, in this context, means leaving the second disk out of the array ("`missing`").  
-        - `/dev/sda3` is where the root filesystem LVM lives, so we use `/dev/sdc3`
-          (the backup disk's equivalent).
-        - Confirm it's been created
+    These command assume root access. Use `sudo` if you're not on the root user.  
+
+1. Add new physical disk to server.
+    - In my case, I also needed to use passthrough mode for the disk by rebooting into 
+      BIOS and changing the device settings to "Convert to Non-RAID disk" (the hardware 
+      RAID controller in my server would prevent the OS from using it).  
+
+1. Copy the boot drive's disk partition table to the new drive.
+   ```bash
+   sgdisk --backup=table.sda /dev/sda
+   sgdisk --load-backup=table.sda /dev/sdc
+   sgdisk --randomize-guids /dev/sdc # To make the GUIDs unique
+   ```
+    - This mirrors the boot drive's partitions so we don't need to create them
+      manually.  
+
+1. Create a **degraded** RAID1 array using the new disk.  
+   ```bash
+   mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
+   ```
+    - Degraded, in this context, means leaving the second disk out of the array ("`missing`").  
+    - `/dev/sda3` is where the root filesystem LVM lives, so we use `/dev/sdc3`
+      (the backup disk's equivalent).
+    - Confirm it's been created
+      ```bash
+      cat /proc/mdstat
+      ```
+      We should see our `md1` array here with `[U_]` (one of two devices):
+      ```plaintext
+      Personalities : [raid1]
+      md1 : active raid1 sdc3[0]
+            233249344 blocks super 1.2 [2/1] [U_]
+            bitmap: 2/2 pages [8KB], 65536KB chunk
+      ```
+
+1. Add the RAID device to LVM.
+   ```bash
+   pvcreate /dev/md1
+   pvs # confirm it's there
+   ```
+    - This adds the RAID array as a physical volume (PV) to be used by LVM.  
+    - The `pvs` output should look something like this:
+      ```plaintext
+        PV         VG  Fmt  Attr PSize    PFree
+        /dev/md1       lvm2 ---   222.44g 222.44g
+        /dev/sda3  pve lvm2 a--  <222.57g  16.00g
+      ```
+
+1. Add the array to the `pve` Volume Group.  
+   ```bash
+   vgs # confirm VG name
+   vgextend pve /dev/md1
+   ```
+    - We can transfer all the data from the `/dev/sda` disk to the
+      `/dev/md1` RAID array now that they're in the same volume group.
+    - Confirm it's been added.  
+      ```bash
+      vgs # confirm the `#PV`
+      ```
+      Check the `#PV` column. It should be `2`.  
+      ```plaintext
+      VG  #PV #LV #SN Attr   VSize    VFree
+      pve   2  20   0 wz--n- <445.01g <238.45g
+      ```
+
+1. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array.  
+   ```bash
+   pvs # confirm PV names
+   pvmove /dev/sda3 /dev/md1
+   ```
+    - This step will take a while. It will migrate all of the data on `/dev/sda3` to `/dev/md1`.  
+        - You can keep an eye on the elapsed time with this:
           ```bash
-          cat /proc/mdstat
+          ps -o etime -p "$(pgrep pvmove)"
+          # Or keep it running to see it count up:
+          watch -n 5 'ps -o etime -p "$(pgrep pvmove)"'
           ```
-          We should see our `md1` array here with `[U_]` (one of two devices):
-          ```plaintext
-          Personalities : [raid1]
-          md1 : active raid1 sdc3[0]
-                233249344 blocks super 1.2 [2/1] [U_]
-                bitmap: 2/2 pages [8KB], 65536KB chunk
-          ```
+    - Once it's done, make sure to confirm the migration succeeded.
+      ```bash
+      vgdisplay pve
+      vgdisplay pve | grep -iP "free\s+pe\s+/\s+size"
+      lvs -o +devices
+      ```
 
-    1. Add the RAID device to LVM.
-       ```bash
-       pvcreate /dev/md1
-       pvs # confirm it's there
-       ```
-        - This adds the RAID array as a physical volume (PV) to be used by LVM.  
-        - The `pvs` output should look something like this:
-          ```plaintext
-            PV         VG  Fmt  Attr PSize    PFree
-            /dev/md1       lvm2 ---   222.44g 222.44g
-            /dev/sda3  pve lvm2 a--  <222.57g  16.00g
-          ```
+1. Remove the original (`/dev/sda3`) from the `pve` volume group.  
+   ```bash
+   vgreduce pve /dev/sda3
+   ```
+    - At this point, LVM only uses `/dev/md1`. The LV root now physically
+      lives in the RAID array.  
 
-    1. Add the array to the `pve` Volume Group.  
-       ```bash
-       vgs # confirm VG name
-       vgextend pve /dev/md1
-       ```
-        - We can transfer all the data from the `/dev/sda` disk to the
-          `/dev/md1` RAID array now that they're in the same volume group.
-        - Confirm it's been added.  
-          ```bash
-          vgs # confirm the `#PV`
-          ```
-          Check the `#PV` column. It should be `2`.  
-          ```plaintext
-          VG  #PV #LV #SN Attr   VSize    VFree
-          pve   2  20   0 wz--n- <445.01g <238.45g
-          ```
+1. Save the RAID configuration.
+   ```bash
+   mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
+   update-initramfs -u
+   ```
+    - These make sure that the array is assembled during early boot.  
+    - `update-initramfs -u` might be `dracut --regenerate-all --force` on
+      some RedHat distros. We're on Proxmox, though, so that's not relevant here, but
+      should be noted.  
 
-    1. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array.  
-       ```bash
-       pvs # confirm PV names
-       pvmove /dev/sda3 /dev/md1
-       ```
-        - This step will take a while. It will migrate all of the data on `/dev/sda3` to `/dev/md1`.  
-        - Make sure to confirm the migration succeeded.
-          ```bash
-          vgdisplay pve
-          vgdisplay pve | grep -iP "free\s+pe\s+/\s+size"
-          lvs -o +devices
-          ```
+1. Verify before reboot.
+   ```bash
+   lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
+   ```
+   You should see:
+   ```plaintext
+   md1        222G lvm
+   └─pve-root  65G ext4 /
+   ```
+    - This confirms the LV for `/` is built on top of `/dev/md1` instead of
+      `/dev/sda3`.  
 
-    1. Remove `/dev/sda3` from the volume group.  
-       ```bash
-       vgreduce pve /dev/sda3
-       ```
-        - At this point, LVM only uses `/dev/md1`. The LV root now physically
-          lives in the RAID array.  
+1. Reboot the system.
+   ```bash
+   reboot
+   ```
+   Check that the root filesystem is mounted with the RAID device.  
+   ```bash
+   cat /proc/mdstat
+   lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
+   findmnt /
+   mount | grep ' / '
+   ```
 
-    1. Save the RAID configuration.
-       ```bash
-       mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
-       update-initramfs -u
-       ```
-        - These make sure that the array is assembled during early boot.  
-        - `update-initramfs -u` might be `dracut --regenerate-all --force` on
-          some RedHat distros. We're on Proxmox, though, so that's not relevant here, but
-          should be noted.  
-
-    1. Verify before reboot.
-       ```bash
-       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
-       ```
-       You should see:
-       ```plaintext
-       md1        222G lvm
-       └─pve-root  65G ext4 /
-       ```
-        - This confirms the LV for `/` is built on top of `/dev/md1` instead of
-          `/dev/sda3`.  
-
-    1. Reboot the system.
-       ```bash
-       reboot
-       ```
-       Check that the root filesystem is mounted with the RAID device.  
-       ```bash
-       cat /proc/mdstat
-       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
-       findmnt /
-       mount | grep ' / '
-       ```
-
-    1. Once we've comfirmed that everything boots correctly and the RAID array
-       is healthy, we can finally add the old boot disk to the mirror.  
-       ```bash
-       mdadm --add /dev/md1 /dev/sda3
-       ```
-       Then confirm:
-       ```bash
-       watch -n 2 "cat /proc/mdstat"
-       ```
-       Wait until it finishes syncinc. When we see `[UU]`, it means both disks are in sync.  
+1. Once we've comfirmed that everything boots correctly and the RAID array
+   is healthy, we can finally add the old boot disk to the mirror.  
+   ```bash
+   mdadm --add /dev/md1 /dev/sda3
+   ```
+   Then confirm:
+   ```bash
+   watch -n 2 "cat /proc/mdstat"
+   ```
+   Wait until it finishes syncinc. When we see `[UU]`, it means both disks are in sync.  
 
 
-#### Troubleshooting
+### Troubleshooting
 
 If GRUB fails to find the root device, we can modify `/etc/default/grub` to
 preload RAID by adding `mdraid1x` to `GRUB_PRELOAD_MODULES`.
@@ -186,6 +188,10 @@ GRUB_PRELOAD_MODULES="lvm mdraid1x"
 If the RAID root doesn't boot, we can use a rescue/live CD to re-check
 `/etc/fstab` (shouldn't be an issue with LVM) and bootloader settings.
 
+## Steps and Explanations
+
+This is a little more long-form than the steps written above, but the process
+is the same.  
 
 ### Backup and Mirror Partition Table
 Create a mirror of the main boot drive's partition table on the new backup drive.  
@@ -245,7 +251,7 @@ If we were using BIOS (Legacy boot), we'd need one more.
     The new, empty disk is `/dev/sdc` in this example. Don't put in the `/dev/sda3`
     partition, or it will be wiped.
 
-Create the RAID array (degraded) with the new backup disk's `3` partition.  
+Create the RAID array (degraded) with the **new backup disk's** `/dev/sdc3` partition.  
 ```bash
 sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
 ```
@@ -270,6 +276,9 @@ Output should look like:
 /dev/md1 : active raid1 sdb3[0]
       [U_]
 ```
+
+The `[U_]` indicates that one out of two drives is present in the array and it
+is healthy.
 
 ### Migrate the Root Filesystem LVM to RAID1
 
@@ -317,12 +326,12 @@ update-initramfs -u
     - Without doing this, the system might fail to boot because the RAID
       wouldn't be assembled early enough.  
 
-### UEFI ESP Boot Redundancy (No `mdadm`)
-This is how you'd also create redundancy for the **OS boot**. This step is
-optional if all you want is data backup.  
+## UEFI ESP Boot Redundancy (No `mdadm`)
+This is how you'd create redundancy for the **OS boot**. This step is
+optional if all you want is data backup for your root filesystem.  
 
-Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not read
-`md` metadata.  
+Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not
+play well with `md` metadata.  
 
 ```bash
 sudo mkfs.vfat -F32 /dev/sdc2
