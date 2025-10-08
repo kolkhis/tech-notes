@@ -69,16 +69,34 @@ rpm -ivh package.rpm  # Install an .rpm package manually
 
 ### Process Management
 ```bash
-ps aux     # View all processes (BSD style)
+ps -ef     # View all processes (standard syntax)
+ps aux     # View all processes (BSD syntax)
+ps -ejH    # Print a process tree (standard syntax)
+ps axjf    # Print a process tree (BSD syntax)
 ps u 1     # View the process with PID 1
 top        # Interactive process viewer
-htop       # Enhanced interactive process viewer (often pre-installed)
+htop       # Enhanced interactive process viewer (sometimes pre-installed)
 kill PID   # Kill a process by PID
 killall processname  # Kill all instances of a process by name
-pkill -u username  # Kill all processes from a specific user
-nice -n 10 command  # Start a command with a priority (lower values = higher priority)
+pkill -u username    # Kill all processes from a specific user
+
+nice -n 10 command   # Start a command with a priority (lower values = higher priority)
 renice -n 10 -p PID  # Change the priority of an existing process
+
+ps -o etime -p "PID"  # Show how long a process has been running
+ps -o etime= -p "PID" # Show how long a process has been running (trim header)
+
+ps -eM # Security info (standard syntax)
+ps axZ # Security info (BSD syntax)
+
+pgrep processname  # Show PIDs for a process with a given name
 ```
+The `ps` command BSD variants do offer very similar functionality, but they do have
+different output, displaying slightly different information.  
+
+More on `pgrep` [here](./tools/grep.md#pgrep)
+
+
 
 ### System Monitoring and Logging
 ```bash
