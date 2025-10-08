@@ -38,6 +38,11 @@ If the boot drive fails, we still want to maintain our data.
 
 ### High Level Overview
 
+These are the steps I took to migrate my root filesystem, which was installed
+via the Proxmox VE installer with LVM, to a RAID1 array.    
+
+These command assume root access. Use `sudo` if you're not on the root user.  
+
 - Create RAID1 array for the root filesystem.  
 
     1. Add new physical disk to server.
@@ -56,12 +61,22 @@ If the boot drive fails, we still want to maintain our data.
 
     1. Create a **degraded** RAID1 array using the new disk.  
        ```bash
-       sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
-       cat /proc/mdstat # confirm it's created ([U_])
+       mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
        ```
         - Degraded, in this context, means leaving the second disk out of the array ("`missing`").  
         - `/dev/sda3` is where the root filesystem LVM lives, so we use `/dev/sdc3`
           (the backup disk's equivalent).
+        - Confirm it's been created
+          ```bash
+          cat /proc/mdstat
+          ```
+          We should see our `md1` array here with `[U_]` (one of two devices):
+          ```plaintext
+          Personalities : [raid1]
+          md1 : active raid1 sdc3[0]
+                233249344 blocks super 1.2 [2/1] [U_]
+                bitmap: 2/2 pages [8KB], 65536KB chunk
+          ```
 
     1. Add the RAID device to LVM.
        ```bash
@@ -69,22 +84,36 @@ If the boot drive fails, we still want to maintain our data.
        pvs # confirm it's there
        ```
         - This adds the RAID array as a physical volume (PV) to be used by LVM.  
+        - The `pvs` output should look something like this:
+          ```plaintext
+            PV         VG  Fmt  Attr PSize    PFree
+            /dev/md1       lvm2 ---   222.44g 222.44g
+            /dev/sda3  pve lvm2 a--  <222.57g  16.00g
+          ```
 
     1. Add the array to the `pve` Volume Group.  
        ```bash
+       vgs # confirm VG name
        vgextend pve /dev/md1
-       pvs # confirm
-       vgs # confirm
        ```
         - We can transfer all the data from the `/dev/sda` disk to the
           `/dev/md1` RAID array now that they're in the same volume group.
+        - Confirm it's been added.  
+          ```bash
+          vgs # confirm the `#PV`
+          ```
+          Check the `#PV` column. It should be `2`.  
+          ```plaintext
+          VG  #PV #LV #SN Attr   VSize    VFree
+          pve   2  20   0 wz--n- <445.01g <238.45g
+          ```
 
     1. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array.  
        ```bash
-       sudo pvs # confirm PV names
-       sudo pvmove /dev/sda3 /dev/md1
+       pvs # confirm PV names
+       pvmove /dev/sda3 /dev/md1
        ```
-        - This should have migrated all of the data on `/dev/sda3` to `/dev/md1`.  
+        - This step will take a while. It will migrate all of the data on `/dev/sda3` to `/dev/md1`.  
         - Make sure to confirm the migration succeeded.
           ```bash
           vgdisplay pve
@@ -94,14 +123,14 @@ If the boot drive fails, we still want to maintain our data.
 
     1. Remove `/dev/sda3` from the volume group.  
        ```bash
-       sudo vgreduce pve /dev/sda3
+       vgreduce pve /dev/sda3
        ```
         - At this point, LVM only uses `/dev/md1`. The LV root now physically
           lives in the RAID array.  
 
     1. Save the RAID configuration.
        ```bash
-       sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+       mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
        update-initramfs -u
        ```
         - These make sure that the array is assembled during early boot.  
@@ -123,12 +152,12 @@ If the boot drive fails, we still want to maintain our data.
 
     1. Reboot the system.
        ```bash
-       sudo reboot
+       reboot
        ```
        Check that the root filesystem is mounted with the RAID device.  
        ```bash
-       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
        cat /proc/mdstat
+       lsblk -o NAME,SIZE,TYPE,MOUNTPOINT
        findmnt /
        mount | grep ' / '
        ```
@@ -136,7 +165,7 @@ If the boot drive fails, we still want to maintain our data.
     1. Once we've comfirmed that everything boots correctly and the RAID array
        is healthy, we can finally add the old boot disk to the mirror.  
        ```bash
-       sudo mdadm --add /dev/md1 /dev/sda3
+       mdadm --add /dev/md1 /dev/sda3
        ```
        Then confirm:
        ```bash
