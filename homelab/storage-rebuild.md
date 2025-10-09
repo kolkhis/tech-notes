@@ -192,6 +192,15 @@ migration.
    watch -n 2 "cat /proc/mdstat"
    ```
    Wait until it finishes syncinc. When we see `[UU]`, it means both disks are in sync.  
+   ```plaintext
+   Personalities : [raid1] [raid0] [raid6] [raid5] [raid4] [raid10]
+   md1 : active raid1 sda3[2] sdc3[0]
+         233249344 blocks super 1.2 [2/2] [UU]
+         bitmap: 1/2 pages [4KB], 65536KB chunk
+
+   unused devices: <none>
+   ```
+   When the RAID entry looks like this, it's complete.  
 
 
 ### Setting up Redundant Boot
@@ -279,17 +288,8 @@ into a RAID array.
 1. Test by rebooting. If we really want to test failover, we can test by
    disconnecting one disk at a time.  
 
-### Troubleshooting
-
-If GRUB fails to find the root device, we can modify `/etc/default/grub` to
-preload RAID by adding `mdraid1x` to `GRUB_PRELOAD_MODULES`.
-
-```bash title="/etc/default/grub"
-GRUB_PRELOAD_MODULES="lvm mdraid1x"
-```
-
-If the RAID root doesn't boot, we can use a rescue/live CD to re-check
-`/etc/fstab` (shouldn't be an issue with LVM) and bootloader settings.
+That should be it for setting up both a redundant root filesystem with RAID and
+mirroring the EFI System Partition.  
 
 ## Steps and Explanations
 
@@ -578,4 +578,16 @@ pvesm status
 ```
 
 
+
+## Troubleshooting
+
+If GRUB fails to find the root device, we can modify `/etc/default/grub` to
+preload RAID by adding `mdraid1x` to `GRUB_PRELOAD_MODULES`.
+
+```bash title="/etc/default/grub"
+GRUB_PRELOAD_MODULES="lvm mdraid1x"
+```
+
+If the RAID root doesn't boot, we can use a rescue/live CD to re-check
+`/etc/fstab` (shouldn't be an issue with LVM) and bootloader settings.
 
