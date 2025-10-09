@@ -1,17 +1,10 @@
-name: Deploy notes into a blog on GitHub Pages with mkdocs
+name: Build MkDocs site and deploy to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-  # Allows you to run this workflow manually from the Actions tab
+  # run workflow manually from the Actions tab
   workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
@@ -32,7 +25,7 @@ jobs:
       - name: Set up directory structure
         run: ./scripts/format-dir-structure
 
-      # - name: Set up directory structure
+      # - name: Generate mkdocs.yml
       #   run: ./scripts/generate-mkdocs-config
 
       - name: Build MkDocs
