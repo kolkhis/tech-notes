@@ -247,10 +247,10 @@ into a RAID array.
    findmnt /boot/efi2
    ```
 
-   !!! warning inline end "Include the trailing slashes!"
-        Make sure you include the trailing slashes in the directory names. If
-        you don't, it will copy the `efi` directory *itself*, causing the ESP
-        filesystem hierarchy to be incorrect.  
+!!! warning inline end "Include the trailing slashes!"
+    Make sure you include the trailing slashes in the directory names. If
+    you don't, it will copy the `efi` directory *itself*, causing the ESP
+    filesystem hierarchy to be incorrect.  
 
 1. Sync the EFI contents from the original boot partition.  
    ```bash
