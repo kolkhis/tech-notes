@@ -203,8 +203,9 @@ that situation if you don't set up redundant boot.
 This part assumes you've already done the steps above to migrate the root LVM 
 into a RAID array.  
 
-1. Identify the partitions. The `/dev/sda2` partition on my machine is mounted
-   to `/boot/efi`.
+1. Identify the boot partitions to turn into ESPs (EFI System Partition). The 
+   `/dev/sda2` partition on my machine is mounted to `/boot/efi`, so `/dev/sdc2` 
+   will be my backup (since the partition table is mirrored).
    ```bash
    findmnt /boot/efi
    #TARGET    SOURCE    FSTYPE OPTIONS
@@ -216,7 +217,7 @@ into a RAID array.
    sudo mkfs.vfat -F32 /dev/sdc2
    ```
 
-1. Mount the new ESP (EFI System Partition). Just a temp location to sync the
+1. Mount the new ESP . Just a temp location to sync the
    boot files.
    ```bash
    sudo mkdir -p /boot/efi2
