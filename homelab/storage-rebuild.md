@@ -557,8 +557,12 @@ The `[UU]` at the end means the mirror is healthy and synchronized.
 
 
 ## UEFI ESP Boot Redundancy (No `mdadm`)
-This is how you'd create redundancy for the **OS boot**. This step is
-optional if all you want is data backup for your root filesystem.  
+<!-- TODO(fix): Add explanations to this section -->
+This is how I set up redundancy for the **OS boot** itself.  
+
+This is *technically* optional if all you want is data backup for your root 
+filesystem, but I wanted to be able to boot from the backup drive if one fails 
+rather than using a bootable USB to boot into recovery mode.  
 
 Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not
 play well with `md` metadata.  
@@ -571,15 +575,20 @@ sudo rsync -a --delete /boot/efi/ /boot/efi2/
 sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox  --recheck
 sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
 sudo update-grub
-```
+sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\grubx64.efi'
+sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\grubx64.efi'
+sudo efibootmgr # verify
 
+# optional: add removable fallback loaders (safety net if NVRAM entries are lost)
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --removable
+```
 ??? notes "What is ESP?"
 
     ESP stands for EFI System Partition. It's the FAT32 partition (in this
     layout, it's `/dev/sda2) that UEFI firmware reads at boot time to find
     bootloader files (e.g., `/EFI/BOOT/BOOT64.EFI` or
     `/EFI/proxmox/grubx64.efi`)
-
 
 
 ### Replacing a Failed Boot Disk (DR)
