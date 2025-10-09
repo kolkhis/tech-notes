@@ -256,29 +256,6 @@ into a RAID array.
    ```bash
    rsync -aiv --delete /boot/efi/ /boot/efi2/
    ```
-    - Output should look something like this:
-      ```plaintext
-      sending incremental file list
-      cd+++++++++ EFI/
-      cd+++++++++ EFI/BOOT/
-      >f+++++++++ EFI/BOOT/BOOTx64.efi
-      >f+++++++++ EFI/BOOT/fbx64.efi
-      >f+++++++++ EFI/BOOT/grubx64.efi
-      >f+++++++++ EFI/BOOT/mmx64.efi
-      cd+++++++++ EFI/Dell/
-      cd+++++++++ EFI/Dell/BootOptionCache/
-      >f+++++++++ EFI/Dell/BootOptionCache/BootOptionCache.dat
-      cd+++++++++ EFI/proxmox/
-      >f+++++++++ EFI/proxmox/BOOTX64.CSV
-      >f+++++++++ EFI/proxmox/fbx64.efi
-      >f+++++++++ EFI/proxmox/grub.cfg
-      >f+++++++++ EFI/proxmox/grubx64.efi
-      >f+++++++++ EFI/proxmox/mmx64.efi
-      >f+++++++++ EFI/proxmox/shimx64.efi
-
-      sent 12,191,057 bytes  received 249 bytes  24,382,612.00 bytes/sec
-      total size is 12,187,234  speedup is 1.00
-      ```
     - Verify that both directories have the same contents.
       ```bash
       ls -alh /boot/efi /boot/efi2
