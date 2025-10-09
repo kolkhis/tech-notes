@@ -242,6 +242,18 @@ migration.
    unused devices: <none>
    ```
    When the RAID entry looks like this, it's complete.  
+    - We can even verify that it's mirrored by looking at `lsblk`. The
+      `/dev/sda3` and `/dev/sdc3` entries should look identical.  
+      ```bash
+      diff <(lsblk /dev/sda3) <(lsblk /dev/sdc3)
+      ```
+      The only difference is the disk name.  
+      ```plaintext
+      2c2
+      < sda3                                                    8:3    0 222.6G  0 part
+      ---
+      > sdc3                                                    8:35   0 222.6G  0 part
+      ```
 
 
 ### Setting up Redundant Boot
