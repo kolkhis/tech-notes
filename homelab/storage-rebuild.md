@@ -13,10 +13,51 @@ But, we didn't, so we're going to set up RAID1 mirroring for the LVM.
 We did use ZFS for `vmdata`, but that came later.  
 
 ## Setting up RAID1 for Root Filesystem
-This is what we'll do to set up RAID1 for our boot drive, in case that ever
-fails. 
+For the root filesystem (mounted at `/`), we will use a RAID1 array.  
 
-If the boot drive fails, we still want to maintain our data.   
+The root filesystem on my server is mounted via LVM.   
+
+!!! example "Find Your Own Root Filesystem"
+
+    If you're going to be using this as a guide, make sure to check what your
+    root filesystem is!
+    ```bash
+    findmnt /
+    ```
+    You'll see this type of output:
+    ```plaintext
+    TARGET SOURCE               FSTYPE OPTIONS
+    /      /dev/mapper/pve-root ext4   rw,relatime,errors=remount-ro
+    ```
+    For my case, `/dev/mapper/pve-root` is the root filesystem, which is a
+    logical volume (LV) through LVM. The typical naming convention here is
+    `VGname-LVname`, so `pve-root` is the `root` LV, belonging to the `pve` volume 
+    group (VG).  
+
+    Find which physical volume is being used for that LV with `pvs`.  
+    ```bash
+    sudo pvs
+    ```
+    This will show you the VG that the disks are associated with. It will
+    typically be `/dev/sda3`.  
+
+    Run these commands to find your own root filesystem and its corresponding
+    disk drive.  
+
+Now that we've determined that our root files are managed in LVM, and
+identified which volume groups and physical volumes are being used, that makes
+migration pretty simple.  
+
+Three main steps here (ultra-simplified).
+
+1. Add the new drive, create a degraded RAID1 array from it
+2. Add the RAID array to LVM  
+3. Migrate all LVM data from old drive to new RAID array  
+4. Remove old drive from LVM, then add it to the RAID array  
+
+There's a lot more to it than that, but that's the concept.  
+
+The disks that I'll be using on this page (for my case):
 
 - `/dev/sda` is the main boot disk that contains the root filesystem.  
 - `/dev/sdc` is the disk that I'll be using for the backup.  
