@@ -209,10 +209,14 @@ This is optional, if your boot drive fails and you've already set up the RAID
 array, your data is safe. But, you may need to boot from a recovery image in
 that situation if you don't set up redundant boot.  
 
+We're essentially going to mirror the ESP (EFI System Partition) on the
+original boot disk (partition `/dev/sda2`) to the new backup disk, but not with
+RAID.  
+
 This part assumes you've already done the steps above to migrate the root LVM 
 into a RAID array.  
 
-1. Identify the boot partitions to turn into ESPs (EFI System Partition). The 
+1. Identify the boot partitions to turn into ESPs. The 
    `/dev/sda2` partition on my machine is mounted to `/boot/efi`, so `/dev/sdc2` 
    will be my backup (since the partition table is mirrored).
    ```bash
@@ -225,6 +229,11 @@ into a RAID array.
    ```bash
    sudo mkfs.vfat -F32 /dev/sdc2
    ```
+   Verify that the filesystem was created.
+   ```bash
+   lsblk -f /dev/sdc2
+   ```
+   The `FSVER` column should be set to `FAT32`.  
 
 1. Mount the new ESP . Just a temp location to sync the
    boot files.
@@ -232,11 +241,50 @@ into a RAID array.
    sudo mkdir -p /boot/efi2
    sudo mount /dev/sdc2 /boot/efi2
    ```
+   Verify that it's mounted.
+   ```bash
+   lsblk /dev/sdc2
+   findmnt /boot/efi2
+   ```
+
+   !!! warning inline end "Include the trailing slashes!"
+        Make sure you include the trailing slashes in the directory names. If
+        you don't, it will copy the `efi` directory *itself*, causing the ESP
+        filesystem hierarchy to be incorrect.  
 
 1. Sync the EFI contents from the original boot partition.  
    ```bash
-   rsync -aiv --delete /boot/efi /boot/efi2
+   rsync -aiv --delete /boot/efi/ /boot/efi2/
    ```
+    - Output should look something like this:
+      ```plaintext
+      sending incremental file list
+      cd+++++++++ EFI/
+      cd+++++++++ EFI/BOOT/
+      >f+++++++++ EFI/BOOT/BOOTx64.efi
+      >f+++++++++ EFI/BOOT/fbx64.efi
+      >f+++++++++ EFI/BOOT/grubx64.efi
+      >f+++++++++ EFI/BOOT/mmx64.efi
+      cd+++++++++ EFI/Dell/
+      cd+++++++++ EFI/Dell/BootOptionCache/
+      >f+++++++++ EFI/Dell/BootOptionCache/BootOptionCache.dat
+      cd+++++++++ EFI/proxmox/
+      >f+++++++++ EFI/proxmox/BOOTX64.CSV
+      >f+++++++++ EFI/proxmox/fbx64.efi
+      >f+++++++++ EFI/proxmox/grub.cfg
+      >f+++++++++ EFI/proxmox/grubx64.efi
+      >f+++++++++ EFI/proxmox/mmx64.efi
+      >f+++++++++ EFI/proxmox/shimx64.efi
+
+      sent 12,191,057 bytes  received 249 bytes  24,382,612.00 bytes/sec
+      total size is 12,187,234  speedup is 1.00
+      ```
+    - Verify that both directories have the same contents.
+      ```bash
+      ls -alh /boot/efi /boot/efi2
+      diff <(ls -alh /boot/efi/**) <(ls -alh /boot/efi2/**)
+      ```
+      No output on the `diff` is a good thing.  
 
 1. Install GRUB on both paritions.
    ```bash
