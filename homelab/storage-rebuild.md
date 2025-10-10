@@ -346,7 +346,7 @@ into a RAID array.
           I chose `shimx64.efi` since that was what the default loader used by
           Proxmox.  
           There's really no drawback to using `shimx64.efi`, it's more
-          compatible bec
+          compatible because it works whether Secure Boot is enabled or not.  
 
     - If you need to **delete** one of the boot entries that you made (you made
       a mistake and you need to re-do it [this definitely didn't happen to me]),
@@ -481,7 +481,7 @@ sudo mdadm --detail /dev/md1
 ```
 Output should look like:
 ```plaintext
-/dev/md1 : active raid1 sdb3[0]
+/dev/md1 : active raid1 sdc3[0]
       [U_]
 ```
 
@@ -591,8 +591,6 @@ The `[UU]` at the end means the mirror is healthy and synchronized.
 
 ---
 
-
-
 ## UEFI ESP Boot Redundancy (No `mdadm`)
 <!-- TODO(fix): Add explanations to this section -->
 This is how I set up redundancy for the **OS boot** itself.  
@@ -601,34 +599,187 @@ This is *technically* optional if all you want is data backup for your root
 filesystem, but I wanted to be able to boot from the backup drive if one fails 
 rather than using a bootable USB to boot into recovery mode.  
 
-Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not
+
+This assumes you have already [cloned your boot disk's partition table](#backup-and-mirror-partition-table).  
+
+We don't use `mdadm` RAID for UEFI boot data because the EFI firmware does not 
 play well with `md` metadata.  
 
-```bash
-sudo mkfs.vfat -F32 /dev/sdc2
-sudo mkdir -p /boot/efi2
-sudo mount /dev/sdc2 /boot/efi2
-sudo rsync -a --delete /boot/efi/ /boot/efi2/
-sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox  --recheck
-sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
-sudo update-grub
-sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\grubx64.efi'
-sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\grubx64.efi'
-sudo efibootmgr # verify
+We will mirror the original boot disk's ESP to the new disk.  
 
-# optional: add removable fallback loaders (safety net if NVRAM entries are lost)
-sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
-sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --removable
-```
-??? notes "What is ESP?"
+??? info "What is an ESP?"
 
     ESP stands for EFI System Partition. It's the FAT32 partition (in this
     layout, it's `/dev/sda2) that UEFI firmware reads at boot time to find
     bootloader files (e.g., `/EFI/BOOT/BOOT64.EFI` or
     `/EFI/proxmox/grubx64.efi`)
 
+### Make a New FAT32 Filesystem
 
-### Replacing a Failed Boot Disk (DR)
+First we make a FAT32 filesystem to mirror the one one the original boot disk.  
+```bash
+sudo mkfs.vfat -F32 /dev/sdc2
+```
+
+### Mount the New Filesystem
+After we've created the FAT32 filesystem, we need to create a mountpoint and
+mount it so that we can copy over the files we need.  
+```bash
+sudo mkdir -p /boot/efi2
+sudo mount /dev/sdc2 /boot/efi2
+```
+The name can be anything, doesn't have to be `efi2`, but that's what I chose
+for clarity.  
+
+### Mirror the ESP
+Use `rsync` to create a full mirror of the `/boot/efi` directory into
+`/boot/efi2`.  
+```bash
+sudo rsync -a --delete /boot/efi/ /boot/efi2/
+```
+
+!!! tip "Include trailing slashes!"
+
+    When specifying the directories in the `rsync` command, you **must**
+    include the trailing slashes to create an actual mirror.  
+    If you ran this without the trailing slashes, it would copy the `/boot/efi` 
+    directory **itself**, which is not what we want. We only want the
+    **contents** of that directory, which is what the trailing slash tells
+    `rsync`.  
+
+Once that's done, move onto the next step.  
+
+### Install GRUB on Both ESPs
+Now that the files are there, we can use `grub-install` to install the
+bootloader onto the partitions.  
+
+```bash
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=proxmox  --recheck
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=proxmox2 --recheck
+```
+
+Make sure to run `update-grub` afterwards. This will generate a new GRUB 
+configuration file.  
+
+```bash
+sudo update-grub
+# or, if that's not available for some reason
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+The `update-grub` command is a wrapper utility for `grub-mkconfig`, so use whichever
+floats ya boat.  
+
+
+### Set up EFI Boot Manager
+We'll need to add some new entries into the EFI boot manager specifying our
+desired bootloader.  
+```bash
+sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\shimx64.efi'
+sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\shimx64.efi'
+```
+
+- `efibootmgr`: This is the userspace application used to modify the UEFI b oot
+  manager. It can create, destroy, and modify boot entries.  
+
+    - `-c`: Create a new boot entry.  
+    - `-d /dev/sdX`: Specify the disk we're using.  
+    - `-p 2`: Specify the boot partition on the disk.  
+    - `-L "Proxmox (sdX2)"`: The label to give to the boot entry.  
+    - `-l '\EFI\proxmox\shimx64.efi'`: Specify the bootloader to use.  
+
+
+???+ info "Choosing the Right Bootloader"
+
+    In this case, the OS loader is `shimx64.efi`.  
+    This bootloader is primarily for when Secure Boot is enabled in BIOS (UEFI).  
+    If you do not have secure boot enabled, you can use `grubx64.efi`
+    instead of `shimx64.efi`.  
+    - `shimx64.efi`: a Microsoft-signed first-stage loader that validates and then chains to GRUB. Required when Secure Boot = ON.  
+    - `grubx64.efi`: GRUB directly. Works when Secure Boot = OFF (or on systems allowing it).  
+    I chose `shimx64.efi` since that was what the default loader used by
+    Proxmox.  
+    There's really no drawback to using `shimx64.efi`, it's more
+    compatible because it works whether Secure Boot is enabled or not.  
+
+???+ tip "Deleting an Entry"
+
+    If you need to **delete** one of the boot entries that you made (you made
+    a mistake and you need to re-do it [this definitely didn't happen to me]),
+    first identify the number that was assigned to it (`Boot000X`) with:
+    ```bash
+    sudo efibootmgr
+    ```
+    Then, if you wanted to delete the `Boot0006` entry, you'd specify `-b 6` along with `-B`.  
+    ```bash
+    sudo efibootmgr -b 6 -B 
+    ```
+
+Once you've created the boot entries, verify that they're there and using the
+bootloader that you specified.  
+```bash
+sudo efibootmgr -v
+```
+
+
+### Add Fallback Loaders (Optional)
+We can also add removable fallback bootloaders to act as a safety net if
+NVRAM (Non-Volatile RAM) entries are ever lost (this part is optional).  
+```bash
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --removable
+```
+This writes a standard fallback loader to `\EFI\BOOT\BOOTX64.EFI`.  
+It guarantees the machine will still boot even if all EFI entries vanish, 
+so it's definitely a good thing to do.
+
+### Changing Boot Order
+
+The boot order should be appropriately updated after doing all these steps, but
+if you want to manually change it, it can be done with the `-o` option.  
+
+Identify the numbers associated with the boot entries.  
+```bash
+sudo efibootmgr
+```
+Then use the `Boot####` numbers in the command (comma-delimited).  
+```bash
+sudo efibootmgr -o 0006,0005,0004,0003
+```
+
+### Reboot
+
+Reboot to make sure you're booting from the new boot entries.  
+
+### Delete Old Boot Entry (Optional)
+
+Once all that's done, you should be able to safely delete the old boot entry.  
+
+!!! warning "Make sure you did it right!"
+
+    This step is destructive. If you delete the original boot entry and your
+    new ones are formatted incorrectly, it may cause you to be locked out of
+    your system. Verify that your bootloader entries are correct before doing
+    this.  
+
+    You may want to test first by [changing the boot order](#changing-boot-order)
+    to boot using the new entires.  
+
+
+First, verify the **number** associated with the original boot entry.  
+```bash
+sudo efibootmgr
+```
+
+Find the original entry. Mine was simply labeled "`proxmox`", and it was
+`Boot0005` (number `5`).  
+```bash
+sudo efibootmgr -b 5 -B 
+```
+That will delete the old boot entry.  
+
+
+## Replacing a Failed Boot Disk (DR)
 If `/dev/sda` fails, we'll still have the backup to boot from. But we'll want
 to replace the disk with a new one to maintain redundancy.  
 
@@ -686,8 +837,6 @@ Add to Proxmox, then verify.
 pvesm add zfspool vmdata -pool vmdata
 pvesm status
 ```
-
-
 
 ## Troubleshooting
 
