@@ -656,19 +656,6 @@ to replace the disk with a new one to maintain redundancy.
 
 5. Wait for `md` to show `[UU]`.
 
-### If GRUB Fails to Find Root Device
-
-If GRUB is failing to find the root device when booting, we can specifically
-add RAID as a preload module in `/etc/default/grub`.  
-
-```bash
-GRUB_PRELOAD_MODULES="lvm mdraid1x"
-```
-Then run:
-```bash
-sudo update-grub
-```
-
 ---
 
 ## ZFS Rebuild (for `vmdata`)
@@ -709,6 +696,10 @@ preload RAID by adding `mdraid1x` to `GRUB_PRELOAD_MODULES`.
 
 ```bash title="/etc/default/grub"
 GRUB_PRELOAD_MODULES="lvm mdraid1x"
+```
+Then run:
+```bash
+sudo update-grub
 ```
 
 If the RAID root doesn't boot, we can use a rescue/live CD to re-check
