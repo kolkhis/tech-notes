@@ -52,4 +52,49 @@ printf "File: %s\n" "${LINES[@]}"
 - `-a LINES`: Specify the array to read into.  
 
 
+## Reading Multiple Values at a Time
+
+We can use `read` to split up lines into different variables.  
+```bash
+read -r name age <<< "paul 50"
+echo "Name: $name, Age: $age"
+# output: 
+# Name: paul, Age: 50
+```
+This is useful if you want to read in multiple variables from lines that are
+separated into columns (without using `awk` or `cut`).  
+
+For instance, if we wanted to utilize this to loop over lines with two columns:
+```bash
+tmpfile="$(mktemp)"
+cat << EOF > "$tmpfile"
+paul 50
+jack 22
+anna 30
+tara 45
+EOF
+
+while read -r name age; do
+    echo "Name: $name, Age: $age"
+done < "$tmpfile"
+```
+
+This separates the elements based on the `IFS` value, which includes whitespace
+by default.  
+
+If we set IFS to null, it would not work as intended.
+```bash
+IFS= read -r name age <<< "paul 50" # BAD
+echo "Name: $name, Age: $age"
+# Output:
+# Name: paul 50, Age:
+```
+
+If we want to be specific, and ensure that the two columns are split up into
+their respective variables, we can set the IFS to a space just for the `read`
+command.
+```bash
+IFS=' ' read -r name age <<< "paul 50"
+```
+This will guarantee that the line gets split on spaces.  
 
