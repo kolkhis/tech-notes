@@ -48,12 +48,14 @@ Now that we've determined that our root files are managed in LVM, and
 identified which volume groups and physical volumes are being used, that makes
 migration pretty simple.  
 
-Three main steps here (ultra-simplified).
+There are four(5) main steps here (ultra-simplified). {.annotate}
 
 1. Add the new drive, create a degraded RAID1 array from it
 2. Add the RAID array to LVM  
 3. Migrate all LVM data from old drive to new RAID array  
 4. Remove old drive from LVM, then add it to the RAID array  
+5. These are the conceptual steps, there are many more technical steps in this
+   process.
 
 There's a lot more to it than that, but that's the concept.  
 
