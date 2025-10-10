@@ -98,3 +98,17 @@ IFS=' ' read -r name age <<< "paul 50"
 ```
 This will guarantee that the line gets split on spaces.  
 
+If we also wanted to include tabs to account for different types of whitespace,
+we could add that to IFS as well.  
+```bash
+IFS=$' \t' read -r name age <<< "paul 50"
+```
+
+!!! note "ANSI-C Quoting"
+
+    When setting the IFS to characters like tab (`\t`), use ANSI-C quoting
+    (`$'...'`) to make sure it's interpreted correctly, as a literal tab character 
+    instead of the literal `\t` characters.  
+
+    [More about ANSI-C Quoting here](../bash/ansi-c-quoting.md).  
+
