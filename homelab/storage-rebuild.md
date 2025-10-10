@@ -332,26 +332,53 @@ into a RAID array.
 1. Add firmware boot entries for both drives to make sure UEFI firmware can
    boot from either disk.  
    ```bash
-   sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\grubx64.efi'
-   sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\grubx64.efi'
+   sudo efibootmgr -c -d /dev/sda -p 2 -L "Proxmox (sda2)" -l '\EFI\proxmox\shimx64.efi'
+   sudo efibootmgr -c -d /dev/sdc -p 2 -L "Proxmox (sdc2)" -l '\EFI\proxmox\shimx64.efi'
    ```
+
+    - ???+ info "Choosing the Right Loader"
+          In this case, the OS loader is `shimx64.efi`.  
+          This bootloader is primarily for when Secure Boot is enabled in BIOS (UEFI).  
+          If you do not have secure boot enabled, you can use `grubx64.efi`
+          instead of `shimx64.efi`.  
+          - `shimx64.efi`: a Microsoft-signed first-stage loader that validates and then chains to GRUB. Required when Secure Boot = ON.  
+          - `grubx64.efi`: GRUB directly. Works when Secure Boot = OFF (or on systems allowing it).  
+          I chose `shimx64.efi` since that was what the default loader used by
+          Proxmox.  
+          There's really no drawback to using `shimx64.efi`, it's more
+          compatible bec
+
+    - If you need to **delete** one of the boot entries that you made (you made
+      a mistake and you need to re-do it [this definitely didn't happen to me]),
+      first identify the number that was assigned to it (`Boot000X`) with:
+      ```bash
+      sudo efibootmgr
+      ```
+      Then, if you wanted to delete the `Boot0006` entry, you'd specify `-b 6` along with `-B`.  
+      ```bash
+      sudo efibootmgr -b 6 -B 
+      ```
+
     - Verify with:
       ```bash
       sudo efibootmgr
       ```
       You should see them as:
       ```plaintext
-      Boot00006* Proxmox (sda2)
-      Boot00007* Proxmox (sdc2)
+      Boot0006* Proxmox (sda2)
+      Boot0007* Proxmox (sdc2)
       ```
       Numbers may vary.  
-    - We can also add removable fallback loaders to act as a safety net if
-      NVRAM entries are ever lost (this part is optional).  
+
+    - We can also add removable fallback bootloaders to act as a safety net if
+      NVRAM (Non-Volatile RAM) entries are ever lost (this part is optional).  
       ```bash
       sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
       sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --removable
       ```
       This writes a standard fallback loader to `\EFI\BOOT\BOOTX64.EFI`.  
+      It guarantees the machine will still boot even if all EFI entries vanish, 
+      so it's definitely a good thing to do.
 
 1. Check that both ESPs exist and are populated. 
    ```bash
@@ -406,11 +433,12 @@ sudo sgdisk --randomize-guids /dev/sdc
     using on your machine.  
 
 ### Create RAID1 Array for Root Filesystem
-We'll need one partition for this.
+We'll need to use one disk partition for this, cloned from the original boot
+disk.
 
 - `/` (root): All the data in the root filesystem, will hold the LVM
 
-If we were using BIOS (Legacy boot), we'd need one more.  
+If we were using BIOS (Legacy boot), we'd need one more for `/boot`.  
 
 - `/boot`: Not needed on UEFI boot systems.  
     - This is **only for systems that use BIOS/Legacy Boot mode.**
@@ -419,7 +447,7 @@ If we were using BIOS (Legacy boot), we'd need one more.
     - UEFI firmware does not play well with `md` metadata, so it's backed up in
       a different way.  
 
-!!! warning
+!!! warning "Degraded RAID Array"
 
     We need to create the array **degraded** first, using **only the new disk**, 
     so we don't touch the live boot disk. We do this by providing `missing` in
@@ -444,7 +472,7 @@ sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdc3 missing
     boot code. It has no filesystem, no files, no mountpoint.  
 
     In UEFI boot systems, `/dev/sda1` will contain BIOS boot instructions for
-    backwards compatibility, even if the disk is in EUFI mode. Make sure to
+    backwards compatibility, even if the system is in UEFI mode. Make sure to
     check it.  
 
 Check to make sure the new array exists and is healthy.  
@@ -472,12 +500,21 @@ is healthy.
    ```bash
    sudo vgextend pve /dev/md1
    ```
+   This is the volume group that all of the system's LVs are build on top of.  
 
 3. Live-migrate all LVs from the old PV (`/dev/sda3`) onto the array
+   !!! info inline end
+       This will take a while. In my case, it took roughly an hour and a half.  
    ```bash
    sudo pvs # confirm PV names
    sudo pvmove /dev/sda3 /dev/md1
    ```
+    - You can keep an eye on the elapsed time with this:
+      ```bash
+      ps -o etime -p "$(pgrep pvmove)"
+      # Or keep it running to see it count up:
+      watch -n 5 'ps -o etime -p "$(pgrep pvmove)"'
+      ```
 
 4. Remove `/dev/sda3` from the volume group.  
    ```bash
