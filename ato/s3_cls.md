@@ -49,4 +49,3 @@ For your first contribution, invest more in the first contribution than you get 
 recommit hook
 Enforcing code style with linters/formatters
 
-oo
