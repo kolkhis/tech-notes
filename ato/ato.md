@@ -37,6 +37,10 @@ Vendors from many companies and projects are afforded booths within the
 convention center. They have the chance to advertise their product in-person,
 and give give away "swag" to attendees (e.g., t-shirts, stickers, buttons,
 hats, etc.).  
+RedHat was giving away, and this may shock you, red hats! Fedoras, in fact.
+CIQ was giving away Rocky Linux hats, tote bags, stickers, even temporary
+tattoos!  One booth was
+even giving away specially-branded Tide pens!
 
 This is a great marketplace for exploring solutions that you may want to try
 out yourself, or perhaps you'll find a solution that you can use
@@ -45,6 +49,10 @@ professionally. It's essentially an open marketplace of ideas and knowledge.
 For instance, this event features Tailscale, which offers homelabbers (among
 others) a solution to remotely connect to their homelab server in a **secure** 
 way, without manually exposing 
+
+
+
+
 
 ## Community
 The community is incredibly welcomeing. This was my first ever tech conference,
