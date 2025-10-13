@@ -55,6 +55,10 @@ Everyone, and I mean everyone (attendees, volunteers, and speakers) are all pass
 technology, which could be a refreshing change of atmosphere if you come from a 
 corporate entity with perhaps a somewhat stifling work environment.  
 
+The co-located free event(s) starting the day before ATO official starts
+include the Community Leadership Summit, Open Source Accessibility Summit, as
+well as the Inclusion and Diversity Summit. I attended the Community Leadership
+Summit, which was an amazing time that you can read about [here](TODO: ADD LINK TO CLS WRITEUP)
 
 
 
