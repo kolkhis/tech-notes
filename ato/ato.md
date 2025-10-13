@@ -47,6 +47,9 @@ The community is incredibly welcomeing. This was my first ever tech conference,
 and the welcome I received from the other attendees was nothing short of
 awesome. 
 
+Everyone, attendees, volunteers, and speakers are all passionate about 
+technology, which could be a refreshing change of atmosphere if you come from a 
+corporate entity with perhaps a somewhat stifling work environment. 
 
 
 
