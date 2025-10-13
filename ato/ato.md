@@ -42,14 +42,20 @@ This is a great marketplace for exploring solutions that you may want to try
 out yourself, or perhaps you'll find a solution that you can use
 professionally. It's essentially an open marketplace of ideas and knowledge.
 
+For instance, this event features Tailscale, which offers homelabbers (among
+others) a solution to remotely connect to their homelab server in a **secure** 
+way, without manually exposing 
+
 ## Community
 The community is incredibly welcomeing. This was my first ever tech conference,
 and the welcome I received from the other attendees was nothing short of
 awesome. 
 
-Everyone, attendees, volunteers, and speakers are all passionate about 
+Everyone, and I mean everyone (attendees, volunteers, and speakers) are all passionate about 
 technology, which could be a refreshing change of atmosphere if you come from a 
-corporate entity with perhaps a somewhat stifling work environment. 
+corporate entity with perhaps a somewhat stifling work environment.  
+
+
 
 
 
