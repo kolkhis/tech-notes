@@ -1,22 +1,30 @@
 # All Things Open (2025)
 ## Raleigh, NC
 
-All Things Open is a tech conference in Raleigh, North Carolina, USA.  
-
 All Things Open (ATO) is one of the largest open-source technology conferences 
 in the U.S., bringing together thousands of developers, engineers, and open-
-source advocates each year in Raleigh, North Carolina.
+source advocates each year in Raleigh, North Carolina.  
 
 It's held annually at the Raleigh Convention Center, a spacious venue designed to 
 host an event of this size.   
 
 2025 marks the 13th anniversary of ATO, with upwards of six thousand attendees this year!  
 
+## Special Thanks
+
+I'd like to personally thank **Todd Lewis (All Things Open LLC)** for
+extending a scholarship, making it possible for me to attend this wonderful 
+event.  
+
+I also must thank the **Professional Linux Users Group** for sponsoring my
+travel, food, and lodging. I would not have been able to experience the event 
+fully without their support.
+
 
 ## Speakers
 
 Industry professionals from all over the world are invited to speak on
-topics on which they're considered experts.
+topics where they're considered experts.
 
 There are several points of focus, and as such, the organizers have presented
 thematic "tracks" that attendees can focus on. Tracks aren't fixed, the attendees 
@@ -44,9 +52,9 @@ Vendors from across the open-source and tech world filled the conference hall
 with booths, demos, and "swag" giveaways. RedHat was giving away -- 
 and this may shock you -- red Fedoras! CIQ represented Rocky Linux, Warewulf, 
 and other projects with lanyards, tote bags, stickers, and even temporary tattoos. 
-One booth was even giving away specially-branded Tide pens! Every booth was 
-giving away stickers for their products.  I think I walked out of the 
-convention center with one of every sticker that was ever created.  
+One booth even handed out branded Tide pens! Every booth was giving away 
+stickers for their products. I think I walked out of the convention center with 
+one of every sticker that was ever created.  
 
 ---
 
@@ -68,20 +76,20 @@ That's just one example of many cool tools and technologies being represented.
 Some other notable booths and demos included:
 
 - AWS Open Source was being represented
-- Zabbix, DynaTrace, Observe, DataDog, and plenty other observability solutions were on
+- Zabbix, DynaTrace, Observe, DataDog, and plenty of other observability solutions were on
   display  
 - HeroDevs had one of the craziest booths at the event.
 - The Linux Foundation was there giving away discounts for educational content
-- Intuit (the people behind Argo) were demoing their new project, numaflow
+- Intuit (the people behind Argo) were demoing their new project, **Numaflow**
 - CodeRabbit was demoing an agentic AI code reviewer
 - Keebio had a great booth set up to display their newest ergonomic mechanical keyboards.
 
-There many other new cutting-edge AI products were on display by a variety of companies.  
+There were many other new cutting-edge AI products were on display by a variety of companies.  
 
 ---
 
 Now, it's not just corporate entities being represented. The event is called
-"All Things Open," so, as you can imagine, there was a **heavy** Open-Source
+"All Things Open," so, as you can imagine, there was a **heavy** open-source
 presence.  
 
 Alma Linux had a booth set up and made a strong case as a leading open-source,
@@ -89,6 +97,9 @@ binary-compatible RHEL alternative.
 
 There were some Raleigh locals there, some representing the TriLUG (Triangle Linux User
 Group), as well as some other local businesses that were in attendance.  
+
+It was great to see so many local open-source advocates and commuity builders
+represented alongside the major tech players.  
 
 There were several recruitment agencies that set up booths throughout the center.  
 If you're looking for work, there are people who can help you to determine your best fit 
@@ -106,9 +117,9 @@ The community is incredibly welcoming. This was my first ever tech conference,
 and the welcome I received from the other attendees, volunteers, and speakers 
 was nothing short of amazing. 
 
-Everyone, and I mean everyone (attendees, volunteers, and speakers) are all passionate about 
-technology. People are there because they care. The community is the beating heart
-of open source, and it's beating strong.  
+Everyone -- and I mean everyone (attendees, volunteers, and speakers) -- is all 
+passionate about technology. People are there because they care. The community 
+is the beating heart of open source, and it's beating strong.  
 
 ## Things I Learned
 
@@ -119,16 +130,19 @@ All the different talks I attended had something valuable to offer.
   an open-source maintainer  
 - Linux Tips and Tricks: A collection of miscellaneous Linux tips presented by
   engineers and content creators  
-- Remotely Connecting to a Homelab: Using Tailscale to set up **secure**
+- Remotely connecting to a Homelab: Using Tailscale to set up **secure**
   ingress into my homelab (or any other device)  
 
-It was not just technical topics that I learned about either. Some of the most
+It was not just technical insights that I walked away with. Some of the most
 valuable things I learned were non-technical.  
 
 - How to get involved with open-source projects
 - How tech professionals network
 - How to be a non-code-contributing member of a community
 - ...among other things.
+
+Overall, ATO gave me a broader understanding of both the technical and human
+sides of open source.  
 
 ## Summary
 
@@ -139,7 +153,7 @@ and support the projects that you love.
 Even if you can't attend the official ATO conference, I'd highly recommend
 hitting up one of the free co-located events that are held the day prior.  
 
-These free events are:
+These co-located free events are:
 
 - Community Leadership Summit
 - Open Source Accessibility Summit
@@ -147,6 +161,5 @@ These free events are:
 
 I attended the Community Leadership Summit, which was an amazing time with
 great discussions (but that's a separate writeup).  
-
 
 
