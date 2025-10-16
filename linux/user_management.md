@@ -80,6 +80,7 @@ SKEL=/etc/skel
 CREATE_MAIL_SPOOL=no
 ```
 
+
 This shows:
 * `GROUP`: The group that they will be added to when created,
 * `HOME`: Where their home directory will be.  
@@ -91,6 +92,14 @@ This shows:
     - The skeleton directory is the location where it will pull default files from (`SKEL`).  
     - Every file in `/etc/skel` will be copied into the new user's home directory.  
 * `CREATE_MAIL_SPOOL`: Whether or not to create a mail spool (mailbox) for the user.  
+
+
+!!! note "`useradd` vs. `adduser`"
+
+    The `useradd` command should not be confused with `adduser`, which is a 
+    separate command entirely, and usually only on Debian-based systems. The 
+    `adduser` and `addgroup` commands are supposed to be "friendlier" commands than 
+    the lower-level `useradd`, `groupadd`, and `usermod` programs.  
 
 
 The `useradd` command is used to both print and set the default values stored
@@ -114,6 +123,12 @@ The values configurable in `/etc/login.defs` include:
 - `UMASK` may be used in `useradd` during home dir creation 
     - **Also** used by login programs if PAM (`pam_umask`) is configured.  
     - Separate from the shell's runtime umask in `/etc/profile`.  
+
+!!! info "Command Line Arguments to `useradd`"
+
+    Any CLI arguments passed to `useradd` will **take priority** over the
+    values set in any file, essentially overriding those configuration values.  
+
 
 ### Changing the Default User Settings
 The defaults can be changed by adding more arguments to the `useradd -D` command:
