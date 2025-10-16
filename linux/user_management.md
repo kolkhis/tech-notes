@@ -62,7 +62,7 @@ gpasswd -d username groupname  # Remove a user from a group
 
 ```
 
-## Show Default User Settings 
+## Default User Settings 
 
 Show the defaults for users made with the `useradd` command:
 ```bash
@@ -79,6 +79,7 @@ SHELL=/bin/sh
 SKEL=/etc/skel
 CREATE_MAIL_SPOOL=no
 ```
+
 This shows:
 * `GROUP`: The group that they will be added to when created,
 * `HOME`: Where their home directory will be.  
@@ -87,11 +88,32 @@ This shows:
 * `EXPIRE`: The date when the account will expire and be disabled.  
 * `SHELL`: The login shell they will have
 * `SKEL`: The skeleton directory, where their default home files will be copied from.
+    - The skeleton directory is the location where it will pull default files from (`SKEL`).  
+    - Every file in `/etc/skel` will be copied into the new user's home directory.  
 * `CREATE_MAIL_SPOOL`: Whether or not to create a mail spool (mailbox) for the user.  
 
-The skeleton directory is the location where it will pull default files from (`SKEL`).  
-Every file in `/etc/skel` will be copied into the new user's home directory.  
 
+The `useradd` command is used to both print and set the default values stored
+in `/etc/default/useradd`, where these values actually live.  
+
+You can also modify `/etc/default/useradd` directly to specify default values 
+used when creating users with `useradd` (e.g., the user's default shell).  
+
+---
+
+There are additional values in `/etc/login.defs` that relate to `useradd`. The 
+default `umask` value for new users is set here, and the `HOME_MODE` setting here 
+sets the permissions for a new user's home directory created with `useradd`.  
+
+The values configurable in `/etc/login.defs` include:
+
+- Password aging fields (how long before a user's password expires)
+- ID ranges, which will determine what range the user's UID/GID will fall in 
+    - `UID_MIN/MAX`, `GID_MIN/MAX`, `SYS_UID_MIN/MAX`, `SYS_GID_MIN/MAX`
+- Home directory mode (permissions), only if `HOME_MODE` is set
+- `UMASK` may be used in `useradd` during home dir creation 
+    - **Also** used by login programs if PAM (`pam_umask`) is configured.  
+    - Separate from the shell's runtime umask in `/etc/profile`.  
 
 ### Changing the Default User Settings
 The defaults can be changed by adding more arguments to the `useradd -D` command:
