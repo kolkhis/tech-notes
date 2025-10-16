@@ -1,7 +1,7 @@
 # Building Redundant Storage 
 
 After going through a headache with a failed drive, I'm rebuilding my Proxmox
-lab's storage setup to be redundant.  
+homelab's storage setup to be redundant.  
 
 When Proxmox was installed intially, we used LVM instead of ZFS.  
 
@@ -10,9 +10,15 @@ the internal mirroring that it supports.
 
 But, we didn't, so we're going to set up RAID1 mirroring for the LVM.  
 
-We did use ZFS for `vmdata`, but that came later.  
+- ZFS **does not** manage the ESP, so even on a ZFS-mirrored boot drive, the EFI
+  partitions must be manually maintained for each boot disk. So if we
+  wanted redundant boot disks, we'd have to go through at least some of these 
+  steps anyway.  
+
+We did use ZFS for `vmdata`, our extra storage pool, but that came later.  
 
 ## Setting up RAID1 for Root Filesystem
+
 For the root filesystem (mounted at `/`), we will use a RAID1 array.  
 
 The root filesystem on my server is mounted via LVM.   
@@ -165,6 +171,7 @@ migration.
       vgdisplay pve | grep -iP "free\s+pe\s+/\s+size"
       lvs -o +devices | grep md1
       ```
+
     - Check the free space for the old physical volume.
       ```bash
       sudo pvs
@@ -815,30 +822,29 @@ to replace the disk with a new one to maintain redundancy.
 The `vmdata` ZFS pool was set up after the original OS installation.  
 The failed drive affected this ZFS pool.  
 
-
 This approach uses ZFS internal mirroring rather than traditional software RAID 
 through `mdadm`.  
 
-Although, once we can afford a new disk, we will set up software RAID1 (mirror)
-on the main PVE boot drive.  
+ZFS makes it really easy to mirror a disk for redundancy. The process is
+built-in to the `zpool` utility.  
 
-Wipe and rebuild
-```bash
-wipefs -a /dev/sdc # clear old zfs labels
-wipefs -a /dev/sdd # clear new Kingston SSD 
-```
+1. Wipe and rebuild
+   ```bash
+   wipefs -a /dev/sdc # clear old zfs labels
+   wipefs -a /dev/sdd # clear new disk
+   ```
 
-Create new, **mirrored** pool.  
-```bash
-sudo zpool create vmdata mirror /dev/sdc /dev/sdd
-sudo zpool status
-```
+2. Create new, **mirrored** pool.  
+   ```bash
+   sudo zpool create vmdata mirror /dev/sdc /dev/sdd
+   sudo zpool status
+   ```
 
-Add to Proxmox, then verify.  
-```bash
-pvesm add zfspool vmdata -pool vmdata
-pvesm status
-```
+3. Add to Proxmox, then verify.  
+   ```bash
+   pvesm add zfspool vmdata -pool vmdata
+   pvesm status
+   ```
 
 ## Troubleshooting
 
