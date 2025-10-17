@@ -14,7 +14,6 @@
 commit 1i2oe23h2f2039f
 Author: Jessica Schumaker <jeschu1@github.com>
 Dte:  tue Sep 16 20:53:33:33 2025 +0000
-
 ```
 
 ### Check Commit Metadata
@@ -43,89 +42,183 @@ Looking at most commits, you don't know
 ```bash
 git log --format=fuller 0c4d01f
 ```
-- Author: the one who wrote the changes
-- Committer: actor that applied the changes
-- There are common cases for committing someone else's authored commit
-    - rebase, cherry-pick, merging a PR for someone
-- BUT it can also be a sign of foul play.
 
-Author: the one that does the work/writing
-Committer: The person that puts it on the shelf/branch
+> Note that `0c4d01f` is a specific commit hash.  
+
+Look at the following fields:
+
+- Author: The one who does the work -- wrote/authored the changes.  
+- Committer: The actor that applied the changes -- puts it into the branch itself.  
+- There are common cases for committing someone else's authored commit.  
+    - E.g., `rebase`, `cherry-pick`, or merging a PR for someone.  
+- However, it can also be a sign of foul play if these two are different.  
+
 
 ## Clue #2 - Commit Signing
-Best clue you can get.  
-- Using a private key you can sign commits.
-Gh will examine the authors email and verify commit's signature against the
-public key updated to that email account.  
+This is one of the best clues you can get as to whether or not a commit was
+spoofed.  
 
-while a private key can be stolen, a commit signature is a pretty strong
-signal. 
+You should use either a GPG or SSH key to sign your commits, this way others
+can always verify if the commit was actually done by you.
 
-lack of signature does not necessaily mean the commitis spoofed.
+GitHub will examine the author's email and verify commit's signature against the
+public key associated with that email's corresponding GitHub account.  
+This will display as a green `verified` badge next to the commit.  
 
+While a private key *can* be stolen, a commit signature is a pretty strong signal of integrity. 
+
+The lack of a signature does not necessaily mean the commit is spoofed, though.
+If the author has not set up automatic commit signing, or do not sign their
+commits with `-S`, the commit won't be signed.
+
+To manually sign a commit, use `-S` when committing:
 ```bash
 git commit -S -m "commit msg"
 ```
 
+!!! note "Setting up a Signing Key"
+
+    You will need to go through the process of adding a "Signing Key" to your
+    GitHub account for commits to actually be verifiable.  
+    I have a writeup on how to get that done using SSH authetication
+    [here](/git/ssh_for_git.md)
+
 The vast majority of people do not sign their commits. Just because it doesn't
-have  asignature doesn't mean it's fake, but it does lack authenticity and
+have a signature doesn't mean it's fake, but it does lack authenticity and
 question integrity.  
 
-## Clue #3
+## Clue #3 - The Pusher
 Final clue: Look at who pushed the commit.  
 
-Pusher: Authenticated Actor that "pushed" the commit to the repo.
-- not a git concept, but used for auth
+- Pusher: Authenticated Actor that "pushed" the commit to the repo.
 
-- Terera are common cases for pushing someone else'se commit (rebase,
-  cherry-pick, merging pr for someone
-- But can be a sign of foul play
+    - "Pusher" is not a core Git concept. This is used on GitHub to show who 
+      actually pushed the commits up to the repo. This is used on GitHub for authentication.  
 
-## Test
+- There are common cases for pushing someone else's commit 
+    - `rebase`, `cherry-pick`, or merging a PR for someone
+- But, if the pusher differs from the author or committer, it could be a sign
+  of foul play.  
 
-Author and committer being different. Take author name as mickey and committer
-as Jessica.  
-- A bit suspicious
+## Things to Look Out For
 
-Author and committer are the same, but someone else pushed.  
-- very suspicious.  
+- Author and committer are different.  
+    - A bit suspicious
+
+- Author and committer are the same, but someone else pushed.  
+    - Very suspicious.  
+
+- Unsigned commits
+    - A bit suspicious, but plenty of people have not set up commit signing.
+
+!!! note "Committing from GitHub's Web UI"
+
+    When you commit via the web, GitHub will be the committer (`noreply.github.com`).  
+    This will also automatically sign the commit (shown as `verified`), since you've
+    already authenticated with GitHub using your login credentials.  
 
 
-When you commit via the web, GitHub will be the committer. (`noreply.github.com`)
+There are repo configurations (branch protections/rulesets) that can be set up
+to reject unsigned commits.  
 
+If you delete a key that you used to sign commits, all your commits made with 
+that key become "unverified". It essentially negates all signatures made with
+that key.  
 
-- is there a repo config around rejecting unsigned commits?
-    - branch protection ruleset
+## tl;dr
 
-## Recap
-- author
-- committer
-- pusher
+When checking commits, look for differences in these 3 pieces of metadata:
 
-Commit identity is a way to get credit for your work. That's super important.  
+1. Author
+2. Committer
+3. Pusher
 
 ## Keeping Commit Attribution
+
+Commit identity is a way to get credit for your work. That's super important.  
 
 Repo hygiene is important. When you squash commits, it makes them into a single
 commit, which can hurt attribution.
 
-The **AUTHOR** is the one that gets attribution on the commit.  
+The **AUTHOR** is the one that gets attribution on the commit. **Not the 
+committer**.  
 
 Squashing the commit will only let the **author** have credit.  
 
-So how to maintain credit? 
 
-on GitHub, they accept this by using this convention within the actual **commit
-message***:
-```bash
-Co-authored-by: will <will@github.com>
-```
+!!! example "So how do you maintain proper attribution when squashing?"
+
+    On GitHub, using this convention within the actual **commit
+    message** will properly attribute the person you specify:
+    ```bash
+    Co-authored-by: will <will@github.com>
+    ```
+    This will need to be their name/email used on GitHub to show proper
+    attribution on GitHub.  
 
 ---
 
-If you delete a key, all your commits made with that key become unverified.  
 
+## Pushing as Someone Else
 
+!!! info "Disclaimer"
+
+    This section is only for educational purposes. Do not attempt to
+    impersonate other people. That's usually considered fraud.
+
+GitHub will show the profile picture and name as the commit author when the
+commit metadata matches their GitHub account.  
+
+All commit metadata comes from your `.gitconfig` file.  
+So, if you `.gitconfig` file metadata matches a **different person's** GitHub
+data (email, name) then they will show up as the committer on GitHub.  
+
+```bash
+git config --global user.name "Some User"
+git config --global user.email "someone@example.com"
+```
+
+If this metadata (specifically, the `user.email`) matches a GitHub account,
+that GitHub accout will be displayed as the user who authored the commit.  
+
+## How Committer and Author are Set
+
+If you create a commit using `git commit`, both the Author and Committer are
+set to your name and email from your `.gitconfig` file.  
+
+---
+
+When a maintainer or reviewer applies a patch, merges a pull request, or
+submits a change from another contributor, the original creator is the Author,
+and the person applying the changes is the Committer.
+
+---
+
+When you rebase (incl. `git pull --rebase`), it rewrites commits to new bases.  
+During this process, the Author details (name and date) stay the same, but
+the Committer details (name and date) are updated to show who performed the
+rebase, and when.  
+
+Cherry-picking a commit takes an existing commit and applies it to another
+branch. This updates the Committer information but preserves the Author.  
+
+---
+
+If you amend a commit:
+```bash
+git commit --amend
+```
+This preserves the original Author, but the Committer is updated to whoever
+made the amendment.  
+
+---
+
+If you apply changes and specify an `--author`:
+```bash
+git commit --author "A U Thor <author@example.com>"
+```
+This will record the person running the commit as the Committer, but the Author
+will be set to whatever argument is passed to `--author`.  
 
 ## Summary
 
