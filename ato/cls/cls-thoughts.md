@@ -1,9 +1,20 @@
 # Community Leadership Summit
 
 The Community Leadership Summit (CLS) is a **free** event that's put on by All
-Things Open, at the Raleigh Convention Center in North Carolina.  
+Things Open, at the Raleigh Convention Center in North Carolina. There are
+several other free events that are co-located at the convention center on the
+same day:
 
-This is a fantasic event, a bazaar for exchanging both knowledge and ideas.  
+- Open Source Accessibility Summit
+- Inclusion and Diversity Summit
+
+These events run concurrently, but you can bounce around between them freely if
+you find discussions in all summits that you wish to attend.  
+
+---
+
+The CLS was a fantasic event, a bazaar for exchanging knowledge, ideas, and
+experience.  
 
 ## When I arrived...
 
@@ -15,13 +26,13 @@ to a lanyard (provided by Google), and hands it to you with a smile. The entire
 process was quick and efficient. I'd expect nothing less from a great group of 
 talented engineers.  
 
-After checking in, I started walking the halls. I saw all of the sponsors 
-setting up their booths. The actual paid conference spans over Sunday and 
-Monday (Oct 12,13) 2025.
+After checking in, I started walking the halls of the convention center. I saw 
+all of the sponsors setting up their booths. The actual paid conference spans 
+over Sunday and Monday (Oct 12,13) 2025, the two days following the free events.
 
 The energy in the convention center was bustling, preparing for the big event
 that starts tomorrow. From the moment you check in and start walking the halls, 
-you can see booths for RedHat, CIQ (leveraging Rocky Linux, Warewulf, etc.), 
+you can see booths for RedHat, CIQ (representing Rocky Linux, Warewulf, etc.), 
 Chainguard, the Open Source Initiative, and Cloudinary, to name a few.  
 
 ## The Schedule
@@ -34,37 +45,60 @@ the attendees to have a voice in what the discussions are about, allowing them
 to further their own research on specific topics and exchange ideas with
 others.  
 
-
+I checked in after the schedule had been determined, so I had to find the board
+on which they posted which sessions are happening in which rooms.  
 
 ## The Sessions
 
-I've attened two sessions so far. 
+I attended several sessions, some about joining communities, getting more 
+involved with communities, some about content creation and new AI tooling. 
 
-The first one was was a discussion about students **getting into Open Source**.
+The first discussion I attended was was a discussion about students **getting 
+into Open Source**, and the challenges they may face.
 
 The second was a discussion on leveraging AI to enhance your social media
 presence to increase engagement and generate content for your users.  
 
-All of these discussions are done in a round-table discourse format, allowing
+The third was a discussion on content creation. This was not specific to tech
+content, although we did have a popular tech content creator (LearnLinuxTV) who
+shared his experience in getting into content creation.
+
+The fourth was a discussion on getting involved with communities and the
+challenges associated with that process. We shared our stories of *wanting* to
+get involved with communities but being unable to, as well as success stories
+where we were able to successfully get involved in a community we wanted to be
+a part of.  
+
+There were a few other discussions around AI tooling and community in general.
+This event is a great way to gain insight into community, both as a member of a
+community and a community leader.  
+
+All of these discussions are done in a round-table, discourse format, allowing
 everyone to have a voice and participate in the discussion.  
 
 ---
 
-Unfortunately, due to the space limitation, it was necessary that two sessions 
-to be held in the same room. I was sitting in the back for both of these 
-discussions and that made it extremely difficult to hear most of the discourse. 
+## Drawbacks
 
-However, what I did hear was valuable.  
+Unfortunately, due to space limitations, it was necessary that two sessions 
+be held in the same room.  
+
+If you were sitting towards the back in some of the sessions that were sharing 
+a room, it could be extremely difficult to hear most of the discourse. 
+
+If they could have set up some sort of dividers to isolate the sound from each
+of the sessions, it could have been much more engaging for those who didn't get
+a front-row seat.  
 
 
 ## My Thoughts on the ATO CLS 
 
 The sheer insight of the ideas exchanged here is worth the trip, whether you're
-local to Raleigh or from somewhere else.
+local to Raleigh or surrounding areas, or from somewhere else.
 
 Being in a position where you can be part of discussions with long-time 
 industry professionals from RedHat, Google, Apache, and long-term maintainers 
-of big Open Source projects, allows you to bridge the gap between `<you>` and `<them>`.  
+of big open-source projects, allows you to bridge the gap between `<you>` and `<them>`.  
 
 It reinforces the idea that we are all just people with a passion for
 technology, innovation, and technological progress.  
@@ -75,12 +109,5 @@ type of teams they have for certain tasks.
 
 ---
 
-The attendees have all been **very** friendly, regardless of their background
-or occupation.  
-
-
-
-
 #cls2025
-
 
