@@ -2,16 +2,41 @@
 
 ## Quickref
 
-Examples
-```bash
+```ini
+┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of the month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+│ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+│ │ │ │ │
+* * * * *
+```
+
+The fields:
+
+1. Minute `[0,59]`
+
+2. Hour `[0,23]`
+
+3. Day of the month `[1,31]`
+
+4. Month of the year `[1,12]`
+
+5. Day of the week (`[0,6]` with `0`=Sunday)
+
+
+Examples:
+
+```ini
 0 * * * * 	    # every hour
 */15 * * * * 	# every 15 mins
 0 */2 * * * 	# every 2 hours
 0 18 * * 0-6 	# every week Mon-Sat at 6pm
 10 2 * * 6,7 	# every Sat and Sun on 2:10am
-0 0 * * 0 	    # every Sunday midnight
+0 0 * * 0 	    # every Sunday at midnight
 @reboot 	    # every reboot
 ```
+
 ## What is Cron?
 
 Cron is a job scheduler daemon in Unix/Linux operating systems.
@@ -136,13 +161,21 @@ If your script relies on variables like `$PATH`, you may need to define them in 
 script.
 
 
-## System-wide Crontab Files - `/etc/crontab` and `/etc/cron.d/`
+## System-wide Crontab Files
+
+The system-wide crontab files:
+
+- `/etc/crontab`: The system-wide central crontab file.  
+- `/etc/cron.d/*`: Any files inside this directory are considered crontab files.  
+
 There's a system-wide crontab file at `/etc/crontab`.
-There are crontab files in `/etc/cron.d` for systems that use `systemd`.
+There are crontab files in `/etc/cron.d` for systems that use `systemd`.  
 
-These crontabs are different from user-specific crontab files, since you must specify a username to run the job as.
+These files are read by the `cron` daemon, which runs as a background process.
 
-These files are read by the cron daemon, which runs as a background process.
+These crontabs are slightly different from user-specific crontab files (e.g., 
+editing with `crontab -e`), since there is an additional field in which you 
+must specify a username to run the job as.
 
 Here's what `/etc/crontab` looks like:
 ```bash
@@ -154,7 +187,7 @@ Here's what `/etc/crontab` looks like:
 
 SHELL=/bin/sh
 # You can also override PATH, but by default, newer versions inherit it from the environment
-#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Example of job definition:
 # .--------------- Minute (1 - 59)
@@ -171,21 +204,44 @@ SHELL=/bin/sh
 52 6 1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
 ```
 
+!!! note "Setting `SHELL` and `PATH`"
+
+    Setting the `SHELL` variable within the crontab file will specify which
+    shell/command interpreter is used to execute the commands.  
+    
+    Setting `PATH` will scope down which binaries are available by name
+    (without invoking using full path to the binary), which could be considered
+    a good practice in the event that the `PATH` variable is ever tampered
+    with.  
+
+
 The `user` field in a cron job is only required in system-wide cron 
 files (e.g., `/etc/crontab` or cron files located in `/etc/cron.d`).
- 
+
+In your local crontab entries, the `user` field is not present as it will
+be run by your user account.  
+
 The entries:
 
-* The first entry runs on the 17th minute of every hour.  
-* The second entry runs at `06:25` every day.  
-* The third entry runs at `06:47` every Sunday (`7`).  
-* The fourth entry runs at `06:52` on the `1`st day of every month.  
+1. The first entry runs on the 17th minute of every hour.  
+2. The second entry runs at `06:25` every day.  
+3. The third entry runs at `06:47` every Sunday (`7`).  
+4. The fourth entry runs at `06:52` on the `1`st day of every month.  
 
-### The `/etc/cron.allow`/`/etc/cron.deny` files
-* `cron.allow`: If this file exists, only the users specified in this file are allowed 
-   to use `crontab`.  
+All of these crontab entries will run the commands as the `root` user.  
+
+### `/etc/cron.allow` and `/etc/cron.deny`
+
+These files are used to specify which users are allowed to use `crontab` in
+order to schedule jobs.  
+
+- `cron.allow`: If this file exists, only the users specified in this file are allowed 
+   to use `crontab` to manage entries.  
     - Specify one user per line.  
-* `cron.deny`: If this file exists, any users specified are denied access to `crontab`.  
+
+If `/etc/cron.allow` does **NOT** exist, then `/etc/cron.deny` is checked.  
+
+- `cron.deny`: If this file exists, any users specified are denied access to `crontab`.  
     - Specify one user per line.  
 
 If both of the files exist, the `cron.allow` file rules will take precendence 
@@ -200,13 +256,17 @@ A simple example:
 ```bash
 (crontab -l 2>/dev/null; printf "* * * * * printf 'This will be added to the crontab\n'\n") | crontab -
 ```
+
 - `( ... )`: A subshell command group. The combined output of all the commands is 
   passed through the pipe.  
-    - This would also work with a brace command group (`{ ... }`).
+    - This would also work with a brace command group (`{ ... }`), which does
+      not run in a subshell.
 - `crontab -l 2>/dev/null`: List the current user's crontab.
     - Redirect stderr so there's no output if there is not crontab for the user.  
-- `printf "..."`: Print the new line to add to the crontab.
-    - `* * * * * printf`: This cron job runs every minute.  
+- `printf "* * * * * printf "...""`: The crontab entry. This cron job runs every minute.
+    - This is combined with the output of the `crontab -l` command (due to the
+      command group), then the entire output of both commands is passed through
+      the pipe (`|`).  
 - `| crontab -`: Load the crontab passed to it via stdin.  
 
 
@@ -215,10 +275,10 @@ crontab (`crontab -l`), and appends a new line to it (`printf ...`).
 The output of this command group is shared, so the entire output will be piped to
 `crontab -`, which reads the standard input and loads it as the new crontab.  
 
-* This replaces the current crontab with the new output. So you need to include
+- This replaces the current crontab with the new output. So you need to include
   existing entries with `crontab -l` if you want to keep them.  
 
-* Make sure to avoid duplicate entries by grepping first.  
+- Make sure to avoid duplicate entries by grepping first.  
 
 
 A more complex example, this function will add the script it is in as a cron job to
@@ -241,4 +301,11 @@ setup-cron-job(){
 
 
 Cron daily runs at 3:14 AM every morning on a linux system.  
+
+## Resources
+
+- `man cron`
+- `man crontab`
+- `man 5 crontab`
+- <https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07>
 
