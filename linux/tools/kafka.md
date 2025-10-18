@@ -23,10 +23,10 @@ The message broker is not limited to just logs -- it can queue any sort of infor
 
 
 ### Setting up Kafka
-You can set up a Kafka server and write to it using the `kafkacat` tool (invoked 
+We can set up a Kafka server and write to it using the `kafkacat` tool (invoked 
 as `kcat`).  
 
-You can set up Kafka logs to be picked up by Promtail and sent to Loki.  
+We can set up Kafka logs to be picked up by Promtail and sent to Loki.  
 It can also be integrated with other monitoring stacks.  
 
 TODO: Finish this section on setting up kafka
@@ -94,7 +94,7 @@ spec:
 - Zookeeper is a coordination service used by kafka to elect a controller broker
   among kafka nodes, store metadata, and manage distributed locks and heartbeats.  
 
-- As of Kafka 2.8, you can run **KRaft** mode (Kafka without Zookeeper), using
+- As of Kafka 2.8, we can run **KRaft** mode (Kafka without Zookeeper), using
   Kafka's builtin metadata quorum system.  
 
 - But many deployments (esp. those using `wurstmeister/kafka` images) still require Zookeeper.
@@ -186,7 +186,7 @@ echo "127.0.0.1 localhost kafka-broker" >> /etc/hosts
 
 ### Writing to kafka
 
-You'll need `kafkacat` to write to kafka.  
+We'll need `kafkacat` to write to kafka.  
 ```bash
 sudo apt-get install -y kafkacat
 ```
@@ -196,7 +196,7 @@ Send a message
 printf "Test message at: %s\n" "$(date)" | kcat -P -b node01:31000 -t System_Logs
 ```
 
-- `node01:31000` is wherever your Kafka/Zookeeper node is. 
+- `node01:31000` is wherever our Kafka/Zookeeper node is. 
     - From our deployment, it's mapped to port `31000` on the `node01` node.  
 
 Now **consume** that message from kafka.  
@@ -216,7 +216,7 @@ So, `kcat` can be used to both produce *and* consume the logs.
 
 ### Scrape Kafka with Promtail
 
-You can scrape Kafka logs just like any other logs using Promtail (or alloy, or any
+We can scrape Kafka logs just like any other logs using Promtail (or alloy, or any
 other log collector).  
 A promtail config for scraping kafka:  
 ```yaml
