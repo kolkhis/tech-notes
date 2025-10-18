@@ -281,26 +281,28 @@ The output of this command group is shared, so the entire output will be piped t
 - Make sure to avoid duplicate entries by grepping first.  
 
 
-A more complex example, this function will add the script it is in as a cron job to
-run at 2AM every day.  
+A more complex example, this bash function will add the script **it is in** as a 
+cron job to run at 2AM every day.  
 ```bash
 setup-cron-job(){
     local CRON_ENTRY
-    if ! crontab -l | grep -i "${BASH_SOURCE[0]}" > /dev/null 2>&1; then
+    if ! crontab -l | grep -qi "${BASH_SOURCE[0]}"; then
         printf "Setting up cron job.\n"
         CRON_ENTRY="0 2 * * * $(realpath "${BASH_SOURCE[0]}") >> $(realpath "$LOGFILE") 2>&1"
         (crontab -l 2>/dev/null; printf "%s\n" "$CRON_ENTRY") | crontab - || {
             printf >&2 "ERROR: Failed to add cron job!\n" && return 1
         }
         printf "Successfully added cron job\n"
+    else
+        printf "The current script's name (%s) is already in the crontab!\n" "${BASH_SOURCE[0]}"
+        printf "Not adding the new cron job.\n"
+        return 1
     fi
     return 0
 }
 ```
 
-
-
-Cron daily runs at 3:14 AM every morning on a linux system.  
+Cron daily (e.g., in `/etc/cron.daily`) runs at 3:14 AM every morning on a linux system.  
 
 ## Resources
 
