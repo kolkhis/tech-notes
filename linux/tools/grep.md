@@ -130,10 +130,10 @@ E.g., `[^abc]` will match everything except one of `abc`.
     * Using the caret `^` with the `-v` option will have the opposite effect.  
 
 ### Output Only the Matched Parts of the Line
-You can effictively extract matched text without the use of capture groups 
+We can effictively extract matched text without the use of capture groups 
 using `grep -o`.  
 
-For example, you can extract the paths from an `ldd` output:
+For example, we can extract the paths from an `ldd` output:
 ```bash
 ldd /bin/bash | grep -o '/[^ ]*'
 ```
@@ -294,7 +294,7 @@ Note: `grep` takes care of assembling the result into a complete SGR sequence (`
 
 ## `pgrep`
 
-`pgrep` (process grep) is a tool that helps you find the PIDs of running processes by
+`pgrep` (process grep) is a tool that helps us find the PIDs of running processes by
 their names or other attributes.  
 
 It's part of the `procps` package on most Linux distros.  
@@ -341,20 +341,20 @@ A more practical example, finding currently running SSHD processes.
 pgrep sshd
 ```
 
-You can also narrow this down further by specifying a user with `-u`.  
+We can also narrow this down further by specifying a user with `-u`.  
 ```bash
 pgrep -u root sshd
 ```
 This will only show the PIDs of the `sshd` processes that are **owned by `root`**.  
 
-You can also specify multiple users, comma-delimited.  
+We can also specify multiple users, comma-delimited.  
 ```bash
 pgrep -u root,daemon sshd
 ```
 This will show the PIDs of all processes owned by the users `root` or `daemon` with
 the name `sshd`.  
 
-You can also just view the PIDs that are owned by users without providing a process
+We can also just view the PIDs that are owned by users without providing a process
 name.  
 ```bash
 pgrep -u root,daemon
@@ -369,14 +369,14 @@ pgrep -u root,daemon -l
 
 ---
 
-Using `-c` you can count the number of processes instead of listing the PIDs.  
+Using `-c` we can count the number of processes instead of listing the PIDs.  
 ```bash
 pgrep -c -u root
 ```
 
 ---
 
-If you need to format the PIDs a certain way, you can specify a delimiter. It
+If we need to format the PIDs a certain way, we can specify a delimiter. It
 defaults to newline, printing each PID on its own line.  
 ```bash
 pgrep -u root -d,
@@ -387,8 +387,8 @@ comma-delimited.
 
 ---
 
-When you specify a process by name, it *only* matches the name of the base process.  
-Using `-f`, you can match the entire command that was run to execute that process.  
+When we specify a process by name, it *only* matches the name of the base process.  
+Using `-f`, we can match the entire command that was run to execute that process.  
 ```bash
 pgrep -f 'daemon'
 ```
