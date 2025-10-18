@@ -43,8 +43,8 @@ telemetry pipeline.
 2. Processors
 3. Downstream desinations
 
-What the processing chains look like is determined by the input data (the
-format and info requirements of the tool) and storage destinations.  
+What the processing chains looks like is determined by the input data (the
+format and info requirements of the tool) and the storage destinations.  
 
 
 
