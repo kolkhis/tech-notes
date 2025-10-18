@@ -1,8 +1,8 @@
 # Understanding Commit Metadata
-## by Staff Engineering Manger at GitHub
+## Staff Engineering Manger at GitHub
 
 
-## why is it important?
+## Why is it important?
 - contains a level of trust
     - would you be more likely to run a script by virus@viruses.com or
       jeschu1@github.com?
@@ -17,25 +17,22 @@ Dte:  tue Sep 16 20:53:33:33 2025 +0000
 ```
 
 ### Check Commit Metadata
-Check the commit metadata. (check profile pic, )
+Check the commit metadata when reviewing commits in the GitHub Web UI. 
 
-- check name
-- check pfp
-- check email
+- Check names
+- Check profile pictures
+- Check emails
 
-compare the 3.  
+Compare these three pieces of data and look for differences.  
 
-## Spoofing Commit
+## Spoofing Commits
 
 Easy to do this by using git config to change username and email and push it up
 to be whoever you want.  
 
-
-```bash
-```
-
-### how do you know?
-Looking at most commits, you don't know
+### How do you know?
+Looking at most commits, you don't know if it's legitimate. But you can look
+for clues to check for any suspicious differences.  
 
 ## Clue #1 - Inspect Metadata
 
