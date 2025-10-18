@@ -79,6 +79,33 @@ gunzip <foo.zip .zip foo.zip.
 
 
 
+## xxd
 
+`xxd` is used to deicpher hexadecimal text. 
+
+If we had a file that contained a series of hex chars:
+```plaintext
+4f 6b 2c 20 73 6f 20 79  6f 75 20 6b 6e 6f 77 20
+62 61 73 65 31 36 20 41  4b 41 20 68 65 78 2e 2e
+2e 0a 0a 42 75 74 20 64  6f 20 79 6f 75 20 6b 6e
+6f 77 20 62 61 73 65 34  20 77 68 65 72 65 20 74
+68 65 20 34 20 73 79 6d  62 6f 6c 73 20 61 72 65
+20 27 2f 27 2c 20 27 2d  27 2c 20 27 5c 27 2c 20
+61 6e 64 20 27 7c 27 20  3f 0a 0a 2d 2f 20 5c 2f
+20 20 2d 5c 20 2d 2d 20  20 2d 5c 20 7c 2f 20 20
+2d 5c 20 7c 2f 0a 2d 5c  20 7c 7c 20 20 2f 5c 20
+7c 2f 20 20 2f 5c 20 2f  2f 20 20 2d 2d 20 2d 7c
+0a 2d 5c 20 7c 7c 20 20  2d 7c 20 2f 5c 20 20 2d
+5c 20 7c 2f 20 20 2d 5c  20 2d 2f 0a 2f 5c 20 2f
+2d 20 20 2f 2f 20 5c 5c  20 20 20 20 20 20 20 0a
+```
+
+"Revert" it from hexadecimal format by using:
+```bash
+xdd -r -p ./file.txt
+```
+
+- `-r`: Revert from hexadecimal
+- `-p`: Convert to a plaintext hex dump
 
 
