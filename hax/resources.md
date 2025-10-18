@@ -1,11 +1,11 @@
-
 # Learning Resources for Cybersecurity  
 
-* TryHackMe  
-* HackTheBox  
-* Over The Wire  
-* https://taggartinstitute.org/  
-* PentesterLab  
+- Understanding wildcards: <https://hackingpassion.com/wildcards-understanding-and-using-for-hacking/>
+- TryHackMe  
+- HackTheBox  
+- Over The Wire  
+- https://taggartinstitute.org/  
+- PentesterLab  
 
 
 ## Random Notes  
