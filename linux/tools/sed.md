@@ -157,6 +157,115 @@ Ex, to append the contents of `file2.txt` to `file.txt`:
 sed -i 'r file2.txt' file.txt
 ```
 
+### Transform like `tr` (`y`)
+We can use the `y` command (transliterate) to perform transformations, much 
+like the external `tr` command.  
+```bash
+sed 'y/abc/ABC/g' file.txt
+```
+
+This will convert all occurrences of:
+
+- `a` to `A`
+- `b` to `B`
+- `c` to `C`
+
+This does not support ranges or character classes like `tr` does, but it could
+be useful if you needed to just convert certain words to other words.  
+
+### Print Line Number (`=`)
+The `=` command just prints the line numbers as they appear in the input.  
+```bash
+sed '=' file.txt
+```
+
+### Next Line (`n`)
+
+The `n` command reads the next line and **replaces** the current one in the
+pattern space. This doesn't actually replace the line in the file itself, it 
+just moves on to the next line in `sed`'s pattern space.  
+
+The `n` command is usually used in a command group (`{...}`).  
+
+```bash
+sed '/pattern/{n; s/old/new/;}' file.txt
+```
+
+- If a line matches the `pattern`, move to the **next line** and perform the
+  substitution `s/old/new/`.  
+
+### Append Next Line (`N`)
+This, unlike the last, **joins** the next line with the current one (instead of
+replacing it).  
+
+Useful if you have a line that you need to modify that will always come after a
+line that matches a certin pattern.  
+
+This one is also usually used in a command group.  
+```bash
+sed '/pattern/{N; s/old/new/;}'
+```
+
+- If a line matches the `pattern`, **combine the next line to the current
+  line**, then perform the substitution `s/old/new/`.  
+
+### Run Shell Commands (`e`)
+Sed can `e`xecute shell commands and optionally replace the output.  
+
+This can be run as a standalone or as a flag on a substitution.  
+
+- Standalone:
+  ```bash
+  sed '/pattern/e date +%F'
+  ```
+  This will print the output of `date +%F` **after** the lines matching the
+  `pattern`.  
+
+- Argument to `s///` (GNU sed extension):
+  ```bash
+  sed 's/^#/date +%F/e'
+  ```
+  This will substitute any line starting with `#` with the output of `date +%F`.  
+
+### Jumping to Labels/Branches like `goto` (`b`)
+The `b` command jumps to a [label](#define-a-label), sort of like a `goto`.  
+```bash
+sed '/pattern/b end
+s/old/new/
+:end'
+```
+If the `pattern` matches, we jump to the label `:end`, which we defined at the 
+end of the command, skipping the substitution.  
+
+<!-- TODO: Why are they called branches? -->
+### Test or Jump-On-Success (`t`)
+If the last command was successful (`s///`) since the last input line or `t`, jump to the label.  
+```bash
+sed ':again; s/old/new/; t again;'
+```
+This performs the substitution. Then the `t` checks if the substitution was
+successfully done. If so, jumps to the label we define (`:again`).  
+
+This is just an example -- the same thing could be done with the `s///g`
+modifier.  
+
+### Define a Label (`:`)
+The `:` command defines a jump target for the `b` or `t` commands.  
+```bash
+sed ':loop; s/old/new/; t loop;'
+```
+
+### Multiline Commands (`D`/`P`)
+
+These commands are used with multiline patterns (e.g., pattern spaces made with
+the `N` command).  
+
+- `D`: Deletes up to the first newline in the pattern space. Continues next cycle.  
+- `P`: Prints up to the first newline in the pattern space (not the whole pattern space).  
+
+```bash
+sed 'N; P; D'  # Print only even-numbered lines  
+```
 
 ## Case-insensitive Matching
 The Linux version of `sed` allows for case insensitive matching with the `i` flag at
@@ -217,13 +326,39 @@ sed -i '/^## Pattern/,/^$/ {/^$/ i New line goes here
 * This does the same thing as above, but instead puts the line above instead of
   below.  
 
-## Delete Line and Line After
-
+## Perform Operations on Line After
+If we have a line that we need to delete **after** a specific other line, we
+can use a command group with the `N` command.  
 ```bash
 sed -i '/pattern/{N;d;}'
 ```
 
-- `N`: Match line after
-- `d`: Delete
+- `{...}`: Command group
+- `N`: Combine the next line with current line (append)
+    - This command will read and append the next line into the **pattern space**, 
+      effectively combining the two lines.  
+- `d`: Delete command. Deletes the line matching the `pattern` as well as the
+  following line.  
+
+## Hold Space && Pattern Space Commands
+
+Sed has these concepts of "hold space" and "pattern space."  
+
+They sort of act as buffers. The **pattern space** is the line that's currently
+being processed, and the **hold space** is a buffer that we can use to
+temporarily store data.  
+
+A list of commands to work with hold/pattern space:
+
+- `h`: Copy to hold space.
+    - Copies the current pattern space into the **hold space** (replaces what was there).  
+- `H`: Append to hold space. 
+    - Appends the current pattern space to the hold space (with a newline separator).  
+- `g`: Get hold space.  
+    - **Replaces** the current **pattern space** with the contents of the **hold space**.  
+- `G`: Append hold space.  
+    - **Appends** the **hold space contents** to the current **pattern space**.  
+- `x`: Exchange hold space and pattern space.  
+    - **Swaps the contents** of the **hold space** and the **pattern space**.  
 
 
