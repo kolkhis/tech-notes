@@ -342,11 +342,10 @@ sed -i '/pattern/{N;d;}'
 
 ## Hold Space && Pattern Space Commands
 
-Sed has these concepts of "hold space" and "pattern space."  
+Sed has these concepts of a "hold space" and a "pattern space."  
 
-They sort of act as buffers. The **pattern space** is the line that's currently
-being processed, and the **hold space** is a buffer that we can use to
-temporarily store data.  
+The **pattern space** is generally the line that's currently being processed, 
+and the **hold space** is a buffer that we can use to temporarily store text.  
 
 A list of commands to work with hold/pattern space:
 
@@ -360,5 +359,45 @@ A list of commands to work with hold/pattern space:
     - **Appends** the **hold space contents** to the current **pattern space**.  
 - `x`: Exchange hold space and pattern space.  
     - **Swaps the contents** of the **hold space** and the **pattern space**.  
+
+There are a few other commands that manipulate the pattern space as well:
+
+- `N`: Append the **next line** to the current **pattern space**.  
+- `n`: Replace the current **pattern space** with the next line.  
+    - This essentially skips the line.  
+
+
+## Table of All Sed Commands
+
+| Command  | Description
+| -------- | ---------------------------------------------
+| `a`      | Append text after current line
+| `i`      | Insert text before current line
+| `c`      | Change entire line
+| `d`      | Delete line
+| `p`      | Print line
+| `s///`   | Substitute (search/replace)
+| `y///`   | Transform characters
+| `=`      | Print line number
+| `n`      | Read next line (replace pattern space)
+| `N`      | Append next line to pattern space
+| `h`      | Copy pattern space to hold space (overwrite)
+| `H`      | Append pattern space to hold space (append)
+| `g`      | Replace pattern space with hold space (overwrite)
+| `G`      | Append hold space to pattern space (append)
+| `x`      | **Swap** pattern and hold space
+| `l`      | Print with escaped chars
+| `q`      | Quit (print current line if applicable)
+| `Q`      | Quit silently
+| `r file` | Read and insert file
+| `w file` | Write line to file
+| `e`      | Execute shell command (standalone or `s///e` modifer for RHS)
+| `{}`     | Group commands
+| `b`      | Branch to label (like `goto`)
+| `t`      | Branch if last `s` succeeded (like `goto` with `if`)
+| `:`      | Define label
+| `D`      | Delete up to newline, loop next cycle
+| `P`      | Print up to newline (with multiline patterns)
+| `#`      | Comment line
 
 
