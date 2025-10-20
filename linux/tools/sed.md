@@ -217,3 +217,13 @@ sed -i '/^## Pattern/,/^$/ {/^$/ i New line goes here
 * This does the same thing as above, but instead puts the line above instead of
   below.  
 
+## Delete Line and Line After
+
+```bash
+sed -i '/pattern/{N;d;}'
+```
+
+- `N`: Match line after
+- `d`: Delete
+
+
