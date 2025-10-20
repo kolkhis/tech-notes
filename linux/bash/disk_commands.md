@@ -19,7 +19,7 @@ Also see [the sysadmin cheatsheet](../sysadmin_command_cheatsheet.md).
 
  
 
-## Commands for Disk/Hardware Management and Monitoring
+## Disk/Hardware Management and Monitoring
 ```bash
 uname -a            # Check OS version
 uname -r            # Check kernel version
@@ -40,6 +40,7 @@ mkfs.ext4 /dev/sdX1 # Create an ext4 filesystem on a partition
 mount /dev/sdX1 /mnt  # Mount a filesystem
 umount /mnt         # Unmount a filesystem
 lsblk               # List all available block devices
+lsblk -f            # Same as above but also list UUIDs and FS types
 df -h               # Display disk usage (human-readable)
 du -sh /dir         # Show disk usage of a directory
 fsck /dev/sdX1      # Check and repair a filesystem
