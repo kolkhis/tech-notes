@@ -789,4 +789,252 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi2 --bootloader-id=prox
 update-grub
 ```
 
+## Status: io-error
+
+- 10/22/25
+
+This morning I tried to SSH into one of my VMs. It says "no route to host," so I 
+check the homelab's status.  
+
+Through the Proxmox Web UI, all VMs have a yellow warning indicator on them,
+which I've never seen before. 
+
+Hovering over one of the VMs, the hover text is "`Status: io-error`".  
+
+I check some basic disk info:
+
+- Command:
+  ```bash
+  cat /proc/mdstat
+  ```
+  Output:
+  ```plaintext
+  Personalities : [raid1] [raid0] [raid6] [raid5] [raid4] [raid10]
+  md1 : active raid1 sdc3[0] sda3[2]
+        233249344 blocks super 1.2 [2/2] [UU]
+        bitmap: 1/2 pages [4KB], 65536KB chunk
+  
+  unused devices: <none>
+  ```
+  The `[UU]` indicates that both disks are healthy. This is the RAID array that
+  holds the all the LVM for the root filesystem as well as some of the VM
+  storage.  
+
+- Command:
+  ```bash
+  zpool status
+  ```
+  Output:
+  ```plaintext
+    pool: vmdata
+   state: ONLINE
+  config:
+  
+          NAME        STATE     READ WRITE CKSUM
+          vmdata      ONLINE       0     0     0
+            sdb       ONLINE       0     0     0
+  
+  errors: No known data errors
+  ```
+  This looks fine, but I hadn't used this ZFS pool at all for any of the VMs yet.  
+
+All 3 disks that are currently connected passed the `smartctl -a`
+self-assessment check.  
+
+I decide to check journald logs.  
+
+- Command:
+  ```bash
+  root@home-pve:~# journalctl -p err -b | grep -iE 'zfs|md|sda|sdb|io|blk'
+  ```
+  Output:
+  ```plaintext
+  Oct 20 16:07:10 home-pve.lab pvedaemon[3027612]: connection timed out
+  Oct 20 16:07:10 home-pve.lab pvedaemon[2768934]: <root@pam> end task UPID:home-pve:002E329C:05A06896:68F69664:vncproxy:1000:root@pam: connection timed out
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [ipcs] crit: connection from bad user 1000! - rejected
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [libqb] error: Error in connection setup (/dev/shm/qb-1699-3029009-33-cLzVOD/qb): Unknown error -1 (-1)
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [ipcs] crit: connection from bad user 1000! - rejected
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [libqb] error: Error in connection setup (/dev/shm/qb-1699-3029009-33-CCJc9A/qb): Unknown error -1 (-1)
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [ipcs] crit: connection from bad user 1000! - rejected
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [libqb] error: Error in connection setup (/dev/shm/qb-1699-3029009-33-GpSx4V/qb): Unknown error -1 (-1)
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [ipcs] crit: connection from bad user 1000! - rejected
+  Oct 20 16:13:26 home-pve.lab pmxcfs[1699]: [libqb] error: Error in connection setup (/dev/shm/qb-1699-3029009-33-7BKqdM/qb): Unknown error -1 (-1)
+  ```
+  No error in I/O that I can see.  
+
+- I'll check to see if storage is full.  
+  Command:
+  ```bash
+  df -h
+  ```
+  Output:
+  ```plaintext
+  Filesystem            Size  Used Avail Use% Mounted on
+  udev                   16G     0   16G   0% /dev
+  tmpfs                 3.2G  2.5M  3.2G   1% /run
+  /dev/mapper/pve-root   65G   26G   36G  42% /
+  tmpfs                  16G   52M   16G   1% /dev/shm
+  tmpfs                 5.0M     0  5.0M   0% /run/lock
+  efivarfs              304K  126K  174K  42% /sys/firmware/efi/efivars
+  /dev/sda2            1022M   12M 1011M   2% /boot/efi
+  /dev/fuse             128M   28K  128M   1% /etc/pve
+  tmpfs                 3.2G     0  3.2G   0% /run/user/1000
+  /dev/sdc2            1022M   12M 1011M   2% /boot/efi2
+  vmdata                462G  128K  462G   1% /vmdata
+  ```
+  Storage is not full.
+
+- Maybe it's a different issue. Are the mounted drives somehow readonly?  
+  ```bash
+  mount | grep -wi 'ro'
+  ```
+  Output:
+  ```plaintext
+  /dev/mapper/pve-root on / type ext4 (rw,relatime,errors=remount-ro)
+  ramfs on /run/credentials/systemd-sysusers.service type ramfs (ro,nosuid,nodev,noexec,relatime,mode=700)
+  ramfs on /run/credentials/systemd-tmpfiles-setup-dev.service type ramfs (ro,nosuid,nodev,noexec,relatime,mode=700)
+  /dev/sda2 on /boot/efi type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
+  ramfs on /run/credentials/systemd-sysctl.service type ramfs (ro,nosuid,nodev,noexec,relatime,mode=700)
+  ramfs on /run/credentials/systemd-tmpfiles-setup.service type ramfs (ro,nosuid,nodev,noexec,relatime,mode=700)
+  /dev/sdc2 on /boot/efi2 type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro)
+  ```
+
+- I can use `pvesh` to check the status of the disks...  
+  ```bash
+  pvesh get /nodes/home-pve/disks/list
+  ```
+  Output:
+  ```plaintext
+  ┌──────────┬─────┬─────────┬───────┬────────────┬──────────────┬────────┬───────────────────────┬────────┬──────────────────────┬───────────┬──────────┬────────────────────┐
+  │ devpath  │ gpt │ mounted │ osdid │ osdid-list │         size │ health │ model                 │ parent │ serial               │ used      │ vendor   │ wwn                │
+  ╞══════════╪═════╪═════════╪═══════╪════════════╪══════════════╪════════╪═══════════════════════╪════════╪══════════════════════╪═══════════╪══════════╪════════════════════╡
+  │ /dev/sda │ 1   │         │    -1 │            │ 240057409536 │ PASSED │ INTEL_SSDSC2BB240G7   │        │ PHDV703406T8240AGN   │ BIOS boot │ ATA      │ 0x55cd2e414d63b19c │
+  ├──────────┼─────┼─────────┼───────┼────────────┼──────────────┼────────┼───────────────────────┼────────┼──────────────────────┼───────────┼──────────┼────────────────────┤
+  │ /dev/sdb │ 1   │         │    -1 │            │ 512110190592 │ PASSED │ FIKWOT_FX812_512GB    │        │ MX_00000000000030083 │ ZFS       │ ATA      │ 0x50c82d5000000084 │
+  ├──────────┼─────┼─────────┼───────┼────────────┼──────────────┼────────┼───────────────────────┼────────┼──────────────────────┼───────────┼──────────┼────────────────────┤
+  │ /dev/sdc │ 1   │         │    -1 │            │ 240057409536 │ PASSED │ KINGSTON_SA400S37240G │        │ 50026B77858FFF4C     │ BIOS boot │ ATA      │ 0x50026b77858fff4c │
+  └──────────┴─────┴─────────┴───────┴────────────┴──────────────┴────────┴───────────────────────┴────────┴──────────────────────┴───────────┴──────────┴────────────────────┘
+  ```
+  The `health` section says `PASSED` for each of the disks.  
+
+
+I'll try doing a bulk shutdown and restart of all VMs. In the Proxmox Web UI, I
+right click my `home-pve` node and do a "Bulk Shutdown" of all VMs with the
+status `io-error`.  
+
+At 11:10, the bulk shutdown executed successfully.  
+I attempt to start a VM, and the error presents itself again.  
+
+I recently moved all the LVM stuff from the installation process to a RAID
+array. I wonder if this has anything to do with the error. However, this error
+did not present itself when the migration happened, or on subsequent reboots.  
+
+
+- I'll check the storage.cfg to see if there are any references to the old disk
+  (from before migrating to the RAID array).  
+  ```bash
+  root@home-pve:~# cat /etc/pve/storage.cfg
+  ```
+  Output:
+  ```plaintext
+  dir: local
+          path /var/lib/vz
+          content backup,vztmpl,iso
+  
+  lvmthin: local-lvm
+          thinpool data
+          vgname pve
+          content images,rootdir
+  
+  zfspool: vmdata
+          pool vmdata
+          content rootdir,images
+          mountpoint /vmdata
+          sparse 1
+  ```
+  I see no reference to `/dev/sda` (the original disk that held the LVM).  
+
+- Checking the PVs, VGs, and LVs.  
+
+    - Command (check PVs):
+      ```bash
+      pvs
+      ```
+      Output:
+      ```plaintext
+      PV         VG  Fmt  Attr PSize   PFree
+      /dev/md1   pve lvm2 a--  222.44g <15.88g
+      ```
+
+    - Command (check VGs):
+      ```bash
+      vgs
+      ```
+      Output:
+      ```plaintext
+      VG  #PV #LV #SN Attr   VSize   VFree
+      pve   1  21   0 wz--n- 222.44g <15.88g
+      ```
+
+    - Command:
+      ```bash
+      lvs
+      ```
+      Output:
+      ```plaintext
+      LV                                        VG  Attr       LSize    Pool Origin                                   Data%  Meta%  Move Log Cpy%Sync Convert
+      base-105-disk-0                           pve Vri-a-tz-k   80.00g data                                          7.76
+      base-9000-disk-0                          pve Vri---tz-k   32.00g data                                    
+      data                                      pve twi-aotzD- <130.27g                                               100.00 4.74
+      root                                      pve -wi-ao----   65.64g                                         
+      snap_vm-1010-disk-0_fm-server-bare        pve Vri---tz-k   80.00g data vm-1010-disk-0                     
+      snap_vm-102-disk-0_clean-install-ansible  pve Vri---tz-k   32.00g data                                    
+      snap_vm-102-disk-0_clean-install-with-ssh pve Vri---tz-k   32.00g data                                    
+      snap_vm-104-disk-0_clean-install          pve Vri---tz-k   80.00g data vm-104-disk-0                      
+      snap_vm-106-disk-0_clean                  pve Vri---tz-k   32.00g data vm-106-disk-0                      
+      swap                                      pve -wi-ao----    8.00g                                         
+      vm-1000-disk-0                            pve Vwi-a-tz--   80.00g data base-105-disk-0                          7.77
+      vm-1010-disk-0                            pve Vwi-a-tz--   80.00g data base-105-disk-0                          41.05
+      vm-102-disk-0                             pve Vwi-aotz--   32.00g data snap_vm-102-disk-0_clean-install-ansible 30.61
+      vm-102-state-clean-install-ansible        pve Vwi-a-tz--   <4.49g data                                          27.93
+      vm-102-state-clean-install-with-ssh       pve Vwi-a-tz--   <4.49g data                                          24.47
+      vm-1020-disk-0                            pve Vwi-a-tz--   80.00g data base-105-disk-0                          36.20
+      vm-104-disk-0                             pve Vwi-a-tz--   80.00g data base-105-disk-0                          35.50
+      vm-104-state-clean-install                pve Vwi-a-tz--   <8.49g data                                          30.57
+      vm-106-disk-0                             pve Vwi-a-tz--   32.00g data base-9000-disk-0                         22.60
+      vm-106-state-clean                        pve Vwi-a-tz--   <8.49g data                                          33.04
+      vm-3000-disk-0                            pve Vwi-a-tz--   80.00g data base-105-disk-0                          12.13
+      ```
+
+The `data` LV seems like it has 100% usage, so that storage is saturated.  
+It looks like I mistakenly created a template of a VM with 80GB allocated for
+storage, which is way too much. 
+
+### Solution
+
+The `pve-data` LV was full due to cloning templates with a large storage
+allocation.  
+
+Solution: Reallocate the amount of storage allowed for these clones.
+
+- Check the LV in question:
+  ```bash
+  lvs | grep -iP 'data\s*pve'
+  ```
+  Output:
+  ```plaintext
+  data  pve twi-aotzD- <130.27g  100.00 4.74
+  ```
+  I destroyed one VM that was using 80GB. The output changed to:
+  ```plaintext
+  data pve twi-aotz-- <130.27g  99.56  4.71
+  ```
+  So this only trimmed 0.44% of the space being used. However, it freed up some
+  space to work with.  
+
+The actual `local-lvm` stoarge has 139.87GiB **TOTAL** storage space.  
+All VM data must be migrated over to the `vmdata` ZFS pool.  
+
+
+
 
