@@ -296,7 +296,7 @@ nav:
     - sql/basics.md
     - sql/exploring_a_database.md
 
-  - HAX:
+  - Hax:
     - hax/hide_website_wall.md
     - hax/misc.md
     - hax/nopslide.md
@@ -369,8 +369,9 @@ nav:
     - windows/powershell_profile.md
     - windows/windows_format_drive.md
     - windows/wsl2.md
-  - GIT:
+  - Git:
     - git/actions.md
+    - git/commit-metadata.md
     - git/basic_contribution_workflow.md
     - git/branches.md
     - git/checkout_operations.md
@@ -393,7 +394,7 @@ nav:
     - git/submodules.md
     - git/sync_local_repo.md
     - git/tags.md
-  - VIM:
+  - Vi/Vim:
     - vim/argument_list.md
     - vim/buffer_list.md
     - vim/build_from_source.md
