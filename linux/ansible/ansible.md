@@ -29,14 +29,15 @@ Also see:
 * Ansible Tower: A GUI framework accessible from a browser or a REST API 
     * [Ansible Tower Docs](https://docs.ansible.com/ansible-tower/latest/html/userguide/overview.html)
 
-
 ## Table of Contents
+* [Other Ansible Tools](#other-ansible-tools) 
 * [Ansible Playbooks](#ansible-playbooks) 
     * [Run an Ansible Playbook](#run-an-ansible-playbook) 
     * [Debugging an Ansible Playbook](#debugging-an-ansible-playbook) 
     * [Items in Playbooks](#items-in-playbooks) 
     * [Tasks](#tasks) 
-        * [Task keywords](#task-keywords) 
+    * [Task keywords](#task-keywords) 
+    * [Playbook Keywords](#playbook-keywords) 
     * [Modules](#modules) 
         * [Common Modules](#common-modules) 
         * [General Structure of a Task using a Module](#general-structure-of-a-task-using-a-module) 
@@ -44,26 +45,35 @@ Also see:
 * [Getting Help with Ansible Modules](#getting-help-with-ansible-modules) 
 * [Ad-hoc Commands using Ansible](#ad-hoc-commands-using-ansible) 
     * [Create a Directory on Remote Hosts](#create-a-directory-on-remote-hosts) 
-    * [Copy File to Remote Hosts](#copy-file-to-remote-hosts) 
+    * [Copy File from Local Machine to Remote Hosts](#copy-file-from-local-machine-to-remote-hosts) 
+    * [Copy file from Remote Host to Local Machine](#copy-file-from-remote-host-to-local-machine) 
     * [Modifying a Line in a File on Remote Hosts](#modifying-a-line-in-a-file-on-remote-hosts) 
 * [Handlers](#handlers) 
 * [Ansible Roles](#ansible-roles) 
 * [Loops in Ansible](#loops-in-ansible) 
     * [Controlling Loops](#controlling-loops) 
-        * [`loop_control` Examples](#loopcontrol-examples) 
+        * [`loop_control` Examples](#loop_control-examples) 
 * [Updating in Batches (Serial)](#updating-in-batches-serial) 
 * [Defining an Inventory using a Hosts File](#defining-an-inventory-using-a-hosts-file) 
 * [Save the Output of a Task in Ansible](#save-the-output-of-a-task-in-ansible) 
     * [Accessing The Registered Variable](#accessing-the-registered-variable) 
+    * [Accessing the Registered Variable in a Separate Play in the Same Playbook](#accessing-the-registered-variable-in-a-separate-play-in-the-same-playbook) 
+    * [Capturing the output of Debug Messages](#capturing-the-output-of-debug-messages) 
+* [Getting the IP Address of any Host in a Playbook](#getting-the-ip-address-of-any-host-in-a-playbook) 
 * [Blocks in Ansible](#blocks-in-ansible) 
     * [Basic Block Example](#basic-block-example) 
     * [Block Error Handling with `rescue` and `always`](#block-error-handling-with-rescue-and-always) 
 * [Ansible Configuration Files](#ansible-configuration-files) 
+* [Using `set_fact` to Persist Variables Across Plays](#using-set_fact-to-persist-variables-across-plays) 
+* [Jinja2 Filters](#jinja2-filters) 
+* [Prompt for Passwords](#prompt-for-passwords) 
+    * [Password for `become`](#password-for-become) 
+    * [Password for SSH Connection](#password-for-ssh-connection) 
+* [Patching Servers with Ansible](#patching-servers-with-ansible) 
 * [Resources](#resources) 
     * [Practicing with Ansible](#practicing-with-ansible) 
 * [Questions](#questions) 
     * [What about Terraform?](#what-about-terraform) 
-
 
 
 ## Ansible Playbooks  
@@ -308,11 +318,14 @@ ansible-doc -s setup # Show snippet for the `setup` Ansible module
 ```
 
 ## Ad-hoc Commands using Ansible  
+
 Ad-hoc commands are used to run tasks on a remote host without creating a playbook.  
 ```bash  
 # Send a command to a host  
 ansible servers -m shell -a "reboot"  
 ```
+
+* `servers`: A **pattern** (or basic string) to match inventory groups/hosts.  
 * `-m`: The module to use.
 * `-a`: Arguments to pass to the module.  
 
@@ -320,6 +333,7 @@ ansible servers -m shell -a "reboot"
 ansible servers -i /hosts/file -m setup -a 'filter=ansible_distribution'
 ansible servers -i /hosts/file -m setup -a 'filter=ansible_date_time'
 ```
+
 
 ### Create a Directory on Remote Hosts
 To create a new directory on a list of hosts:
@@ -810,7 +824,7 @@ Use jinja templates to generate reports.
 * [Using Filters to Manipulate Data](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_filters.html)
 * [Ansible Builtin Filters](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#filter-plugins)
 * [jinja2 builtin filters](https://tedboy.github.io/jinja2/templ14.html#builtin-filters)
-
+* [Ansible Patterns](https://docs.ansible.com/ansible/latest/inventory_guide/intro_patterns.html)
 
 
 ### Practicing with Ansible  
@@ -822,15 +836,20 @@ bunch of hosts to run playbooks on.
 
 ## Questions  
 
-How do conditionals work in ansible?  
-What is an ansible collection?  [Ansible collections](./collections_in_ansible.md)  
-What are 'blocks' in ansible?  
-What are 'handlers' in ansible? [Handlers](#handlers)  
+- How do conditionals work in ansible?  [Conditionals in Ansible](./conditionals_in_ansible.md)
+- What is an ansible collection?  [Ansible collections](./collections_in_ansible.md)  
+- What are 'blocks' in ansible?  [Blocks in Ansible](#blocks-in-ansible)
+- What are 'handlers' in ansible? [Handlers](#handlers)  
 
 ### What about Terraform?  
 Ansible and Terraform serve very different purposes.  
-Ansible is more automating server configuration & tasks, where Terraform is automating infrastructure.  
-You'd use Terraform to spin up an EC2 instance, you'd use Ansible to install nginx on that EC2 instance.  
-Generally speaking, TF spins up your infrastructure, Ansible configures it.  
+Ansible is more automating server configuration && performing tasks, where 
+Terraform is automating infrastructure provisioning.  
+
+For example:  
+You'd use Terraform to spin up an EC2 instance, then you'd use Ansible to 
+install nginx on that EC2 instance.  Generally speaking, TF spins up your 
+infrastructure, Ansible configures it.  
+
 
 
