@@ -50,6 +50,35 @@ dpkg-query -l pattern # List all packages matching the pattern
 dpkg-query -s package # See the status of a package (or multiples)
 ```
 
+Sometimes package installations can be borked and dependencies aren't properly
+installed. 
+
+Fix package installations:
+```bash
+sudo apt-get update --fix-missing           # Rebuild the package list 
+sudo apt-get install --fix-missing package  # Fix broken dependencies automatically
+```
+
+Or, simply reinstall the package (this works in most cases).  
+```bash
+sudo apt-get install --reinstall package
+```
+
+If a package installation was interrupted, it may be unpacked but unconfigured.
+Use `dpkg` to solve this problem.  
+```bash
+# Reconfigure partially installed packages (install was interrupted)
+sudo dpkg --configure -a
+```
+
+We can free up space by clearing the package cache and removing unnecessary
+package files and dependencies.  
+```bash
+sudo apt clean      # Clean pkg cache
+sudo apt autoremove # Remove unnecessary files/deps
+```
+
+
 
 ### `dpkg` Output
 When using `dpkg -l`, you'll see 5 main columns.  
