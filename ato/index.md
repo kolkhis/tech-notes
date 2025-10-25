@@ -73,18 +73,20 @@ but this one stuck out to me as an avid homelabber.
 
 That's just one example of many cool tools and technologies being represented.  
 
+With all the booths presenting products, there was a **heavy** focus on **observability**, **AI**,
+and observability *with* AI.  
+
 Some other notable booths and demos included:
 
-- AWS Open Source was being represented
 - Zabbix, DynaTrace, Observe, DataDog, and plenty of other observability solutions were on
   display  
-- HeroDevs had one of the craziest booths at the event.
-- The Linux Foundation was there giving away discounts for educational content
-- Intuit (the people behind Argo) were demoing their new project, **Numaflow**
 - CodeRabbit was demoing an agentic AI code reviewer
+- There were many other new cutting-edge AI products were on display by a variety of companies.  
+- AWS Open Source was being represented
+- HeroDevs had one of the craziest booths at the event.
+- The Linux Foundation was respresented, giving away discounts for educational content
+- Intuit (the people behind Argo) were demoing their new project, **Numaflow**
 - Keebio had a great booth set up to display their newest ergonomic mechanical keyboards.
-
-There were many other new cutting-edge AI products were on display by a variety of companies.  
 
 ---
 
