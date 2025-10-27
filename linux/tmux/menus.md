@@ -1,4 +1,3 @@
-
 # Menus in Tmux
 
 ## The `display-menu` command
@@ -7,13 +6,15 @@
 ```bash
 display-menu (menu) [-O] [-c target-client] [-t target-pane] [-T title] [-x position] [-y position] name key command ...  
 ```
-* `manu` can be used as an alise for `display-menu`
+
+* `menu` can be used as an alise for `display-menu`
 
 ### Options for Styling the Menu
 `-T` is a format for the menu title (see `man://tmux 2138`).
 
 `-x` and `-y` give the position of the menu.
 Both may be a row or column number, or one of the following special values:
+
 | Value |  Flag   | Meaning
 |-|-|-
 | `C`   | Both    | The centre of the terminal
@@ -57,6 +58,7 @@ Examples:
 "Kill" X kill-pane 
 "Respawn" R "respawn-pane -k" 
 ```
+
 * `"Kill" X kill-pane`
     * `"Kill"` is the text shown for the menu item.
     * `X` is the key shortcut.
@@ -71,10 +73,10 @@ You can set conditions for menu items.
 Items that don't match the condition can be disabled.  
 
 * Follows a structure: `"${?#{conditional},,-}Display Text" x "command"`
-E.g.,:
-```bash
-"#{?#{>:#{window_panes},1},,-}Swap Up" u "swap-pane -U"
-```
+  E.g.,:
+  ```bash
+  "#{?#{>:#{window_panes},1},,-}Swap Up" u "swap-pane -U"
+  ```
 * The conditional: `{>:#{window_panes},1}` checks `#{window_panes}` to see if
   there's more than one pane in the window.  
 * That's passed to the outer conditional format (`#{?conditional,true,false}`), where `true`
@@ -84,6 +86,7 @@ E.g.,:
 
 ### Keys
 The following keys are also available:
+
 | Key      |  Function
 |-|-
 | `Enter`  | Choose selected item

@@ -1,14 +1,4 @@
-
-# Moving tmux Panes to Different Windows
-
-
-## Table of Contents
-* [Moving Panes](#moving-panes) 
-    * [Moving a Pane to a Different Window](#moving-a-pane-to-a-different-window) 
-    * [Moving a Pane Around Within the Same Window](#moving-a-pane-around-within-the-same-window) 
-    * [Example](#example) 
-    * [Detailed Steps with Tmux Prefix](#detailed-steps-with-tmux-prefix) 
-    * [Summary (TL;DR)](#summary-(tl;dr)) 
+# Moving Tmux Panes to Different Windows
 
 > NOTE: My personal tmux prefix is `Ctrl-a`. The default prefix is `Ctrl-b`.
 
