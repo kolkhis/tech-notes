@@ -159,7 +159,11 @@ iperf3 --server
 iperf3 -c 192.168.4.11 -u -n 20G
 ```
 
-* `-P`: Allow parallel streams.  
+- `-c`: The address to the `iperf3` server.  
+- `-u`: Use UDP rather than TCP.  
+- `-n`: The number of bytes to transmit.  
+    - Can be `K` (KB), `M` (MB), `G` (GB), or `T` (TB).  
+- `-P`: Allow parallel streams.  
 
 ## Choosing Which Tool to Use
 
