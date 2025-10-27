@@ -1,27 +1,10 @@
-
 # Tmux Styling and Colors  
-##### See the [docs on styling](https://github.com/tmux/tmux/wiki/Getting-Started#list-of-style-and-format-options).  
 
 Tmux offers various options to specify the colour and attributes of aspects of
 the interface, e.g., `status-style` for the status line.  
  
- 
-*`man://tmux 2407`*
-## Table of Contents
-* [Embedded Styles](#embedded-styles) 
-* [Attributes](#attributes) 
-* [Alignment](#alignment) 
-    * [Mouse Stuff](#mouse-stuff) 
-* [Examples](#examples) 
-* [Status Line](#status-line) 
-    * [Window List in the Status Line](#window-list) 
-    * [Window Flags in the Status Line](#window-flags) 
-    * [Automatic Refreshing](#automatic-refreshing) 
-    * [Status Line Commands](#status-line-commands) 
-* [Session Option for Monitoring Activity](#session-option-for-monitoring-activity) 
-* [Hook Commands](#hook-commands) 
-* [Menus](#menus) 
-
+Also see the [docs on styling](https://github.com/tmux/tmux/wiki/Getting-Started#list-of-style-and-format-options),
+or the `tmux` man page: `man://tmux 2407` or `man tmux /^STYLES`
 
 ## Embedded Styles  
 `gF` (`<C-w>gF` for a new tab) -> `man://tmux 2407`
