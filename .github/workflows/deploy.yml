@@ -3,11 +3,11 @@ name: Build MkDocs site and deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+    paths:
+      - '**.md'
+      - 'mkdocs.yml'
   # run workflow manually from the Actions tab
   workflow_dispatch:
-  paths:
-    - '**.md'
-    - 'mkdocs.yml'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
