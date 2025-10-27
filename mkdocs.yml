@@ -338,12 +338,12 @@ nav:
     - podman/dockerfile-builds-best-practices.md
     - podman/podman.md
   - Homelab:
-    - homelab/storage-rebuild.md
     - homelab/bastion.md
     - homelab/homelab_initial_setup.md
-    - homelab/project_k8s_haproxy_keepalived.md
+    - homelab/storage-rebuild.md
     - homelab/troubleshooting.md
     - homelab/hardware-raid-controller.md
+    - homelab/project_k8s_haproxy_keepalived.md
     - homelab/cloud-init.md
   - WEB:
     - web/domain-configuration.md

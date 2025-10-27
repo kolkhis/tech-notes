@@ -1,36 +1,19 @@
-# Project - K8s Cluster using HAProxy Load Balancer and Keepalived
+# Project - HA K8s Cluster
 
-## Table of Contents
-* [Set up the Environment](#set-up-the-environment) 
-    * [Spin up VMs](#spin-up-vms) 
-    * [Install K8s](#install-k8s) 
-    * [Initialize k8s Cluster](#initialize-k8s-cluster) 
-    * [Install a CNI plugin (flannel)](#install-a-cni-plugin-flannel) 
-    * [Join the Worker Nodes](#join-the-worker-nodes) 
-    * [Deploy a Test App](#deploy-a-test-app) 
-    * [Check which NodePort was Assigned](#check-which-nodeport-was-assigned) 
-* [Set up two HAProxy Nodes](#set-up-two-haproxy-nodes) 
-    * [Configure HAProxy](#configure-haproxy) 
-* [Set up Keepalived for a Virtual IP (VIP)](#set-up-keepalived-for-a-virtual-ip-vip) 
-    * [Install Keepalived on the HAProxy Nodes](#install-keepalived-on-the-haproxy-nodes) 
-    * [Configure Keepalived](#configure-keepalived) 
-        * [First HAProxy Node's Keepalived Configuration](#first-haproxy-nodes-keepalived-configuration) 
-        * [Second HAProxy Node's Keepalived Configuration](#second-haproxy-nodes-keepalived-configuration) 
-    * [Start/Restart Keepalived](#startrestart-keepalived) 
-* [Test the Virtual IP and Failover](#test-the-virtual-ip-and-failover) 
-* [tl;dr](#tldr) 
-* [Misc Notes](#misc-notes) 
-
+These are my notes on automating the setup of a high availability Kubernetes
+cluster, using HAProxy and Keepalived for load balancing.  
 
 Feats:
+
 - Multi-node k8s cluster (1+ control, 2+ workers)
-- HAProxy load balancer to distribute traffic to the k8s nodes
+- Two HAProxy load balancer nodes to distribute traffic to the k8s nodes
 - Keepalived will run on both HAProxy VMs to manage a shared Virtual IP (VIP)
     - This will allow both HAProxy VMs to have the same IP
 
 ---
 
 TODO:
+
 - Add more Control Plane nodes (2 more?) for real HA
 - Ingress controller 
     - `Traefix`, `Nginx`, `HAProxy Ingress`
