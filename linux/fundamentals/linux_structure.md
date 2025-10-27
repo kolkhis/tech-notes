@@ -5,8 +5,10 @@
 | Path     | Description
 | -------- | -----------------
 | `/`      | The top-level directory is the root filesystem. Contains all of the files required to boot the operating system before other filesystems are mounted as well as the files required to boot the other filesystems. After boot, all of the other filesystems are mounted at standard mount points as subdirectories of the root
-| `/bin`   | Contains essential command binaries
-| `/boot`  | Consists of the static bootloader, kernel executable, and files required to boot the Linux OS.
+| `/bin`        | Contains essential command binaries
+| `/usr/sbin`   | Contains admin binaries
+| `/sbin`       | Contains system binaries (symlinked to `/usr/sbin`)
+| `/boot`       | Consists of the bootloader, kernel, and files required to boot the OS
 | `/dev`   | Contains device files (special files) for every hardware device attached to the system
 | `/etc`   | Local system configuration files. Also stores config files for applications
 | `/home`  | Stores the home directories for all users (except root).
