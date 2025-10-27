@@ -5,15 +5,23 @@ system.
 
 These notes are about the purpose of the various directories on a Linux system.  
 
+Main source of information is the
+[Filesystem Hierarchy Specification (FHS)](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch01.html)
+from the Linux Foundation.  
+
 ## `/` (root)
 The root directory contains everything.  
-All files on a system are either in root or a subdirectory of root.  
+All files on a system are in either root or a subdirectory of root.  
 
 ## `/dev`
 The `/dev` directory contains **device files**.  
 
 These are [special files](./special_files.md) that are either **character
 special files**, **block special files**, or **pipe special files**.  
+
+This is where you'd find devices like keyboards and mice, TTYs
+(pseudo-terminals), and other special files that are meant to store, retrieve,
+or generate data.  
 
 A few examples:
 
@@ -25,8 +33,8 @@ The list goes on.
 
 ## `/bin`
 
-The `/bin` directory stores **essential** user command binaries, which should (will) 
-be available to all users.  
+The `/bin` (binaries) directory stores **essential *user*** command binaries, 
+which should be available to all users.  
 
 The `/bin` directory has no subdirectories.  
 
@@ -104,12 +112,16 @@ Specification.
 - `/usr/sbin`: More binaries for admins.  
 - `/usr/lib`: The system libraries needed for binaires.  
 
+### `/usr/sbin`
+The `/sbin` (usually symlinked to `/usr/sbin`) directory stores binaries
+that are used by administrators.  
 
 ## `/opt`
-This directory is usually used for **self-contained** third-party applications.  
-Self-contained meaning that the application's files aren't spread across the rest of
-the filesystem (e.g., no files in `/etc`, `/var`, or other system dirs).  
+The `/opt` (optional) directory is usually used for **self-contained** 
+third-party applications.  
 
+Self-contained meaning that the application's files aren't spread across the 
+rest of the filesystem (e.g., no files in `/etc`, `/var`, or other system dirs).  
 
 ## `/var`
 
@@ -121,33 +133,34 @@ The files in this directory are meant to be persistent.
 
 ### `/var/lib`
 
-This is where application data is stored.  
-
-## `/dev`
-
-The `/dev` directory stores special files.  
-
-Special files can either be block devices or character special files.  
-
+This is where applications' essential libraries are stored.  
 
 ## `/boot`
 
-The `/boot` directory contains the static files of the bootloader (e.g., GRUB).  
+The `/boot` directory contains the essential files required during the 
+operating system's boot process.  
 
-It contains everything required for the boot process, with the exception of config
+It contains everything required for the boot process with the exception of config
 files that aren't needed at boot time or needed by the map installer.  
-
-All the binaires needed by the bootloader to boot a **file** go 
-in `/sbin` (system binaries directory).  
 
 The config files not needed at boot time go in `/etc`.  
 
-The `/boot` directory also contains the kernel (or the kernel is located in the `/` [root] directory).  
+Includes:
+- Static files of the bootloader (e.g., GRUB).  
+    - All the binaires needed by the bootloader to boot a **file** go 
+      in `/sbin` (system binaries directory, usually symlinked to `/usr/sbin`).  
+
+- The kernel (the kernel can alternatively sometimes be located in the `/` [root] directory).  
+- The `initrd` image (initial RAM disk image), used for loading kernel modules
+  needed at boot time.  
+
+These files are used before the kernel can access system files.  
+
 
 
 ## `/etc`
 
-The `/etc` directory contains primarily configuration files.  
+The `/etc` (et cetera) directory contains primarily configuration files.  
 
 There should be no binaries here. There can be scripts, though.  
 
@@ -161,22 +174,24 @@ There are some subdirectories that should be here (only the first one is mandato
 - `/etc/xml`: Stores config files for XML (eXtensible Markup Language).  
     - Optional.  
 
-
+This is also where you'd find config files for system daemons, like the SSH
+daemon (in `/etc/ssh`).  
 
 
 ## `/srv`
 
-The `/srv` directory is not on all Linux machines by default.  
-This directory is used for data that is being served by the system (e.g., Samba).  
+The `/srv` (service) directory is not on all Linux machines by default.  
+This directory is used for data that is being served by the system (e.g., Samba, NFS).  
 
 ## `/home`
 
 This stores the home directory for users.  
 
-This directory doesn't **have** to be on a system. User account home directories can 
+This directory doesn't **have** to be on a system per the FHS. User account home directories can 
 be stored elsewhere.  
 
 
-
 ## Resources
+
+- <https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch01.html>
 - <https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03.html>
