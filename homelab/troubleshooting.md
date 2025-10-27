@@ -47,7 +47,6 @@ Upon further investigation, I found that there were many errors.
   ```bash
   sudo zpool status -v vmdata
   ```
-  
   Output:
   ```bash
     pool: vmdata
@@ -292,7 +291,7 @@ affected VMs.
 - `203`
 - `204`
 
-!!! note "Spoiler Alert"
+??? warning "Spoiler Alert"
 
     There were more than 3 affected VMs.  
 
@@ -321,9 +320,11 @@ hardware fix can stop these.
 
 I physically removed the drive that was causing issues.  
 
-The drive was: FIKWOT FX815 512GB. I guess it tracks that a $20 drive on Amazon only lasts for 8 months.  
+The drive was: FIKWOT FX815 512GB. I guess it tracks that a $20 drive on Amazon
+only lasts for 8 months.  
 
-The pool was set up as a stripe, with no redundancy. ZFS can't detach a disk from a striped pool.  
+The pool was set up as a stripe, with no redundancy. ZFS can't detach a disk
+from a striped pool.  
 
 The `/dev/sdb` disk is a single stripe with no redundancy so it's unrecoverable.  
 
@@ -494,7 +495,7 @@ They need to be removed.
       ```
       The same error appears when trying to remove the template via the web UI.  
 
-- To remove the kaput templates, we'll need to manually delete their
+- To remove the cooked templates, we'll need to manually delete their
   configuration files (stored in `/etc/pve/qemu-server/<VMID>.conf`).  
   ```bash
   sudo rm /etc/pve/qemu-server/{103,9001}.conf
@@ -666,8 +667,8 @@ update-initramfs -u
 This is how you'd also create redundancy for the **OS boot**. This step is
 optional if all you want is data backup.  
 
-Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not read
-`md` metadata.  
+Again, we don't use `mdadm` RAID for UEFI boot data. The EFI firmware does not 
+read `md` metadata.  
 
 ```bash
 sudo mkfs.vfat -F32 /dev/sdb2
