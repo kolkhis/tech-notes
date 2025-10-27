@@ -176,7 +176,6 @@ nav:
       - linux/monitoring/monitoring_tools.md
       - linux/monitoring/prometheus_service_discovery.md
     - Tmux:
-      - linux/tmux/buffers.md
       - linux/tmux/copy_mode.md
       - linux/tmux/formats.md
       - linux/tmux/menus.md
