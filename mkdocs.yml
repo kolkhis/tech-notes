@@ -340,10 +340,11 @@ nav:
   - Homelab:
     - homelab/storage-rebuild.md
     - homelab/bastion.md
-    - homelab/cloud-init.md
     - homelab/homelab_initial_setup.md
     - homelab/project_k8s_haproxy_keepalived.md
     - homelab/troubleshooting.md
+    - homelab/hardware-raid-controller.md
+    - homelab/cloud-init.md
   - WEB:
     - web/domain-configuration.md
     - Javascript:
