@@ -159,6 +159,14 @@ commented out).
       This will require both public key authentication and a password, ***or*** just
       keyboard-interactive authentication.  
 
+    - Available options for AuthenticationMethods:
+        - `password`
+        - `publickey`
+        - `keyboard-interactive`
+        - `none` (used for accounts without passwords when `PermitEmptyPasswords` is enabled)
+        - `hostbased`
+        - `gssapi-with-mic`
+
 ### Applying Changes to `sshd_config`
 
 Reload any changes to SSH with `systemctl`:
@@ -250,4 +258,28 @@ To add the port to firewalld:
 firewall-cmd --permanent --add-port 2222 # Make it persistent
 firewall-cmd --reload
 ```
+
+## Setting a Chroot Directory
+
+The `ChrootDirectory` option for `sshd_config` allows us to effectively jail
+users.  
+
+This option takes a pathname of a directory to `chroot` to after the user
+successfully authenticates.  
+
+This `ChrootDirectory` needs to contain all the necessary files and directories
+to support a user's SSH session.  
+For an interactive session, this requires:
+
+- A shell of some sort.  
+- Basic `/dev` nodes:
+    - `/dev/null`
+    - `/dev/zero`
+    - `/dev/stdin`
+    - `/dev/stdout`
+    - `/dev/stderr`
+    - TTY devices
+    - Some programs that are put into the `chroot` directory may require some other 
+      special files (e.g., `/dev/random`, `/dev/urandom`, etc.).  
+
 
