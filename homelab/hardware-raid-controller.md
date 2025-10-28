@@ -31,7 +31,64 @@ systems' RAID controllers) is RAID mode.
 
 ### RAID Mode
 
-<!-- TODO -->
+The default mode for the PERC H730 integrated RAID controller is RAID mode.  
+
+This mode allows the controller to aggregate disks into virtual RAID volumes,
+which effectively masks the individual disks themselves.  
+
+This mode is fine if we're opting for a hardware RAID configuration for our
+backup and striping disks.  
+
+However, if we want to use any of the advanced features of Proxmox by utilizing
+the all features of ZFS, or if we want to use software RAID via `mdadm`, this mode is not
+ideal.  
+
+#### Setting up a Hardware RAID Array
+If we ever did want to set up a RAID array using the hardware RAID controller,
+this must be done during boot in the system setup.  
+
+We'd need to configure a RAID array using the RAID controller's setup utility
+(like the PERC configuration, typically accessed with ++ctrl+r++ at boot time).  
+
+If we wanted to use hardware RAID for our Proxmox installation:
+
+- Enter the RAID controller menu during boot and create the RAID array (RAID1,
+  RAID5, RAID10, etc.).  
+
+- Save the RAID configuration and exit. The controller now exposes a single
+  logical disk, which will be available to the OS.  
+
+- Boot into the Proxmox VE installer and select the RAID array we created as
+  the installation target. This will be treated as any other storage device.  
+
+- Post-install, we can format and manage the logical disk with `ext4`, `xfs`,
+  `lvm`, etc., but we won't have OS-level access to individual disks, nor can
+  we use some of the more advanced features of ZFS, which require direct drive 
+  control.  
+
+- For monitoring or management, we would need to ensure the RAID controller
+  drivers are loaded and compatible with Proxmox's kernel, to avoid possible 
+  detection issues.  
+    - Some controllers may require manual driver installation.  
+
+
+Keep in mind, hardware RAID abstracts away the physical disks. All disk
+management, redundancy, and failures are handled by the controller, not by
+Proxmox/Linux.  
+
+Also keep in mind, we lose access to features like ZFS or Ceph that require 
+direct disk control and SMART data.  
+
+
+This approach is standard when using hardware RAID on Dell servers for Proxmox,
+but it's only really optimal if hardware RAID features (e.g., cache, BBU,
+redundancy) are **required**, *and* we don't need the advanced software RAID
+features of `mdadm` or ZFS.  
+
+!!! warning "Honestly..."
+
+    Just use HBA/JBOD with software RAID via `mdadm` or ZFS.
+
 
 ### HBA Mode
 
