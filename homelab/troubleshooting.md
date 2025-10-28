@@ -1145,16 +1145,25 @@ assume that the **download** of the `linux-generic` kernel was failing.
 
 ---
 
+### OS Installtion Fix
+
 After attempting this installation process several times, using the same 
 configuration (no changes made whatsoever), the install (on `vmdata`) was 
 successful.  
+
+Nothing was changed in either the VM configuration or storage setup, so I'm 
+really not sure why it suddenly works. But it suddenly works.  
+
+### Forensic Analysis
 
 I found that the logs from the OS installation process are stored in `/var/log/install`.  
 ```bash
 cd /var/log/install
 ```
 
-Examining the installation logs after a successful installation:
+I examined the installation logs after the successful installation, searching for
+the step that was previously failing to see if I could find any hints as to
+what the problem may have been.  
 ```bash
 grep -rin 'install kernel'  # lines 945 and 1620
 vi /var/log/install/curtin-install.log +945
@@ -1193,12 +1202,14 @@ directory are completed successfully.
 
 ### Conclusion
 
-Nothing was changed in either the VM configuration or storage, so I'm really
-not sure why it suddenly works. But it suddenly works.  
-
 The only thing I can think of is that there was a temporary network failure,
 causing the download of the `linux-generic` kernel to fail, which in turn
 caused the entire installation process to fail.  
+
+I didn't think that was entirely likely, as the installer does a test of the
+package mirror before attempting to install, and the mirror test passed without
+issue.  
+
 
 
 
