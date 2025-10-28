@@ -1131,13 +1131,25 @@ Reason: -
 Stdout: .
 ```
 
-This error seems to  be part of the subiquity process.  
+This error seems to  be part of the curtin process, and `apt-get` was the
+problematic process while trying to **download** `linux-generic` (`--download-only`).
+The error was presented as a Python traceback.  
 
-After attempting to install several times, using the same configuration, the
-install (on `vmdata`) was successful.  
+The return code of `100` wasn't incredibly useful. From `man apt-get`:
+```plaintext
+DIAGNOSTICS
+       apt-get returns zero on normal operation, decimal 100 on error.
+```
+However, since it was an `apt-get install` with `--download-only`, we can
+assume that the **download** of the `linux-generic` kernel was failing.  
 
-I found that the logs from the OS installation process are stored in
-`/var/log/install`.  
+---
+
+After attempting this installation process several times, using the same 
+configuration (no changes made whatsoever), the install (on `vmdata`) was 
+successful.  
+
+I found that the logs from the OS installation process are stored in `/var/log/install`.  
 ```bash
 cd /var/log/install
 ```
@@ -1148,7 +1160,21 @@ grep -rin 'install kernel'  # lines 945 and 1620
 vi /var/log/install/curtin-install.log +945
 ```
 Looking around during this step, I found the previously problematic line of 
-the `unshare --fork --pid ...` system call.  
+the system call that attempted to install `linux-generic` via `apt-get`.  
+
+- Line 987:
+  ```plaintext
+  Running command ['unshare', '--fork', '--pid', '--mount-proc=/target/proc', '--', 'chroot', '/target', 'apt-get', '--quiet', '--assume-yes', '--option=Dpkg::options::=--force-unsafe-io', '--option=Dpkg::Options::=--force-confold', 'install', '--download-only', 'linux-generic'] with allowed return codes [0] (capture=False)
+  ```
+    - This was the previously failed command. Download of the kernel itself
+      (not the installation).  
+
+- Line 1107:
+  ```plaintext
+  Running command ['unshare', '--fork', '--pid', '--mount-proc=/target/proc', '--', 'chroot', '/target', 'apt-get', '--quiet', '--assume-yes', '--option=Dpkg::options::=--force-unsafe-io', '--option=Dpkg::Options::=--force-confold', 'install', '-', 'linux-generic'] with allowed return codes [0] (capture=False)
+  ```
+    - This was not a `--download-only` as the previous `apt-get` command, this
+      was the actual full installation of `linux-generic`.  
 
 This line displayed no errors, and seems to have executed successfully.  
 ```plaintext
@@ -1165,8 +1191,15 @@ directory are completed successfully.
 
 ---
 
+### Conclusion
+
 Nothing was changed in either the VM configuration or storage, so I'm really
 not sure why it suddenly works. But it suddenly works.  
+
+The only thing I can think of is that there was a temporary network failure,
+causing the download of the `linux-generic` kernel to fail, which in turn
+caused the entire installation process to fail.  
+
 
 
 
