@@ -1,7 +1,6 @@
-
 # Disk Types in Linux
 
-You can view disks in Linux with `fdisk -l`.  
+You can view disks in Linux with `fdisk -l` or `lsblk`.  
 
 Disks can have different names depending on the type of storage device, and the
 kernel driver that's managing the storage device.  
@@ -22,7 +21,6 @@ xvda1
 * `xvd` is the prefix
 * `a` is the position of the disk
 * `1` is the number of the partition. If there's no number, it's not a partition.  
-
 
 
 ### Different Types of Disks and their Names (Prefixes)
