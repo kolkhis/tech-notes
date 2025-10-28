@@ -27,6 +27,13 @@ mkfs.xfs /dev/sda3
 ```
 This creates a new file system, with the `xfs` format, on the block device `/dev/sda3`.  
 
+!!! note "Different filesystem formats"
+
+    The `mkfs` utility can specify any filesystem type (e.g., `mkfs.ext4`,
+    `mkfs.ext3`, etc.).  
+    Type in `mkfs.` and press ++tab+tab++ to trigger completion to see all
+    available filsystem types on your local machine.  
+
 This can now be mounted directly to a directory.  
 ```bash
 sudo mkdir /new_mountpoint       # Make a new directory to mount to.  
