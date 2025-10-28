@@ -903,8 +903,11 @@ We can monitor this with a simple `watch` command:
 watch -n 5 sudo zpool status vmdata
 ```
 
-Once the `(resilvering)` text is gone, the resilvering (mirroring) process is
-complete.  
+Once the `(resilvering)` text is gone, the `scan:` line should indicate that 
+the resilvering (mirroring) process has been completed.  
+```plaintext
+scan: resilvered 66.7G in 00:04:28 with 0 errors on Tue Oct 28 13:26:33 2025
+```
 
 
 ## Troubleshooting
