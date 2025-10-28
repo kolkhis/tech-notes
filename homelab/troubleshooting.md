@@ -1038,4 +1038,135 @@ All VM data must be migrated over to the `vmdata` ZFS pool.
 
 
 
+## Ubuntu Installer Fails
+
+After rebuilding the ZFS pool and migrating most of the VMs I have over to it,
+I attempted to install Ubuntu Server to replace the templates that I lost
+during the drive failure incident.  
+
+When setting up the VM via the Proxmox Web UI, I chose:
+
+- OS
+    - Using ISO from storage `local` 
+      ```plaintext
+      ubuntu-22.04.3-live-server-amd64.iso
+      ```
+    - Guest OS is Linux, version "6.x - 2.6 Kernel"
+
+- System
+    - Graphic card: Default
+    - Machine: Default (i440fx)
+    - SCSI Controller: VirtIO SCSI single
+    - BIOS: SeaBIOS
+    - QEMU Agent: Enabled
+
+- Disks:
+    - Bus/Device: SCSI 0 
+    - SCSI Controller: VirtIO SCSI single
+    - Storage: `vmdata`, 32 GiB
+    - Discard: no
+    - IO thread: yes
+    - SSD emulation: no
+    - Backup: yes
+    - Readonly: no
+    - Skip replication: no
+    - Async IO: Default (io_uring)
+    
+- CPU
+    - Sockets: 1
+    - Cores: 1
+    - Type: `x86-64-v2-AES`
+        - I have also tried Type: `host`
+    - 
+
+- Memory: 4096 MiB
+    - Ballooning Device: Enabled
+
+- Network:
+    - Bridge: vmbr0
+    - Model: VirtIO (paravirtualized)
+    - Firewall: enabled
+
+### The Error
+
+```plaintext
+finish: cmd-install/stage-curthooks/builtin/cmd-curthooks/installing-kernel: FAIL: installing kernel
+finish: cmd-install/stage-curthooks/builtin/cmd-curthooks: FAIL: curtin command curthooks
+
+Traceback (most recent call last):
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/commands/main.py", line 202, in main
+    ret = args.func(args)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/commands/curthooks.py", line 2217, in curthooks
+    builtin_curthooks(cfg, target, state)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/commands/curthooks.py", line 2050, in builtin_curthooks
+    install_kernel(cfg, target)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/commands/curthooks.py", line 397, in install_kernel
+    install(kernel_cfg.package)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/commands/curthooks.py", line 362, in install
+    distro.install_packages([pkg], target=target, env=flash_kernel_env())
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/distro.py", line 473, in install_packages
+    return install_cmd('install', args=pkglist, opts=opts, target=target)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/distro.py", line 255, in run_apt_command
+    cmd_rv = apt_install(mode, args, opts=opts, env=env, target=target)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/distro.py", line 303, in apt_install
+    cmd_rv = inroot.subp(cmd + dl_opts + packages, env=env)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/util.py", line 843, in subp
+    return _subp(*args, **kwargs)
+  File "/snap/subiquity/68711/lib/python3.12/site-packages/curtin/util.py", line 323, in _subp
+    raise ProcessExecutionError(stdout_out, stderr_err)
+
+curtin.util.ProcessExecutionError: Unexpected error while running command.
+
+Command: ['unshare', '--fork', '--pid', '--mount-proc=/target/proc', '--', 'chroot', '/target', 'apt-get', '--quiet', '--assume-yes', '--option=Dpkg::options::=--force-confold', 'install', '--download-only', 'linux-generic']
+
+Exit code: 100
+Reason: -
+Stdout: .
+Stderr: .
+
+Unexpected error while running command.
+Command: ['unshare', '--fork', '--pid', '--mount-proc=/target/proc', '--', 'chroot', '/target', 'apt-get', '--quiet', '--assume-yes', '--option=Dpkg::options::=--force-confold', 'install', '--download-only', 'linux-generic']
+Exit code: 100
+Reason: -
+Stdout: .
+```
+
+This error seems to  be part of the subiquity process.  
+
+After attempting to install several times, using the same configuration, the
+install (on `vmdata`) was successful.  
+
+I found that the logs from the OS installation process are stored in
+`/var/log/install`.  
+```bash
+cd /var/log/install
+```
+
+Examining the installation logs after a successful installation:
+```bash
+grep -rin 'install kernel'  # lines 945 and 1620
+vi /var/log/install/curtin-install.log +945
+```
+Looking around during this step, I found the previously problematic line of 
+the `unshare --fork --pid ...` system call.  
+
+This line displayed no errors, and seems to have executed successfully.  
+```plaintext
+finish: cmd-install/stage-curthooks/builtin/cmd-curthooks/installing-kernel: SUCCESS: installing kernel
+```
+However, the following line from the error:
+```plaintext
+finish: cmd-install/stage-curthooks/builtin/cmd-curthooks: FAIL: curtin command curthooks
+```
+...was not directly under the `installing kernel` success log as it was in the
+error log. Instead it came 252 lines later. This is likely due to the fact that 
+the `cmd-curthooks` step only finishes with all other steps in the `cmd-curthooks/`
+directory are completed successfully.   
+
+---
+
+Nothing was changed in either the VM configuration or storage, so I'm really
+not sure why it suddenly works. But it suddenly works.  
+
+
 
