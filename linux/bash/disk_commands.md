@@ -54,7 +54,9 @@ The `1 5` after the command means to run the command every 1 second, 5 times.
 Shows the size, type of drive, and where it is mounted.  
 ```bash
 lsblk
-lsblk
+lsblk -f        # Also show fstypes and UUIDs
+lsblk /dev/sda  # Show a specific disk
+lsblk /dev/sda1 # Show a specific partition
 ```
 
 ### `fdisk`
@@ -313,6 +315,8 @@ and mounts it to the directory `/directory`
 
 ---
 
+## Other Relevant Commands
+
 - `journalctl` 
     - Log analysis tools like `journalctl` can be used to quickly triage system issues 
       based on error severity.
@@ -353,14 +357,13 @@ and mounts it to the directory `/directory`
 
 - `mdadm`: Manage MD devices (AKA Linux Software RAID).  
     - This is used to create and manage RAID devices. 
-    
-- `dd`
+    - Stands for "Multiple Disk Administration"
+
+- `dd`: Write data to disks.  
 - `mttr`
 
-- `fsck` - never run on mounted file systems  
+- `fsck`: Cehck and repair a Linux filesystem. **Never run on mounted filesystems.**
 - `df -h`: Show disk space usage (in a `-h`uman readable format)
-- `w`: Shows who is logged in on the system.  
-
 
 - `fdisk`: Disk partitioning tool. 
     - This allows you to view, modify, create, and delete disk partitions  
