@@ -1145,7 +1145,7 @@ assume that the **download** of the `linux-generic` kernel was failing.
 
 ---
 
-### OS Installtion Fix
+### OS Installation Fix
 
 After attempting this installation process several times, using the same 
 configuration (no changes made whatsoever), the install (on `vmdata`) was 
