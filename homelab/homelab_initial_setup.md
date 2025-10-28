@@ -1,4 +1,4 @@
-# Homelab Initial Setup Notes
+# Initial Setup Notes
 Just notes documenting my initial setup process for my homelab.  
 
 This file is just kind of a stream-of-consciousness dump where I wrote down issues
@@ -6,41 +6,26 @@ and solutions I tried.
 
 Read at your own peril.  
 
-## Table of Contents
-* [My Hardware](#my-hardware) 
-* [Initial System Setup (Installation)](#initial-system-setup-installation) 
-* [Set up a New User](#set-up-a-new-user) 
-* [Setting up Storage for the Homelab](#setting-up-storage-for-the-homelab) 
-* [Package Setup](#package-setup) 
-    * [Setting up LVM](#setting-up-lvm) 
-    * [Replacing the Old Disk and Partitioning the New Ones](#replacing-the-old-disk-and-partitioning-the-new-ones) 
-* [Use Web UI to Create Directory and Upload ISOs](#use-web-ui-to-create-directory-and-upload-isos) 
-* [Creating the First VM](#creating-the-first-vm) 
-* [Moving to ZFS](#moving-to-zfs) 
-* [Setting up Monitoring](#setting-up-monitoring) 
-* [Troubleshooting Write-ups](#troubleshooting-write-ups) 
-    * [Troubleshooting Logical Volume Management (LVM) Commands](#troubleshooting-logical-volume-management-lvm-commands) 
-    * [Troubleshooting the Disk - Creating the Logical Volume](#troubleshooting-the-disk---creating-the-logical-volume) 
-    * [Troubleshooting Installation](#troubleshooting-installation) 
-    * [Installation Troubleshooting Steps Taken](#installation-troubleshooting-steps-taken) 
-        * [Reconfiguing BIOS (UEFI)](#reconfiguing-bios-uefi) 
-        * [Re-scanning for Drives](#re-scanning-for-drives) 
-        * [Updating Firmware](#updating-firmware) 
-        * [Hardware RAID Controller Device settings](#hardware-raid-controller-device-settings) 
-* [Initial Setup Troubleshooting TL;DR](#initial-setup-troubleshooting-tldr) 
-* [Removing a VM that is Pointing to a Nonexistent Storage](#removing-a-vm-that-is-pointing-to-a-nonexistent-storage) 
-* [Misc](#misc) 
-
-
 ## My Hardware
 Machine: Dell PowerEdge R730
-* Specs:
-    * Memory:
-        * 32GB RAM (DDR4 RDIMM)
-    * CPU:
-        * Intel(R) Xeon(R) CPU E5-2690 v3 @ 2.60GHz (two of these)
-        * 12 cores per socket (24 cores), 2 threads per core (48 threads)
-        * x86_64 Architecture 
+
+Specs:
+
+- Memory:
+    - 32GB RAM (DDR4 RDIMM)
+- CPU:
+    - Intel(R) Xeon(R) CPU E5-2690 v3 @ 2.60GHz (two of these)
+    - 12 cores per socket (24 cores), 2 threads per core (48 threads)
+    - x86_64 Architecture 
+    - CPU max MHz: `3500.0`
+    - CPU min MHz: `1200.0`
+- Storage:
+    - Dell PERC H730 Integrated hardware RAID controller 
+        - Passthrough via HBA enabled (not using hardware RAID)
+        - Writeup of enabling HBA mode can be found [here](./hardware-raid-controller.md)
+    - Two 512GB SSDs, 2.5in (during initial setup)  
+    
+
 
 
 ## Initial System Setup (Installation)
@@ -171,10 +156,11 @@ sudo apt-get install sysstat
 
 ### Setting up LVM
 
-I couldn't find some LVM commands (`lvs`, `lvdisplay`, etc.), so I had to go and [find out where the commands were](#troubleshooting-logical-volume-management-lvm).  
+I couldn't find some LVM commands (`lvs`, `lvdisplay`, etc.), so I had to go and
+[find out where the commands were](#troubleshooting-logical-volume-management-lvm).  
 
-After doing that, I provisioned the entire partition I made on the 800GB SSD as a single logical volume for
-storage.  
+After doing that, I provisioned the entire partition I made on the 800GB SSD as 
+a single logical volume for storage.  
 ```bash
 pvcreate /dev/sdb1
 vgcreate vg1 /dev/sdb1
@@ -184,8 +170,9 @@ I got an error here and had to [troubleshoot the disk](#troubleshooting-logical-
 
 
 ### Replacing the Old Disk and Partitioning the New Ones
-Using `smartctl`, I discovered that the disk had seen 7 years of active use (61,436 hours, 2559.83 days)... I'm pretty sure I need to replace it.  
-2554 days + 16 hours
+Using `smartctl`, I discovered that the disk had seen 7 years of active use 
+(61,436 hours, 2559.83 days). That's 2554 days and 16 hours... I'm pretty sure 
+I need to replace it.  
 
 ---
 
@@ -507,16 +494,20 @@ Using `smartctl`, I discovered that the disk had seen 7 years of active use (61,
 
 
 ### Troubleshooting Installation
-First Error: 
+
+First Error:  
 `The installer could not find any supported hard disks.` 
 
-??? info "Spoiler Alert (Fix)"
+???+ info "Spoiler Alert (Fix)"
 
-    Fix: Boot into BIOS (F11 on startup), go to "Device Settings".  
-    There is an option in the BIOS in the "Device Settings", under the "Hardware 
-    RAID Controller", that says "Convert to Non-RAID Disk". 
+    - Fix (all disks): The *real* fix for this is enabling HBA/JBOD in the
+      hardware RAID controller configuration.  
+        - See how [here](./hardware-raid-controller.md).  
 
-    This must be done for each disk.  
+    - Fix (single disk): Boot into BIOS (F11 on startup), go to "Device Settings".  
+      There is an option in the BIOS in the "Device Settings", under the "Hardware 
+      RAID Controller", that says "Convert to Non-RAID Disk". 
+          - This must be done for each disk.  
 
 I have an 800GB SSD in drive bay 0.  
 
