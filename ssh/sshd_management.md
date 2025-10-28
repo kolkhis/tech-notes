@@ -137,6 +137,27 @@ commented out).
       ```sh
       AuthenticationMethods publickey
       ```
+    - We can also specify multiple authentication methods to allow, using a
+      space-delimited list.  
+      ```bash
+      AuthenticationMethods publickey password
+      ```
+      This will allow both public key auth and password auth.  
+
+    - We can even require further authentication by requiring public key
+      authentication ***and*** password authentication.  
+      ```bash
+      AuthenticationMethods publickey,password
+      ```
+      This will require public key auth, **and** password auth.  
+      This must be a comma-delimited list of accepted authentication methods.  
+
+    - The above methods can be combined to allow different types of auth.  
+      ```bash
+      AuthenticationMethods publickey,password keyboard-interactive
+      ```
+      This will require both public key authentication and a password, ***or*** just
+      keyboard-interactive authentication.  
 
 ### Applying Changes to `sshd_config`
 
