@@ -827,16 +827,15 @@ through `mdadm`.
 
 ZFS makes it really easy to mirror a disk for redundancy. The process is
 built-in to the `zpool` utility.  
-
 1. Wipe and rebuild
    ```bash
-   wipefs -a /dev/sdc # clear old zfs labels
+   wipefs -a /dev/sdb # clear old zfs labels
    wipefs -a /dev/sdd # clear new disk
    ```
 
 2. Create new, **mirrored** pool.  
    ```bash
-   sudo zpool create vmdata mirror /dev/sdc /dev/sdd
+   sudo zpool create vmdata mirror /dev/sdb /dev/sdd
    sudo zpool status
    ```
 
@@ -845,6 +844,68 @@ built-in to the `zpool` utility.
    pvesm add zfspool vmdata -pool vmdata
    pvesm status
    ```
+
+!!! note "Disk Names"
+
+    My disk names are `/dev/sdb` (the remaining disk from the last pool) and the
+    new disk is `/dev/sdd`.  
+
+---
+
+I went about this a *slightly* different way.  
+
+I wanted to rebuild immediately and migrate over all the VM data to a rebuilt 
+ZFS pool, but I was still waiting on the secondary disk to arrive.  
+
+I went ahead and re-created the ZFS pool from the single remaining disk.  
+```bash
+sudo wipefs -a /dev/sdb
+sudo zpool create vmdata /dev/sdb
+```
+Then, when the new disk arrived, I installed it into the server and added it as
+a mirror for the single-disk ZFS pool.  
+
+To add the disk as a **mirror**, we need to use `zpool attach`:
+```bash
+sudo zpool attach vmdata /dev/sdb /dev/sdd
+```
+
+- `zpool attach` attaches a new device to an existing ZFS virtual device.  
+- `vmdata` is the name of the ZFS pool.  
+- `/dev/sdb` is the **existing device**.  
+- `/dev/sdd` is the **new device**.  
+
+!!! info "Using `attach` instead of `add`"
+
+    By default, if the existing device (`/dev/sdb`) is not part of a mirrored
+    config, `zpool attach` automatically creates a two-way mirror of the 
+    existing device (`/dev/sdb`) and the new device (`/dev/sdd`).  
+
+    However, if we used `zpool add` rather than `attach`, it would stripe and
+    increase capacity instead of mirroring for redundancy.  
+
+
+Once that's done, we can monitor the resilvering process.  
+```bash
+sudo zpool status vmdata
+```
+The new disk will show `(resilvering)` at the end of the line:
+```plaintext
+    NAME        STATE     READ WRITE CKSUM
+    vmdata      ONLINE       0     0     0
+      mirror-0  ONLINE       0     0     0
+        sdb     ONLINE       0     0     0
+        sdd     ONLINE       0     0     0  (resilvering)
+```
+
+We can monitor this with a simple `watch` command:
+```bash
+watch -n 5 sudo zpool status vmdata
+```
+
+Once the `(resilvering)` text is gone, the resilvering (mirroring) process is
+complete.  
+
 
 ## Troubleshooting
 
