@@ -27,23 +27,26 @@ uptime              # Check how long system has been up
 cat /proc/cmdline   # Get info on how the system was started
 vmstat 1 5          # Check virtual memory usage (1 second intervals for 5 seconds)
 mpstat 1 5          # Check overall CPU usage
-ps -ef              # Check what processes are running on the system
+ps -ef              # Show all processes running on the system
+ps aux              # Show all processes running on the system (BSD style syntax)
 ps -ef | awk '{print $1}' | sort | uniq -c
+
 pidstat 1 5         # Check which processes are executing on the processor
 iostat -xz 1 5      # More CPU and Disk usages
 sar -n DEV 1 5      # Check network usage and load of system
 dmidecode           # Get system information
 ethtool enp1s0      # Check link to `enp1s0`, or any other network connection
 
-fdisk -l            # List partition tables
-mkfs.ext4 /dev/sdX1 # Create an ext4 filesystem on a partition
-mount /dev/sdX1 /mnt  # Mount a filesystem
-umount /mnt         # Unmount a filesystem
-lsblk               # List all available block devices
-lsblk -f            # Same as above but also list UUIDs and FS types
-df -h               # Display disk usage (human-readable)
-du -sh /dir         # Show disk usage of a directory
-fsck /dev/sdX1      # Check and repair a filesystem
+fdisk -l                # List disk and partition tables
+mkfs.ext4 /dev/sdX1     # Create an ext4 filesystem on a partition
+mount /dev/sdX1 /mnt    # Mount a filesystem
+umount /mnt             # Unmount a filesystem
+lsblk                   # List all available block devices
+lsblk -f                # Same as above but also list UUIDs and FS types
+blkid                   # Show UUIDs and other info on block devices
+df -h                   # Display disk usage (human-readable)
+du -sh /dir             # Show disk usage of a directory
+fsck /dev/sdX1          # Check and repair a filesystem
 ```
 The `1 5` after the command means to run the command every 1 second, 5 times.  
 
@@ -175,6 +178,27 @@ blkid           # List all block devices' UUIDs, filesystem types, etc.
 blkid /dev/vda1 # Show only the info for /dev/vda1 
 ```
 
+### `mkfs`
+The `mkfs` command is used to format a drive or partition with a specific
+filesystem type (e.g., `ext4`)
+
+- Typing `mkfs` then ++tab+tab++ (to trigger completion) will show all the 
+  different filesystem types available to create on your local machine.  
+    - e.g., `mkfs.ext4`, `mkfs.xfs`, etc.
+
+- This will allow us to format a block device with the given type, whether it 
+  be a hard disk, disk partition, USB drive, etc..  
+
+When a block device is formatted with a new filesystem, all inode pointers on 
+the block device are deleted, but the data still remains on the disk. Forensic 
+tools can recover that data.  
+
+Some examples:
+```bash
+mkfs.vfat -F32 /dev/sdX1  # Format a partition as FAT32
+mkfs.ext4 /dev/sdX1       # Format a partition as ext4
+```
+
 ### `df`
 `df` shows disk usage.
 You can specify a directory to show the usage of that directory.  
@@ -193,6 +217,23 @@ df -h / | grep -v Size | awk '{print $2}'
 - `grep -v Size` will remove the line containing the word `Size`
 - `awk '{print $2}'` will print 2nd column
 
+### `file -s`
+
+The `file` command is usually used to tell us what type of file a given
+filename is.  
+
+Using the `-s` option, we can pass in **s**pecial files (e.g., block devices).  
+```bash
+sudo file -s /dev/sda
+# /dev/sda: DOS/MBR boot sector, extended partition table (last)
+```
+This will show us the type of disk or partition that a given block device is.  
+```bash
+sudo file -s /dev/sda2
+# /dev/sda2: Linux rev 1.0 ext4 filesystem data, UUID=d8436ab2-d98c-4780-89e3-6f998519607f (needs journal recovery) (extents) (64bit) (large files) (huge files)
+```
+This shows the filesystem type, the block device's UUID, and what type of files
+it can store (large files, huge files).  
 
 ## System Information  
 ```bash  
@@ -327,13 +368,6 @@ and mounts it to the directory `/directory`
             - In this case, only messages with an error level of 3 or higher (critical errors)
         - `-x`: Add explanatory help texts about the logs from the "message catalog", which provides possible causes or solutions to certain log messages.  
         - `-b`: Show only the latest boot.  
-
-- `mkfs`
-    - `mkfs.<Tab>` will show all the different types of file systems you can make using bash completion.  
-        - e.g., `mkfs.ext4`, `mkfs.xfs`, etc.
-    - This will format a block device with the given type.  
-    - All inode pointers on the block device are deleted when formatted with `mkfs`, but 
-      the data still remains on the disk. Forensic tools can recover that data.  
 
 - `sar`: Collect, report, or save system activity information.  
 - `lsblk`: Lists all mount points that are block devices  
