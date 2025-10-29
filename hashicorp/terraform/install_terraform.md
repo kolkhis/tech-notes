@@ -1,32 +1,36 @@
 # Installing Hashicorp Terraform
 
-These notes were sourced from [het_tanis' Killercoda lab](https://killercoda.com/het-tanis/course/Hashicorp-Labs)
-and the [Hashicorp Terraform documentation](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).  
-
-## Table of Contents
-* [Terraform Installation](#terraform-installation) 
-    * [Debian-based Install](#debian-based-install) 
-        * [Setup the hashicorp repositories (debian-based)](#setup-the-hashicorp-repositories-debian-based) 
-        * [Install dependencies](#install-dependencies) 
-        * [Install the HashiCorp GPG key](#install-the-hashicorp-gpg-key) 
-        * [Verify the key's fingerprint](#verify-the-keys-fingerprint) 
-        * [Add the official HashiCorp repository to your system.](#add-the-official-hashicorp-repository-to-your-system) 
-    * [Install Terraform from the Hashicorp Repository](#install-terraform-from-the-hashicorp-repository) 
-* [Do some basic checks to see that it is correctly setup.](#do-some-basic-checks-to-see-that-it-is-correctly-setup) 
-    * [RHEL-based install](#rhel-based-install) 
-        * [Using Yum](#using-yum) 
-        * [Using DNF](#using-dnf) 
-* [tl;dr](#tldr) 
-    * [Debian](#debian) 
-* [Resources](#resources) 
-
 
 ## Terraform Installation
 
+Terraform can be installed via package manager on most Linux distros.  
+The Hashicorp repository must be added to install via package manager.  
+
 ### Debian-based Install
+
+#### Quick setup:
+
+```bash
+wget -O - https://apt.releases.hashicorp.com/gpg |
+    sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+```
+
+The repository can alternatively be added by using `apt-key add` and `apt-add-repository`:
+```bash
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt update
+sudo apt install terraform
+```
+
 #### Setup the hashicorp repositories (Debian-based)
 
-* See [the docs](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+* Also see [the official installation guide](https://developer.hashicorp.com/terraform/install)
+
+Add the apt repository by downloading the GPG key, adding it to the keyring,
+then adding the appropriate repo.  
 
 ---
 
@@ -48,8 +52,8 @@ wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/
 #### Verify the key's fingerprint:
 ```bash
 gpg --no-default-keyring \
---keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
---fingerprint
+    --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+    --fingerprint
 ```
 
 The `gpg` command will report the key fingerprint:
@@ -68,8 +72,8 @@ sub   rsa4096 XXXX-XX-XX [E]
 Add the official HashiCorp repository to your system:
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
-sudo tee /etc/apt/sources.list.d/hashicorp.list
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | 
+    sudo tee /etc/apt/sources.list.d/hashicorp.list
 ```
 
 ### Install Terraform from the Hashicorp Repository
@@ -94,22 +98,22 @@ sudo apt-get install terraform
 
 
 * Check where the system put Terraform binary.
-```bash
-which terraform
-```
+  ```bash
+  which terraform
+  ```
 
 * Verify Terraform functionality.
-```bash
-terraform -help
-```
-Make sure you look at some of the capabilities you have with Terraform.
-
+  ```bash
+  terraform -help
+  ```
+  Make sure you look at some of the capabilities you have with Terraform.
+  
 * Check Terraform subcommands
-```bash
-terraform -help plan
-```
+  ```bash
+  terraform -help plan
+  ```
 
-### RHEL-based install
+### RedHat-based Install
 #### Using Yum
 Install dependencies:
 ```bash
@@ -129,7 +133,9 @@ sudo yum -y install terraform
 #### Using DNF
 
 ```bash
-curl https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
+curl https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo |
+    sudo tee /etc/yum.repos.d/hashicorp.repo
+sudo dnf install -y terraform
 ```
 
 ## tl;dr:
@@ -149,5 +155,8 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
 ```
 
 ## Resources
+- [het_tanis' Killercoda lab](https://killercoda.com/het-tanis/course/Hashicorp-Labs)
+- [Hashicorp Terraform documentation](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).  
 - [Official Packaging Guide](https://www.hashicorp.com/en/official-packaging-guide)
+- [AWS Terraform CLI Tutorial](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 
