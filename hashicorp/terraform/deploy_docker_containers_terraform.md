@@ -22,6 +22,7 @@ Your team has decided to use Terraform and deploy containers in an infrastructur
 Verify that `containerd` is running and that Terraform is installed on your system.
 
 Hint:
+
 * `sudo systemctl status containerd`
 * The build infrastructure[docs](https://developer.hashicorp.com/terraform/tutorials/docker-get-started/docker-build)
 
@@ -71,75 +72,76 @@ Let's create the first deployment of Terraform in our environment.
 ---
 
 * Make a `main.tf` file in the directory
-```bash
-touch main.tf
-```
+  ```bash
+  touch main.tf
+  ```
 
 * Add a default configuration for the terraform project
-```tf
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 2.13.0"
+  ```tf
+  terraform {
+    required_providers {
+      docker = {
+        source  = "kreuzwerker/docker"
+        version = "~> 2.13.0"
+      }
     }
   }
-}
- 
-provider "docker" {}
-
-resource "docker_image" "nginx" {
-  name         = "nginx:latest"
-  keep_locally = false
-}
- 
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.latest
-  name  = "tutorial"
-  ports {
-    internal = 80
-    external = 8000
+   
+  provider "docker" {}
+  
+  resource "docker_image" "nginx" {
+    name         = "nginx:latest"
+    keep_locally = false
   }
-}
-```
+   
+  resource "docker_container" "nginx" {
+    image = docker_image.nginx.latest
+    name  = "tutorial"
+    ports {
+      internal = 80
+      external = 8000
+    }
+  }
+  ```
 
 * Make sure the Terraform configuration is well formatted and validated.
-```bash
-terraform fmt
-terraform validate
-```
+  ```bash
+  terraform fmt
+  terraform validate
+  ```
 
 We will see an error here.
 This is because the validate is looking to see if we've done an `init` and pulled down the provider.
 That is happening in the next step.
 
 * Before we can deploy with Terraform we need to initialize and download all providers.
-```bash
-terraform init
-```
+  ```bash
+  terraform init
+  ```
 
 * Let's check the system to see all the files that have been created
-```bash
-ls -al
-```
+  ```bash
+  ls -al
+  ```
 
 * Let's deploy our resources
-```bash
-terraform apply --auto-approve
-```
+  ```bash
+  terraform apply --auto-approve
+  ```
 
 * Let's verify that we have a working container
-```bash
-docker images
-docker ps
-curl 127.0.0.1:8000
-```
+  ```bash
+  docker images
+  docker ps
+  curl 127.0.0.1:8000
+  ```
 
 * Look at the `terraform.tfstate` file to see all the objects that terraform is tracking in the deployment.
-```bash
-cat terraform.tfstate
-```
-WARNING: The terraform.tfstate file should never be edited by hand, only terraform should edit that file.
+  ```bash
+  cat terraform.tfstate
+  ```
+  WARNING: The `terraform.tfstate` file should never be edited by hand, only 
+  terraform should edit that file.
 
 ---
 
@@ -151,81 +153,81 @@ Deploy 3 containers that are bound internally on port 80 and
 externally use 8080, 8081, and 8082.
 
 * Start by destroying our old Terraform configuration.
-```bash
-terraform destroy --auto-approve
-```
+  ```bash
+  terraform destroy --auto-approve
+  ```
 
 * Then edit for our new configuration.
-```bash
-vi main.tf
-```
-Set the configuration to look like this:
-```terraform
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 2.13.0"
+  ```bash
+  vi main.tf
+  ```
+  Set the configuration to look like this:
+  ```terraform
+  terraform {
+    required_providers {
+      docker = {
+        source  = "kreuzwerker/docker"
+        version = "~> 2.13.0"
+      }
     }
   }
-}
-
-provider "docker" {}
-
-resource "docker_image" "nginx" {
-  name         = "nginx:latest"
-  keep_locally = false
-}
-
-resource "docker_container" "nginx8080" {
-  image = docker_image.nginx.latest
-  name  = "nginx8080"
-  ports {
-    internal = 80
-    external = 8080
+  
+  provider "docker" {}
+  
+  resource "docker_image" "nginx" {
+    name         = "nginx:latest"
+    keep_locally = false
   }
-}
-
-resource "docker_container" "nginx8081" {
-  image = docker_image.nginx.latest
-  name  = "nginx8081"
-  ports {
-    internal = 80
-    external = 8081
+  
+  resource "docker_container" "nginx8080" {
+    image = docker_image.nginx.latest
+    name  = "nginx8080"
+    ports {
+      internal = 80
+      external = 8080
+    }
   }
-}
-
-resource "docker_container" "nginx8082" {
-  image = docker_image.nginx.latest
-  name  = "nginx8082"
-  ports {
-    internal = 80
-    external = 8082
+  
+  resource "docker_container" "nginx8081" {
+    image = docker_image.nginx.latest
+    name  = "nginx8081"
+    ports {
+      internal = 80
+      external = 8081
+    }
   }
-}
-```
+  
+  resource "docker_container" "nginx8082" {
+    image = docker_image.nginx.latest
+    name  = "nginx8082"
+    ports {
+      internal = 80
+      external = 8082
+    }
+  }
+  ```
 
 * Make sure the Terraform configuration is well formatted and validated.
-```bash
-terraform fmt
-terraform validate
-```
+  ```bash
+  terraform fmt
+  terraform validate
+  ```
 
 * Deploy our resources
-```bash
-terraform apply --auto-approve
-```
+  ```bash
+  terraform apply --auto-approve
+  ```
 
 * Verify that all the containers are working.
-```bash
-docker images
-docker ps
-curl 127.0.0.1:8080
-sleep 2
-curl 127.0.0.1:8081
-sleep 2
-curl 127.0.0.1:8082
-```
+  ```bash
+  docker images
+  docker ps
+  curl 127.0.0.1:8080
+  sleep 2
+  curl 127.0.0.1:8081
+  sleep 2
+  curl 127.0.0.1:8082
+  ```
 
 
 
