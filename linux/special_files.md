@@ -4,7 +4,6 @@ The term "special file" on Linux/Unix means a file that can generate or receive 
 Since "everything is a file™," this includes storage devices, pipes, file
 descriptors, and character special files.  
 
-
 ## Common Special Files
 
 - `/dev/null`: A character special file that can receive data.  
@@ -73,39 +72,108 @@ One for permissions, the other for SELinux contexts.
 When specifying either a block or character special file with `mknod`, you need to 
 specify major and minor device numbers.  
 
-* The `MAJOR` number tells the kernel which driver to use (e.g., the block driver).  
+- The `MAJOR` number tells the kernel which driver to use (e.g., the block driver).  
     - This is like the "class" of device.  
-* The `MINOR` number tells the kernel which instance of the device the file refers to.  
+- The `MINOR` number tells the kernel which instance of the device the file refers to.  
     - This is the "specific device in that class."
 
-You can check major and minor numbers with `stat` or `ls -l`.  
+There are a few ways to determine the major/minor numbers for specific files.  
+
+- You can check major and minor numbers with `stat`.  
+  ```bash
+  stat /dev/sda
+  ```
+  Output:
+  ```plaintxt
+    File: /dev/sda
+    Size: 0               Blocks: 0          IO Block: 4096   block special file
+  Device: 5h/5d   Inode: 323         Links: 1     Device type: 8,0
+  Access: (0660/brw-rw----)  Uid: (    0/    root)   Gid: (    6/    disk)
+  Access: 2025-04-28 15:44:20.295315382 -0400
+  Modify: 2025-03-04 13:38:48.603526535 -0500
+  Change: 2025-03-04 13:38:48.603526535 -0500
+   Birth: -
+  ```
+  You can see the `Device type: 8,0`.  
+  This is the major and minor number.  
+
+- Alternatively, you could simply use `file` and it should print the
+  major/minor.  
+  ```bash
+  file /dev/null
+  ```
+  Output:
+  ```plaintext
+  /dev/null: character special (1/3)
+  ```
+  The `1/3` specifies a major number of `1` and minor number of `3`.  
+
+- Or, using `ls -l` on a special file, you can see its major and minor numbers.  
+  ```bash
+  ls -l /dev/sda
+  ```
+  Output:
+  ```plaintext
+  brw-rw---- 1 root disk 8, 0 Mar  4 13:38 /dev/sda
+  ```
+  This is a block device (`b`) with a major number of `8` (driver: `sd`), and a minor
+  number of `0` (`/dev/sda`).  
+  `/dev/sda1` would be minor number `1`.  
+
+### Extracting Major/Minor Numbers
+
+As far as programmatically parsing the major/minor device numbers, I'd say
+using `file` produces the most easily parsable output.  
+
+The output is a single line of text, with device numbers presented in a block 
+of text at the end of the line, wrapped in parentheses and separated by a 
+forward slash (`/`).  
+
+This can be easily parsed by `cut`, `perl`, `awk`, etc.  
 ```bash
-stat /dev/sda
+file /dev/null | cut -d' ' -f4
+file /dev/null | awk '{print $NF}'
+file /dev/null | perl -ae 'print "$F[-1]\n"'
 ```
-Output:
-```plaintxt
-  File: /dev/sda
-  Size: 0               Blocks: 0          IO Block: 4096   block special file
-Device: 5h/5d   Inode: 323         Links: 1     Device type: 8,0
-Access: (0660/brw-rw----)  Uid: (    0/    root)   Gid: (    6/    disk)
-Access: 2025-04-28 15:44:20.295315382 -0400
-Modify: 2025-03-04 13:38:48.603526535 -0500
-Change: 2025-03-04 13:38:48.603526535 -0500
- Birth: -
+All of these commands will extract the last field in the output.  
+```plaintext
+(1/3)
 ```
-You can see the `Device type: 8,0`.  
-This is the major and minor number.  
 
+From there, it's as simple as removing the parentheses and splitting based on
+the `/`.  
 
+---
 
-Or, using `ls -l` on a special file, you can see its major and minor numbers.  
-```bash
-ls -l /dev/sda
-# brw-rw---- 1 root disk 8, 0 Mar  4 13:38 /dev/sda
-```
-This is a block device (`b`) with a major number of `8` (driver: `sd`), and a minor
-number of `0` (`/dev/sda`).  
-`/dev/sda1` would be minor number `1`.  
+There are a number of ways to remove parentheses and split on a character.  
 
+- Probably the easiest way to extract the numbers is to create a longer pipeline.  
+  ```bash
+  file /dev/null | cut -d' ' -f4 | tr -d '()' | awk -F'/' '{print $1, $2}'
+  ```
+  Output:
+  ```plaintext
+  1 3
+  ```
 
+- We can read them into variables by utilizing `IFS` and `read`:
+  ```bash
+  IFS='()/' read -r _ _ _ maj min < <(file /dev/null)
+  printf "maj: %s, min: %s\n" "$maj" "$min"
+  ```
+  This uses underscores to discard parts of the input we don't want. 
+  Output:
+  ```plaintext
+  maj: 1, min: 3
+  ```
+  This also gives us the variables to work with.  
+
+- We can use perl with a bit of regex.  
+  ```bash
+  file /dev/null | perl -ane '$F[-1] =~ s/\(([\d\/]+)\)/$1/g; print "$F[-1]\n";'
+  ```
+  Or omit the splitting entirely and just grab the `1/3`.  
+  ```bash
+  file /dev/null | perl -ne 'print "$1\n" if m/\(([\d\/]+)\)/;'
+  ```
 
