@@ -829,9 +829,66 @@ open(my $fh, '<', 'file.txt') or die $!;
 - `die` will exit with an error message. 
 - `$!` holds the last error message that the program encountered.  
 
+## Using Perl like Awk
+
+We can use perl just like awk to print specific columns of output.  
+
+This can be done by using `-a` (autosplit mode) and `-n` (non-printing loop).  
+
+When using `-a`, the split line is automatically saved into the `@F` array.  
+
+- For example, to print the first column of `ls -l` (permissions):
+  ```bash
+  ls -l | perl -ane 'print "$F[0]\n"'
+  ```
+    - Using `-a` implicitly sets `-n`, so this is a bit redundant.  
+      We could omit the `-n` and get the same result:  
+      ```bash
+      ls -l | perl -ae 'print "$F[0]\n"'
+      ```
+
+- Another example, to print the major/minor device numbers from `stat` output:
+  ```bash
+  stat /dev/null | perl -ae 'print "$F[8]\n" if ($. == 3);'
+  ```
+  This prints the 9th column (zero-based indexing), but only if the line number
+  (`$.`) is equal to three.  
+
+
+This can also be done by passing `-F` with a character to split on (just like `awk`),
+along with a custom array name for the split lines.   
+
+- Print the first column of input (0-based indexing).  
+  ```bash
+  ls -l | perl -F' ' -ane 'my @f = split; print "$f[0]\n";'
+  ```
+
+!!! info "Using a Custom Array Name with `-F`"
+
+    Note that we're using a custom array name here and calling `split` on the
+    input line.  
+    That's because `-F` will make the `@F` array contain the line
+    **character-by-character** rather than splitting on the desired
+    pattern/character provided to `-F`.  
+
+- Extract the major/minor device numbers from `stat` output:
+  ```bash
+  stat /dev/null | perl -F' ' -e 'my @f = split; print "$f[8]\n" if ($. == 3);'
+  # 1,3
+  ```
+
+The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.  
+
+- `-F<pattern>`: Split on the character/pattern specified for `-a`
+    - `-a`: Turns on autosplit mode when used with a `-n` or `-p`.  
+        - An implicit split command to the `@F` array is done as the first thing
+          inside the implicit loop while produced by the `-n` or `-p` options.  
+
 
 ## Resources
 
+- `perldoc perlrun`
 - [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
 - [List of Pragmas (Pragmatic Modules)](https://perldoc.perl.org/modules#Pragmatic-Modules)
+
 
