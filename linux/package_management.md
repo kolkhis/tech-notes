@@ -141,7 +141,13 @@ Some other example values that are possible:
 ###### tl;dr: first char is what you *wanted* to do, second char is what *actually happened*
 
 ## Package Management in RedHat-based systems 
-RedHat family systems (Rocky, CentOS, Fedora, etc.) use `dnf` and `rpm` for package management.  
+
+RedHat family systems (Rocky, CentOS, Fedora, etc.) use `rpm` for package management.  
+The frontend provided for RPM is usually either `dnf` (newer), or `yum`
+(older).  
+
+On SUSE systems, which also use RPM, its frontend may be `zypper`.  
+
 ```bash  
 # Package updates and installations
 dnf update                      # Update all packages to the latest available versions  
@@ -158,6 +164,8 @@ dnf list installed              # List all installed packages
 dnf list available              # List available packages in the enabled repos  
 dnf list package                # Show details about a specific package  
 dnf whatprovides command        # Show the package that provides the given command
+dnf repoquery --requires package  # Show package dependencies
+yum deplist package             # Show package dependencies
 
 # Managing repositories
 dnf repolist                    # List enabled repositories  
