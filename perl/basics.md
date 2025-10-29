@@ -875,6 +875,19 @@ along with a custom array name for the split lines.
   ls -l | perl -F' ' -ane 'my @f = split; print "$f[0]\n";'
   ```
 
+The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.  
+
+- Extract the major/minor device numbers from `stat` output:
+  ```bash
+  stat /dev/null | perl -F' ' -e 'my @f = split; print "$f[8]\n" if ($. == 3);'
+  # 1,3
+  ```
+    - `-F<pattern>`: Split on the character/pattern specified for `-a`.  
+        - `-a`: Turns on autosplit mode when used with a `-n` or `-p` (`-n` implied by
+          default).  
+            - An implicit `split()` command on the `@F` array is done first inside the 
+              implicit loop (looped with the `-n` or `-p` options).  
+
 !!! info "Using a Custom Array Name with `-F`"
 
     Note that we're using a custom array name here and calling `split` on the
@@ -883,23 +896,11 @@ along with a custom array name for the split lines.
     **character-by-character** rather than splitting on the desired
     pattern/character provided to `-F`.  
 
-- Extract the major/minor device numbers from `stat` output:
-  ```bash
-  stat /dev/null | perl -F' ' -e 'my @f = split; print "$f[8]\n" if ($. == 3);'
-  # 1,3
-  ```
-
-The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.  
-
-- `-F<pattern>`: Split on the character/pattern specified for `-a`
-    - `-a`: Turns on autosplit mode when used with a `-n` or `-p`.  
-        - An implicit split command to the `@F` array is done as the first thing
-          inside the implicit loop while produced by the `-n` or `-p` options.  
-
 
 ## Resources
 
-- `perldoc perlrun`
+- `perldoc`
+    - `perldoc perlrun`
 - [Perl Command Line Options - perl.com](https://www.perl.com/pub/2004/08/09/commandline.html/)
 - [List of Pragmas (Pragmatic Modules)](https://perldoc.perl.org/modules#Pragmatic-Modules)
 
