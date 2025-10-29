@@ -25,12 +25,16 @@ The tools used to manage packages on your system heavily depends on your operati
 ## Package Management on Debian-based systems
 Debian-based systems (Ubuntu, Mint, etc.) use `apt` with `dpkg` for package management.    
 
-The `apt` command is sort of a wrapper for all the `apt-` family commands.  
+The `apt` command is sort of a wrapper for all the `apt-*` family commands.  
 For instance:
 
 - `apt install` is `apt-get install`  
 - `apt show` is `apt-cache show`  
 - etc.
+
+This provides a centralized tool to perform the same functionality without
+memorizing all the different `apt-*` commands. However, there are some commands
+that are not available through `apt` itself.  
 
 ```bash  
 apt update          # Update package lists  (apt-get update)
@@ -40,7 +44,11 @@ apt install package=4.5.0 # Install a specific version of a package (apt-get ins
 apt remove package  # Remove a package (apt-get remove) 
 apt search package  # Search for a package in the repositories (apt-cache search)
 apt show package    # Show a specific package in the repositories (apt-cache show)
-apt-cache showpkg package  # Show a package and its dependencies in the repositories
+apt-cache showpkg package   # Show a package and its dependencies in the repositories
+apt-cache depends package   # Show a package's dependencies
+apt-cache rdepends package  # Show reverse dependencies 
+apt-mark showmanual     # Show packages that were installed manually
+
 dpkg -i package.deb # Install a .deb package manually  
 dpkg -r package     # Remove a package  
 dpkg -l             # List all installed packages  
