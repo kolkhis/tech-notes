@@ -267,10 +267,11 @@ nav:
   - Hashicorp:
     - hashicorp/hashicorp-vault.md
     - Terraform:
+      - hashicorp/terraform/proxmox-terraform.md
       - hashicorp/terraform/ansible_and_terraform.md
       - hashicorp/terraform/deploy_docker_containers_terraform.md
       - hashicorp/terraform/install_terraform.md
-      - hashicorp/terraform/project_structure.md
+      - hashicorp/terraform/tf-project-structure.md
 
   - AWS:
     - aws/ccp-notes.md
