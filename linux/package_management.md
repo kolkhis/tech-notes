@@ -225,15 +225,20 @@ package manager.
   yum history list package_name
   ```
 
-## Find what Package a Tool is From
+## Find Package Files
 
-### `dpkg -S`
-On Debian-based systems, you'd use `dpkg -S` to determine what package a tool came
-from.  
+### `dpkg --search`
+On Debian-based systems, you'd use `dpkg -S` to search for a filename from
+installed packages.  
+
+This searches package files for a specific filename. It can be used to 
+determine which package a specific file or command came from.  
 ```bash
-dpkg -S toolname
+dpkg --search filename/toolname
+dpkg -S filename/toolname
 ```
-This will match the tool name and show you what package installed the tool.  
+This will match the tool name and show you files that came from the installed
+package or tool.  
 
 For instance, finding what package `pgrep` came from:
 ```bash
@@ -241,7 +246,7 @@ dpkg -S pgrep
 ```
 
 The output would look something like this:
-```bash
+```plaintext
 unzip: /usr/share/man/man1/zipgrep.1.gz
 procps: /usr/share/man/de/man1/pgrep.1.gz
 procps: /usr/share/man/man1/pgrep.1.gz
