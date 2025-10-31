@@ -167,7 +167,8 @@ Providers are downloaded from the [Terraform registry](https://registry.terrafor
     makes the appropriate calls to the API. The provider will report back what
     changed (or what will change).  
 
-All that to say, Terraform has a Proxmox provider.  
+All that to say, Terraform has a [Proxmox
+provider](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs).  
 
 So, we'd create a directory for our Terraform project.  
 ```bash
@@ -198,15 +199,21 @@ resource "proxmox_vm_qemu" "new_vm" {
     target_node = "home-pve"
     clone       = "ubuntu-template"
     storage     = "vmdata"
-    # storage     = "local-lvm"
     cores       = 2
     memory      = 2048
 }
 ```
 
-This specifies a **single VM to create**.  
+This specifies a **single VM to create**. In this case, a clone of a
+pre-existing VM or template named `ubuntu-template`.  
 Any additional VMs would be another `resource` entry, all with their own
 configurations.  
+
+Here, we're using a [`proxmox_vm_qemu` resource](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu),
+which will create a new VM by either cloning an existing VM/template, or by
+creating a new one from an ISO file.  
+
+Using a clone or ISO is less granular than using a [CloudInit template](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init).  
 
 ---
 
@@ -226,9 +233,66 @@ Finally, we `apply` to actually do the magic.
 terraform apply
 ```
 
+## Hiding the API Key
+
+So, storing API keys in plain text is usually not great practice.  
+
+### Using Environment Variables
+One very common method of avoiding plaintext secrets is using environment variables.  
+
+We can define variables in a `variables.tf` file (or just in `main.tf`).  
+We'll make a variable for the API endpoint, the token ID (name), as well as the
+API key itself.  
+```hcl title="variables.tf"
+variable "proxmox_api_url" {
+    description = "Proxmox API endpoint"
+    type        = string
+}
+
+variable "proxmox_api_token_id" {
+    description = "Proxmox API token ID"
+    type        = string
+}
+
+variable "proxmox_api_token_secret" {
+    description = "Proxmox API token secret (API key itself)"
+    type        = string
+    sensitive   = true
+}
+```
+
+Then, we'd reference these variables inside the `provider` block.  
+
+We access variables by simply using `var.<VAR_NAME>`.  
+```hcl
+provider "proxmox" {
+    pm_api_url          = var.proxmox_api_url
+    pm_api_token_id     = var.proxmox_api_token_id
+    pm_api_token_secret = var.proxmox_api_token_secret
+    pm_tls_insecure     = true
+}
+```
+
+Finally, we'd need to set the environment variables.  
+Any environment variable that is prepended with `TF_VAR_` is automatically
+picked up by Terraform.  
+
+```bash
+export TF_VAR_promox_api_url="https://192.168.1.49:8006/api2/json"
+export TF_VAR_promox_api_token_id="terraform@pve!tf-token"
+export TF_VAR_promox_api_token_secret="SECRET_TOKEN"
+```
+We can set this in our `.bashrc`, or source it from some other environment file 
+(e.g., in a `.env` file).  
+
+Once those are set and sourced, we're all set with setting up the environment
+variables for our secrets.  
+
+
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
 - <https://pve.proxmox.com/pve-docs/pveum-plain.html>
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
+- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
 - <https://registry.terraform.io/>
