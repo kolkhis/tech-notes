@@ -109,12 +109,12 @@ user and assign it a new API key.
       PAM is password-based auth only, so it's not ideal for automation and app
       integrations.  
 
-    - Verify that the user account has been created.  
-      ```bash
-      pveum user list
-      ```
+2. Verify that the user account has been created.  
+   ```bash
+   pveum user list
+   ```
 
-2. Set a password for the user.  
+3. Set a password for the user.  
    ```bash
    pveuser passwd terraform@pve
    ```
@@ -122,7 +122,7 @@ user and assign it a new API key.
       however I don't encourage people to pass passwords as command line
       arguments. Those arguments live in shell history.  
 
-3. Generate an API token.  
+4. Generate an API token.  
    ```bash
    pveum user token add terraform@pve <TOKEN_ID>
    ```
@@ -136,8 +136,99 @@ user and assign it a new API key.
       the value (the token itself). The `full-tokenid` follows the pattern
       `user@realm!token-id`, so in my case `terraform@pve!tf-token`.  
 
+5. Verify the token has been created.  
+   ```bash
+   pveum user token list terraform@pve
+   ```
+
+Once the user account is created and has an API key, we can move forward to
+configuring the Terraform Proxmox provider.  
+
+### Configure Terraform Provider
+
+Terraform has this concept of "providers."  
+
+Providers are essentially plugins that allow Terraform talk to an external
+system, usually via that system's API.  
+
+Each provider is programmed to interact with specific APIs (e.g., AWS, Proxmox), 
+and exposes **Terraform resources** that correspond to that system.  
+
+Providers are downloaded from the [Terraform registry](https://registry.terraform.io/)
+
+!!! info "How Terraform providers work"
+
+    When we run `terraform init`, it reads the `.tf` files and detects which
+    providers are being used, then downloads and installs them into
+    the `.terraform/providers` directory.  
+
+    Then, when we run `terraform plan` or `terraform apply`, it will load each
+    provider's plugin binary, passes in the config (via RPC), and the **provider** 
+    makes the appropriate calls to the API. The provider will report back what
+    changed (or what will change).  
+
+All that to say, Terraform has a Proxmox provider.  
+
+So, we'd create a directory for our Terraform project.  
+```bash
+mkdir pve-tf && cd pve-tf
+```
+Then we'd make a `main.tf` file to define the provider we want to use.  
+```bash
+touch main.tf
+vi main.tf
+```
+
+Inside the `main.tf` file, we'd add:
+```hcl
+provider "proxmox" {
+    pm_api_url  = "https://192.168.1.49:8006/api2/json"
+    pm_user     = "terraform"
+    pm_password = "api-key-goes-here"
+    pm_tls_insecure = true
+}
+```
+This configures the Proxmox provider, and specifies the necessary information 
+for Terraform to interact with the Proxmox API.  
+
+Then, also in `main.tf`, we'd add the new **resource** that we want to create.  
+```hcl
+resource "proxmox_vm_qemu" "new_vm" {
+    name        = "new_vm"
+    target_node = "home-pve"
+    clone       = "ubuntu-template"
+    storage     = "vmdata"
+    # storage     = "local-lvm"
+    cores       = 2
+    memory      = 2048
+}
+```
+
+This specifies a **single VM to create**.  
+Any additional VMs would be another `resource` entry, all with their own
+configurations.  
+
+---
+
+Once we have the `provider` and our `resource` set up in `main.tf`, we can go
+ahead and do `terraform init` to intialize the provider.  
+```bash
+terraform init
+```
+
+Then, we can do a `plan` to see the changes that will be made.  
+```bash
+terraform plan
+```
+
+Finally, we `apply` to actually do the magic.  
+```bash
+terraform apply
+```
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
 - <https://pve.proxmox.com/pve-docs/pveum-plain.html>
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
+- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
+- <https://registry.terraform.io/>
