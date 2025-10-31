@@ -109,6 +109,11 @@ user and assign it a new API key.
       PAM is password-based auth only, so it's not ideal for automation and app
       integrations.  
 
+    - Verify that the user account has been created.  
+      ```bash
+      pveum user list
+      ```
+
 2. Set a password for the user.  
    ```bash
    pveuser passwd terraform@pve
@@ -117,10 +122,22 @@ user and assign it a new API key.
       however I don't encourage people to pass passwords as command line
       arguments. Those arguments live in shell history.  
 
-
+3. Generate an API token.  
+   ```bash
+   pveum user token add terraform@pve <TOKEN_ID>
+   ```
+   The `<TOKEN_ID>` is going to be a user-specified token identifier.  
+   This ID is basically just a name for your API key.  
+   I'll name mine `tf-token`.  
+   ```bash
+   pveum user token add terraform@pve tf-token
+   ```
+    - This will output a table containing the `full-tokenid`, info, and
+      the value (the token itself). The `full-tokenid` follows the pattern
+      `user@realm!token-id`, so in my case `terraform@pve!tf-token`.  
 
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
+- <https://pve.proxmox.com/pve-docs/pveum-plain.html>
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
-
