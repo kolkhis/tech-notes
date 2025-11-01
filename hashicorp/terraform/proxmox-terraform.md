@@ -192,6 +192,21 @@ provider "proxmox" {
 This configures the Proxmox provider, and specifies the necessary information 
 for Terraform to interact with the Proxmox API.  
 
+These three things are essential:
+
+1. `pm_api_url`: The PVE API endpoint
+2. `pm_user`: The Proxmox user
+2. `pm_password`: The Proxmox user's password
+
+!!! note "Setting user and password as environment vars"
+
+    The `user` and `password` can be left out of the `provider` definition as
+    long as these are set as environment variables:
+    ```bash
+    export PM_USER="terraform@pve"
+    export PM_PASS="api-key-goes-here"
+    ```
+
 Then, also in `main.tf`, we'd add the new **resource** that we want to create.  
 ```hcl
 resource "proxmox_vm_qemu" "new_vm" {
@@ -204,6 +219,7 @@ resource "proxmox_vm_qemu" "new_vm" {
 }
 ```
 
+
 This specifies a **single VM to create**. In this case, a clone of a
 pre-existing VM or template named `ubuntu-template`.  
 Any additional VMs would be another `resource` entry, all with their own
@@ -213,7 +229,11 @@ Here, we're using a [`proxmox_vm_qemu` resource](https://registry.terraform.io/p
 which will create a new VM by either cloning an existing VM/template, or by
 creating a new one from an ISO file.  
 
-Using a clone or ISO is less granular than using a [CloudInit template](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init).  
+Using a clone or ISO is less granular than using 
+[CloudInit](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init).  
+CloudInit will allow us to configure the hostname, set up SSH keys, and perform
+other system configurations that need to be done before the VM is ready for
+general use.  
 
 ---
 
@@ -240,6 +260,33 @@ So, storing API keys in plain text is usually not great practice.
 ### Using Environment Variables
 One very common method of avoiding plaintext secrets is using environment variables.  
 
+#### Using Boilerplate Environment Variables
+
+Terraform will look for these variables when utilizing the `proxmox` provider
+without a `pm_user` and `pm_password` set in the provider definition:
+
+- `PM_USER`
+- `PM_PASS`
+- `PM_API_TOKEN_ID`
+- `PM_API_TOKEN_SECRET`
+
+Set these as environment variables in either `.bashrc`, or in a `.env` file and
+then run `source .env` to make sure they're in your current shell environment.  
+
+This way, the API key can be set in a separate file without specifying the
+username and password in the `main.tf`.  
+
+```bash
+export PM_USER='terraform@pve'
+export PM_PASS='password-here'
+export PM_API_TOKEN_ID='terraform@pve!tf-token'
+export PM_API_TOKEN_SECRET="afcd8f45-acc1-4d0f-bb12-a70b0777ec11"
+```
+
+
+
+
+#### Using Custom Variables
 We can define variables in a `variables.tf` file (or just in `main.tf`).  
 We'll make a variable for the API endpoint, the token ID (name), as well as the
 API key itself.  
@@ -288,6 +335,53 @@ We can set this in our `.bashrc`, or source it from some other environment file
 Once those are set and sourced, we're all set with setting up the environment
 variables for our secrets.  
 
+### Using Vault
+
+Hashicorp Vault is the gold standard for hiding secrets used with Terraform.  
+
+Vault setup
+
+You'd set the secrets once in vault:
+```bash
+vault kv put secret/proxmox/terraform \
+    url="https://192.168.1.49:8006/api2/json" \
+    token_id="terraform@pve!tf-token" \
+    token_secret="TOKEN_SECRET"
+```
+
+We'd need to use the `vault` provider in our `main.tf`.  
+```hcl
+provider "vault" {
+    address = "https://vault.example.com"
+    token   = "your-root-or-app-token"
+}
+```
+
+!!! info
+
+    This will require having a local vault server running.  
+    That's a separate writeup.  
+
+After specifying the `vault` provider, we can then access the data stored
+inside.  
+
+```hcl
+data "vault_kv_secret_v2" "pve_data" {
+  mount = "secret"
+  name  = "proxmox/terraform"
+}
+
+provider "proxmox" {
+  pm_api_url          = data.vault_kv_secret_v2.pve_data.data["url"]
+  pm_api_token_id     = data.vault_kv_secret_v2.pve_data.data["token_id"]
+  pm_api_token_secret = data.vault_kv_secret_v2.pve_data.data["token_secret"]
+  pm_tls_insecure     = true
+}
+```
+    
+We specify a `data` entry, then we can scope into each of the keys that we set
+earlier with `vault kv put`.  
+
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
@@ -295,4 +389,4 @@ variables for our secrets.
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
-- <https://registry.terraform.io/>
+- <https://developer.hashicorp.com/terraform/tutorials/secrets/secrets-vault>
