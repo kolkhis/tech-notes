@@ -2244,10 +2244,9 @@ reboot
 
 
 ## Resources
-* [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
-* [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
-
-* <https://www.linuxmissive.com/2020/04/how-to-interrupt-grub-and-override-init.html>
-
+- [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
+- [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
+- <https://www.linuxmissive.com/2020/04/how-to-interrupt-grub-and-override-init.html>
 - [Linux Kernel Programming](https://sysprog21.github.io/lkmpg/)
+- [DevOps Bash Tools List](https://github.com/HariSekhon/DevOps-Bash-tools)
 
