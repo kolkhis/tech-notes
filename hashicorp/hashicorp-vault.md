@@ -1,10 +1,34 @@
 # Hashicorp Vault
 
-
-
 ## Setting up Hashicorp Vault
 
-##### KC Lab (notes)
+### Installation
+Install Vault via package manager after adding the repository.  
+
+Source: [HCP Vault install guide](https://developer.hashicorp.com/vault/install).  
+
+Installation for Debian-based systems:
+```bash
+wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs 2>/dev/null) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update
+sudo apt install -y vault
+```
+
+Installation for RedHat-based systems (RHEL, Rocky, Alma): 
+```bash
+# dnf
+sudo dnf install -y dnf-plugins-core
+sudo dnf config-manager addrepo --from-repofile=https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo dnf install -y vault
+
+# yum
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install vault
+```
+
+### KC Lab (notes)
 
 Start the Hashicorp Vault server in dev mode:  
 ```bash
