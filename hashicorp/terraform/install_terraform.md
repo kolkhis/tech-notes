@@ -1,6 +1,5 @@
 # Installing Hashicorp Terraform
 
-
 ## Terraform Installation
 
 Terraform can be installed via package manager on most Linux distros.  
@@ -8,7 +7,7 @@ The Hashicorp repository must be added to install via package manager.
 
 ### Debian-based Install
 
-#### Quick setup:
+#### Quick setup
 
 ```bash
 wget -O - https://apt.releases.hashicorp.com/gpg |
@@ -34,22 +33,22 @@ then adding the appropriate repo.
 
 ---
 
-#### Install dependencies:
+#### Install dependencies
 * `gnupg`
 * `software-properties-common`
-* `curl`
+* `curl`/`wget`
 
 ```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 ```
 
-#### Install the HashiCorp GPG key:
+#### Install the HashiCorp GPG key
 
 ```bash
 wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
 ```
 
-#### Verify the key's fingerprint:
+#### Verify the key's fingerprint
 ```bash
 gpg --no-default-keyring \
     --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
@@ -138,7 +137,7 @@ curl https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo |
 sudo dnf install -y terraform
 ```
 
-## tl;dr:
+## tl;dr
 ### Debian
 ```bash
 # make sure gpg is present
