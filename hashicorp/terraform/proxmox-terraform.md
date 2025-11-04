@@ -526,6 +526,7 @@ runcmd:
   - systemctl enable --now qemu-guest-agent
 ```
 
+The `qemu-guest-agent` package will be installed and the daemon started.  
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
