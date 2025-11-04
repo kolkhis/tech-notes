@@ -77,19 +77,43 @@ When declaring input variables, we can set attributes:
 - `ephemeral`: Available during runtime, but not stored in `state` or `plan` files.  
     - Good for temporary variables (short-lived tokens, session IDs, etc.).   
 
+We typically set these in a separate `variables.tf` file.  
+
 The basic syntax is:
 
-```hcl
+```hcl title="variables.tf"
 variable "<label>" {
-    description = "An example variable block"
-    type        = "<type>"
-    default     = "<default value>"
-    sensitive   = true # or false
+  description = "An example variable block"
+  type        = "<type>"
+  default     = "<default value>"
+  sensitive   = true # or false
 }
 ```
 
-If we were using a type that stores multiple values, we'd need to specify the
-type for each value.  
+The values of the variables can be accessed in `main.tf` (or other) by using
+the `var` keyword with dot notation, using the `<label>` as the name of the
+variable.  
+
+So for this example:
+```hcl title="variables.tf"
+variable "testvar" {
+  description = "Test variable"
+  type = string
+  default = "Hello, world"
+}
+```
+We'd access the value of this variable in `main.tf` as follows:
+```hcl title="main.tf"
+resource "example" "example" {
+  name = var.testvar
+}
+```
+
+---
+
+If we are using a data type that stores multiple values, we need to specify 
+the type for each value.  
+
 For the `list` type, we'd need to specify the list item's attributes.
 Same with `object` types, `map` types, `set` types, and `tuple` types.  
 ```hcl
@@ -218,6 +242,25 @@ variable "proxmox_api_key" {
 }
 ```
 
+## `.tfvars`
+Any file with the `.tfvars` file extension (or simply `.tfvars` by itself) will
+be used to define values for the variables declared inside `variables.tf`.  
+
+The syntax will be the same as other HCL variable definitions.  
+
+For example, a `terraform.tfvars` file with the following definition:
+```hcl title=".tfvars"
+proxmox_api_key = "asdfasdfasdf"
+```
+
+Will populate the variable defined inside `variables.tf`:
+```hcl
+variable "proxmox_api_key" {
+  description = "API key for Proxmox"
+  type        = string
+  sensitive   = true
+}
+```
 
 
 
