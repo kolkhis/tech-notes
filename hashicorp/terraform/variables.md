@@ -53,4 +53,83 @@ resource "proxmox_vm_qemu" "test_vm" {
 }
 ```
 
+## Input Variables
+
+Input variables are used to pass in values from outside the config/module.  
+They're used to assign dynamic values to resource attributes. The difference
+between locals and input vars is the input vars allow you to pass values
+**before** code execution.    
+
+Input variables are meant to act as inputs to modules. Input variables declared
+within modules are used to accept outside values.  
+
+When declaring input variables, we can set attributes:
+
+- `type`: Data type
+- `default`: Default value if none is given
+- `description`: A description for the var, used to generate documentation for
+  the module  
+- `validation`: Defines validation rules
+    - `condition`
+    - `error_message`
+- `sensitive`: Boolean used to mask the variable's value anywhere it would be
+  displayed (e.g., for API keys)  
+- `ephemeral`: Available during runtime, but not stored in `state` or `plan` files.  
+    - Good for temporary variables (short-lived tokens, session IDs, etc.).   
+
+The basic syntax is:
+
+```hcl
+variable "<label>" {
+    description = "An example variable block"
+    type        = "<type>"
+    default     = "<default value>"
+    sensitive   = true # or false
+}
+```
+
+If we were using a type that stores multiple values, we'd need to specify the
+type for each value.  
+For the `list` type, we'd need to specify the list item's attributes.
+Same with `object` types, `map` types, and `tuple` types.  
+```hcl
+variable "example_list" {
+  description = "An example list variable in a variable block"
+  type        = list(string)
+  default     = "<default value>"
+  sensitive   = true # or false
+}
+
+variable "example_object" {
+  description = "An example object variable in a variable block"
+  type        = object({
+    name    = string
+    age     = number
+    enabled = bool
+    tags    = list(string)
+  })
+  default     = {
+    name = "john"
+    age  = 30
+    enabled = true
+    tags = ["engineer", "male", 30]
+  }
+  sensitive   = true # or false
+}
+
+variable "example_tuple" {
+  description = "An example tuple variable in a variable block"
+  type        = tuple([string, number, bool])
+  default     = ["item1", 33, false]
+}
+```
+
+
+
+
+
+## Resources
+- <https://developer.hashicorp.com/terraform/language/block/variable>
+- <https://developer.hashicorp.com/terraform/language/block/variable#basic-variable-declaration>
+- <https://spacelift.io/blog/how-to-use-terraform-variables>
 
