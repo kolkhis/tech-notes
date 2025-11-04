@@ -182,15 +182,28 @@ vi main.tf
 
 Inside the `main.tf` file, we'd add:
 ```hcl
-provider "proxmox" {
-    pm_api_url  = "https://192.168.1.49:8006/api2/json"
-    pm_user     = "terraform"
-    pm_password = "api-key-goes-here"
-    pm_tls_insecure = true
+terraform {
+  required_providers {
+    proxmox = {
+      source = "Telmate/proxmox"
+    }
+  }
 }
 ```
-This configures the Proxmox provider, and specifies the necessary information 
-for Terraform to interact with the Proxmox API.  
+This specifies the provider we want to use. We can also specify a `version`
+alongside the `source` if we need to use a specific version of the provider.  
+
+Next, we configure the provider.  
+```hcl
+provider "proxmox" {
+  pm_api_url  = "https://192.168.1.49:8006/api2/json"
+  pm_user     = "terraform"
+  pm_password = "api-key-goes-here"
+  pm_tls_insecure = true
+}
+```
+This configures the Proxmox provider (`Telmate/proxmox`), and specifies the 
+necessary information for Terraform to interact with the Proxmox API.  
 
 These three things are essential:
 
@@ -198,7 +211,7 @@ These three things are essential:
 2. `pm_user`: The Proxmox user
 2. `pm_password`: The Proxmox user's password
 
-!!! note "Setting user and password as environment vars"
+!!! note "Setting user and password as environment variables"
 
     The `user` and `password` can be left out of the `provider` definition as
     long as these are set as environment variables:
@@ -207,18 +220,17 @@ These three things are essential:
     export PM_PASS="api-key-goes-here"
     ```
 
-Then, also in `main.tf`, we'd add the new **resource** that we want to create.  
+Once the provider is configured, we'd add the new **resource** that we want to create, also in `main.tf`.  
 ```hcl
 resource "proxmox_vm_qemu" "new_vm" {
-    name        = "new_vm"
-    target_node = "home-pve"
-    clone       = "ubuntu-template"
-    storage     = "vmdata"
-    cores       = 2
-    memory      = 2048
+  name        = "new_vm"
+  target_node = "home-pve"
+  clone       = "ubuntu-template"
+  storage     = "vmdata"
+  cores       = 2
+  memory      = 2048
 }
 ```
-
 
 This specifies a **single VM to create**. In this case, a clone of a
 pre-existing VM or template named `ubuntu-template`.  
