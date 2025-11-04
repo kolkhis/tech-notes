@@ -1,7 +1,4 @@
-
-# Deploy Docker Containers with Terraform
-
-
+# Docker Containers w/ Terraform
 
 ## Table of Contents
 * [Deploy Docker Containers with Terraform](#deploy-docker-containers-with-terraform) 
@@ -20,8 +17,6 @@
 ## Setting Up Terraform
 Your team has decided to use Terraform and deploy containers in an infrastructure as code manner.
 Verify that `containerd` is running and that Terraform is installed on your system.
-
-Hint:
 
 * `sudo systemctl status containerd`
 * The build infrastructure[docs](https://developer.hashicorp.com/terraform/tutorials/docker-get-started/docker-build)
