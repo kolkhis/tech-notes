@@ -532,7 +532,11 @@ runcmd:
 - <https://pve.proxmox.com/pve-docs/pveum-plain.html>
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
-- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
-- <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud-init%20getting%20started.md>
 - <https://developer.hashicorp.com/terraform/tutorials/secrets/secrets-vault>
 - <https://developer.hashicorp.com/terraform/enterprise/workspaces/dynamic-provider-credentials/vault-configuration>
+
+Cloud-Init resources:
+
+- <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud-init%20getting%20started.md>
+- <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud_init.md>
+- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
