@@ -457,6 +457,7 @@ qm set 1400 --boot c --bootdisk virtio0
 qm set 1400 --ide2 vmdata:cloudinit
 qm set 1400 --ciuser luser --cipassword luser
 qm set 1400 --agent 1
+qm template 1400
 ```
 
 These are the command broken down:
@@ -466,25 +467,31 @@ These are the command broken down:
 
 - `qm importdisk`: Imports the downloaded Rocky Linux **cloud image** into the
   storage pool `vmdata`.  
+    - Pulls **from**
+      `/var/lib/vz/template/qcow/Rocky-9-GenericCloud-Base.latest.x86_64.qcow2`
+      and puts it **into** `vmdata:vm-1400-disk-0`.  
 
-- `qm set 1400 --virtio0 vmdata:vm-1400-disk-0`: Attaches the imported disk as
-  the VM's main boot disk using the VirtIO network interface.  
+- `qm set 1400 ...`: Setting configuration values for the new VM with ID 1400.  
 
-- `qm set 1400 --boot c --bootdisk virtio0`: Sets the boot order from the first
-  hard disk (`virtio0`) .  
+    - `--virtio0 vmdata:vm-1400-disk-0`: Attaches the imported disk as
+      the VM's main boot disk using the VirtIO network interface.  
 
-- `qm set 1400 --ide2 vmdata:cloudinit`: This adds a special **CloudInit drive** to IDE slot 2.  
-    - This disk acts as a metadata provider. CloudInit inside the guest reads
-      from it during boot.  
-    - It's essentially a virtual drive that contains instructions for the VM's
-      first boot configuration.  
+    - `--boot c --bootdisk virtio0`: Sets the boot order from the first
+      hard disk (`virtio0`) .  
 
-- `qm set 1400 --ciuser luser --cipassword luser`: This defines the **default
-  CloudInit user credentials** for the template (user: `luser`, pass: `luser`).  
-    - These values will be used if we don't override them later in Terraform.  
+    - `--ide2 vmdata:cloudinit`: This adds a special **CloudInit drive** to IDE slot 2.  
+        - This disk acts as a metadata provider. CloudInit inside the guest reads
+          from it during boot.  
+        - It's essentially a virtual drive that contains instructions for the VM's
+          first boot configuration.  
 
-- `qm set 1400 --agent 1`: Enable the QEMU guest agent.  
+    - `--ciuser luser --cipassword luser`: This defines the **default
+      CloudInit user credentials** for the template (user: `luser`, pass: `luser`).  
+        - These values will be used if we don't override them later in Terraform.  
 
+    - `--agent 1`: Enable the QEMU guest agent.  
+
+- `qm template 1400`: Convert the new VM into a template.  
 
 
 
@@ -494,5 +501,6 @@ These are the command broken down:
 - <https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
+- <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud-init%20getting%20started.md>
 - <https://developer.hashicorp.com/terraform/tutorials/secrets/secrets-vault>
 - <https://developer.hashicorp.com/terraform/enterprise/workspaces/dynamic-provider-credentials/vault-configuration>
