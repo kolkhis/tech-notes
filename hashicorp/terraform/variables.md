@@ -91,7 +91,7 @@ variable "<label>" {
 If we were using a type that stores multiple values, we'd need to specify the
 type for each value.  
 For the `list` type, we'd need to specify the list item's attributes.
-Same with `object` types, `map` types, and `tuple` types.  
+Same with `object` types, `map` types, `set` types, and `tuple` types.  
 ```hcl
 variable "example_list" {
   description = "An example list variable in a variable block"
@@ -122,8 +122,101 @@ variable "example_tuple" {
   type        = tuple([string, number, bool])
   default     = ["item1", 33, false]
 }
+
+variable "example_set" {
+  description = "An example set variable in a variable block"
+  type        = set(string)
+  default     = ["item1", "item2", "item3"]
+}
+
+variable "example_map" {
+  description = "An example map variable in a variable block"
+  type        = map(string)
+  default     = {
+    key1 = "value1"
+    key2 = "value2"
+  }
+}
 ```
 
+---
+
+### Complex Input Variables
+
+We can even use a `map` of objects or `list` of objects when declaring input variables.  
+These ones have a bit more complexity involved, but they're powerful.  
+```hcl
+variable "example_object_map" {
+  description = "An example map of objects in a variable block"
+  type        = map(object({
+    key1 = string
+    key2 = string
+  }))
+  default     = {
+    "vm1" = {
+      key1 = "value1"
+      key2 = "value2"
+    },
+    "vm2" = {
+      key1 = "value1"
+      key2 = "value2"
+    },
+    "vm3" = {
+      key1 = "value1"
+      key2 = "value2"
+    }
+  }
+}
+# Note we're doing `map()`, then `object()` nested within.  
+# The `map` objects `vm1`/`vm2` have quotes, but the object keys themselves do not.  
+# Also note the commas between map items.  
+
+variable "example_object_list" {
+  description = "An example list of objects in a variable block"
+  type        = list(object({
+    key1 = string
+    key2 = string
+  }))
+  default = [
+    {
+      key1 = "value1"
+      key2 = "value2"
+    },
+    {
+      key1 = "value1"
+      key2 = "value2"
+    },
+    {
+      key1 = "value1"
+      key2 = "value2"
+    }
+  ]
+}
+```
+
+
+## Environment Variables
+
+Input variable values can be set by using Terraform environment variables.  
+
+All we need to do in order to pass environment variables to Terraform is to
+prepend the variable's name with `TF_VAR_<name>`.  
+
+When setting variables this way, the `<name>` needs to match the variables
+declared in `variables.tf`.  
+
+```bash
+export TF_VAR_proxmox_api_key='asdfasdfasdfasdf'
+```
+This will automatically be picked up by Terraform when we have an entry in
+`variables.tf`.  
+```hcl
+variable "proxmox_api_key" {
+  description = "API key for Proxmox"
+  type        = string
+  sensitive   = true
+}
+```
 
 
 
