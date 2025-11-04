@@ -493,6 +493,38 @@ These are the command broken down:
 
 - `qm template 1400`: Convert the new VM into a template.  
 
+### Cloud-Init Snippets
+
+Once the template is created, we can create **snippets**, which are used to
+pass additional configuration to the Cloud-Init package.  
+
+!!! note
+
+    Before wae can create a snippet, we need a place to store it. Best practice
+    is to store snippets in the same location as the template.  
+    Cloned VMs can't start if the snippet is not accessible.  
+
+
+Create a snippet directory:
+```bash
+mkdir /var/lib/vz/snippets
+```
+
+Create a snippet (this one will be used to ensure `qemu-guest-agent` is
+installed):
+```bash
+touch /var/lib/vz/snippets/qemu-guest-agent.yml
+vi /var/lib/vz/snippets/qemu-guest-agent.yml
+```
+
+The file should be formatted as follows:
+```yaml
+#cloud-config
+runcmd:
+  - apt-get update
+  - apt-get install -y qemu-guest-agent
+  - systemctl enable --now qemu-guest-agent
+```
 
 
 ## Resources
