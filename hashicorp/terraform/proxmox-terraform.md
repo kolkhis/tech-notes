@@ -122,9 +122,11 @@ user and assign it a new API key.
       however I don't encourage people to pass passwords as command line
       arguments. Those arguments live in shell history.  
 
-4. Generate an API token.  
+4. Generate an API token (decide on privilege separation or not).  
    ```bash
-   pveum user token add terraform@pve <TOKEN_ID>
+   pveum user token add terraform@pve TOKEN_ID
+   # or
+   pveum user token add terraform@pve TOKEN_ID --privsep 0
    ```
    The `<TOKEN_ID>` is going to be a user-specified token identifier.  
    This ID is basically just a name for your API key.  
@@ -135,6 +137,9 @@ user and assign it a new API key.
     - This will output a table containing the `full-tokenid`, info, and
       the value (the token itself). The `full-tokenid` follows the pattern
       `user@realm!token-id`, so in my case `terraform@pve!tf-token`.  
+    - Privilege separation will require us to configure the ACL by adding a
+      role to the token itself. If it's on (default), the token will inherit
+      the privileges of the user it belongs to.  
 
 5. Verify the token has been created.  
    ```bash
@@ -539,6 +544,50 @@ runcmd:
 ```
 
 The `qemu-guest-agent` package will be installed and the daemon started.  
+
+## Troubleshooting
+
+When running `terraform plan`, if we get some sort of error, we will need to
+troubleshoot.  
+
+### Token Privilege Error
+For instance, I received this error:
+```plaintext
+│ Error: user terraform@pve has valid credentials but cannot retrieve user list, check privilege separation of api token
+│
+│   with provider["registry.terraform.io/telmate/proxmox"],
+│   on main.tf line 9, in provider "proxmox":
+│    9: provider "proxmox" {
+```
+This suggests that the API key that I'm using is improperly configured.  
+
+The privilege separation setting was enabled from that token, shown by the
+command:
+```bash
+sudo pveum user token list terraform@pve
+```
+
+There seems to be two options for fixing this problem:
+
+1. Recreate the token with privilege separation disabled and give the user
+   itself the permissions.  
+   ```bash
+   sudo pveum user token add terraform@pve TOKEN_ID --privsep 0
+   ```
+2. Configure ACLs for API tokens with privilege separation enabled.  
+   ```bash
+   sudo pveum acl modify / -token 'terraform@pve!tf-token' -role PVEAdmin
+   # Verify:
+   sudo pveum acl list
+   ```
+
+I went for option 2, as it follows the rule of least privilege.  
+
+
+
+
+
+
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/install>
