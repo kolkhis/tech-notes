@@ -149,6 +149,23 @@ user and assign it a new API key.
 Once the user account is created and has an API key, we can move forward to
 configuring the Terraform Proxmox provider.  
 
+### Configure ACL
+In order for the token and user to have permissions, we need to add some roles
+via the ACL.  
+
+The easiest way to do this is to grant the `Administrator` role.  
+
+We can add a role with `pveum acl modify`.  
+```bash
+sudo pveum acl modify / -user terraform@pve -role Administrator
+```
+
+If privilege separation is enabled on the API token generated earlier, we must
+also add the role to the token.  
+```bash
+sudo pveum acl modify / -token terraform@pve!tf-token -role Administrator
+```
+
 ### Configure Terraform Provider
 
 Terraform has this concept of "providers."  
