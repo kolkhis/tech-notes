@@ -339,9 +339,20 @@ variables for our secrets.
 
 Hashicorp Vault is the gold standard for hiding secrets used with Terraform.  
 
-Vault setup
+!!! info
 
-You'd set the secrets once in vault:
+    The following assumes a Vault dev server is already set up in the environment.  
+    Quick overview:
+
+    - Install via the [Hashicorp Vault Installation Guide](https://developer.hashicorp.com/vault/install)
+    - Start a vault server and set the necessary variables  
+      ```bash
+      vault server -dev & # Start dev server and run in background
+      export VAULT_ADDR='http://127.0.0.1:8200'
+      export VAULT_TOKEN='<ROOT_TOKEN_HERE>' # root token from
+      ```
+
+With the Vault server running, you'd set the secrets:
 ```bash
 vault kv put secret/proxmox/terraform \
     url="https://192.168.1.49:8006/api2/json" \
@@ -349,18 +360,18 @@ vault kv put secret/proxmox/terraform \
     token_secret="TOKEN_SECRET"
 ```
 
-We'd need to use the `vault` provider in our `main.tf`.  
+Then, we'd need to specify the `vault` provider in our `main.tf`.  
 ```hcl
 provider "vault" {
     address = "https://vault.example.com"
     token   = "your-root-or-app-token"
 }
 ```
-
-!!! info
-
-    This will require having a local vault server running.  
-    That's a separate writeup.  
+If we already set the `VAULT_ADDR` and `VAULT_TOKEN` environment variables, we
+can omit them in the provider.  
+```hcl
+provider "vault" {}
+```
 
 After specifying the `vault` provider, we can then access the data stored
 inside.  
@@ -378,9 +389,103 @@ provider "proxmox" {
   pm_tls_insecure     = true
 }
 ```
-    
+
 We specify a `data` entry, then we can scope into each of the keys that we set
 earlier with `vault kv put`.  
+
+---
+
+So, once it's all set up, the `main.tf` should look something like this:
+```hcl
+provider "vault" {}
+
+data "vault_kv_secret_v2" "pve_data" {
+  mount = "secret"
+  name  = "proxmox/terraform"
+}
+
+provider "proxmox" {
+  pm_api_url          = data.vault_kv_secret_v2.pve_data.data["url"]
+  pm_api_token_id     = data.vault_kv_secret_v2.pve_data.data["token_id"]
+  pm_api_token_secret = data.vault_kv_secret_v2.pve_data.data["token_secret"]
+  pm_tls_insecure     = true
+}
+```
+
+## Using CloudInit
+Using CloudInit images with Proxmox offers extended levels of configuration and 
+customization when provisioning VMs with Terraform.  
+
+In order to use Cloud-Init for Terraform, we typically need a VM built with a
+cloud image image that comes with Cloud-Init preinstalled. These are available 
+for download for most major distributions (e.g., for [Ubuntu Server](https://cloud-images.ubuntu.com/). 
+
+We would:
+
+1. Make a VM with a CloudInit drive (e.g., using `qm`).  
+2. Turn it into a Proxmox template (this will be our golden image).  
+3. Use Terraform to clone it and do the initial configuration.  
+
+In order to use CloudInit, we need to create a CloudInit drive.  
+
+The CloudInit drive is a special virtual disk, which is created automatically
+when we run:
+```bash
+qm set VMID --ide2 vmdata:cloudinit
+```
+This can be done using whatever storage you want, as long as you append
+`:cloudinit` to the end.  
+
+### Creating a CloudInit Drive
+
+We can create a CloudInit Drive by using the [`qm` command line
+tool](https://pve.proxmox.com/pve-docs/qm.1.html).  
+
+We'd start the same way as making a normal VM.  
+```bash
+qm create 1400 --name 'rocky9-gencloud-template' \
+    --memory 2048 \
+    --net0 virtio,bridge=vmbr0 \
+    --cores 1 \
+    --sockets 1 \
+    --cpu x86-64-v2-AES \
+    --storage vmdata
+
+qm importdisk 1400 /var/lib/vz/template/qcow/Rocky-9-GenericCloud-Base.latest.x86_64.qcow2 vmdata:vm-1400-disk-0
+qm set 1400 --virtio0 vmdata:vm-1400-disk-0
+qm set 1400 --boot c --bootdisk virtio0
+qm set 1400 --ide2 vmdata:cloudinit
+qm set 1400 --ciuser luser --cipassword luser
+qm set 1400 --agent 1
+```
+
+These are the command broken down:
+
+- `qm create`: This creates a new VM called `rocky9-gencloud-template`, and 
+  configures the network, memory, and CPU.  
+
+- `qm importdisk`: Imports the downloaded Rocky Linux **cloud image** into the
+  storage pool `vmdata`.  
+
+- `qm set 1400 --virtio0 vmdata:vm-1400-disk-0`: Attaches the imported disk as
+  the VM's main boot disk using the VirtIO network interface.  
+
+- `qm set 1400 --boot c --bootdisk virtio0`: Sets the boot order from the first
+  hard disk (`virtio0`) .  
+
+- `qm set 1400 --ide2 vmdata:cloudinit`: This adds a special **CloudInit drive** to IDE slot 2.  
+    - This disk acts as a metadata provider. CloudInit inside the guest reads
+      from it during boot.  
+    - It's essentially a virtual drive that contains instructions for the VM's
+      first boot configuration.  
+
+- `qm set 1400 --ciuser luser --cipassword luser`: This defines the **default
+  CloudInit user credentials** for the template (user: `luser`, pass: `luser`).  
+    - These values will be used if we don't override them later in Terraform.  
+
+- `qm set 1400 --agent 1`: Enable the QEMU guest agent.  
+
+
 
 
 ## Resources
@@ -390,3 +495,4 @@ earlier with `vault kv put`.
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu>
 - <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
 - <https://developer.hashicorp.com/terraform/tutorials/secrets/secrets-vault>
+- <https://developer.hashicorp.com/terraform/enterprise/workspaces/dynamic-provider-credentials/vault-configuration>
