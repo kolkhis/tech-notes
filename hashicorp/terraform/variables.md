@@ -218,6 +218,24 @@ variable "example_object_list" {
 }
 ```
 
+### Variable Validation
+
+We can specify conditions that must be met for a variable's value to be valid.  
+
+Within the `variable` block, we'd specify the `validation` keyword, along with
+some code to be executed to test the value.  
+```hcl
+variable "name" {
+  description = "The name of a VM or something"
+  type        = string
+  default     = "new-vm"
+  validation = {
+    condition     = length(var.name) > 1
+    error_message = "We need at least 2 characters for the name!"
+  }
+}
+```
+
 
 ## Environment Variables
 
