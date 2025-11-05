@@ -14,8 +14,6 @@ Also see [network storage](../networking/network_storage.md).
     * [Setting up ZFS on Proxmox](#setting-up-zfs-on-proxmox) 
 * [Resources](#resources) 
 
-
-
 ## Overview of Storage on Proxmox  
 
 Proxmox (or `pve`) can use a ton of different file systems, but you have to choose  
@@ -181,9 +179,31 @@ There's also native ZFS support on Proxmox.
       ```
 
 
+## Image Storage
 
+Images in Proxmox are typically stored in the default `local` storage pool if
+installed with LVM.  
 
+The ISO images on the filesystem itself live in the directory:
+```bash
+ls /var/lib/vz/template/iso/
+```
+This is where any uploaded ISOs will live when uploaded via the Proxmox Web UI.  
 
+Any `.img` files will also be stored here.  
+
+So, say we want to avoid using the Proxmox Web UI and just copy or download the 
+image files via the command line.  
+
+I have a Samba share mounted at `/mnt/samba/secure-share/` with ISOs stored
+inside. I could do an `rsync` to copy all files inside or a simple `cp` to copy
+a single file.  
+```bash
+sudo cp /mnt/samba/secure-share/ISOs/noble-server-cloudimg-amd64.img /var/lib/vz/template/iso/
+```
+
+This is a way to circumvent the need for the GUI. A `curl` or `wget` would also 
+work for downloading images directly to this directory.  
 
 
 
