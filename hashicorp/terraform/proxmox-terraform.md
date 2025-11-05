@@ -631,6 +631,8 @@ the `Telmate/proxmox` provider.
     - This block in particular has many sub-blocks that can be specified to
       further configure disk devices.  
 
+### Without Using Cloud-Init
+
 An example entry for this type of resource, a basic clone of a Proxmox VM 
 template (no cloud-init):  
 ```hcl
@@ -644,7 +646,7 @@ resource "proxmox_vm_qemu" "test-tf-vm" {
     storage = "vmdata"
     size    = "16G"
     type    = "disk"
-    slot    = "ide0"
+    slot    = "scsi0"
   }
   network {
     id     = 0
@@ -654,8 +656,125 @@ resource "proxmox_vm_qemu" "test-tf-vm" {
   cpu {
     cores = 1
   }
-  memory = 2048
+  memory = 4096
 }
+```
+
+### Using Cloud-Init
+
+Some official examples of using the `Telmate/proxmox` provider with Cloud-Init can be
+found on [the Telmate/proxmox GitHub](https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/examples/cloudinit_example.tf) and 
+on the [Terraform registry docs](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/cloud_init_disk).  
+
+Steps taken:
+```bash
+# Pull down the qcow2 cloud init image into the appropriate directory
+# Create directory and switch
+mkdir /var/lib/vz/template/qcow && cd /var/lib/vz/template/qcow
+# Download the image (can use wget too if you want)
+curl -LO https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2
+
+# Create the VM
+qm create 9020 --name "rocky-10-cloudinit-template" --storage vmdata
+
+# Create the config file if it doesn't exist
+touch /etc/pve/qemu-server/9020.conf 
+
+# Import the Cloud-Init image to the VM's disk (on scsi0 using vmdata)
+# Can probably use `qm importdisk`
+qm set 9020 --scsi0 vmdata:0,import-from=/var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2
+```
+
+
+Example Terraform config for a VM using Cloud-Init:
+```hcl
+resource "proxmox_vm_qemu" "cloudinit-test" {
+  vmid        = 1400
+  name        = "rocky-cloudinit-test-vm"
+  target_node = "home-pve"
+  agent       = 1
+  cpu {
+    cores     = 1
+    sockets   = 1
+  }
+
+  memory      = 2048
+  boot        = "order=scsi0" # has to be the same as the OS disk of the template
+  clone       = "rocky-10-cloudinit-template" # The name of the template
+  scsihw      = "virtio-scsi-single"
+  vm_state    = "running"
+  automatic_reboot = true
+
+  # Cloud-Init configuration
+  cicustom   = "vendor=local:snippets/qemu-guest-agent.yml" # /var/lib/vz/snippets/qemu-guest-agent.yml
+  ciupgrade  = true
+  nameserver = "1.1.1.1 8.8.8.8"
+  ipconfig0  = "ip=192.168.1.10/24,gw=192.168.1.1,ip6=dhcp"
+  skip_ipv6  = true
+  ciuser     = "luser"
+  cipassword = "luser"
+  sshkeys    = <<EOF
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGjGGUL4ld+JmvbDmQFu2XZrxEQio3IN7Yhgcir377t Optiplex Homelab key
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQdazsCyvNGrXGT+zEc6l5X/JILWouFlnPchYsCeFZk kolkhis@home-pve
+EOF
+
+  # Most cloud-init images require a serial device for their display
+  serial {
+    id = 0
+  }
+
+  disks {
+    scsi {
+      scsi0 {
+        # We have to specify the disk from our template, else Terraform will think it's not supposed to be there
+        disk {
+          storage = "local-lvm"
+          # The size of the disk should be at least as big as the disk in the template. If it's smaller, the disk will be recreated
+          size    = "10G" 
+        }
+      }
+    }
+    ide {
+      # Some images require a cloud-init disk on the IDE controller, others on the SCSI or SATA controller
+      ide1 {
+        cloudinit {
+          storage = "vmdata"
+        }
+      }
+    }
+  }
+
+  network {
+    id = 0
+    bridge = "vmbr0"
+    model  = "virtio"
+  }
+}
+```
+
+The custom Cloud-Init configurations are as follows:
+```hcl
+ # Cloud-Init configuration
+  cicustom   = "vendor=local:snippets/qemu-guest-agent.yml" # /var/lib/vz/snippets/qemu-guest-agent.yml
+  ciupgrade  = true
+  nameserver = "1.1.1.1 8.8.8.8"
+  ipconfig0  = "ip=192.168.1.10/24,gw=192.168.1.1,ip6=dhcp"
+  skip_ipv6  = true
+  ciuser     = "root"
+  cipassword = "Enter123!"
+  sshkeys    = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/Pjg7YXZ8Yau9heCc4YWxFlzhThnI+IhUx2hLJRxYE Cloud-Init@Terraform"
+```
+We can specify multiple SSH keys to add by using a heredoc:
+```hcl
+  sshkeys    = <<EOF
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/Pjg7YXZ8Yau9heCc4YWxFlzhThnI+IhUx2hLJRxYE example
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/Pjg7YXZ8Yau9heCc4YWxFlzhThnI+IhUx2hLJRxYE example
+EOF
+```
+
+The `ciuser` and `cipass` can be pre-configured when creating the template:
+```bash
+qm set 1400 --ciuser "luser" --cipassword "luser"
 ```
 
 
@@ -671,6 +790,15 @@ resource "proxmox_vm_qemu" "test-tf-vm" {
 
 Cloud-Init resources:
 
+- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud-init%2520getting%2520started>
+- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
 - <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud-init%20getting%20started.md>
 - <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud_init.md>
-- <https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud_init>
+- <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/examples/cloudinit_example.tf>
+
+Cloud-Init images:
+
+- <https://cloud-images.ubuntu.com/>
+- <https://dl.rockylinux.org/pub/rocky/10/images/x86_64/>
+    - [Download: Latest Rocky Linux 10 Cloud Image](https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2)
+
