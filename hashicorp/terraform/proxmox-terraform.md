@@ -207,13 +207,14 @@ Inside the `main.tf` file, we'd add:
 terraform {
   required_providers {
     proxmox = {
-      source = "Telmate/proxmox"
+      source  = "Telmate/proxmox"
+      version = "3.0.2-rc04"
     }
   }
 }
 ```
-This specifies the provider we want to use. We can also specify a `version`
-alongside the `source` if we need to use a specific version of the provider.  
+This specifies the provider we want to use. We also specify a `version`
+alongside the `source` to use a specific version of the provider.  
 
 Next, we configure the provider.  
 ```hcl
@@ -591,17 +592,70 @@ There seems to be two options for fixing this problem:
    ```bash
    sudo pveum user token add terraform@pve TOKEN_ID --privsep 0
    ```
+
 2. Configure ACLs for API tokens with privilege separation enabled.  
    ```bash
-   sudo pveum acl modify / -token 'terraform@pve!tf-token' -role PVEAdmin
+   sudo pveum acl modify / -token 'terraform@pve!tf-token' -role Administrator
    # Verify:
    sudo pveum acl list
    ```
 
-I went for option 2, as it follows the rule of least privilege.  
+I went for option 2.  
+
+The `Administrator` role seems to be required for provisioning VMs. I tried
+using the `PVEAdmin` role but that lacked the necessary `Sys.Modify`
+permission.  
+
+
+I had privilege separation enabled for my token, added the `Administrator`
+role, 
+
+When using privilege separation, the `Administrator` role needs to be added
+to **both the user *and* the token**.  
+
+If the user lacks the necessary privileges, the token privileges will not be enough.  
 
 
 
+## Proxmox VM Qemu Resource
+
+This is the resource that will be used to provision VMs on Proxmox.  
+
+There are several blocks that need to be specified on the later versions on
+the `Telmate/proxmox` provider.  
+
+- [Top Level Block](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#top-level-block)
+- [CPU Block](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#cpu-block)
+- [Network Block](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#network-block)
+- [Disk Block](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#disk-block)
+    - This block in particular has many sub-blocks that can be specified to
+      further configure disk devices.  
+
+An example entry for this type of resource:
+```hcl
+resource "proxmox_vm_qemu" "test-tf-vm" {
+  name        = "test-tf-vm"
+  agent       = 1
+  boot        = "order=scsi0"
+  target_node = "home-pve"
+  clone       = "ubuntu-22.04-template"
+  disk {
+    storage = "vmdata"
+    size    = "16G"
+    type    = "disk"
+    slot    = "ide0"
+  }
+  network {
+    id     = 0
+    model  = "virtio"
+    bridge = "vmbr0"
+  }
+  cpu {
+    cores = 1
+  }
+  memory = 2048
+}
+```
 
 
 
