@@ -631,7 +631,8 @@ the `Telmate/proxmox` provider.
     - This block in particular has many sub-blocks that can be specified to
       further configure disk devices.  
 
-An example entry for this type of resource:
+An example entry for this type of resource, a basic clone of a Proxmox VM 
+template (no cloud-init):  
 ```hcl
 resource "proxmox_vm_qemu" "test-tf-vm" {
   name        = "test-tf-vm"
