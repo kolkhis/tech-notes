@@ -31,8 +31,29 @@ condition is **true**, we use the value "`default-a`". If the condition is
 false (the variable is not an empty string), then we use the value of the
 variable itself, `var.a`.  
 
+## Operators
 
+The logical operators for checking conditions supported by HCL include:
+
+- `==`: Equal to
+- `!=`: Not equal to
+- `>`: Greater than
+- `>=`: Greater than or equal to
+- `<`: Less than
+- `<=`: Less than or equal to
+- `!`: NOT (Negate a condition)
+
+HCL also supports the standard AND/OR operators found in most languages.  
+
+- `&&`: AND 
+- `||`: OR
+
+An example:
+```hcl
+condition = var.name != "" && lower(var.name) == var.name
+```
 
 ## Resources
 - <https://developer.hashicorp.com/terraform/language/expressions/conditionals>
-
+- <https://developer.hashicorp.com/terraform/language/functions>
+- <https://developer.hashicorp.com/terraform/language/functions/regex>
