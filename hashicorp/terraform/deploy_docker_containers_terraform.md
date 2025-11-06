@@ -157,7 +157,7 @@ externally use 8080, 8081, and 8082.
   vi main.tf
   ```
   Set the configuration to look like this:
-  ```terraform
+  ```hcl
   terraform {
     required_providers {
       docker = {
@@ -231,31 +231,30 @@ externally use 8080, 8081, and 8082.
 
 ## tl;dr
 
-* Check that `containerd` is running and exposed (i.e., listening) on your system.
+- Check that `containerd` is running and exposed (i.e., listening) on your system.
   ```bash
   sudo systemctl status containerd --no-pager
   ss -ntulp | grep -i containerd
   ```
-* Check that `terraform` is installed.
+- Check that `terraform` is installed.
   ```bash
   which terraform
   terraform version
   ```
-* Create a directory named `learn-terraform-docker-container`.
+- Create a directory named `learn-terraform-docker-container`.
   ```bash
   mkdir learn-terraform-docker-container
   ```
-* Change into the directory.
+- Change into the directory.
   ```bash
   cd learn-terraform-docker-container
   ```
-* Create a `main.tf` file to define your infrastructure. 
+- Create a `main.tf` file to define your infrastructure. 
   ```bash
   touch main.tf
   ```
-
-* Set a configuration in `main.tf`
-  ```tf
+- Set a configuration in `main.tf`
+  ```hcl
   terraform {
     required_providers {
       docker = {
