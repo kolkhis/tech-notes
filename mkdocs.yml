@@ -270,6 +270,7 @@ nav:
       - hashicorp/terraform/proxmox-terraform.md
       - hashicorp/terraform/conditionals.md
       - hashicorp/terraform/variables.md
+      - hashicorp/terraform/loops.md
       - hashicorp/terraform/ansible_and_terraform.md
       - hashicorp/terraform/deploy_docker_containers_terraform.md
       - hashicorp/terraform/install_terraform.md
