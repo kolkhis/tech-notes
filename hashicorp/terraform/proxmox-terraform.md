@@ -563,60 +563,6 @@ runcmd:
 
 The `qemu-guest-agent` package will be installed and the daemon started.  
 
-## Troubleshooting
-
-When running `terraform plan`, if we get some sort of error, we will need to
-troubleshoot.  
-
-### Token Privilege Error
-For instance, I received this error:
-```plaintext
-│ Error: user terraform@pve has valid credentials but cannot retrieve user list, check privilege separation of api token
-│
-│   with provider["registry.terraform.io/telmate/proxmox"],
-│   on main.tf line 9, in provider "proxmox":
-│    9: provider "proxmox" {
-```
-This suggests that the API key that I'm using is improperly configured.  
-
-The privilege separation setting was enabled from that token, shown by the
-command:
-```bash
-sudo pveum user token list terraform@pve
-```
-
-There seems to be two options for fixing this problem:
-
-1. Recreate the token with privilege separation disabled and give the user
-   itself the permissions.  
-   ```bash
-   sudo pveum user token add terraform@pve TOKEN_ID --privsep 0
-   ```
-
-2. Configure ACLs for API tokens with privilege separation enabled.  
-   ```bash
-   sudo pveum acl modify / -token 'terraform@pve!tf-token' -role Administrator
-   # Verify:
-   sudo pveum acl list
-   ```
-
-I went for option 2.  
-
-The `Administrator` role seems to be required for provisioning VMs. I tried
-using the `PVEAdmin` role but that lacked the necessary `Sys.Modify`
-permission.  
-
-
-I had privilege separation enabled for my token, added the `Administrator`
-role, 
-
-When using privilege separation, the `Administrator` role needs to be added
-to **both the user *and* the token**.  
-
-If the user lacks the necessary privileges, the token privileges will not be enough.  
-
-
-
 ## Proxmox VM Qemu Resource
 
 This is the resource that will be used to provision VMs on Proxmox.  
@@ -758,12 +704,15 @@ The custom Cloud-Init configurations are as follows:
   cicustom   = "vendor=local:snippets/qemu-guest-agent.yml" # /var/lib/vz/snippets/qemu-guest-agent.yml
   ciupgrade  = true
   nameserver = "1.1.1.1 8.8.8.8"
-  ipconfig0  = "ip=192.168.1.10/24,gw=192.168.1.1,ip6=dhcp"
+  ipconfig0  = "ip=dhcp"
+  #ipconfig0  = "ip=192.168.1.10/24,gw=192.168.1.1,ip6=dhcp"
   skip_ipv6  = true
   ciuser     = "root"
   cipassword = "Enter123!"
   sshkeys    = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/Pjg7YXZ8Yau9heCc4YWxFlzhThnI+IhUx2hLJRxYE Cloud-Init@Terraform"
 ```
+
+
 We can specify multiple SSH keys to add by using a heredoc:
 ```hcl
   sshkeys    = <<EOF
@@ -776,6 +725,216 @@ The `ciuser` and `cipass` can be pre-configured when creating the template:
 ```bash
 qm set 1400 --ciuser "luser" --cipassword "luser"
 ```
+
+## Troubleshooting
+
+When running `terraform plan`, if we get some sort of error, we will need to
+troubleshoot.  
+
+### Token Privilege Error
+For instance, I received this error:
+```plaintext
+│ Error: user terraform@pve has valid credentials but cannot retrieve user list, check privilege separation of api token
+│
+│   with provider["registry.terraform.io/telmate/proxmox"],
+│   on main.tf line 9, in provider "proxmox":
+│    9: provider "proxmox" {
+```
+This suggests that the API key that I'm using is improperly configured.  
+
+The privilege separation setting was enabled from that token, shown by the
+command:
+```bash
+sudo pveum user token list terraform@pve
+```
+
+There seems to be two options for fixing this problem:
+
+1. Recreate the token with privilege separation disabled and give the user
+   itself the permissions.  
+   ```bash
+   sudo pveum user token add terraform@pve TOKEN_ID --privsep 0
+   ```
+
+2. Configure ACLs for API tokens with privilege separation enabled.  
+   ```bash
+   sudo pveum acl modify / -token 'terraform@pve!tf-token' -role Administrator
+   # Verify:
+   sudo pveum acl list
+   ```
+
+I went for option 2.  
+
+The `Administrator` role seems to be required for provisioning VMs. I tried
+using the `PVEAdmin` role but that lacked the necessary `Sys.Modify`
+permission.  
+
+
+I had privilege separation enabled for my token, added the `Administrator`
+role, 
+
+When using privilege separation, the `Administrator` role needs to be added
+to **both the user *and* the token**.  
+
+If the user lacks the necessary privileges, the token privileges will not be enough.  
+
+### VM Can't Boot into OS (Cloud-Init)
+
+I created a template with the following commands:
+```bash
+qm create 9030 --name "rocky-10-cloudinit-template" \
+    --memory 4096 \
+    --net0 virtio,bridge=vmbr0 \
+    --cores 1 \
+    --sockets 1 \
+    --cpu "x86-64-v2-AES" \
+    --storage vmdata
+
+# Create config file if it doesn't exist
+touch "/etc/pve/qemu-server/$VMID.conf"
+
+qm importdisk 9030 /var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2 vmdata
+qm set 9030 --virtio0 "vmdata:vm-9030-disk-0"
+qm set 9030 --boot c --bootdisk virtio0
+qm set 9030 --ide2 "vmdata:cloudinit"
+qm set 9030 --ciuser "$CI_USER" --cipassword "$CI_PASS"
+qm set 9030 --agent 1
+```
+
+The resource provisioned in `main.tf` is as follows:
+```hcl
+resource "proxmox_vm_qemu" "test-tf-vm" {
+  name        = "test-rocky10-cloudinit-vm"
+  vmid        = 7000
+  agent       = 1
+  boot        = "order=scsi0"
+  target_node = "home-pve"
+  clone       = "rocky-10-cloudinit-template"
+  # full_clone  = false
+  memory = 4096
+  cpu {
+    cores   = 1
+    sockets = 1
+    type    = "x86-64-v2-AES"
+  }
+  network {
+    id     = 0
+    model  = "virtio"
+    bridge = "vmbr0"
+  }
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          storage = "vmdata"
+          size    = "10G"
+        }
+      }
+    }
+    ide {
+      # Some images require a cloud-init disk on the IDE controller, others on the SCSI or SATA controller
+      ide0 {
+        cloudinit {
+          storage = "vmdata"
+        }
+      }
+    }
+  }
+
+  # Cloud-Init configuration
+  cicustom   = "vendor=local:snippets/qemu-guest-agent.yml" # /var/lib/vz/snippets/qemu-guest-agent.yml
+  ciupgrade  = true
+  nameserver = "1.1.1.1 8.8.8.8"
+  # ipconfig0  = "ip=192.168.4.100/24,gw=192.168.4.1,ip6=dhcp"
+  ipconfig0  = "ip=dhcp"
+  skip_ipv6  = true
+  ciuser     = "luser"
+  cipassword = "luser"
+  sshkeys    = <<EOF
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGjGGUL4ld+JmvbDmQFu2XZrxEQio3IN7Yhgcir377t Optiplex Homelab key
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQdazsCyvNGrXGT+zEc6l5X/JILWouFlnPchYsCeFZk kolkhis@home-pve
+EOF
+}
+```
+The `terraform apply` runs successfully, and the VM is created.  
+The error that I'm running into is that the VM only boots up to BIOS, it does
+not boot into the actual operating system.  
+
+It boots into SeaBIOS and displays the text:
+```plaintext
+SeaBIOS (version rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org)
+Machine UUID 70539c11-3f6a-4bd0-9c97-44eb8ef0696c
+Booting from Hard Disk...
+GRUB loading.......
+Welcome to GRUB!
+
+Probing EDD (edd=off to disable)... ok
+_
+```
+
+---
+
+Doing further research, it appears it's possible that SeaBIOS won't be able to boot a qcow2
+image.  
+
+It appears I have two options.  
+
+#### Modify the Template In-Place
+I may be able to fix this by modifying the template's boot format to use UEFI
+instead of BIOS. I'll also have to set an EFI disk partition for the template.    
+
+
+```bash
+qm set 9030 --bios ovmf --machine q35
+qm set 9030 --efidisk0 "vmdata:0,format=raw,efitype=4m"
+qm set 9030 --boot order=virtio0
+```
+
+#### Full Re-create of Template
+
+```bash
+qm create 9030 \
+    --name rocky10-cloudinit-template \
+    --memory 2048 \
+    --cores 1 \
+    --net0 virtio,bridge=vmbr0 \
+    --cpu x86-64-v2-AES \
+    --machine q35 \
+    --bios ovmf
+
+qm importdisk 9030 /var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2 vmdata
+qm set 9030 --scsihw virtio-scsi-pci --scsi0 vmdata:vm-9030-disk-0
+qm set 9030 --efidisk0 vmdata:0,format=raw,efitype=4m
+qm set 9030 --ide2 vmdata:cloudinit
+qm set 9030 --agent enabled=1
+qm set 9030 --boot order=scsi0
+qm template 9030
+```
+
+---
+
+Both of those solutions failed. The cloned image still boots into GRUB but
+never reaches the OS.  
+
+I will enable logging within the Proxmox provider:
+```hcl
+provider "proxmox" {
+  pm_api_url          = var.pm_api_url
+  pm_user             = var.pm_user
+  pm_api_token_secret = var.pm_api_token_secret
+  pm_api_token_id     = var.pm_api_token_id
+  pm_tls_insecure     = true
+  pm_log_enable       = true
+  pm_log_file         = "tf-pve-plugin.log"
+  pm_debug            = true
+  pm_log_levels = {
+    _default = "debug"
+  }
+}
+```
+Then I'll run again to see if I can gain insight into what's going wrong.  
+
+
 
 
 
@@ -800,5 +959,8 @@ Cloud-Init images:
 
 - <https://cloud-images.ubuntu.com/>
 - <https://dl.rockylinux.org/pub/rocky/10/images/x86_64/>
-    - [Download: Latest Rocky Linux 10 Cloud Image](https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2)
+
+- [Download: Latest Rocky Linux 10 Cloud Image (qcow)](https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2)
+
+- [Download: Debian 12 Cloud Image (qcow)](https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2)
 
