@@ -621,34 +621,58 @@ mkdir /var/lib/vz/template/qcow && cd /var/lib/vz/template/qcow
 curl -LO https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2
 
 # Create the VM
-qm create 9020 --name "rocky-10-cloudinit-template" --storage vmdata
+qm create 9030 \
+    --name "rocky-10-cloudinit-template" \
+    --memory 2048 \
+    --cpu "host" \
+    --cores 1 \
+    --sockets 1 \
+    --storage "vmdata" \
+    --net0 virtio,bridge=vmbr0 \
+    --machine q35 \
+    --bios ovmf 
 
-# Create the config file if it doesn't exist
-touch /etc/pve/qemu-server/9020.conf 
+# Import the Cloud-Init image to the VM's disk 
+qm disk import 9030 "rocky-10-cloudinit-template" "vmdata"
 
-# Import the Cloud-Init image to the VM's disk (on scsi0 using vmdata)
-# Can probably use `qm importdisk`
-qm set 9020 --scsi0 vmdata:0,import-from=/var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2
+# Basic disk configuration
+qm set 9030 --scsihw virtio-scsi-pci --scsi0 "vmdata:vm-9030-disk-0"
+qm set 9030 --efidisk0 "vmdata:0,format=raw,efitype=4m"
+qm set 9030 --ide2 "vmdata:cloudinit"
+qm set 9030 --agent enabled=1
+qm set 9030 --boot order=scsi0
+
+# Convert to template
+qm template 9030
 ```
+Here, we use `host` as the CPU type. Using `x86-64-v2-AES` with Rocky Linux was
+causing a kernel panic on boot in my environment.  
 
 
-Example Terraform config for a VM using Cloud-Init:
+Example Terraform config for a VM using Cloud-Init, using the Rocky 10 base image:
 ```hcl
 resource "proxmox_vm_qemu" "cloudinit-test" {
   vmid        = 1400
   name        = "rocky-cloudinit-test-vm"
+  clone       = "rocky-10-cloudinit-template" # The name of the template
   target_node = "home-pve"
+  vm_state    = "running"
   agent       = 1
+  memory      = 2048
   cpu {
     cores     = 1
     sockets   = 1
+    type      = "host"
   }
 
-  memory      = 2048
+  scsihw = "virtio-scsi-pci"
+  bios   = "ovmf"
+  efidisk {
+    storage = "vmdata"
+    efitype = "4m"
+  }
+
   boot        = "order=scsi0" # has to be the same as the OS disk of the template
-  clone       = "rocky-10-cloudinit-template" # The name of the template
-  scsihw      = "virtio-scsi-single"
-  vm_state    = "running"
   automatic_reboot = true
 
   # Cloud-Init configuration
@@ -660,8 +684,8 @@ resource "proxmox_vm_qemu" "cloudinit-test" {
   ciuser     = "luser"
   cipassword = "luser"
   sshkeys    = <<EOF
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGjGGUL4ld+JmvbDmQFu2XZrxEQio3IN7Yhgcir377t Optiplex Homelab key
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQdazsCyvNGrXGT+zEc6l5X/JILWouFlnPchYsCeFZk kolkhis@home-pve
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGjGGUL4ld+JmvbDmQFu2XZrxEQio3IN7Yhgcir377t example@example
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQdazsCyvNGrXGT+zEc6l5X/JILWouFlnPchYsCeFZk example@example
 EOF
 
   # Most cloud-init images require a serial device for their display
@@ -879,37 +903,34 @@ image.
 
 It appears I have two options.  
 
-#### Modify the Template In-Place
-I may be able to fix this by modifying the template's boot format to use UEFI
-instead of BIOS. I'll also have to set an EFI disk partition for the template.    
+1. Modify the Template In-Place
+   I may be able to fix this by modifying the template's boot format to use UEFI
+   instead of BIOS. I'll also have to set an EFI disk partition for the template.    
+   ```bash
+   qm set 9030 --bios ovmf --machine q35
+   qm set 9030 --efidisk0 "vmdata:0,format=raw,efitype=4m"
+   qm set 9030 --boot order=virtio0
+   ```
 
-
-```bash
-qm set 9030 --bios ovmf --machine q35
-qm set 9030 --efidisk0 "vmdata:0,format=raw,efitype=4m"
-qm set 9030 --boot order=virtio0
-```
-
-#### Full Re-create of Template
-
-```bash
-qm create 9030 \
-    --name rocky10-cloudinit-template \
-    --memory 2048 \
-    --cores 1 \
-    --net0 virtio,bridge=vmbr0 \
-    --cpu x86-64-v2-AES \
-    --machine q35 \
-    --bios ovmf
-
-qm importdisk 9030 /var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2 vmdata
-qm set 9030 --scsihw virtio-scsi-pci --scsi0 vmdata:vm-9030-disk-0
-qm set 9030 --efidisk0 vmdata:0,format=raw,efitype=4m
-qm set 9030 --ide2 vmdata:cloudinit
-qm set 9030 --agent enabled=1
-qm set 9030 --boot order=scsi0
-qm template 9030
-```
+2. Full Re-create of Template
+   ```bash
+   qm create 9030 \
+       --name rocky10-cloudinit-template \
+       --memory 2048 \
+       --cores 1 \
+       --net0 virtio,bridge=vmbr0 \
+       --cpu x86-64-v2-AES \
+       --machine q35 \
+       --bios ovmf
+   
+   qm importdisk 9030 /var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2 vmdata
+   qm set 9030 --scsihw virtio-scsi-pci --scsi0 vmdata:vm-9030-disk-0
+   qm set 9030 --efidisk0 vmdata:0,format=raw,efitype=4m
+   qm set 9030 --ide2 vmdata:cloudinit
+   qm set 9030 --agent enabled=1
+   qm set 9030 --boot order=scsi0
+   qm template 9030
+   ```
 
 ---
 
@@ -933,6 +954,22 @@ provider "proxmox" {
 }
 ```
 Then I'll run again to see if I can gain insight into what's going wrong.  
+
+---
+
+The error seemed to be that Rocky Linux requires UEFI boot, but the host was
+booting via SeaBIOS. This seemed strange, as during the template setup I
+specified UEFI as the `bios` configuration setting.  
+
+The fix for this was to create a few entries in the `main.tf` file.  
+```hcl
+  scsihw = "virtio-scsi-pci"
+  bios   = "ovmf"
+  efidisk {
+    storage = "vmdata"
+    efitype = "4m"
+  }
+```
 
 
 
