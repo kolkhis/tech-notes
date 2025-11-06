@@ -35,7 +35,7 @@ sudo apt update && sudo apt install terraform
 
 I wrote my own [custom installer script](https://github.com/kolkhis/.dotfiles/blob/main/install/install/install-terraform)
 for portability, to work on both Debian-based and RedHat-based systems -- mainly
-distros that are binary-compatible with RHEL (Rocky, Alma).  
+Debian/Ubuntu Server and distros that are binary-compatible with RHEL (Rocky, Alma).  
 
 ## Terraform Authetication on Proxmox
 
@@ -107,7 +107,8 @@ user and assign it a new API key.
       ```
       We don't use the `pam` realm because we can't create API tokens for the user. 
       PAM is password-based auth only, so it's not ideal for automation and app
-      integrations.  
+      integrations. `pam` can be used with username/password rather than
+      username/API key.  
 
 2. Verify that the user account has been created.  
    ```bash
@@ -153,14 +154,15 @@ configuring the Terraform Proxmox provider.
 In order for the token and user to have permissions, we need to add some roles
 via the ACL.  
 
-The easiest way to do this is to grant the `Administrator` role.  
+The easiest way to do this is to grant the `Administrator` role to the user/API
+key.  
 
 We can add a role with `pveum acl modify`.  
 ```bash
 sudo pveum acl modify / -user terraform@pve -role Administrator
 ```
 
-If privilege separation is enabled on the API token generated earlier, we must
+If privilege separation is **enabled** on the API token generated earlier, we must
 also add the role to the token.  
 ```bash
 sudo pveum acl modify / -token terraform@pve!tf-token -role Administrator
@@ -168,17 +170,16 @@ sudo pveum acl modify / -token terraform@pve!tf-token -role Administrator
 
 ### Configure Terraform Provider
 
-Terraform has this concept of "providers."  
-
-Providers are essentially plugins that allow Terraform talk to an external
-system, usually via that system's API.  
+Terraform has this concept of "providers," which are essentially plugins that 
+allow Terraform talk to an external system, usually via that system's API.  
 
 Each provider is programmed to interact with specific APIs (e.g., AWS, Proxmox), 
 and exposes **Terraform resources** that correspond to that system.  
 
-Providers are downloaded from the [Terraform registry](https://registry.terraform.io/)
+Providers are downloaded from the [Terraform registry](https://registry.terraform.io/) 
+when running `terraform init`.  
 
-!!! info "How Terraform providers work"
+??? info "How Terraform providers work"
 
     When we run `terraform init`, it reads the `.tf` files and detects which
     providers are being used, then downloads and installs them into
@@ -219,28 +220,33 @@ alongside the `source` to use a specific version of the provider.
 Next, we configure the provider.  
 ```hcl
 provider "proxmox" {
-  pm_api_url  = "https://192.168.1.49:8006/api2/json"
-  pm_user     = "terraform"
-  pm_password = "api-key-goes-here"
+  pm_api_url          = "https://192.168.1.49:8006/api2/json"
+  pm_user             = "terraform@pve"
+  pm_api_token_id     = "terraform@pve!tf-token"
+  pm_api_token_secret = "API_KEY_GOES_HERE"
   pm_tls_insecure = true
 }
 ```
 This configures the Proxmox provider (`Telmate/proxmox`), and specifies the 
 necessary information for Terraform to interact with the Proxmox API.  
 
-These three things are essential:
+These four things are required:
 
-1. `pm_api_url`: The PVE API endpoint
-2. `pm_user`: The Proxmox user
-2. `pm_password`: The Proxmox user's password
+2. `pm_user`: The Proxmox user we created earlier  
+1. `pm_api_url`: The PVE API endpoint  
+2. `pm_api_token_id`: The Proxmox user's API key ID (`user@realm!token-name`)
+2. `pm_api_token_secret`: The Proxmox user's API key  
 
 !!! note "Setting user and password as environment variables"
 
-    The `user` and `password` can be left out of the `provider` definition as
+    Some of the entries can be left out of the `provider` definition as
     long as these are set as environment variables:
     ```bash
     export PM_USER="terraform@pve"
-    export PM_PASS="api-key-goes-here"
+    export PM_PASS="password" # If using PAM (username/password auth)
+    export PM_API_TOKEN_ID="terraform@pve!tf-token"
+    export PM_API_TOKEN_SECRET="API_KEY_GOES_HERE"
+    export PM_API_URL="http://192.168.1.49:8006/api2/json"
     ```
 
 Once the provider is configured, we'd add the new **resource** that we want to create, also in `main.tf`.  
@@ -272,13 +278,20 @@ general use.
 
 ---
 
-Once we have the `provider` and our `resource` set up in `main.tf`, we can go
-ahead and do `terraform init` to intialize the provider.  
+Once we have the `provider` and our `resource` blocks set up in `main.tf`, we 
+can go ahead and do `terraform fmt` to format our file, then `terraform init` 
+to intialize the provider.  
 ```bash
+terraform fmt
 terraform init
 ```
 
-Then, we can do a `plan` to see the changes that will be made.  
+We can make sure our config is valid with `validate`.
+```bash
+terraform validate
+```
+
+Then, we can do a `plan` to see the changes that will be made (like a dry run).  
 ```bash
 terraform plan
 ```
@@ -288,9 +301,13 @@ Finally, we `apply` to actually do the magic.
 terraform apply
 ```
 
+Then we're good to go!  
+
 ## Hiding the API Key
 
 So, storing API keys in plain text is usually not great practice.  
+
+We can obfuscate them in Terraform a number of different ways.  
 
 ### Using Environment Variables
 One very common method of avoiding plaintext secrets is using environment variables.  
