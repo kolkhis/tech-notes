@@ -832,14 +832,15 @@ qm create 9030 --name "rocky-10-cloudinit-template" \
     --storage vmdata
 
 # Create config file if it doesn't exist
-touch "/etc/pve/qemu-server/$VMID.conf"
+touch "/etc/pve/qemu-server/9030.conf"
 
 qm importdisk 9030 /var/lib/vz/template/qcow/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2 vmdata
 qm set 9030 --virtio0 "vmdata:vm-9030-disk-0"
 qm set 9030 --boot c --bootdisk virtio0
 qm set 9030 --ide2 "vmdata:cloudinit"
-qm set 9030 --ciuser "$CI_USER" --cipassword "$CI_PASS"
+qm set 9030 --ciuser "luser" --cipassword "luser"
 qm set 9030 --agent 1
+qm template 9030
 ```
 
 The resource provisioned in `main.tf` is as follows:
