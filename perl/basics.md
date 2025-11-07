@@ -885,15 +885,15 @@ The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.
     - `-F<pattern>`: Split on the character/pattern specified for `-a`.  
         - `-a`: Turns on autosplit mode when used with a `-n` or `-p` (`-n` implied by
           default).  
-            - An implicit `split()` command on the `@F` array is done first inside the 
-              implicit loop (looped with the `-n` or `-p` options).  
+        - Using `-a` implies a `split()` function call on the `@F` array, which is
+          done **first** inside the `-n`/`-p` loop.  
 
 !!! info "Using a Custom Array Name with `-F`"
 
-    Note that we're using a custom array name here and calling `split` on the
-    input line.  
-    That's because `-F` will make the `@F` array contain the line
-    **character-by-character** rather than splitting on the desired
+    Note that we're using a custom array name here (`@f`, lowercase) and
+    calling `split` on the input line.  
+    That's because `-F` will make the `@F` array contain the 
+    line **character-by-character** rather than splitting on the desired
     pattern/character provided to `-F`.  
 
 
