@@ -915,10 +915,10 @@ _
 
 ---
 
-Doing further research, it appears it's possible that SeaBIOS won't be able to boot a qcow2
+Doing further research, it appears it's possible that SeaBIOS won't be able to boot a Rocky
 image.  
 
-It appears I have two options.  
+It seems I have two options.  
 
 1. Modify the Template In-Place
    I may be able to fix this by modifying the template's boot format to use UEFI
@@ -974,6 +974,12 @@ Then I'll run again to see if I can gain insight into what's going wrong.
 
 ---
 
+The debug logs did not show any helpful errors. Since Terraform was 
+successfully running without errors, this does make sense. The problem lies in 
+the configuration itself.  
+
+#### Fix
+
 The error seemed to be that Rocky Linux requires UEFI boot, but the host was
 booting via SeaBIOS. This seemed strange, as during the template setup I
 specified UEFI as the `bios` configuration setting.  
@@ -987,8 +993,20 @@ The fix for this was to create a few entries in the `main.tf` file.
     efitype = "4m"
   }
 ```
+Here we explicitly set the `scsihw` and `bios` settings, as well as specify the
+`efidisk` block.  
 
+These settings were apparently not being set from the template clone itself.  
 
+With a Rocky Linux image, it's also important to set the CPU type to `host` if
+you're booting into a kernel panic.  
+```hcl
+  cpu {
+    core    = 1
+    sockets = 1
+    type    = "host"
+  }
+```
 
 
 
