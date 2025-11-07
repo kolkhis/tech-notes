@@ -45,7 +45,7 @@ Say we want our naming convention to use something like `control-node01`,
 the count gets to ten, we'd end up with `control-node010`. That's not what we
 want.  
 
-We can use the `format()` builtin function to pad the string with zeroes.  
+We can use the `format()` builtin function to pad the number with zero(es).  
 ```hcl
 resource "example" "example-name" {
   count = 2
