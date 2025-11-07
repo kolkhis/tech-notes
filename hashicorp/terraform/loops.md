@@ -38,5 +38,22 @@ This will create:
 
 All with identical configurations.  
 
+### Padding with Zeroes
+
+Say we want our naming convention to use something like `control-node01`,
+`control-node02`, etc., but we don't want to hardcode the leading zero in. If
+the count gets to ten, we'd end up with `control-node010`. That's not what we
+want.  
+
+We can use the `format()` builtin function to pad the string with zeroes.  
+```hcl
+resource "example" "example-name" {
+  count = 2
+  name = format("control-node%02d", count.index + 1)
+}
+```
+This format of `%02d` will pad the left side with zeroes, as long as the
+padding doesn't exceed 2 digits.  
+
 
 
