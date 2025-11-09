@@ -260,6 +260,73 @@ variable "proxmox_api_key" {
 }
 ```
 
+### Reserved Environment Variables
+
+Terraform uses a bunch of different environment variables to customize
+behavior.  
+
+- `TF_VAR_name`: Set variables to be used (by name) within Terraform configurations.  
+    - These are checked **last** for a value.  
+
+- `TF_LOG`: Enables logging (to stderr). Set its value to a log level to see
+  those logs.  
+  ```bash
+  export TF_LOG=trace  # | debug | info | warn | error
+  # to disable, unset or set to 'off':
+  unset TF_LOG
+  export TF_LOG="off"
+  ```
+    - `TF_LOG_CORE`: Enables logging for **only** Terraform, will *not* output 
+      provider plugin logs.   
+    - `TF_LOG_PROVIDER`: Enables logging for **only** the provider plugin, will *not* output
+      Terraform core logs.   
+
+- `TF_LOG_PATH`: Path to file where the logs will output to.  
+    - `TF_LOG` needs to also be set for any logging to be enabled.  
+
+
+- `TF_INPUT`: When set to `false` or `0`, Terraform commands assume the CLI
+  argument `-input=false`.  
+
+- `TF_CLI_ARGS`: Specify additional arguments to be used when running 
+  **any and all** Terraform commands.  
+    - These args are placed directly after the subcommand, and before any
+      flags/options on the command line.  
+      For instance:
+      ```bash
+      export TF_CLI_ARGS="-input=false"
+      terraform apply -force
+      # Expands to:
+      terraform apply -input=false -force
+      ```
+
+- `TF_CLI_ARGS_name`: Specify additional arguments to be used when running a
+  specific Terraform command (`name`).  
+    - Same placement strategy as `TF_CLI_ARGS`, and will only affect the given `name` subcommand.  
+      ```bash
+      export TF_CLI_ARGS_plan="-refresh=false"
+      terraform plan
+      # Expands to:
+      terraform plan -refresh=false
+      ```
+
+- `TF_DATA_DIR`
+
+- `TF_WORKSPACE`
+
+- `TF_IN_AUTOMATION`
+
+- `TF_REGISTRY_DISCOVERY_RETRY`
+
+- `TF_REGISTRY_CLIENT_TIMEOUT`
+
+- `TF_STATE_PERSIST_INTERVAL`
+
+- `TF_CLI_CONFIG_FILE`
+
+- `TF_PLUGIN_CACHE_DIR`
+
+
 ## `.tfvars`
 Any file with the `.tfvars` file extension (or simply `.tfvars` by itself) will
 be used to define values for the variables declared inside `variables.tf`.  
@@ -285,5 +352,7 @@ variable "proxmox_api_key" {
 ## Resources
 - <https://developer.hashicorp.com/terraform/language/block/variable>
 - <https://developer.hashicorp.com/terraform/language/block/variable#basic-variable-declaration>
+- <https://developer.hashicorp.com/terraform/cli/config/environment-variables>
+- <https://developer.hashicorp.com/terraform/language/parameterize#environment-variables>
 - <https://spacelift.io/blog/how-to-use-terraform-variables>
 
