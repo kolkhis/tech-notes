@@ -56,4 +56,8 @@ This format of `%02d` will pad the left side with zeroes, as long as the
 padding doesn't exceed 2 digits.  
 
 
+## Resources
+- <https://developer.hashicorp.com/terraform/language/meta-arguments>
+- <https://developer.hashicorp.com/terraform/language/meta-arguments/for_each>
+- <https://developer.hashicorp.com/terraform/language/meta-arguments/count>
 
