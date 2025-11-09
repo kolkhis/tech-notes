@@ -310,21 +310,36 @@ behavior.
       terraform plan -refresh=false
       ```
 
-- `TF_DATA_DIR`
+- `TF_DATA_DIR`: The directory where Terraform will store its data. This
+  defaults to `./.terraform` (in the current dir).    
+    - Setting this could be useful if the pwd isn't writable.  
+    - If setting this, set before running the initial `terraform init`.  
 
-- `TF_WORKSPACE`
+- `TF_WORKSPACE`: Sets the Terraform workspace.  
+    - Automation-friendly alternative to using:
+      ```bash
+      terraform workspace select some_workspace
+      ```
 
-- `TF_IN_AUTOMATION`
+- `TF_IN_AUTOMATION`: If set (to any value), Terraform will avoid suggesting
+  commands to run next.  
 
-- `TF_REGISTRY_DISCOVERY_RETRY`
+- `TF_REGISTRY_DISCOVERY_RETRY`: Set the max number of retries to the remote 
+  registry client.  
 
-- `TF_REGISTRY_CLIENT_TIMEOUT`
+- `TF_REGISTRY_CLIENT_TIMEOUT`: Timeout for requests to the remote
+  registry. Defaults to 10 seconds.  
 
-- `TF_STATE_PERSIST_INTERVAL`
+- `TF_STATE_PERSIST_INTERVAL`: Interval in seconds that TF attempts to persist
+  state to a remote backend during `apply`. Defaults to 20 seconds.  
 
-- `TF_CLI_CONFIG_FILE`
+- `TF_CLI_CONFIG_FILE`: The location for the Terraform runtime configuration file. 
+    - Called `.terraformrc`, or `terraform.rc` on Windows.  
+    - Old version of this variable was `TERRAFORM_CONFIG`, but that one is deprecated.  
 
-- `TF_PLUGIN_CACHE_DIR`
+- `TF_PLUGIN_CACHE_DIR`: Enables and sets the `plugin_cache_dir` setting in the 
+  Terraform CLI configuration.   
+    - Equivalent to setting [`plugin_cache_dir` in your `.terraformrc`](https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache)
 
 
 ## `.tfvars`
@@ -355,4 +370,6 @@ variable "proxmox_api_key" {
 - <https://developer.hashicorp.com/terraform/cli/config/environment-variables>
 - <https://developer.hashicorp.com/terraform/language/parameterize#environment-variables>
 - <https://spacelift.io/blog/how-to-use-terraform-variables>
+- <https://developer.hashicorp.com/terraform/cli/config/config-file>
+- <https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache>
 
