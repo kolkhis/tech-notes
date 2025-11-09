@@ -767,6 +767,49 @@ The `ciuser` and `cipass` can be pre-configured when creating the template:
 qm set 1400 --ciuser "luser" --cipassword "luser"
 ```
 
+## Setting the IP
+
+When using Cloud-Init, we can specify the IP that the VM will request from the
+router.  
+
+This is configured through the `ipconfig0` setting.  
+```hcl
+  ipconfig0  = "ip=dhcp"
+```
+Setting this to `ip=dhcp` will say "just give me an IP," so it will be
+different every time.  
+
+If we want to give it an exact IP so we always know it's at a specific
+location, we can set it explicitly:
+```hcl
+  ipconfig0  = "ip=192.168.1.10/24,gw=192.168.1.1,ip6=dhcp"
+```
+This will request the IP `192.168.1.10` from the gateway router, which is
+specified in `gw=192.168.1.1`.  
+
+If we wanted to set the IP to `192.168.4.200`, we would specify that using CIDR
+notation.
+```txt
+ip=192.168.4.200/24
+```
+This is saying "assign me the address `192.168.4.200` in the `192.168.4.0` range".  
+
+
+Note that specifying an IP that is already assigned to a device will result in 
+an error, and that host will not receive an IP at all, meaning it will not have
+any network connection.  
+
+When assigning IPs this way, make sure to choose ones that are not taken.  
+
+If we're deploying multiple hosts by looping with `count`, we can use the
+`count.index` to increment the IPs that are being assigned.  
+```hcl
+  count = 3
+  ipconfig0  = "ip=192.168.1.${200 + count.index}/24,gw=192.168.1.1,ip6=dhcp"
+```
+Since `count` loops are zero-based, this will give the IPs `192.168.1.200-202`.  
+
+
 ## Troubleshooting
 
 When running `terraform plan`, if we get some sort of error, we will need to
