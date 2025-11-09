@@ -84,14 +84,14 @@ The basic syntax is:
 ```hcl title="variables.tf"
 variable "<label>" {
   description = "An example variable block"
-  type        = "<type>"
+  type        = type
   default     = "<default value>"
   sensitive   = true # or false
 }
 ```
 
 The values of the variables can be accessed in `main.tf` (or other) by using
-the `var` keyword with dot notation, using the `<label>` as the name of the
+the `var.<label>` syntax with dot notation, using the `<label>` as the name of the
 variable.  
 
 So for this example:
@@ -110,6 +110,8 @@ resource "example" "example" {
 ```
 
 ---
+
+### Complex Input Variables
 
 If we are using a data type that stores multiple values, we need to specify 
 the type for each value.  
@@ -164,8 +166,6 @@ variable "example_map" {
 ```
 
 ---
-
-### Complex Input Variables
 
 We can even use a `map` of objects or `list` of objects when declaring input variables.  
 These ones have a bit more complexity involved, but they're powerful.  
@@ -248,13 +248,13 @@ When setting variables this way, the `<name>` needs to match the variables
 declared in `variables.tf`.  
 
 ```bash
-export TF_VAR_proxmox_api_key='asdfasdfasdfasdf'
+export TF_VAR_aws_api_key='super-secret-api-key'
 ```
 This will automatically be picked up by Terraform when we have an entry in
 `variables.tf`.  
 ```hcl
-variable "proxmox_api_key" {
-  description = "API key for Proxmox"
+variable "aws_api_key" {
+  description = "API key for AWS"
   type        = string
   sensitive   = true
 }
@@ -265,8 +265,13 @@ variable "proxmox_api_key" {
 Terraform uses a bunch of different environment variables to customize
 behavior.  
 
+The one from the previous section is used to define custom variables for our
+Terraform configs:
+
 - `TF_VAR_name`: Set variables to be used (by name) within Terraform configurations.  
     - These are checked **last** for a value.  
+
+The rest that follow all change the behavior of Terraform itself.  
 
 - `TF_LOG`: Enables logging (to stderr). Set its value to a log level to see
   those logs.  
@@ -283,7 +288,6 @@ behavior.
 
 - `TF_LOG_PATH`: Path to file where the logs will output to.  
     - `TF_LOG` needs to also be set for any logging to be enabled.  
-
 
 - `TF_INPUT`: When set to `false` or `0`, Terraform commands assume the CLI
   argument `-input=false`.  
