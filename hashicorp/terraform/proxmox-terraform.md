@@ -801,6 +801,17 @@ any network connection.
 
 When assigning IPs this way, make sure to choose ones that are not taken.  
 
+!!! info "DHCP Reservation"
+
+    It's feasible to use DHCP reservation to reserve IPs for VMs. However, that
+    would require also manually setting the MAC address of the VM in the Terraform
+    configuration file, deploying the VM, entering the router, then reserving the 
+    IP to that MAC address for each instance created.  
+
+    This method does not scale well, as there's too much manual intervention. So, 
+    being careful about selecting the IPs is a better approach.  
+
+
 If we're deploying multiple hosts by looping with `count`, we can use the
 `count.index` to increment the IPs that are being assigned.  
 ```hcl
@@ -808,6 +819,7 @@ If we're deploying multiple hosts by looping with `count`, we can use the
   ipconfig0  = "ip=192.168.1.${200 + count.index}/24,gw=192.168.1.1,ip6=dhcp"
 ```
 Since `count` loops are zero-based, this will give the IPs `192.168.1.200-202`.  
+
 
 
 ## Troubleshooting
