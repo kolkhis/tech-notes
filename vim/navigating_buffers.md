@@ -1,5 +1,3 @@
-
-
 # Navigating Buffers in Vim
 
 
@@ -47,3 +45,15 @@
 | `;`          | Repeat the last `f`, `F`, `t`, or `T` command  |
 | `,`          | Repeat the last `f`, `F`, `t`, or `T` command in the opposite direction |
 
+## Searching
+
+When doing a search for a specific word, type `/` in normal mode to start the
+search.  
+
+If you want to search for the current word that the cursor is on, you can
+simply press `*` (asterisk/star) and it will search for the next occurrence of
+the word. This is equivalent to doing `/` then `\<` (starting word boundary),
+++ctrl+r+ctrl+w++ (insert current word under cursor), then `\>` (closing word
+boundary).  
+
+You can also search backwards in the say way by using `#` instead of `*` .  
