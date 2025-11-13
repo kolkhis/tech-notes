@@ -119,6 +119,11 @@ The community is incredibly welcoming. This was my first ever tech conference,
 and the welcome I received from the other attendees, volunteers, and speakers 
 was nothing short of amazing. 
 
+Walking through the halls and chatting with all the fellow techies was probably
+the highlight of the event. We had people from all over the world fly in for
+this event! Getting to chat with people from different walks of life who have
+all found their way into tech was an amazing experience.  
+
 Everyone -- and I mean everyone (attendees, volunteers, and speakers) -- is all 
 passionate about technology. People are there because they care. The community 
 is the beating heart of open source, and it's beating strong.  
@@ -126,6 +131,9 @@ is the beating heart of open source, and it's beating strong.
 ## Things I Learned
 
 All the different talks I attended had something valuable to offer.  
+
+Most of the technical details of these talks have been integrated with my
+notes, but to highlight a few key points:
 
 - CI/CD Tips: Various deployment strategies  
 - Commit Spoofing with Git Commit Metadata: **Incredibly** valuable to be aware of as
