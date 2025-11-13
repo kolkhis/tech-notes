@@ -841,6 +841,12 @@ open(my $fh, '<', 'file.txt') or die $!;
 - `die` will exit with an error message. 
 - `$!` holds the last error message that the program encountered.  
 
+We can extend this with a custom error message if we want to be more specific.
+
+```perl
+open(my $fh, '<', 'file.txt') or die "Error opening file.txt: $!"
+```
+
 ## Using Perl like Awk
 
 We can use perl just like awk to print specific columns of output.  
