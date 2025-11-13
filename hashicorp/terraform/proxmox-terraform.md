@@ -547,6 +547,11 @@ These are the command broken down:
 
 ### Cloud-Init Snippets
 
+Snippets fall under the topic of 
+[Cloud-Init configuration files](https://cloudinit.readthedocs.io/en/latest/reference/examples.html).  
+[Cloud-Init configuration files](https://cloudinit.readthedocs.io/en/latest/reference/examples.html#install-arbitrary-packages).  
+Anything under that 
+
 Once the template is created, we can create **snippets**, which are used to
 pass additional configuration to the Cloud-Init package.  
 
@@ -577,6 +582,23 @@ runcmd:
   - apt-get install -y qemu-guest-agent
   - systemctl enable --now qemu-guest-agent
 ```
+
+We're using the 
+[`runcmd` configuration](https://cloudinit.readthedocs.io/en/latest/reference/examples.html#run-commands-on-first-boot),
+which allows us to run arbitrary commands on the node's first boot.  
+
+When we pass the commands in like this, it will be executed with `sh`.  
+If we were to instead pass in a list, they would be executed with the `execve()` syscall.  
+
+For example:
+```yaml
+#cloud-config
+runcmd:
+  - [ 'apt-get', 'update' ]
+  - [ 'apt-get', 'install', '-y', 'qemu-guest-agent' ]
+  - [ 'systemctl', 'enable', '--now', 'qemu-guest-agent']
+```
+
 
 The `qemu-guest-agent` package will be installed and the daemon started.  
 
@@ -1082,6 +1104,7 @@ Cloud-Init resources:
 - <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud-init%20getting%20started.md>
 - <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/guides/cloud_init.md>
 - <https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/examples/cloudinit_example.tf>
+- [Cloud-Init Configurations](https://cloudinit.readthedocs.io/en/latest/reference/examples.html#install-arbitrary-packages)
 
 Cloud-Init images:
 
