@@ -867,35 +867,73 @@ When using `-a`, the split line is automatically saved into the `@F` array.
   (`$.`) is equal to three.  
 
 
+- We can replicate the behavior of `-a` by using a custom array, and running a
+  `split` function on the line.  
+
+  ```bash
+  ls -alh | perl -ne 'my @f = split; print "$f[0]\n"'
+  ```
+
+!!! info "Using a Custom Array Name with `-n`"
+
+    Note that we're using a custom array name here (`@f`, lowercase) and
+    calling `split` on the input line.  
+
+
 This can also be done by passing `-F` with a character to split on (just like `awk`),
 along with a custom array name for the split lines.   
 
-- Print the first column of input (0-based indexing).  
-  ```bash
-  ls -l | perl -F' ' -ane 'my @f = split; print "$f[0]\n";'
+- Say we have a CSV file and we want to print the third field of each line.
+  ```csv
+  one,two,three,
+  four,five,six,
+  seven,eight,nine,
+  ten,eleven,twelve,
   ```
-
-The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.  
-
-- Extract the major/minor device numbers from `stat` output:
+  We could extract the third field of each line:
   ```bash
-  stat /dev/null | perl -F' ' -e 'my @f = split; print "$f[8]\n" if ($. == 3);'
-  # 1,3
+  perl -F',' -e 'print "$F[2]\n"' ./test.csv
   ```
-    - `-F<pattern>`: Split on the character/pattern specified for `-a`.  
+  We'd get the output:
+  ```txt
+  three
+  six
+  nine
+  twelve
+  ```
+    - `-F<pattern>`: Specify the character/pattern to split on (for `-a`, which
+      is implied).  
         - `-a`: Turns on autosplit mode when used with a `-n` or `-p` (`-n` implied by
           default).  
         - Using `-a` implies a `split()` function call on the `@F` array, which is
           done **first** inside the `-n`/`-p` loop.  
 
-!!! info "Using a Custom Array Name with `-F`"
 
-    Note that we're using a custom array name here (`@f`, lowercase) and
-    calling `split` on the input line.  
-    That's because `-F` will make the `@F` array contain the 
+
+This is the main use case for the `-F` option.  
+
+!!! info "Using `-F` to split on spaces"
+    
+    Using `-F' '` (with a space) will make the `@F` array contain the 
     line **character-by-character** rather than splitting on the desired
     pattern/character provided to `-F`.  
+    This is because `-F` implies `-a`, which already calls `split()` on the
+    line itself. So when an additional `split()` is applied on the line, it
+    will chop it up character-by-character.  
 
+    The `-F` option is best used when splitting on characters **other than** spaces.  
+    If used to split on spaces, it will split the entire line into an array
+    that holds each character as a separate element.  
+    This **is** useful if you actually need to extract specific characters instead of 
+    chunks of text.  
+    For splitting on spaces, I'd recommend just using `-a` without `-F`.  
+
+- Print the first **character** of the input (0-based indexing).  
+  ```bash
+  ls -l | perl -F' ' -e 'print "$F[0]\n"'
+  ```
+
+The `-F` option implicitly sets the `-a` and `-n` options, so we can omit them.  
 
 ## Resources
 
