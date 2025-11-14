@@ -2,8 +2,8 @@
 ## Raleigh, NC
 
 All Things Open (ATO) is one of the largest open-source technology conferences 
-in the U.S., bringing together thousands of developers, engineers, and open-
-source advocates each year in Raleigh, North Carolina.  
+in the U.S., bringing together thousands of developers, engineers, and open-source
+advocates each year in Raleigh, North Carolina.  
 
 It's held annually at the Raleigh Convention Center, a spacious venue designed to 
 host an event of this size.   
@@ -38,20 +38,20 @@ few.
 ---
 
 Many of the speakers that are presenting are long-time industry professionals
-from big-name companies and projects (e.g., GitHub, Tailscale, AlmaLinux, etc.), as
-well as some popular content creators. Some of the talks are highly technical,
-while others focus on the broader aspects of working in tech as a whole.  
+from big-name companies and projects (e.g., Google, GitHub, Tailscale, AlmaLinux, etc.), as
+well as some popular content creators (notably LearnLinuxTV). Some of the talks 
+are highly technical, while others focus on the broader aspects of working in
+tech as a whole.  
 
-Wherever you may find yourself in tech, there is a topic being presented that
-will be suited to your role.  
-
+Whatever role you may find yourself in, there is a topic being presented that 
+will be beneficial to your professional development.  
 
 ## Booths
 
 Vendors from across the open-source and tech world filled the conference hall
 with booths, demos, and "swag" giveaways. RedHat was giving away -- 
 and this may shock you -- red Fedoras! CIQ represented Rocky Linux, Warewulf, 
-and other projects with lanyards, tote bags, stickers, and even temporary tattoos. 
+and AppTainer with lanyards, tote bags, stickers, and even temporary tattoos. 
 One booth even handed out branded Tide pens! Every booth was giving away 
 stickers for their products. I think I walked out of the convention center with 
 one of every sticker that was ever created.  
@@ -80,13 +80,14 @@ Some other notable booths and demos included:
 
 - Zabbix, DynaTrace, Observe, DataDog, and plenty of other observability solutions were on
   display  
-- CodeRabbit was demoing an agentic AI code reviewer
+- **CodeRabbit** was demoing an agentic AI code reviewer  
 - There were many other new cutting-edge AI products were on display by a variety of companies.  
-- AWS Open Source was being represented
-- HeroDevs had one of the craziest booths at the event.
-- The Linux Foundation was respresented, giving away discounts for educational content
-- Intuit (the people behind Argo) were demoing their new project, **Numaflow**
-- Keebio had a great booth set up to display their newest ergonomic mechanical keyboards.
+- AWS Open Source had a luxurious booth  
+- HeroDevs had one of the craziest booths at the event.  
+- The Linux Foundation was respresented, giving away discounts for educational content  
+- Intuit (the people behind Argo) were demoing their new project, **Numaflow**  
+- Keebio had a great booth set up to display their newest ergonomic mechanical keyboards.  
+- ...and many others.  
 
 ---
 
@@ -124,9 +125,11 @@ the highlight of the event. We had people from all over the world fly in for
 this event! Getting to chat with people from different walks of life who have
 all found their way into tech was an amazing experience.  
 
-Everyone -- and I mean everyone (attendees, volunteers, and speakers) -- is all 
-passionate about technology. People are there because they care. The community 
-is the beating heart of open source, and it's beating strong.  
+Everyone in attendance is passionate about technology -- and I mean everyone (
+attendees, volunteers, and speakers). People are there because they care about
+the future of tech and open source.  
+
+The community is the beating heart of open source, and it's beating strong.  
 
 ## Things I Learned
 
@@ -135,20 +138,21 @@ All the different talks I attended had something valuable to offer.
 Most of the technical details of these talks have been integrated with my
 notes, but to highlight a few key points:
 
-- CI/CD Tips: Various deployment strategies  
 - Commit Spoofing with Git Commit Metadata: **Incredibly** valuable to be aware of as
   an open-source maintainer  
 - Linux Tips and Tricks: A collection of miscellaneous Linux tips presented by
   engineers and content creators  
 - Remotely connecting to a Homelab: Using Tailscale to set up **secure**
   ingress into my homelab (or any other device)  
+- CI/CD Tips: Various technologies, tools, and deployment strategies, for CI/CD
+  pipelines  
 
 It was not just technical insights that I walked away with. Some of the most
 valuable things I learned were non-technical.  
 
-- How to get involved with open-source projects
-- How tech professionals network
-- How to be a non-code-contributing member of a community
+- How to get involved with open-source projects  
+- How tech professionals network  
+- How to be a non-code-contributing member of a community  
 - ...among other things.
 
 Overall, ATO gave me a broader understanding of both the technical and human
@@ -161,13 +165,13 @@ technologies, hear from industry leaders about the trajectory of future tech,
 and support the projects that you love.
 
 Even if you can't attend the official ATO conference, I'd highly recommend
-hitting up one of the free co-located events that are held the day prior.  
+attending one of the free co-located events that are held the day prior.  
 
 These co-located free events are:
 
-- Community Leadership Summit
-- Open Source Accessibility Summit
-- Inclusion and Diversity Summit
+- **Community Leadership Summit**
+- **Open Source Accessibility Summit**
+- **Inclusion and Diversity Summit**
 
 I attended the Community Leadership Summit, which was an amazing time with
 great discussions (but that's [a separate writeup](./cls/index.md)).  
