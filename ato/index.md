@@ -170,6 +170,6 @@ These co-located free events are:
 - Inclusion and Diversity Summit
 
 I attended the Community Leadership Summit, which was an amazing time with
-great discussions (but that's a separate writeup).  
+great discussions (but that's [a separate writeup](./cls/index.md)).  
 
 
