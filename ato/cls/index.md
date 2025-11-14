@@ -14,8 +14,8 @@ you find discussions in all summits that you wish to attend.
 
 ---
 
-The CLS was a fantasic event, a bazaar for exchanging knowledge, ideas, and
-experience.  
+The CLS was a fantasic event -- an open bazaar for exchanging knowledge, ideas, 
+and experience.  
 
 ## When I arrived...
 
@@ -24,8 +24,7 @@ tablets set up, where you can either enter your name or scan your QR code
 (provided when you get your ticket) to check in. Once you submit, an ID is 
 automatically printed at the check-in booth. The volunteer attaches your badge
 to a lanyard (provided by Google), and hands it to you with a smile. The entire 
-process was quick and efficient. I'd expect nothing less from a great group of 
-talented engineers.  
+process was quick and efficient.  
 
 After checking in, I started walking the halls of the convention center. I saw 
 all of the sponsors setting up their booths. The actual paid conference spans 
@@ -38,16 +37,13 @@ Chainguard, the Open Source Initiative, and Cloudinary, to name a few.
 
 ## The Schedule
 
-The schedule for the community leadership summit is determined in the morning.
-People suggest ideas for topics to discuss, and the schedule is built upon those ideas.  
+The CLS event is considered an "unconference," a participant-driven event. The 
+schedule is determined in the morning. People suggest ideas for topics to 
+discuss, and the schedule is built upon those ideas.  
 
-This is a great method for determining the scedule, in my opinion. It allows
-the attendees to have a voice in what the discussions are about, allowing them
-to further their own research on specific topics and exchange ideas with
-others.  
-
-I checked in after the schedule had been determined, so I had to find the board
-on which they posted which sessions are happening in which rooms.  
+This is a great method for determining the scedule. It allows the attendees to 
+have a voice in what the discussions are about, allowing them to further their 
+own research on specific topics and exchange ideas with others.  
 
 ## The Sessions
 
@@ -71,28 +67,26 @@ where we were able to successfully get involved in a community we wanted to be
 a part of.  
 
 There were a few other discussions around AI tooling and community in general.
-This event is a great way to gain insight into community, both as a member of a
-community and a community leader.  
 
-All of these discussions are done in a round-table, discourse format, allowing
-everyone to have a voice and participate in the discussion.  
+This event is a great way to gain insight into community, both as a member of a
+community and a community leader. All of these discussions are done in a 
+round-table discourse format, allowing everyone to have a voice and participate
+in the discussion.  
 
 ---
 
 ## Drawbacks
 
-Unfortunately, due to space limitations, it was necessary that two sessions 
-be held in the same room.  
+Unfortunately, likely due to space constraints, it was sometimes necessary that 
+two sessions be held in the same room.  
 
 If you were sitting towards the back in some of the sessions that were sharing 
 a room, it could be extremely difficult to hear most of the discourse. 
 
-If they could have set up some sort of dividers to isolate the sound from each
-of the sessions, it could have been much more engaging for those who didn't get
-a front-row seat.  
+If something could be done to isolate the sound from each of the sessions, it 
+could have been much more engaging for those who didn't get a front-row seat.  
 
-
-## My Thoughts on the ATO CLS 
+## Summary
 
 The sheer insight of the ideas exchanged here is worth the trip, whether you're
 local to Raleigh or surrounding areas, or from somewhere else.
@@ -108,7 +102,4 @@ This also allows you to gain insight into what these large companies and/or
 large projects are doing. What tools they're using, what ideas they have, what
 type of teams they have for certain tasks.  
 
----
-
-#cls2025
 
