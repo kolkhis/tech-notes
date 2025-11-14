@@ -5,6 +5,7 @@ Dev's journey as an open source project sole maintainer.
 
 
 Outline
+
 1. Linux Desktop and GNOME shell
 2. How to make a GNOME extensions
 3. how he became a maintainer
@@ -14,12 +15,14 @@ Outline
 ## Linux Desktop
 
 2-5% of global market share is Linux Desktop (based on browser research)
+
 - no incl chromebooks, wsl
 
 ### desktop Environments
 envs:
+
 - GNOME shell
-- kde plasma
+- KDE plasma
 - hyprland
 - xfce
 - cinnamon
@@ -32,11 +35,11 @@ envs:
 - unity
 - enlightenment
 
-GNOME vs kde:
+GNOME vs KDE:
 - GNOME:
     - simpler streamlined cleaner, lower distraction, default in fedora and ubuntu,
       lighter hardware reqs, less directly customizable
-- kde: 
+- KDE: 
     - More granular, customizable powerful, large community, many apps available
 
 ### GNOME shell extensions
@@ -45,9 +48,9 @@ Fewer builtin features than KDE does. No task bar. There's a dash.
 - customize GNOME by using extensions
 - similar to chome extensions and mozilla addons
 
-Most popular gnome extension is "Dash to Dock".   
+Most popular GNOME extension is "Dash to Dock".   
 
-33 how to make a gnome extension
+33 how to make a GNOME extension
 
 gis.guide/extensions has a getting started page
 
