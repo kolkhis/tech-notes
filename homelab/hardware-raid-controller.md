@@ -85,11 +85,6 @@ but it's only really optimal if hardware RAID features (e.g., cache, BBU,
 redundancy) are **required**, *and* we don't need the advanced software RAID
 features of `mdadm` or ZFS.  
 
-!!! warning "Honestly..."
-
-    Just use HBA/JBOD with software RAID via `mdadm` or ZFS.
-
-
 ### HBA Mode
 
 One of the options that I found was Host Bus Adapter (HBA) mode, which some
