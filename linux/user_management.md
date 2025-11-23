@@ -447,6 +447,16 @@ systemctl restart apache2
 systemctl restart mysql
 ```
 
+---
+
+### Adding a New Sudoers File
+
+We can drop a file in `/etc/sudoers.d/` that contains custom ruleset(s).  
+
+Once a file is put in this directory, it will be evaluated just like
+`/etc/sudoers`.  
+
+
 ## Creating the sudo group
 You can create the `sudo` group on the system, if it doesn't exist, specified by a `%` before the name.  
 ```bash
@@ -477,6 +487,7 @@ Alternatively, you can look in `/etc/passwd`.
 ```bash
 cat /etc/passwd | grep -i 'username'
 ```
+
 
 
 ## Resources
