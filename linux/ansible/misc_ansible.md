@@ -88,3 +88,12 @@ Or, managed nodes on windows:
 * PowerShell 3.0+ and .NET 4.0+ for Windows.  
  
 
+## Ad-Hoc 
+
+Get localhost information:
+```bash
+ansible localhost -m setup -a "filter=ansible_date_time"
+ansible localhost -m setup -a "filter=ansible_mounts"
+```
+
+
