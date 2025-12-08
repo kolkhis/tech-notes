@@ -73,7 +73,7 @@ There are 5 classes of addresses.
 
 - A - 8 network bits by default (Starts with 0-127.)
 - B - 16 network bits by default(Starts with 128-191.)
-- B - 24 network bits by default(Starts with 192-223.)
+- C - 24 network bits by default(Starts with 192-223.)
 - D - Multicast
 - E - Experimental
 
@@ -326,12 +326,7 @@ TLS.
 Secure data at rest with encryption, data in motion with TLS.  
 We encrypt data between two endpoints with TLS.  
 
-PKI is public key infrastructure. It has a CA (Certificate authority).  
-
-- Hierarchial Network Model (Cisco): <https://itworkbooks.wordpress.com/2014/12/02/cisco-hierarchical-network-model-core-distribution-access/> 
-
-
-Ping splits a network. If I can not ping it but can get a console access on it,
+Ping splits a network, as it only works at layer <LAYER>. If I can not ping it but can get a console access on it,
 
 - DAS - Direct Attached Storage
     - Directly connected to one server (typically only one server), except in
@@ -351,4 +346,6 @@ Ping splits a network. If I can not ping it but can get a console access on it,
     - SAN traffic does not exist in the same realm as other traffic. They have
       their own network.  
 
+- CIDR Calculator: <https://cidr.xyz/>
+- Hierarchial Network Model (Cisco): <https://itworkbooks.wordpress.com/2014/12/02/cisco-hierarchical-network-model-core-distribution-access/> 
 
