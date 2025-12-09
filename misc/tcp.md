@@ -18,54 +18,6 @@ TCP/IP works in layers.
 
 
 
-## Misc
-
-- <https://www.redbooks.ibm.com/redbooks/pdfs/gg243376.pdf>  
-    - Read up to page 170 for systems engineering stuff  
-    - skip ch 5, 6, 7, 8, maybe 9  
-
-- SIP: Session Initiation Protocol - would be a phone call (VOIP) - 200 OK is like a web protocol  
-- RTP: Real-Time Transport Protocol  
-- UDP: User Datagram Protocol  
-- TCP: Transmission Control Protocol  
-
-Bridges are at layer 2, using hardware addressing.  
-
-- Wireshark  
-
----
-
-Networking tends not to deal with the top 3 layers of the OSI model.  
-
-There's always a sender, receiver, medium, and noise. These 5 will exist in all
-network communication.  
-
-- TX: Send
-- RX: Receive
-- DCE: Data Cricuit Equipment
-- DTE: Data Terminal Equipment
-- AS: Autonomous System
-    - What you control and what you don't
-- Demarcation: The point that defines the ending of one AS and the start of another.  
-- Metric: Any unit of measurement to differentiate systems.  
-    - Bits or bytes
-
-4 primary types of addresses
-
-- Layer 7 - DNS addressing: Resolves our addresses
-    - Each DNS address needs to be globally unique.  
-- Layer 4 - ports
-    - Ports exist for both TCP and UDP.  
-    - Must be per-device unique (can only be listening on a single port from a
-      single other machine).  
-- layer 3 IP addressing
-    - Can be IPv4 (32 bits, 3.4b addresses) or IPv6 (128 bits, some quintillion numbers)
-    - Each needs to be globally unique.  
-- layer 2 - MAC addressing
-    - Hardware addresses, 48 bits long, burned into the NIC. Expressed in hexadecimal.  
-    - A MAC address needs to be locally unique (within the same network).  
-    - The first half is the vendor code. Any physical device has its first
-      half baked in. This part is randomly generated inside of virtual environments.   
 
 ## Subnetting (IPv4)
 
@@ -116,7 +68,7 @@ But... Technically it's 254.
 
 - 0 is the network.  
 - 255 is the broadcast.  
- 
+
 But, if we were to "borrow a bit" from the host bits, which will create a
 subnet bit.  
 
@@ -206,8 +158,12 @@ A ping to www.google.com means that everything worked from end to end.
     - Things that happen on one end need to happen on the endpoint as well.  
 
 5. Session  
-    - Windowing
     - Flow Control
+        - Windowing
+            - Windowing is a mechanism used (mainly by TCP) to control **how much data** 
+              can be sent before requiring an acknowledgement. This is a form of
+              flow control.  
+            - 
     - These directly relate to TCP.  
 
 4. Transport (header applied) -> segment
@@ -265,7 +221,6 @@ to the network layer).
 Mostly working on the bottom 4 layers.  
 IPv4 is the adrdressing scheme for the Netowrk layer.  
 
-PDU: Protocol Data Units. Each 
 
 ## VLANs
 Subnets happen on layer 3.  
@@ -288,6 +243,55 @@ involved.
 
 Frame Header happens at the Data Link layer.  
 
+## Misc
+
+- <https://www.redbooks.ibm.com/redbooks/pdfs/gg243376.pdf>  
+    - Read up to page 170 for systems engineering stuff  
+    - skip ch 5, 6, 7, 8, maybe 9  
+
+- SIP: Session Initiation Protocol - would be a phone call (VOIP) - 200 OK is like a web protocol  
+- RTP: Real-Time Transport Protocol  
+- UDP: User Datagram Protocol  
+- TCP: Transmission Control Protocol  
+
+Bridges are at layer 2, using hardware addressing.  
+
+- Wireshark  
+
+---
+
+Networking tends not to deal with the top 3 layers of the OSI model.  
+
+There's always a sender, receiver, medium, and noise. These 5 will exist in all
+network communication.  
+
+- PDU: Protocol Data Units
+- TX: Send
+- RX: Receive
+- DCE: Data Cricuit Equipment
+- DTE: Data Terminal Equipment
+- AS: Autonomous System
+    - What you control and what you don't
+- Demarcation: The point that defines the ending of one AS and the start of another.  
+- Metric: Any unit of measurement to differentiate systems.  
+    - Bits or bytes
+
+4 primary types of addresses
+
+- Layer 7 - DNS addressing: Resolves our addresses
+    - Each DNS address needs to be globally unique.  
+- Layer 4 - ports
+    - Ports exist for both TCP and UDP.  
+    - Must be per-device unique (can only be listening on a single port from a
+      single other machine).  
+- layer 3 IP addressing
+    - Can be IPv4 (32 bits, 3.4b addresses) or IPv6 (128 bits, some quintillion numbers)
+    - Each needs to be globally unique.  
+- layer 2 - MAC addressing
+    - Hardware addresses, 48 bits long, burned into the NIC. Expressed in hexadecimal.  
+    - A MAC address needs to be locally unique (within the same network).  
+    - The first half is the vendor code. Any physical device has its first
+      half baked in. This part is randomly generated inside of virtual environments.   
 ## Look Up
 
 - Switches and routers will shut down their interface commands by defualt. Use
