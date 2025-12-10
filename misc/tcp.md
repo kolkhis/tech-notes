@@ -148,8 +148,8 @@ A ping to www.google.com means that everything worked from end to end.
           what the app is doing, can adapt to various apps, users, and devices.
             - E.g., they'd know what a header should look like when passed into
               a backend application.  
-        - Web Application Firewall: Tend to be system-aware, designed to
-          protect against OWASP top 10.  
+        - Web Application Firewalls  
+            - These tend to be system-aware, designed to protect against OWASP top 10.  
 
 6. Presentation
     - Encode/Decode
