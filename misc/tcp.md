@@ -144,8 +144,9 @@ A ping to www.google.com means that everything worked from end to end.
     - Firewalls
         - Unified Threat Management (UTM): Multiple layers of security
           appliances that protect the system.  
-        - Next Gen Firewalls: Application level firewalls that are aware of
-          what the app is doing, can adapt to various apps, users, and devices.
+        - Next Gen Firewalls
+            - These are application level firewalls that are aware of what the app is doing, 
+              can adapt to various apps, users, and devices.
             - E.g., they'd know what a header should look like when passed into
               a backend application.  
         - Web Application Firewalls  
