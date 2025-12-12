@@ -13,8 +13,7 @@ This is a basic rundown of how TCP works.
 TCP operates using a three-way handshake process. It does this by setting flags
 in segments sent via layer 4 of the OSI model (the transport layer).  
 
-Say we have a server that we're connecting to and a client that we're using to
-connect to it.  
+Say we have a client machine that we're using to connect to a server.  
 
 First, the client will send a TCP segment (layer 4, transport) with a SYN flag
 set to 1 and chooses an Initial Sequence Number (ISN).  
