@@ -8,6 +8,8 @@ requires verification on both ends.
 
 ## Three-Way Handshake
 
+This is a basic rundown of how TCP works.  
+
 TCP operates using a three-way handshake process. It does this by setting flags
 in segments sent via layer 4 of the OSI model (the transport layer).  
 
