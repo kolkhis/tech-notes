@@ -85,6 +85,28 @@ kubectl get pods -n awx -w
 
 It may take a couple minutes for it to fully come online.  
 
+### Access the UI
+
+Now that everything is set up, we can access the AWX Web UI.  
+First, we need to know which port we need to use to access it via HTTP.  
+```bash
+kubectl get svc -n awx
+```
+This will show more info than we need, just look for the part that looks
+something like `80:30080/TCP`. This is the NodePort mapping.  
+
+Once we have the NodePort, we can access it in the browser via the host node's 
+IP. This will be different in your own environment.  
+```plaintext
+http://192.168.1.200:30080
+```
+
+It will prompt a login. We can get the admin password with the following
+command:
+```bash
+kubectl get secret awx-admin-password -n awx -o jsonpath="{.data.password}" | base64 -d
+```
+Then login with the username `admin` and the password from that command.  
 
 
 ## Resources
