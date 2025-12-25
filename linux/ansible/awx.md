@@ -48,6 +48,45 @@ make deploy
 This installs the Custom Resource Definitions (CRDs), and the operator pod
 starts watching for AWX resources.  
 
+### Deploy AWX
+Now that k3s is set up and the AWX operator is installed, we can deploy AWX
+itself.  
+
+First, create a namespace for AWX.  
+```bash
+kubectl create ns awx
+```
+Then we create an AWX deployment file `awx.yaml`.  
+```bash
+touch awx.yaml
+vi awx.yaml
+```
+Add the configuration:
+```yaml
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+  namespace: awx
+spec:
+  service_type: nodeport
+  replicas: 1
+```
+
+Then we can `apply` it.  
+```bash
+kubectl apply -f awx.yaml
+```
+
+Watch for it to come up.
+```bash
+kubectl get pods -n awx -w
+```
+
+It may take a couple minutes for it to fully come online.  
+
+
+
 ## Resources
 
 - <https://spacelift.io/blog/ansible-awx>
