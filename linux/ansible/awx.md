@@ -56,7 +56,7 @@ First, create a namespace for AWX.
 ```bash
 kubectl create ns awx
 ```
-Then we create an AWX deployment file `awx.yaml`.  
+Then we create an AWX **Custom Resource (CR)** file named `awx.yaml`.  
 ```bash
 touch awx.yaml
 vi awx.yaml
