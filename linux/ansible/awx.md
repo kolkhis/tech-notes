@@ -108,11 +108,16 @@ kubectl get secret awx-admin-password -n awx -o jsonpath="{.data.password}" | ba
 ```
 Then login with the username `admin` and the password from that command.  
 
-Then we've got it working. That's a minimal setup of Ansible AWX using k3s.  
+Then we've got it working. 
+
+---
+
+That's just a minimal setup of Ansible AWX using k3s.  
 
 This process can get much more elaborate with full Kubernetes, adding ingress, 
 TLS for certificate signing, webhooks, Vault integrations, LDAP/AD
 authentication, etc.  
+
 
 ## Resources
 
