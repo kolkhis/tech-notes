@@ -18,6 +18,8 @@ this has been deprecated in favor of Kubernetes.
 This can be done with k3s instead of full blown Kubernetes. For simplicity's
 sake, I'll use that in this writeup. 
 
+This should be done on a dedicated VM that will only be used for k3s/AWX.  
+
 ### Install K3s
 The nice thing about k3s is that it's a single-line installation process.  
 ```bash
