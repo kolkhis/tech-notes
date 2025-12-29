@@ -50,6 +50,9 @@ make deploy
 This installs the Custom Resource Definitions (CRDs), and the operator pod
 starts watching for AWX resources.  
 
+- Operators are software that turn a complex application into a native K8s
+  **object** that you can control with yaml.  
+
 ### Deploy AWX
 Now that k3s is set up and the AWX operator is installed, we can deploy AWX
 itself.  
