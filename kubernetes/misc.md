@@ -60,9 +60,18 @@ containers to function as a single unit.
 
 ---
 
+### Operators
+
+An operator is a piece of software that turns a complex application into a 
+native K8s **object** that can be controlled with yaml.  
+
+A Custom Resource (CR) is used to interact with the operator.  
+
+
 ## Things to Look Up
+
 * Blue Green Deployment
-<img src="https://storage.googleapis.com/killercoda-prod-europe1/repositories/het-tanis/Kubernetes-Labs/blue-green-deployments/assets/blue_green.png"/>
+  <img src="https://storage.googleapis.com/killercoda-prod-europe1/repositories/het-tanis/Kubernetes-Labs/blue-green-deployments/assets/blue_green.png"/>
     * Blue is the version of the app running in prod. You cut over 100% of traffic into a Green (new version of Blue) deployment.  
     * Allows you to seamlessly switch over to a new version of an application without any downtime.  
     * [het's lab on blue/green deployments](https://killercoda.com/het-tanis/course/Kubernetes-Labs/blue-green-deployments)  
