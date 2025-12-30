@@ -7,7 +7,6 @@ It is considered a free and open-source alternative to Ansible Automation Platfo
 (AAP) which is a paid software from RedHat. In fact, AAP is downstream from the AWX
 project.  
 
-
 ## Getting Started
 
 Typically, AWX is installed within a Kuberenetes cluster.  
@@ -124,11 +123,8 @@ This process can get much more elaborate with full Kubernetes, adding ingress,
 TLS for certificate signing, webhooks, Vault integrations, LDAP/AD
 authentication, etc.  
 
-
 ## Resources
 
 - <https://spacelift.io/blog/ansible-awx>
 - <https://www.raptorswithhats.com/2022-05-getting-started-with-awx/>
 - <https://github.com/ansible/awx>
-
-
