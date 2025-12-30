@@ -4,7 +4,6 @@
 ## Security Practices with Containers
 
 * Using a smaller base image to run the application can be more secure.
-    * This is because 
 
 
 ## Limitations of Containers
@@ -14,7 +13,6 @@
       versa, without some sort of virtualization.  
 
 
-<!-- difference between containers and pods -->
 ## Pods vs. Containers
 Containers and pods are two different concepts.  
 
@@ -43,7 +41,6 @@ They're intended to run a single microservice or an application process.
 
 
 ### Pods
-
 
 A pod is collection of one or more containers that are tightly coupled and share the
 same network and storage resources. 
