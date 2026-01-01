@@ -11,8 +11,8 @@ project.
 
 Typically, AWX is installed within a Kuberenetes cluster.  
 
-Previously, it was a viable option to use Docker-compose rather than k8s, but 
-this has been deprecated in favor of Kubernetes.  
+Docker/Compose can be used rather than k8s for labs and testing.  
+For production-grade environments, Kubernetes is still the preferred method.
 
 This can be done with k3s instead of full blown Kubernetes. For simplicity's
 sake, I'll use that in this writeup. 
