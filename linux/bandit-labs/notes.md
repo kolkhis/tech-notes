@@ -152,3 +152,110 @@ cat /var/lib/dpkg/info/bandit7.password
 ssh bandit7@bandit
 ```
 
+## Level 8
+The password for the next level is stored in the file `data.txt` next to the word 
+"millionth". 
+
+```bash
+cat data.txt | grep millionth
+```
+
+- `dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc`
+
+```bash
+ssh bandit8@bandit
+```
+
+## Level 9
+The password for the next level is stored in the file `data.txt` and is the only 
+line of text that occurs only once.
+
+```bash
+sort ./data.txt | uniq -u
+# Don't be me:
+sort ./data.txt | uniq -c | grep -P '^\s*1\s+'
+```
+
+- `4CKMh1JI91bUIZZPXDqGanal4xvAg0JM`
+
+```bash
+ssh bandit9@bandit
+```
+
+## Level 10
+The password for the next level is stored in the file `data.txt` in one of the 
+few human-readable strings, preceded by several `=` characters.
+
+
+
+Open in `vi`.  
+```bash
+vi ./data.txt
+```
+Search for multiple equal signs with `/==`, hit `n` to go to next. Eventually
+find password.  
+
+
+- `grep` wasn't working properly when used normally, as it was a binary file with 
+  ASCII strings hidden inside.  
+  Use `--binary-files=text` to grep for the ASCII inside the binary file.  
+  ```bash
+  grep --binary-files=text '===' ./data.txt
+  ```
+  Output:
+  ```txt
+                          &/g>========== the
+  q      r3>!A];Lu<Q /oa.*OYﾂ!ZWy4$ ========== password
+  ##AMM/Dq]L":wySt+Ea|RE>wn;
+                            ?@F,f\Z'========== is
+  ǭ?*9f3ߚqw}ɺTc#y-ey =1а{}#Ax}K
+  ( D! O?eR=[G6DVw ========== FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+  ```
+
+- `FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey`
+
+```bash
+ssh bandit10@bandit
+```
+
+## Level 11
+
+The password for the next level is stored in the file `data.txt`, which contains 
+base64 encoded data.  
+
+```bash
+cat data.txt | base64 -d
+# The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+```
+
+- `dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr`
+
+```bash
+ssh bandit11@bandit
+```
+
+## Level 12
+The password for the next level is stored in the file `data.txt,` where all 
+lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions.
+
+Use `vi`'s builtin Rot13 encode/decode.  
+```bash
+vi data.txt
+```
+Use `g?` to rot13 decode the entire string.  
+
+- The password is `7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4`
+
+Or, be like Zorgul and use `tr` like a smart man.  
+```bash
+cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+#The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+```
+
+```bash
+ssh bandit11@bandit
+```
+
+
+
+
