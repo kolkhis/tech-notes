@@ -113,6 +113,42 @@ ssh bandit5@bandit
 ```
 
 ## Level 6
+The password for the next level is stored in a file somewhere under the inhere 
+directory and has all of the following properties:
 
+- human-readable
+- 1033 bytes in size
+- not executable
 
+```bash
+find ./inhere/ -size 1033c
+# ./inhere/maybehere07/.file2
+find ./inhere/ -size 1033c | xargs cat
+```
+
+- `HWasnPhtq9AVKe0dmk45nxy20cvUa6EG`
+
+```bash
+ssh bandit6@bandit
+```
+
+## Level 7
+
+The password for the next level is stored somewhere on the server and has all 
+of the following properties:
+
+- owned by user bandit7
+- owned by group bandit6
+- 33 bytes in size
+
+```bash
+find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
+cat /var/lib/dpkg/info/bandit7.password
+```
+
+- `morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj`
+
+```bash
+ssh bandit7@bandit
+```
 
