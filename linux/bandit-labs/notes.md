@@ -253,7 +253,7 @@ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 ```
 
 ```bash
-ssh bandit11@bandit
+ssh bandit12@bandit
 ```
 
 
