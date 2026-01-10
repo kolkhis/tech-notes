@@ -343,4 +343,29 @@ nc localhost 30000
 
 - `8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo`
 
+```bash
+ssh bandit15@bandit
+```
+
+## Level 16
+
+The password for the next level can be retrieved by submitting the password of 
+the current level to port `30001` on localhost using SSL/TLS encryption.  
+
+Helpful note: Getting “DONE”, “RENEGOTIATING” or “KEYUPDATE”?  
+Read the “CONNECTED COMMANDS” section in the manpage.  
+
+```bash
+openssl s_client localhost:30001
+# Pasted in: 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+# Correct!
+# kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+```
+
+- `kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx`
+
+```bash
+ssh bandit16@bandit
+```
+
 
