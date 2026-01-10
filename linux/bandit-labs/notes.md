@@ -256,6 +256,54 @@ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 ssh bandit12@bandit
 ```
 
+## Level 13
 
+The password for the next level is stored in the file `data.txt`, which is a 
+hexdump of a file that has been repeatedly compressed. 
+
+For this level it may be useful to create a directory under `/tmp` in which you 
+can work. Use `mkdir` with a hard to guess directory name. Or better, use the 
+command `mktemp -d`. Then copy the datafile using `cp`, and rename it using `mv` (
+read the manpages!)
+
+```bash
+mkdir /tmp/solve
+cd /tmp/solve
+cp ~/data.txt .
+file data.txt
+less data.txt 
+xxd -r data.txt > unhexed.txt # reverse the hex dump
+file unhexed.txt # gzip
+mv unhexed.txt unhexed.gz
+gunzip unhexed.gz
+file unhexed # bzip
+bzip2 -d ./unhexed
+file unhexed.out # gzip
+mv unhexed.out unhexed.gz
+gunzip unhexed.gz
+file unhexed # unhexed: POSIX tar archive (GNU)
+tar -xvf unhexed # produced data5.bin
+file data5.bin # data5.bin: POSIX tar archive (GNU)
+tar -xvf ./data5.bin # produced data6.bin
+file data6.bin # data6.bin: bzip2 compressed data, block size = 900k
+bzip2 -d data6.bin # produced data6.bin.out
+file data6.bin.out # data6.bin.out: POSIX tar archive (GNU)
+tar -xvf data6.bin.out # produced data8.bin
+file data8.bin # data8.bin: gzip compressed data, was "data9.bin"
+mv data8.bin data8.gz
+gunzip data8.gz
+file data8 # data8: ASCII text
+cat data8 # The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
+```
+
+- Password found in 27 commands
+- `FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn`
+
+SSH into next level with password:
+```bash
+ssh bandit13@bandit
+```
+
+## Level 14
 
 
