@@ -2,6 +2,9 @@
 
 Notes from doing the labs at <https://overthewire.org/wargames/bandit>.  
 
+!!! warning "SPOILER ALERT"
+
+    This page contains the answers for the bandit labs.
 
 ## Level 0
 
