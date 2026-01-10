@@ -331,3 +331,16 @@ ssh bandit14@bandit
 
 ## Level 15
 
+The password for the next level can be retrieved by submitting the password of 
+the current level to port `30000` on localhost.
+
+```bash
+nc localhost 30000
+# Pasted in: MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
+# Correct!
+# 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+```
+
+- `8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo`
+
+
