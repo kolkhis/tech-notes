@@ -306,4 +306,28 @@ ssh bandit13@bandit
 
 ## Level 14
 
+The password for the next level is stored in `/etc/bandit_pass/bandit14` and can 
+only be read by user bandit14.
+
+For this level, you don’t get the next password, but you get a private SSH key 
+that can be used to log into the next level. Look at the commands that logged 
+you into previous bandit levels, and find out how to use the key for this level.
+
+```bash
+cat sshkey.private
+```
+Copy key to local machine in `~/.ssh/bandit14_key.pem`.
+```bash
+chmod 600 ~/.ssh/bandit14_key.pem
+ssh bandit14@bandit -i ~/.ssh/bandit14_key.pem
+cat /etc/bandit_pass/bandit14 # MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
+```
+
+- `MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS`
+
+```bash
+ssh bandit14@bandit
+```
+
+## Level 15
 
