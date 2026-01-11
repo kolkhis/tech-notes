@@ -800,6 +800,11 @@ It can function as a simple client and server for TCP or UDP connections.
 * Change timezone for system:  
     * `timedatectl set-timezone America/New_York`
 
+To reset the time on a local machine, restart the `systemd-timesyncd` service:
+```bash
+sudo systemctl restart systemd-timesyncd
+```
+
 
 ## Colored output for `less`
 Kinda janky, and only displays in red, but red is easier to read.  
