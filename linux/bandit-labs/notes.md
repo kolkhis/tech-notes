@@ -395,7 +395,6 @@ ss -ntulp | awk '{print $5}' | perl -pe 's/.*://' | sort -n
 # 31691
 # 31790
 # 31960
-
 ```
 
 - Five ports:
@@ -407,39 +406,42 @@ ss -ntulp | awk '{print $5}' | perl -pe 's/.*://' | sort -n
         - Responds with KEYUPDATE
     - 31960
 
-Wrote a probing script:
-```bash
-#!/bin/bash
+Attempted solutions:
 
-declare -a PORTS=(
-        31046
-        31518
-        31691
-        31790
-        31960
-)
+- Wrote a probing script:
+  ```bash
+  #!/bin/bash
+  
+  declare -a PORTS=(
+          31046
+          31518
+          31691
+          31790
+          31960
+  )
+  
+  for port in "${PORTS[@]}"; do
+          printf "\n\nConnecting to localhost on port: %d\n\n\n" "$port"
+          #echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client localhost:$port
+          echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | nc localhost $port
+  done
+  ```
 
-for port in "${PORTS[@]}"; do
-        printf "\n\nConnecting to localhost on port: %d\n\n\n" "$port"
-        #echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client localhost:$port
-        echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | nc localhost $port
-done
-```
-
-Connecting manually:
-```bash
-openssl s_client -connect localhost:31518
-```
+- Connecting manually:
+  ```bash
+  openssl s_client -connect localhost:31518
+  ```
+  Then pasting in the password.
 
 
-Problem: Pasting the password in interactively was seen as a keyupdate command.
- 
+Problem: Pasting the password interactively was seen as a KEYUPDATE command
+(see `man openssl-s_client`).
+
 Solution: Perform the input non-interactively with the `-quiet` flag and echo
 in the password to the command instead. 
 ```bash
 echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client -quiet -tls1_3 localhost:31790
 ```
-
 
 Output:
 ```txt
@@ -473,8 +475,4 @@ vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
 -----END RSA PRIVATE KEY-----
 ```
 Credentials for next level.  
-
-
-
-
 
