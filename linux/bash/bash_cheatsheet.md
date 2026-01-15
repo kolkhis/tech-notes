@@ -804,6 +804,7 @@ To reset the time on a local machine, restart the `systemd-timesyncd` service:
 ```bash
 sudo systemctl restart systemd-timesyncd
 ```
+This is normally needed when rolling back a VM to a snapshot.  
 
 
 ## Colored output for `less`
