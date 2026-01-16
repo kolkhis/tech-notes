@@ -358,6 +358,10 @@ the current level to port `30001` on localhost using SSL/TLS encryption.
 Helpful note: Getting “DONE”, “RENEGOTIATING” or “KEYUPDATE”?  
 Read the “CONNECTED COMMANDS” section in the manpage.  
 
+---
+
+The port can be accessed using `openssl`, using the `s_client` subcommand.  
+
 ```bash
 openssl s_client localhost:30001
 # Pasted in: 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
@@ -384,11 +388,8 @@ simply send back to you whatever you send to it.
 
 ---
 
+First we'll check the ports that are open in the specified range.  
 ```bash
-ss -ntulp
-# tcp      LISTEN    0         64                         *:31960                    *:*
-# tcp      LISTEN    0         64                         *:31046                    *:*
-# tcp      LISTEN    0         64                         *:31691                    *:*
 ss -ntulp | awk '{print $5}' | perl -pe 's/.*://' | sort -n
 # 31046
 # 31518
@@ -408,7 +409,8 @@ ss -ntulp | awk '{print $5}' | perl -pe 's/.*://' | sort -n
 
 Attempted solutions:
 
-- Wrote a probing script:
+- Wrote a probing script to check ports within the specified range using 
+  `openssl s_client` and `nc`:
   ```bash
   #!/bin/bash
   
@@ -422,7 +424,9 @@ Attempted solutions:
   
   for port in "${PORTS[@]}"; do
           printf "\n\nConnecting to localhost on port: %d\n\n\n" "$port"
-          #echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client localhost:$port
+          printf "OpenSSL connection attempt:\n"
+          echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client localhost:$port
+          printf "nc connection attempt:\n"
           echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | nc localhost $port
   done
   ```
@@ -431,14 +435,14 @@ Attempted solutions:
   ```bash
   openssl s_client -connect localhost:31518
   ```
-  Then pasting in the password.
+  Then pasting in the password.  
 
-
-Problem: Pasting the password interactively was seen as a KEYUPDATE command
-(see `man openssl-s_client`).
+    - The main problem with this approach is that pasting the password interactively 
+      was seen as a KEYUPDATE command (see the `CONNECTED COMMANDS` section 
+      in `man openssl-s_client`).
 
 Solution: Perform the input non-interactively with the `-quiet` flag and echo
-in the password to the command instead. 
+in the password to the command instead.  
 ```bash
 echo "kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx" | openssl s_client -quiet -tls1_3 localhost:31790
 ```
