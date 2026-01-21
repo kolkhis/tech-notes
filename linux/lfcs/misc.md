@@ -82,6 +82,9 @@ man 1 printf
 man 3 printf
 ```
 
+- Section `1` is for commands.
+- Section `3` is for C functions (system calls).  
+
 Use `--help` in the exam before `man`, as `man` usually takes more time.  
 
 `apropos` searches for man pages that contain a word in their short
