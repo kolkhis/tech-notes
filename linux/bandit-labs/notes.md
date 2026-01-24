@@ -22,7 +22,7 @@ ssh bandit0@bandit
 ```
 Enter password. Level complete. 
 
-## Level 1
+## Level 0 -> 1
 
 Find password for bandit1 in `~/readme`.  
 ```bash
@@ -36,7 +36,7 @@ Log out of bandit0, log back in as bandit1
 ssh bandit1@bandit
 ```
 
-## Level 2
+## Level 1 -> 2
 Password in a file called `-` in home dir.  
 ```bash
 cat ~/-
@@ -53,7 +53,7 @@ ssh bandit2@bandit
 
 
 
-## Level 3
+## Level 2 -> 3
 Password in a file called `--spaces in this filename--` in home dir.  
 
 ```bash
@@ -68,7 +68,7 @@ ssh bandit3@bandit
 ```
 
 
-## Level 4
+## Level 3 -> 4
 Password in file `~/inhere/...Hiding-From-You`.  
 
 ```bash
@@ -81,7 +81,7 @@ cat ~/inhere/...Hiding-From-You
 ssh bandit4@bandit
 ```
 
-## Level 5
+## Level 4 -> 5
 Password in the only **human-readable** file in `~/inhere`.  
 
 Check the kind of files that are in there:
@@ -115,7 +115,7 @@ cat ./inhere/-file07
 ssh bandit5@bandit
 ```
 
-## Level 6
+## Level 5 -> 6
 The password for the next level is stored in a file somewhere under the inhere 
 directory and has all of the following properties:
 
@@ -135,7 +135,7 @@ find ./inhere/ -size 1033c | xargs cat
 ssh bandit6@bandit
 ```
 
-## Level 7
+## Level 6 -> 7
 
 The password for the next level is stored somewhere on the server and has all 
 of the following properties:
@@ -155,7 +155,7 @@ cat /var/lib/dpkg/info/bandit7.password
 ssh bandit7@bandit
 ```
 
-## Level 8
+## Level 7 -> 8
 The password for the next level is stored in the file `data.txt` next to the word 
 "millionth". 
 
@@ -169,7 +169,7 @@ cat data.txt | grep millionth
 ssh bandit8@bandit
 ```
 
-## Level 9
+## Level 8 -> 9
 The password for the next level is stored in the file `data.txt` and is the only 
 line of text that occurs only once.
 
@@ -185,7 +185,7 @@ sort ./data.txt | uniq -c | grep -P '^\s*1\s+'
 ssh bandit9@bandit
 ```
 
-## Level 10
+## Level 9 -> 10
 The password for the next level is stored in the file `data.txt` in one of the 
 few human-readable strings, preceded by several `=` characters.
 
@@ -221,7 +221,7 @@ find password.
 ssh bandit10@bandit
 ```
 
-## Level 11
+## Level 10 -> 11
 
 The password for the next level is stored in the file `data.txt`, which contains 
 base64 encoded data.  
@@ -237,7 +237,7 @@ cat data.txt | base64 -d
 ssh bandit11@bandit
 ```
 
-## Level 12
+## Level 11 -> 12
 The password for the next level is stored in the file `data.txt,` where all 
 lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions.
 
@@ -259,7 +259,7 @@ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 ssh bandit12@bandit
 ```
 
-## Level 13
+## Level 12 -> 13
 
 The password for the next level is stored in the file `data.txt`, which is a 
 hexdump of a file that has been repeatedly compressed. 
@@ -307,7 +307,7 @@ SSH into next level with password:
 ssh bandit13@bandit
 ```
 
-## Level 14
+## Level 13 -> 14
 
 The password for the next level is stored in `/etc/bandit_pass/bandit14` and can 
 only be read by user bandit14.
@@ -332,7 +332,7 @@ cat /etc/bandit_pass/bandit14 # MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
 ssh bandit14@bandit
 ```
 
-## Level 15
+## Level 14 -> 15
 
 The password for the next level can be retrieved by submitting the password of 
 the current level to port `30000` on localhost.
@@ -350,7 +350,7 @@ nc localhost 30000
 ssh bandit15@bandit
 ```
 
-## Level 16
+## Level 15 -> 16
 
 The password for the next level can be retrieved by submitting the password of 
 the current level to port `30001` on localhost using SSL/TLS encryption.  
@@ -375,7 +375,7 @@ openssl s_client localhost:30001
 ssh bandit16@bandit
 ```
 
-## Level 17
+## Level 16 -> 17
 
 The credentials for the next level can be retrieved by submitting the password 
 of the current level to a port on localhost in the range `31000` to `32000`.  
@@ -484,4 +484,8 @@ Save to localhost in `~/.ssh/bandit18_key.pem`, then SSH in.
 ```bash
 ssh -i ~/.ssh/bandit18_key.pem bandit18@bandit 
 ```
+
+## Level 17 -> 18
+
+
 
