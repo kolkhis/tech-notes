@@ -480,3 +480,8 @@ vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
 ```
 Credentials for next level.  
 
+Save to localhost in `~/.ssh/bandit18_key.pem`, then SSH in.
+```bash
+ssh -i ~/.ssh/bandit18_key.pem bandit18@bandit 
+```
+
