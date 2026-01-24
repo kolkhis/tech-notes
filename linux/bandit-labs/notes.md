@@ -482,10 +482,91 @@ Credentials for next level.
 
 Save to localhost in `~/.ssh/bandit18_key.pem`, then SSH in.
 ```bash
-ssh -i ~/.ssh/bandit18_key.pem bandit18@bandit 
+ssh -i ~/.ssh/bandit17_key.pem bandit17@bandit 
 ```
 
 ## Level 17 -> 18
+
+There are 2 files in the homedirectory: `passwords.old` and `passwords.new`.
+
+The password for the next level is in `passwords.new` and is the only line that has 
+been changed between `passwords.old` and `passwords.new`.  
+
+NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into 
+bandit18, this is related to the next level, bandit19
+
+---
+
+Doing a diff one the file:
+```bash
+diff passwords.new passwords.old
+```
+
+Output:
+```txt
+42c42
+< x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+---
+> pGozC8kOHLkBMOaL0ICPvLV1IjQ5F1VA
+```
+
+The diff on the left, in `passwords.new`, would be the password for the next
+level.  
+
+- `x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO`
+
+```bash
+ssh bandit18@bandit
+```
+
+Although correct, directly entering the password does not work. We'll proceed to the next level.
+
+
+## Level 18 -> 19
+
+The password for the next level is stored in a file `readme` in the homedirectory.  
+Unfortunately, someone has modified `.bashrc` to log you out when you log in with SSH.
+
+---
+
+Command:
+```bash
+ssh bandit18@bandit 'cat readme'
+```
+
+Output:
+```txt
+cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
+```
+
+Now we can ssh into bandit19.  
+```bash
+ssh bandit19@bandit
+```
+
+## Level 19 -> 20
+
+To gain access to the next level, you should use the `setuid` binary in the 
+home directory. Execute it without arguments to find out how to use it.  
+
+The password for this level can be found in the usual place (`/etc/bandit_pass`), 
+after you have used the `setuid` binary.
+
+- Resources: <https://en.wikipedia.org/wiki/Setuid>
+
+---
+
+```bash
+./bandit20-do cat /etc/bandit_pass/bandit20
+```
+
+Output:
+```txt
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+```
+
+## Level 20 -> 21
+
 
 
 
