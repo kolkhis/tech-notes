@@ -565,7 +565,52 @@ Output:
 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
 ```
 
+
+Notes:
+
+- In the first perm digit (octal), 4 is setuid, 2 is setgid  
+    - E.g., `6711` has setuid and setgid  
+    - If the file owner is bandit20, and setuid is on, the file can be run as
+      that user
+
+```bash
+ssh bandit20@bandit
+```
+
 ## Level 20 -> 21
+
+There is a setuid binary in the home directory that does the following:
+
+- It makes a connection to localhost on the port you specify as a commandline argument.  
+
+- It then reads a line of text from the connection and compares it to the password 
+  in the previous level (bandit20). 
+
+- If the password is correct, it will transmit the password for the next level (bandit21).  
+
+NOTE: Try connecting to your own network daemon to see if it works as you think.  
+
+---
+
+Solution:
+
+- Set up listener that will serve the password over a port
+  ```bash
+  echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | netcat -lp 1234 &
+  ```
+
+- Then use the binary to connect to that port
+  ```bash
+  ./suconnect 1234
+  ```
+
+Output:
+```txt
+Read: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+Password matches, sending next password
+EeoULMCra2q0dSkYj561DX7s1CpBuOBt
+```
+
 
 
 
