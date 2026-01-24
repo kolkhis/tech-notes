@@ -596,7 +596,11 @@ Solution:
 
 - Set up listener that will serve the password over a port
   ```bash
-  echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | netcat -lp 1234 &
+  echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -lp 1234 &
+  # or
+  echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" > >(nc -lp 1234) &
+  # or
+  nc -lp 1234 <<< "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" &
   ```
 
 - Then use the binary to connect to that port
@@ -610,8 +614,5 @@ Read: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
 Password matches, sending next password
 EeoULMCra2q0dSkYj561DX7s1CpBuOBt
 ```
-
-
-
 
 
