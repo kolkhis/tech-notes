@@ -605,17 +605,16 @@ after you have used the `setuid` binary.
     0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
     ```
 
+    Notes:
 
-Notes:
+    - In the first perm digit (octal), 4 is setuid, 2 is setgid  
+        - E.g., `6711` has setuid and setgid  
+        - If the file owner is bandit20, and setuid is on, the file can be run as
+          that user
 
-- In the first perm digit (octal), 4 is setuid, 2 is setgid  
-    - E.g., `6711` has setuid and setgid  
-    - If the file owner is bandit20, and setuid is on, the file can be run as
-      that user
-
-```bash
-ssh bandit20@bandit
-```
+    ```bash
+    ssh bandit20@bandit
+    ```
 
 ## Level 20 -> 21
 
