@@ -473,6 +473,7 @@ simply send back to you whatever you send to it.
           was seen as a KEYUPDATE command (see the `CONNECTED COMMANDS` section 
           in `man openssl-s_client`).
 
+
 ??? warning "Solution"
 
     Solution: Perform the input non-interactively with the `-quiet` flag and echo
@@ -551,11 +552,12 @@ bandit18, this is related to the next level, bandit19
 
     - `x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO`
 
-```bash
-ssh bandit18@bandit
-```
+    ```bash
+    ssh bandit18@bandit
+    ```
 
-Although correct, directly entering the password does not work. We'll proceed to the next level.
+    Although correct, directly entering the password does not work.  
+    We'll proceed to the next level.
 
 
 ## Level 18 -> 19
@@ -654,4 +656,21 @@ NOTE: Try connecting to your own network daemon to see if it works as you think.
     EeoULMCra2q0dSkYj561DX7s1CpBuOBt
     ```
 
+## Level 21 -> 22
+
+## Level 22 -> 23
+
+## Level 23 -> 24
+
+## Level 24 -> 25
+
+## Level 25 -> 26
+
+## Level 26 -> 27
+
+## Level 27 -> 28
+
+## Level 28 -> 29
+
+## Level 29 -> 30
 
