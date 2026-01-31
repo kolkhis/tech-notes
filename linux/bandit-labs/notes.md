@@ -676,6 +676,7 @@ Look in `/etc/cron.d/` for the configuration and see what command is being execu
     chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
     cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
     ```
+    This prints the password to the /tmp file every minute.  
 
     Open file that it's putting password into every minute:
     ```bash
@@ -684,9 +685,22 @@ Look in `/etc/cron.d/` for the configuration and see what command is being execu
 
     - Contents: `tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q`
 
+!!! note "Notes"
+
+    Perms for /tmp:
+    ```bash
+    drwxrwx-wt  37 root root 9.8M Jan 31 18:12 tmp
+    ```
+    The `x` perm has the value of `t`.  
+    This prevented us from simply using `ls /tmp`.  
+
+    The `t` is the sticky bit, so `/tmp` is world-writable but protected by sticky bit so users
+    cannot delete each other’s tmp files.  
+    When set on a directory, users can create files there (assuming write/execute), 
+    but only the file's owner or root can delete or rename those files.  
 
 
-<!-- ## Level 22 -> 23 -->
+## Level 22 -> 23
 
 <!-- ## Level 23 -> 24 -->
 
