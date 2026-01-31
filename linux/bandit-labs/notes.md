@@ -714,55 +714,55 @@ information it prints.
 
 ---
 
+??? warning "Solution"
 
-```bash
-ls -alh /etc/cron.d/cronjob_bandit23
-# -rw-r--r-- 1 root root 122 Oct 14 09:26 /etc/cron.d/cronjob_bandit23
-cat /etc/cron.d/cronjob_bandit23
-# @reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
-# * * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
-ls -alh /usr/bin/cronjob_bandit23.sh
-# -rwxr-x--- 1 bandit23 bandit22 211 Oct 14 09:26 /usr/bin/cronjob_bandit23.sh
-```
+    ```bash
+    ls -alh /etc/cron.d/cronjob_bandit23
+    # -rw-r--r-- 1 root root 122 Oct 14 09:26 /etc/cron.d/cronjob_bandit23
+    cat /etc/cron.d/cronjob_bandit23
+    # @reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+    # * * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+    ls -alh /usr/bin/cronjob_bandit23.sh
+    # -rwxr-x--- 1 bandit23 bandit22 211 Oct 14 09:26 /usr/bin/cronjob_bandit23.sh
+    ```
 
-We'll look at the script being run.  
-```bash
-vi /usr/bin/cronjob_bandit23.sh
-```
-Contents:
-```bash
-#!/bin/bash
+    We'll look at the script being run.  
+    ```bash
+    vi /usr/bin/cronjob_bandit23.sh
+    ```
+    Contents:
+    ```bash
+    #!/bin/bash
 
-myname=$(whoami)
-mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+    myname=$(whoami)
+    mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
 
-echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+    echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
 
-cat /etc/bandit_pass/$myname > /tmp/$mytarget
-```
+    cat /etc/bandit_pass/$myname > /tmp/$mytarget
+    ```
 
-So this is being run as bandit23, so the /tmp filename is going to be the
-md5sum of this string:
-```bash
-echo I am user $myname | md5sum | cut -d ' ' -f 1
-```
+    So this is being run as bandit23, so the /tmp filename is going to be the
+    md5sum of this string:
+    ```bash
+    echo I am user $myname | md5sum | cut -d ' ' -f 1
+    ```
 
-So we run the cmd as bandit23
-```bash
-echo I am user bandit23 | md5sum | cut -d ' ' -f 1
-# 8ca319486bfbbc3663ea0fbe81326349
-cat /tmp/8ca319486bfbbc3663ea0fbe81326349
-# 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
-```
+    So we run the cmd as bandit23
+    ```bash
+    echo I am user bandit23 | md5sum | cut -d ' ' -f 1
+    # 8ca319486bfbbc3663ea0fbe81326349
+    cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+    # 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+    ```
 
-- `0Zf11ioIjMVN551jX3CmStKLYqjk54Ga`
+    - `0Zf11ioIjMVN551jX3CmStKLYqjk54Ga`
 
-```bash
-ssh bandit23@bandit
-```
+    ```bash
+    ssh bandit23@bandit
+    ```
 
-
-<!-- ## Level 23 -> 24 -->
+## Level 23 -> 24
 
 <!-- ## Level 24 -> 25 -->
 
