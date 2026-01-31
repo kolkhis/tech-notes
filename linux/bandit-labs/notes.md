@@ -844,8 +844,10 @@ may want to keep a copy around...
     tail -F /tmp/b24pass.txt
     ```
 
-    This seems to not be working for whatever reason. Perhaps it's the `/tmp`
-    directory permissions.    
+    This seems to not be working for whatever reason. 
+    It turns out it was the `/tmp` directory permissions (see the "Alternate
+    Solution" section, we used that before we figured this out).    
+
     The script file is deleted, however it does not create the /tmp/b24pass.txt file for us to read.   
 
     `printf '#!/bin/bash\ncat /etc/bandit_pass/bandit24 > /tmp/b24/pass.txt\n' > foo/kol.sh; chmod 755 foo/kol.sh`
