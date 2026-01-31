@@ -864,7 +864,7 @@ may want to keep a copy around...
     Serve using netcat.  
     ```bash
     #!/bin/bash
-    trap : SIGKILL # Trap signal 9 because it
+    trap : SIGKILL # Trap signal 9 because the cron script is using `timeout -s 9`
     nc -lp 1234 < /etc/bandit_pass/bandit24 &
     ```
 
