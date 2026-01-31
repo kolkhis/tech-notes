@@ -656,7 +656,35 @@ NOTE: Try connecting to your own network daemon to see if it works as you think.
     EeoULMCra2q0dSkYj561DX7s1CpBuOBt
     ```
 
-<!-- ## Level 21 -> 22 -->
+## Level 21 -> 22
+
+A program is running automatically at regular intervals from cron, the time-based job scheduler.  
+Look in `/etc/cron.d/` for the configuration and see what command is being executed.
+
+---
+
+??? warning "Solution"
+
+    ```bash
+    ls -alh /etc/cron.d/
+    vi /etc/cron.d/cronjob_bandit22
+    ```
+
+    File contains:
+    ```bash
+    #!/bin/bash
+    chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+    cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+    ```
+
+    Open file that it's putting password into every minute:
+    ```bash
+    vi /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+    ```
+
+    - Contents: `tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q`
+
+
 
 <!-- ## Level 22 -> 23 -->
 
