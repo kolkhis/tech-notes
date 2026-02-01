@@ -172,4 +172,39 @@ done
 The `CONDITION` can be either a comparative condition or a command. Either way,
 it will continue to run until the `CONDITION` evaluates to `0` (true).  
 
+This type of loop is particularly useful if you need to continuously run a
+command until it is successful.  
+
+### `until` Examples
+
+If we were waiting for a directory to exist, we could use `until` to
+continuously check the condition of that directory.  
+```bash
+until [[ -d /home/kolkhis/wait ]]; do
+    sleep 0.5
+done
+printf "Found the directory /home/kolkhis/wait\n"
+```
+This will check the condition given, the existence of the directory
+`/home/kolkhis/wait`, and while that condition is false, it will run `sleep 0.5`.  
+This means the condition will be checked every 0.5 seconds until it evaluates
+to true (zero).  
+
+
+---
+
+If we're waiting for a netcat listener to be set up on the localhost, serving a 
+string of text over port 1234, but we don't know the exact moment it will be
+set up:
+```bash
+# This will set up the listener to serve the string
+nc -lp 1234 <<< "This will be served to the first one to connect to port 1234"
+```
+Then we can use an `until` loop to try to connect.  
+```bash
+# Run command until successful
+until nc localhost 1234; do sleep 0.2; done
+```
+This will continue to run the command, `nc localhost 1234`, until the exit code
+of that command is zero (successful).  
 
