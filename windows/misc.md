@@ -28,3 +28,11 @@ the service.
 Type `services` in the start menu, and find the 
 `Connected User Experiences and Telemtry` service. Double click and set
 "Startup Type" to `Disabled`, then click the `Stop` button if it's running.    
+
+
+## Misc. Optimization
+
+Type in `sysdm.cpl` in the start menu.  
+Open it, go to "Advanced", "Performance Settings", and select "Adjust for best performance".
+This will disable random, useless animations that take up compute.  
+ 
