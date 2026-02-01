@@ -158,3 +158,18 @@ done
 
 This is yet another method you can use to interactively get user input.  
 
+## `until` Loops
+
+The `until` loop will continue to run *until* a specific condition is met.  
+
+The basic syntax for this is like other loops.  
+```bash
+until CONDITION; do
+    code here
+done
+```
+
+The `CONDITION` can be either a comparative condition or a command. Either way,
+it will continue to run until the `CONDITION` evaluates to `0` (true).  
+
+
