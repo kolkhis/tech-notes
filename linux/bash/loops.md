@@ -161,6 +161,7 @@ This is yet another method you can use to interactively get user input.
 ## `until` Loops
 
 The `until` loop will continue to run *until* a specific condition is met.  
+This is essentially the opposite of a `while` loop.  
 
 The basic syntax for this is like other loops.  
 ```bash
@@ -177,10 +178,11 @@ command until it is successful.
 
 ### `until` Examples
 
-If we were waiting for a directory to exist, we could use `until` to
+If we are waiting for a directory to exist, we could use `until` to
 continuously check the condition of that directory.  
 ```bash
 until [[ -d /home/kolkhis/wait ]]; do
+    printf "Directory /home/kolkhis/wait does not exist...\n"
     sleep 0.5
 done
 printf "Found the directory /home/kolkhis/wait\n"
