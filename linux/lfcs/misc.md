@@ -23,8 +23,7 @@ place where the PC can show text output and allow command input (CLI).
 After a Linux machine is booted, you can open a virutal terminal by using:
 ++ctrl+alt+f2++ 
 
-Linux servers often don't have a GUI.  
-But some do.  
+Linux servers often don't have a GUI, but some do.  
 
 ```bash
 ip a
@@ -102,7 +101,7 @@ the database that `apropos` uses.
 sudo mandb
 ```
 Probably don't need to do this on servers that have been up for a while. It's
-done automatically.  
+typically done automatically.  
 
 ---
 
