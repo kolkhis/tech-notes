@@ -2241,6 +2241,15 @@ exit
 reboot
 ```
 
+## Kill Zombie Processes
+
+Zombie processes are processes that have been left running in the background,
+and the process that spawned those processes has ended.  
+
+To show zombie processes on Linux, use:
+```bash
+ps aux | grep -w 'Z'
+```
 
 
 ## Resources
