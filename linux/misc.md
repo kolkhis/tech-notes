@@ -2250,6 +2250,19 @@ To show zombie processes on Linux, use:
 ```bash
 ps aux | grep -w 'Z'
 ```
+If there are zombie processes running, then you may see something like this:
+```txt
+kolkhis    14553  0.0  0.0      0     0 ?        Z    Jan30   0:00 [sh] <defunct>
+kolkhis    23677  0.0  0.0      0     0 ?        Z    Feb01   0:00 [sh] <defunct>
+```
+The `Z` in the `STAT` (status) field indicates that the process is a zombie
+process.  
+
+To kill a zombie process, simply identify any processes with the `Z` status in
+`ps aux` and run a `kill` against them.  
+```bash
+kill 14553 23677
+```
 
 
 ## Resources
