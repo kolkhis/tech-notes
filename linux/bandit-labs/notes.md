@@ -1108,9 +1108,24 @@ You should use command prompt instead.
     - `s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ`
 
 
-<!-- ## Level 26 -> 27 -->
+## Level 26 -> 27
+
+Good job getting a shell! Now hurry and grab the password for bandit27!
+
+---
+
+??? warning "Solution"
+
+    Bandit27 password came from 25-26.  
+
+    - `s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ`
+
+    ```bash
+    ssh bandit27@bandit
+    ```
 
 <!-- ## Level 27 -> 28 -->
+
 
 <!-- ## Level 28 -> 29 -->
 
