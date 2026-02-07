@@ -1174,7 +1174,7 @@ your machine.
 
 ---
 
-??? warning "Solution" 
+??? warning "Solution"
 
     ```bash
     git clone ssh://bandit28-git@bandit.labs.overthewire.org:2220/home/bandit28-git/repo
