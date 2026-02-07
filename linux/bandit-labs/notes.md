@@ -888,8 +888,19 @@ may want to keep a copy around...
     #!/bin/bash
     mkdir /tmp/b24
     chmod 777 /tmp/b24
-    cat /etc/bandit_pass/bandit24 > /temp/b24/pass.txt
+    cat /etc/bandit_pass/bandit24 > /tmp/b24/pass.txt
     ```
+    Then wait for the file to be created, then `cat` it out.
+    ```bash
+    cat /tmp/b24/pass.txt
+    ```
+
+    - `gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8`
+
+    ```bash
+    ssh bandit24@bandit
+    ```
+
 
 
 
@@ -919,6 +930,10 @@ may want to keep a copy around...
     ```
 
     - `gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8`
+
+    ```bash
+    ssh bandit24@bandit
+    ```
 
 
 <!-- ## Level 24 -> 25 -->
