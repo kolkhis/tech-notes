@@ -1324,6 +1324,13 @@ your machine.
 
 ---
 
+<!-- TODO(finish): Finish this level -->
+??? warning "Solution"
+
+    ```bash
+    git clone ssh://bandit30-git@bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+    ```
+
 <!-- ## Level 31 -> 32 -->
 
 <!-- ## Level 32 -> 33 -->
