@@ -1016,6 +1016,7 @@ You should use command prompt instead.
 
 ---
 
+
 ??? warning "Solution"
 
     Looks like we have the bandit26 ssh key in the bandit25 home dir
@@ -1108,6 +1109,7 @@ You should use command prompt instead.
     - `s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ`
 
 
+
 ## Level 26 -> 27
 
 Good job getting a shell! Now hurry and grab the password for bandit27!
@@ -1117,15 +1119,43 @@ Good job getting a shell! Now hurry and grab the password for bandit27!
 ??? warning "Solution"
 
     Bandit27 password came from 25-26.  
+    Instead of using `:e` for the file, use `:set shell=/bin/bash` then `:sh` to 
+    spawn a shell as the bandit26 user.  
 
-    - `s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ`
+    This way we can see that there is a `bandit27-do` setuid binary in bandit26 home
+    dir.  
+
+    We can use this to get the password for bandit27.  
+    ```txt
+    bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
+    upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB
+    ```
+
+    - Bandit27 pass: `upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB`
 
     ```bash
     ssh bandit27@bandit
     ```
 
-<!-- ## Level 27 -> 28 -->
+## Level 27 -> 28
 
+There is a git repository at 
+`ssh://bandit27-git@bandit.labs.overthewire.org/home/bandit27-git/repo` via the port 2220.
+
+The password for the user `bandit27-git` is the same as for the user bandit27.
+
+From your local machine (not the OverTheWire machine!), clone the repository 
+and find the password for the next level. This needs git installed locally on 
+your machine.
+
+---
+
+Clone locally (set port):
+```bash
+git clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+cat repo/README
+# The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
+```
 
 <!-- ## Level 28 -> 29 -->
 
