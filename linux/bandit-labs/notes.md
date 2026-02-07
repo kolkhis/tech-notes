@@ -1234,8 +1234,84 @@ your machine.
     - username: bandit29
     - password: 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
     ```
+    Or, `git diff HEAD~1`.  
 
     - `4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7`
+    
+    ```bash
+    ssh bandit29@bandit
+    ```
 
-<!-- ## Level 29 -> 30 -->
+## Level 29 -> 30
+
+There is a git repository at 
+`ssh://bandit29-git@bandit.labs.overthewire.org/home/bandit29-git/repo`
+via the port 2220.
+
+The password for the user bandit29-git is the same as for the user bandit29.
+
+From your local machine (not the OverTheWire machine!), clone the repository 
+and find the password for the next level. This needs git installed locally on 
+your machine.
+
+---
+
+??? "warning" Solution
+
+    ```bash
+    git clone ssh://bandit29-git@bandit.labs.overthewire.org:2220/home/bandit29-git/repo
+    cd repo
+    cat README.md
+    ```
+    Output:
+    ```txt
+    # Bandit Notes
+    Some notes for bandit30 of bandit.
+
+    ## credentials
+
+    - username: bandit30
+    - password: <no passwords in production!>
+    ```
+
+    ```bash
+    git branch -a
+    ```
+    Output:
+    ```txt
+    * master
+      remotes/origin/HEAD -> origin/master
+      remotes/origin/dev
+      remotes/origin/master
+      remotes/origin/sploits-dev
+    ```
+
+    Check out the dev branch:
+    ```bash
+    git checkout remotes/origin/dev
+    ```
+    Must use checkout for remote branches.  
+
+    Look at readme:
+    ```bash
+    cat README.md
+    ```
+
+    Output:
+    ```md
+    # Bandit Notes
+    Some notes for bandit30 of bandit.
+
+    ## credentials
+
+    - username: bandit30
+    - password: qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
+    ```
+
+    - `qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL`
+
+
+## Resources
+
+- [Oh Shit, Git](https://ohshitgit.com/)
 
