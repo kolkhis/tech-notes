@@ -1256,7 +1256,7 @@ your machine.
 
 ---
 
-??? "warning" Solution
+??? warning "Solution"
 
     ```bash
     git clone ssh://bandit29-git@bandit.labs.overthewire.org:2220/home/bandit29-git/repo
