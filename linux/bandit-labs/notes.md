@@ -1310,6 +1310,25 @@ your machine.
 
     - `qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL`
 
+## Level 30 -> 31
+
+There is a git repository at 
+`ssh://bandit30-git@bandit.labs.overthewire.org/home/bandit30-git/repo`
+via the port 2220.  
+
+The password for the user bandit30-git is the same as for the user bandit30.
+
+From your local machine (not the OverTheWire machine!), clone the repository 
+and find the password for the next level. This needs git installed locally on 
+your machine.
+
+---
+
+<!-- ## Level 31 -> 32 -->
+
+<!-- ## Level 32 -> 33 -->
+
+<!-- ## Level 33 -> 34 -->
 
 ## Resources
 
