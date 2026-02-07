@@ -1150,14 +1150,92 @@ your machine.
 
 ---
 
-Clone locally (set port):
-```bash
-git clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
-cat repo/README
-# The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
-```
+??? warning "Solution"
 
-<!-- ## Level 28 -> 29 -->
+    Clone locally (set port):
+    ```bash
+    git clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+    cat repo/README
+    # The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
+    ```
+
+    - `Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN`
+
+
+## Level 28 -> 29
+
+There is a git repository at 
+`ssh://bandit28-git@bandit.labs.overthewire.org/home/bandit28-git/repo` via the port 2220.
+The password for the user bandit28-git is the same as for the user bandit28.
+
+From your local machine (not the OverTheWire machine!), clone the repository 
+and find the password for the next level. This needs git installed locally on 
+your machine.
+
+---
+
+??? warning "Solution" 
+
+    ```bash
+    git clone ssh://bandit28-git@bandit.labs.overthewire.org:2220/home/bandit28-git/repo
+    cd repo
+    cat ./README.md
+    ```
+
+    Output:
+    ```md
+    # Bandit Notes
+    Some notes for level29 of bandit.
+
+    ## credentials
+
+    - username: bandit29
+    - password: xxxxxxxxxx
+    ```
+
+    Password is not there, let's look at git history.  
+    ```bash
+    git log
+    ```
+
+    ```txt
+    commit b5ed4b5a3499533c2611217c8780e8ead48609f6 (HEAD -> master, origin/master, origin/HEAD)
+    Author: Morla Porla <morla@overthewire.org>
+    Date:   Tue Oct 14 09:26:24 2025 +0000
+
+        fix info leak
+
+    commit 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+    Author: Morla Porla <morla@overthewire.org>
+    Date:   Tue Oct 14 09:26:24 2025 +0000
+
+        add missing data
+
+    commit 6d8e5e607602b597ade7504a550a29ba03f2cca0
+    Author: Ben Dover <noone@overthewire.org>
+    Date:   Tue Oct 14 09:26:24 2025 +0000
+
+        initial commit of README.md
+    ```
+
+    Roll back to before the 'fix info leak'.  
+
+    ```bash
+    git reset --hard HEAD~1
+    cat README.md
+    ```
+    Contents:
+    ```md
+    # Bandit Notes
+    Some notes for level29 of bandit.
+
+    ## credentials
+
+    - username: bandit29
+    - password: 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
+    ```
+
+    - `4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7`
 
 <!-- ## Level 29 -> 30 -->
 
