@@ -24,7 +24,7 @@ Just a list of tools with brief descriptions.
 
 ## Debugging and Troubleshooting Tools
 * nikolaka/netshoot: Container with common networking tools (`tcpdump`, `ping`, etc)
-* K9s: Terminal based UI for interacting with k8s clusters.  
+* K9s: Terminal based UI (TUI) for interacting with k8s clusters.  
 * kubectl-debug: Debugging tool for pods using ephemeral containers.  
 * stern: Multi-pod and multi-container log tailing for k8s.  
 * kube-ops-view: Dashboard for visualizing operational status of k8s clusters.  
