@@ -1319,8 +1319,9 @@ via the port 2220.
 The password for the user bandit30-git is the same as for the user bandit30.
 
 From your local machine (not the OverTheWire machine!), clone the repository 
-and find the password for the next level. This needs git installed locally on 
-your machine.
+and find the password for the next level.
+
+This needs git installed locally on your machine.
 
 ---
 
@@ -1330,6 +1331,40 @@ your machine.
 
     ```bash
     git clone ssh://bandit30-git@bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+    ```
+
+    Exploring:
+    ```bash
+    git reflog show --all
+    # d604df2 (HEAD, origin/master, origin/HEAD, master) HEAD@{0}: checkout: moving from master to remotes/origin/master
+    # d604df2 (HEAD, origin/master, origin/HEAD, master) refs/heads/master@{0}: clone: from ssh://bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+    # d604df2 (HEAD, origin/master, origin/HEAD, master) refs/remotes/origin/HEAD@{0}: clone: from ssh://bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+    # d604df2 (HEAD, origin/master, origin/HEAD, master) HEAD@{1}: clone: from ssh://bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+    git cat-file -t refs/tags/secret
+    # blob
+    cat .git/packed-refs
+    ## pack-refs with: peeled fully-peeled sorted
+    # d604df2303c973b8e0565c60e4c29d3801445299 refs/remotes/origin/master
+    # 84368f3a7ee06ac993ed579e34b8bd144afad351 refs/tags/secret
+    git show 84368f3a7ee06ac993ed579e34b8bd144afad351
+    # fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
+    ```
+
+    In the `.git/packed-refs` file, we saw some refs that were likely packed with
+    `git pack-refs`.  
+
+    So at some point someone ran `git tag -m 'PASSWORD'`, and then packed it so it
+    was inaccessible.  
+
+    By doing `git show <HASH>`, we can see the tag message and any referenced
+    objects.  
+
+    Alternatively, we could have just seen the tag with:
+    ```bash
+    git tag -l
+    # secret
+    git show secret
+    # fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
     ```
 
 <!-- ## Level 31 -> 32 -->
