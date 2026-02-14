@@ -1325,8 +1325,6 @@ This needs git installed locally on your machine.
 
 ---
 
-<!-- TODO(finish): Finish this level -->
-
 ??? warning "Solution (Unfinished)"
 
     ```bash
@@ -1367,7 +1365,61 @@ This needs git installed locally on your machine.
     # fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
     ```
 
-<!-- ## Level 31 -> 32 -->
+## Level 31 -> 32
+
+There is a git repository at 
+`ssh://bandit31-git@bandit.labs.overthewire.org:2220/home/bandit31-git/repo`
+via the port 2220.
+
+The password for the user bandit31-git is the same as for the user bandit31.
+
+From your local machine (not the OverTheWire machine!), clone the repository
+and find the password for the next level. This needs git installed locally on
+your machine.
+
+---
+
+```bash
+ls .git
+# .git/       .gitignore
+cat .gitignore
+# *.txt
+cat ./README.md
+# This time your task is to push a file to the remote repository.
+# 
+# Details:
+#     File name: key.txt
+#     Content: 'May I come in?'
+#     Branch: master
+# 
+sed -i '/\.txt/s/^/#/' ./.gitignore
+cat .gitignore
+#*.txt
+touch key.txt
+echo 'May I come in?' > key.txt
+git add key.txt
+git commit -m "Initial commit of key.txt"
+git push
+# remote: ### Attempting to validate files... ####
+# remote:
+# remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+# remote:
+# remote: Well done! Here is the password for the next level:
+# remote: 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K
+# remote:
+# remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+# remote:
+```
+
+- The README contained instructions.
+- We had to remove the *.txt from .gitignore so we could push the file.  
+- There seems to be a git hook that responds. It gave us the password. 
+    - They probably have a `pre-receive` or `post-receive` hook that reponds and 
+      declines the file.  
+    - TODO: Look into how git hooks work.  
+
+- `3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K`
+
 
 <!-- ## Level 32 -> 33 -->
 
