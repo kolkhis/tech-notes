@@ -2264,6 +2264,27 @@ To kill a zombie process, simply identify any processes with the `Z` status in
 kill 14553 23677
 ```
 
+## Bindable Readline Commands
+
+It's entirely possible to rebind the text navigation commands for the command
+line.  
+Using `set -o vi` will set up vi bindings for navigating the command line,
+but this is fully customizable.  
+
+
+| Command | Default 
+|---------|---------
+| `beginning-of-line` | `C-a`
+| `end-of-line` | `C-e`
+| `forward-char` | `C-f`
+| `backward-char` | `C-b`
+| `forward-word` | `M-f` 
+| `backward-word` | `M-b` 
+| `clear-screen` | `C-l` 
+| `redraw-current-line` | ` `  (unbound by default)
+
+These are just the commands for moving the cursor around. 
+More can be found in section 8.4.1 of the Bash Reference Manual.  
 
 ## Resources
 - [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
