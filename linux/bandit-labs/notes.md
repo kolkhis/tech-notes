@@ -1378,50 +1378,80 @@ and find the password for the next level. This needs git installed locally on
 your machine.
 
 ---
+??? warning "Solution"
 
-```bash
-ls .git
-# .git/       .gitignore
-cat .gitignore
-# *.txt
-cat ./README.md
-# This time your task is to push a file to the remote repository.
-# 
-# Details:
-#     File name: key.txt
-#     Content: 'May I come in?'
-#     Branch: master
-# 
-sed -i '/\.txt/s/^/#/' ./.gitignore
-cat .gitignore
-#*.txt
-touch key.txt
-echo 'May I come in?' > key.txt
-git add key.txt
-git commit -m "Initial commit of key.txt"
-git push
-# remote: ### Attempting to validate files... ####
-# remote:
-# remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-# remote:
-# remote: Well done! Here is the password for the next level:
-# remote: 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K
-# remote:
-# remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-# remote:
+    ```bash
+    ls .git
+    # .git/       .gitignore
+    cat .gitignore
+    # *.txt
+    cat ./README.md
+    # This time your task is to push a file to the remote repository.
+    # 
+    # Details:
+    #     File name: key.txt
+    #     Content: 'May I come in?'
+    #     Branch: master
+    # 
+    sed -i '/\.txt/s/^/#/' ./.gitignore
+    cat .gitignore
+    #*.txt
+    touch key.txt
+    echo 'May I come in?' > key.txt
+    git add key.txt
+    git commit -m "Initial commit of key.txt"
+    git push
+    # remote: ### Attempting to validate files... ####
+    # remote:
+    # remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+    # remote:
+    # remote: Well done! Here is the password for the next level:
+    # remote: 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K
+    # remote:
+    # remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+    # remote:
+    ```
+
+    - The README contained instructions.
+    - We had to remove the *.txt from .gitignore so we could push the file.  
+    - There seems to be a git hook that responds. It gave us the password. 
+        - They probably have a `pre-receive` or `post-receive` hook that reponds and 
+          declines the file.  
+        - TODO: Look into how git hooks work.  
+
+    - `3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K`
+
+
+## Level 32 -> 33
+
+After all this git stuff, it’s time for another escape. Good luck!
+
+---
+
+Upon login:
+```txt
+WELCOME TO THE UPPERCASE SHELL
+>> whoami
+sh: 1: WHOAMI: Permission denied
+>> test
+sh: 1: TEST: Permission denied
+>> \test
+sh: 1: TEST: Permission denied
+>> ?
+sh: 1: ?: Permission denied
+>> \?
+sh: 1: ?: Permission denied
+>> test='echo'
+>> ${test} hello
+sh: 1: HELLO: Permission denied
+>> $USER
+sh: 1: bandit32: Permission denied
+>> $SHELL
+WELCOME TO THE UPPERCASE SHELL
+>> $PATH
+sh: 1: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin: not found
 ```
 
-- The README contained instructions.
-- We had to remove the *.txt from .gitignore so we could push the file.  
-- There seems to be a git hook that responds. It gave us the password. 
-    - They probably have a `pre-receive` or `post-receive` hook that reponds and 
-      declines the file.  
-    - TODO: Look into how git hooks work.  
-
-- `3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K`
-
-
-<!-- ## Level 32 -> 33 -->
 
 <!-- ## Level 33 -> 34 -->
 
