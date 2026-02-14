@@ -2288,6 +2288,11 @@ format.
 These are just the commands for moving the cursor around. 
 More can be found in section 8.4 of the Bash Reference Manual.  
 
+To see a quick rundown of which commands are bound to which keys:
+```bash
+bind -p | grep -ve '^#' -e 'self-insert'
+```
+
 ## Resources
 - [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
 - [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
