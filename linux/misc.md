@@ -2269,7 +2269,9 @@ kill 14553 23677
 It's entirely possible to rebind the text navigation commands for the command
 line.  
 Using `set -o vi` will set up vi bindings for navigating the command line,
-but this is fully customizable.  
+but this is fully customizable by using `bind`.  
+We can see the current bindings by using `bind -P`, or `bind -p` for a shorter
+format.  
 
 
 | Command | Default 
@@ -2284,7 +2286,7 @@ but this is fully customizable.
 | `redraw-current-line` | ` `  (unbound by default)
 
 These are just the commands for moving the cursor around. 
-More can be found in section 8.4.1 of the Bash Reference Manual.  
+More can be found in section 8.4 of the Bash Reference Manual.  
 
 ## Resources
 - [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
