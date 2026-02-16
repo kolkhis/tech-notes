@@ -1452,6 +1452,16 @@ WELCOME TO THE UPPERCASE SHELL
 sh: 1: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin: not found
 ```
 
+Logged into bandit31 to see the shell that's being used:
+```bash
+grep 'bandit32' /etc/passwd
+# bandit32:x:11032:11032:bandit level 32:/home/bandit32:/home/bandit32/uppershell
+ls -alh /home/bandit32/uppershell
+# -rwsr-x--- 1 bandit33 bandit32 15K Oct 14 09:26 /home/bandit32/uppershell
+```
+This has the `setuid` bit in the execute permission, so it looks like it's
+being run as bandit33.  
+
 
 <!-- ## Level 33 -> 34 -->
 
