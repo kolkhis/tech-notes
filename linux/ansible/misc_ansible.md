@@ -96,4 +96,42 @@ ansible localhost -m setup -a "filter=ansible_date_time"
 ansible localhost -m setup -a "filter=ansible_mounts"
 ```
 
+## Line Continuations
+
+There are a couple different ways to add more content on new lines to the same
+key.
+
+The operators:
+
+- `|`: Literal line continuation. Preserves exact newlines and indetation in the block.  
+  ```yaml
+  content: |
+    Line one
+    Line two
+  ```
+  Renders as `"Line one\nLine two\n"`.  
+
+- `>`: Folded line continuation. Converts newlines to spaces, folding into a
+  single line (except double newlines, which render as a single newline).  
+  ```yaml
+  content: >
+    Line one
+    Line two
+  ```
+  Renders as `"Line one Line two"`. If there were two newlines in a row,
+  though:
+  ```yaml
+  content: >
+    Line one
+
+    Line two
+  ```
+  This would render as `"Line one\nLine two"`.  
+
+There are a few "chomping" indicators you can add alongside these two operators
+as well to control how tailing newlines behave.  
+
+- `+`: Preserve all trailing newlines (`|+`, `>+`).  
+- `-`: Remove all trailing newlines (`|-`, `>-`).  
+
 
