@@ -135,3 +135,23 @@ as well to control how tailing newlines behave.
 - `-`: Remove all trailing newlines (`|-`, `>-`).  
 
 
+## Wait for dpkg lock
+When working with Debian-based systems, specifically installing or updating 
+packages, `dpkg` may be in use by another process.
+
+This may be caused by the `unattended-upgrades` service, but we can actually
+check when the `dpkg` lock is in effect by using `fuser`.  
+
+```yaml
+- name: Wait for dpkg/apt locks to be released
+  ansible.builtin.shell: |
+    set -e
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do
+      sleep 5
+    done
+  args:
+    executable: /bin/bash
+  changed_when: false
+  become: true
+```
+
