@@ -35,4 +35,8 @@ Type `services` in the start menu, and find the
 Type in `sysdm.cpl` in the start menu.  
 Open it, go to "Advanced", "Performance Settings", and select "Adjust for best performance".
 This will disable random, useless animations that take up compute.  
+
+## Resources
+
+- 400GB Lab for AD setup: <https://learn.microsoft.com/en-us/microsoft-365/enterprise/modern-desktop-deployment-and-management-lab?view=o365-worldwide>
  
