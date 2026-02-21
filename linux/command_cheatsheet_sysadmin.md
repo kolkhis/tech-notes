@@ -149,3 +149,15 @@ crontab -l  # List all crontab jobs for current user
 systemctl enable service  # Enable a service to start on boot
 systemctl disable service # Disable a service from starting on boot
 ```
+
+## Configuring System Time
+
+```bash
+timedatectl                 # Get timezone for system  
+timedatectl list-timezones  # Find the system's current timezone
+timedatectl set-timezone America/New_York   # Change the timezone for the system
+systemctl restart systemd-timesyncd    # Reset/re-sync the system time
+```
+To reset the time on a local machine, restart the `systemd-timesyncd` service.
+This is normally needed when rolling back a VM to a snapshot.  
+
