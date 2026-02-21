@@ -1428,42 +1428,56 @@ After all this git stuff, it’s time for another escape. Good luck!
 
 ---
 
-Upon login:
-```txt
-WELCOME TO THE UPPERCASE SHELL
->> whoami
-sh: 1: WHOAMI: Permission denied
->> test
-sh: 1: TEST: Permission denied
->> \test
-sh: 1: TEST: Permission denied
->> ?
-sh: 1: ?: Permission denied
->> \?
-sh: 1: ?: Permission denied
->> test='echo'
->> ${test} hello
-sh: 1: HELLO: Permission denied
->> $USER
-sh: 1: bandit32: Permission denied
->> $SHELL
-WELCOME TO THE UPPERCASE SHELL
->> $PATH
-sh: 1: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin: not found
-```
+??? warning "Exploration/Solution"
 
-Logged into bandit31 to see the shell that's being used:
-```bash
-grep 'bandit32' /etc/passwd
-# bandit32:x:11032:11032:bandit level 32:/home/bandit32:/home/bandit32/uppershell
-ls -alh /home/bandit32/uppershell
-# -rwsr-x--- 1 bandit33 bandit32 15K Oct 14 09:26 /home/bandit32/uppershell
-```
-This has the `setuid` bit in the execute permission, so it looks like it's
-being run as bandit33.  
+    Upon login:
+    ```txt
+    WELCOME TO THE UPPERCASE SHELL
+    >> whoami
+    sh: 1: WHOAMI: Permission denied
+    >> test
+    sh: 1: TEST: Permission denied
+    >> \test
+    sh: 1: TEST: Permission denied
+    >> ?
+    sh: 1: ?: Permission denied
+    >> \?
+    sh: 1: ?: Permission denied
+    >> test='echo'
+    >> ${test} hello
+    sh: 1: HELLO: Permission denied
+    >> $USER
+    sh: 1: bandit32: Permission denied
+    >> $SHELL
+    WELCOME TO THE UPPERCASE SHELL
+    >> $PATH
+    sh: 1: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin: not found
+    ```
 
+    Logged into bandit31 to see the shell that's being used:
+    ```bash
+    grep 'bandit32' /etc/passwd
+    # bandit32:x:11032:11032:bandit level 32:/home/bandit32:/home/bandit32/uppershell
+    ls -alh /home/bandit32/uppershell
+    # -rwsr-x--- 1 bandit33 bandit32 15K Oct 14 09:26 /home/bandit32/uppershell
+    ```
+    This has the `setuid` bit in the execute permission, so it looks like it's
+    being run as bandit33.  
 
-<!-- ## Level 33 -> 34 -->
+    ```bash
+    >> $0
+    $
+    ```
+
+    ```bash
+    cat /etc/bandit_pass/bandit33
+    # tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0
+    ```
+
+    - `tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0`
+
+## Level 33 -> 34
+At this moment, level 34 does not exist yet.
 
 ## Resources
 
