@@ -280,4 +280,38 @@ This specifies a condition for the role `role4`.
 The `role4` role will only be run when the variable `myvar` is `true`. We're using
 a jinja2 filter to make it default to `false` if it's not defined.  
 
+Alternatively, use YAML syntax:
+```yaml
+roles:
+  - role: role1
+    when: myvar | default(false) == true
+```
+These are functionally equivalent. The YAML syntax is more in line with
+traditional Ansible.  
+
+## Running Roles Multiple Times
+
+By default, Ansible only allows you to execute roles a single time per play.  
+This is a safeguard to prevent duplication.  
+
+If a role is needed to run multiple times, there are a few ways to enable that
+behavior.
+
+- Set the `allow_duplicates` value in the role's `meta/main.yml` file.  
+    - This will allow the role to be executed multiple times within the same
+      play.  
+
+- Another way is to pass in different parameters to the role on each invocation.
+  ```yaml
+  roles:
+    - role: role1
+      vars:
+        param1: value1
+    - role: role2
+      vars:
+        param1: value2
+  ```
+  This will also allow the role to be executed multiple times.  
+
+  
 
