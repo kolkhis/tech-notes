@@ -313,5 +313,26 @@ behavior.
   ```
   This will also allow the role to be executed multiple times.  
 
-  
+Needing a role to run multiple times is a case that can happen when trying to
+run a role against localhost without localhost being part of the inventory or
+target group of the play.  
+
+For example, if a `nodejs_setup` role needs to be run on the Ansible control
+node for building purposes, **as well as** the remote host that the Node
+application will be running on, but localhost not in the inventory.  
+```yaml
+- name: Install nodejs on both servers
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: nodejs_setup
+      delegate_to: localhost
+      vars:
+        hosttype: local
+
+    - role: nodejs_setup
+      vars:
+        hosttype: remote
+```
 
