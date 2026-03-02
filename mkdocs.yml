@@ -379,7 +379,7 @@ nav:
     - git/basic_contribution_workflow.md
     - git/branches.md
     - git/checkout_operations.md
-    - git/commands.md
+    - git/git-commands.md
     - git/commit-message-convention.md
     - git/creating_notes_repo.md
     - git/fetch_one_file.md
