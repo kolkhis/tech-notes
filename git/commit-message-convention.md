@@ -84,5 +84,6 @@ Closes #135
 
 ## Resources
 
-- <https://www.conventionalcommits.org/en/v1.0.0/#specification>
+- Conventional Commits: <https://www.conventionalcommits.org/en/v1.0.0/#specification>
+- Commit Trailers: <https://git-scm.com/docs/git-interpret-trailers>
 
