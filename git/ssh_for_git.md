@@ -66,3 +66,88 @@ Then, run:
 git log --show-signature -1
 ```
 
+## Getting a User's Public Keys from Github
+
+A user's public SSH and GPG keys can be easily retrieved from GitHub.  
+If the need ever arises to do this, these notes outline exactly how it's done.  
+
+### Github Endpoints
+
+To get a specific user's public keys from Github, simply execute a `curl` command.
+
+```bash
+GH_USER="Kolkhis"
+curl https://github.com/${GH_USER}.keys
+curl https://github.com/${GH_USER}.gpg
+```
+It's simply `https://github.com/`, followed by the target user's username, with 
+either `.keys` or `.gpg` at the end.  
+
+#### `.keys`
+
+Curling `https://github.com/USERNAME.keys` will return
+the public SSH keys for the given username.  
+
+#### `.gpg`
+
+Curling `https://github.com/USERNAME.gpg` will return
+the public GPG keys for the given username.  
+
+### Adding to Authorized Keys
+
+These keys can easily be added to the local `~/.ssh/authorized_keys` files with
+a one-liner.  
+```bash
+GH_USER="Kolkhis" curl https://github.com/${GH_USER}.keys | tee -a ~/.ssh/authorized_keys
+```
+Alternatively, omit the variable and use the username directly.  
+
+### Turning it into a Script
+
+This can be useful for when setting up a new local machine by adding
+your own SSH keys from your GitHub account to the `authorized_keys` file on the
+new system.  
+
+```bash
+#!/bin/bash
+# Check inputs: should be `scriptname username provider` 
+# or `scriptname username` for github default
+if [[ $# -ne 0 ]]; then
+    GH_USER="$1"
+    shift
+    if [[ $# -ne 0 ]]; then
+        PROVIDER="$2"
+        case $PROVIDER in
+            gh|github|github.com)
+                GIT_PROVIDER="github.com";
+                shift
+                ;;
+            gl|gitlab|gitlab.com)
+                GIT_PROVIDER="gitlab.com";
+                shift
+                ;;
+            *)
+                GIT_PROVIDER="github.com";
+                shift
+                ;;
+        esac
+    else
+        GIT_PROVIDER="github.com"
+    fi
+else
+    printf "You did not specify a username to fetch the keys for!\n"
+fi
+
+curl https://${GIT_PROVIDER}/${GH_USER}.keys | tee -a ~/.ssh/authorized_keys
+```
+
+### Keys from Gitlab
+
+Gitlab will respond the same exact way when using `curl` on the same endpoint.
+
+```bash
+GITLAB_USER="Kolkhis"
+curl https://gitlab.com/$GITLAB_USER.keys
+curl https://gitlab.com/$GITLAB_USER.gpg
+```
+

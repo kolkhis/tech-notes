@@ -384,7 +384,6 @@ nav:
     - git/creating_notes_repo.md
     - git/fetch_one_file.md
     - git/gh.md
-    - git/github_user_keys.md
     - git/gpg_for_git.md
     - git/issue-templates.md
     - git/misc.md
