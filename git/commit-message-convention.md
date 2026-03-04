@@ -81,6 +81,11 @@ Before this fix foo wasn't enabled at all, behavior changes from <old> to <new>
 Closes #135
 ```
 
+## Trailers
+
+Trailers are essentially footers for Git commit messages.  
+Some trailers have special meanings, and some offer additional functionality on
+sites like GitHub.  
 
 ## Resources
 
