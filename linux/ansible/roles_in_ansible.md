@@ -338,5 +338,6 @@ application will be running on, but localhost not in the inventory.
 
 Here, simply setting the `hosttype` var to a different value will allow
 multiple executions. This variable can be anything, and isn't required to 
-actually be used in the role.  
+actually be used in the role itself, it only needs to be specified on
+invocation when trying to run multiple times.  
 
