@@ -37,6 +37,7 @@ Example solution:
 
 - Use NetworkManager (either `nmcli` or `nmtui`)
 
+Example using `nmcli` (as root):
 ```bash
 nmcli connection show
 ip a
@@ -47,4 +48,11 @@ nmcli connection modify PROFILE_NAME  \
     ipv4.method static
 ping -c 1 google.com
 ```
+
+Using `nmtui`, you'd simply run (as root):
+```bash
+nmtui
+```
+Then go through the user interface to modify the connection to the specified
+state.  
 
