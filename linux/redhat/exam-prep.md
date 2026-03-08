@@ -55,4 +55,7 @@ nmtui
 ```
 Then go through the user interface to modify the connection to the specified
 state.  
+Set the "IPv4 CONFIGURATION" setting to "Manual" then just fill in the rest of
+the configuration.  
+
 
