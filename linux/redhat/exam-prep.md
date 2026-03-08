@@ -11,3 +11,12 @@ machine state.
 SELinux enabled**. This is a hard requirement.  
 
 
+## Example Tasks
+
+### Configure the Network
+
+!!! info "Scenario"
+
+    Configure the network for Server A first. Then Server B after password reset
+    The networks will already be configured on these servers but the
+    configuration must be changed to reflect the desired state.  
