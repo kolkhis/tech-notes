@@ -20,3 +20,31 @@ SELinux enabled**. This is a hard requirement.
     Configure the network for Server A first. Then Server B after password reset
     The networks will already be configured on these servers but the
     configuration must be changed to reflect the desired state.  
+
+    Assign this IP address configuration to your virtual machines as follows:
+
+    - Hostname servera.lab.example.com and serverb.lab.example.com
+    - IP address:   192.168.1.150-151
+    - NetMastk:     255.255.255.0
+    - Gateway:      192.168.1.1
+    - Nameserver:   192.168.1.100
+
+    The root password for Server A will be provided, but they may require you
+    do do the root password recovery process for Server B to get/set the root
+    password.  
+
+Example solution:
+
+- Use NetworkManager (either `nmcli` or `nmtui`)
+
+```bash
+nmcli connection show
+ip a
+nmcli connection modify PROFILE_NAME  \
+    ipv4.address 192.168.1.150/24 \
+    ipv4.gateway 192.168.1.1 \
+    ipv4.dns 8.8.8.8 \
+    ipv4.method static
+ping -c 1 google.com
+```
+
