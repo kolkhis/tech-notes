@@ -59,5 +59,8 @@ Set the "IPv4 CONFIGURATION" setting to "Manual" then just fill in the rest of
 the configuration.  
 Once the settings are changed in the `nmtui`, you must go back and select the
 same network interface and deactivate/reactivate it for changes to take effect.
+To reset the interface from `nmtui`, you'd go back in the TUI, select "Activate
+a connection", then disable/re-enable.  
  
+---
 
