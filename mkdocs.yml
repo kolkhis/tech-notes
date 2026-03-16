@@ -52,6 +52,7 @@ nav:
   - Home: index.md
 
   - Linux:
+    - linux/lfs/index.md
     - linux/RAID.md
     - linux/ansi_control_sequences.md
     - linux/archives.md
