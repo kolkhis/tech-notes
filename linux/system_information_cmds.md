@@ -380,6 +380,20 @@ md5sum /etc/services
 sha256sum /etc/services
 ```
 
+There's also `openssl`, which can be used to generate a hash of a file:
+```bash
+openssl dgst -sha256 /etc/services
+```
+This will generate a SHA256 hash of the file. You can use other hashing
+algorithms with `openssl` as well, like `-md5` for MD5 or `-sha1` for SHA1.
+
+To have a more human-readable output, use the `-r` flag before the filename:
+```bash
+openssl dgst -sha256 -r /etc/services
+```
+This will output the hash followed by the filename, making it easier to read
+and compare with other outputs.  
+
 ## Check if a System Needs Reboot
 There are commands check if a system needs a reboot, which vary from distro to
 distro.  
