@@ -5,16 +5,15 @@ and Transport Layer Security (TLS) protocols.
 
 It provides a set of cryptographic functions and utilities for secure communication over networks.
 
-The `openssl` command line tool is robust and versatile, allowing the user to perform various functions.    
+The OpenSSL suite has an `openssl` command line tool, which is robust and versatile, 
+allowing the user to perform various cryptographic functions.  
 
 ## Usage
 
-The basic syntax for using the `openssl` command is as follows:
-
+The basic syntax for using the `openssl` command is:
 ```bash
 openssl <command> [options] [arguments]
 ```
-
 There are a ton of `<command>` options available, each serving a specific
 purpose.  
 
@@ -56,9 +55,27 @@ purpose.
 - `openssl x509`: Displays and manages X.509 certificates.
 
 - `openssl s_client`: Connects to a remote server using SSL/TLS and displays 
-  the server's certificate and other information.
+  the server's certificate and other info.
 
-- `openssl s_server`: Starts a simple SSL/TLS server
+- `openssl s_server`: Starts a simple SSL/TLS server that can be connected to 
+  by using `openssl s_client` or other SSL/TLS clients.
 
+- `openssl pkcs12`: Manages PKCS#12 files, which are used to store private keys
+  and certificates in a single file.
+
+- `openssl rsa`: Manages RSA private keys, including converting between different
+  formats and extracting public keys.
+
+## Documentation
+
+Each subcommand offered by `openssl` has its own set of options/arguments.  
+As such, each subcommand has its own `man` page.  
+To access the man page for a specific subcommand:
+```bash
+man openssl-command
+# For example:
+man openssl-dgst
+```
+This pulls up the man page for the `dgst` subcommand.  
 
 
