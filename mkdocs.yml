@@ -121,6 +121,7 @@ nav:
       - linux/ansible/variables.md
     - Tools:
       - linux/tools/umask.md
+      - linux/tools/openssl.md
       - linux/tools/aide.md
       - linux/tools/awk.md
       - linux/tools/bc.md
