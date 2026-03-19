@@ -54,6 +54,10 @@ purpose.
 
 - `openssl x509`: Displays and manages X.509 certificates.
 
+- `openssl rsa`: Manages RSA private keys, including converting between different
+  formats and extracting public keys.
+
+
 - `openssl s_client`: Connects to a remote server using SSL/TLS and displays 
   the server's certificate and other info.
 
@@ -62,9 +66,6 @@ purpose.
 
 - `openssl pkcs12`: Manages PKCS#12 files, which are used to store private keys
   and certificates in a single file.
-
-- `openssl rsa`: Manages RSA private keys, including converting between different
-  formats and extracting public keys.
 
 ## Documentation
 
@@ -77,5 +78,8 @@ man openssl-command
 man openssl-dgst
 ```
 This pulls up the man page for the `dgst` subcommand.  
+
+There is also really good tab completion in Bash for the `openssl` command.
+Typing `openssl` and pressing ++tab+tab++ will show all available subcommands.
 
 
