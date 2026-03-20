@@ -20,6 +20,9 @@ purpose.
 
 ### Common Commands
 
+`openssl` has a **lot** of subcommands (over 100), but below are some useful
+ones that might be good to know about.  
+
 - `openssl version`: Displays the version of OpenSSL installed on the system.
   ```bash
   openssl version
@@ -29,6 +32,11 @@ purpose.
   ```bash
   openssl dgst -sha256 file.txt
   ```
+    - Alternatively, we can specify the digest algorithm as a subcommand
+      instead of using `dgst` with the `-sha256` flag:
+      ```bash
+      openssl sha256 file.txt
+      ```
 
 - `openssl enc`: Encrypts or decrypts data using various algorithms.
   ```bash
@@ -80,10 +88,12 @@ To access the man page for a specific subcommand:
 man openssl-command
 # For example:
 man openssl-dgst
+man openssl-s_client
 ```
-This pulls up the man page for the `dgst` subcommand.  
+This pulls up the man page for the `dgst`/`s_client` subcommand.  
 
-There is also really good tab completion in Bash for the `openssl` command.
-Typing `openssl` and pressing ++tab+tab++ will show all available subcommands.
+The `openssl` command also has really good tab completion in Bash.
+Type out `openssl ` (with a space) and pres ++tab+tab++, that'll show all available subcommands.
+
 
 
