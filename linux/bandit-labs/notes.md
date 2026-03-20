@@ -393,6 +393,8 @@ Read the “CONNECTED COMMANDS” section in the manpage.
 ??? warning "Solution"
 
     The port can be accessed using `openssl`, using the `s_client` subcommand.  
+    It looks like they're serving the password over SSL/TLS by using 
+    `openssl s_server` on the server side.  
 
     ```bash
     openssl s_client localhost:30001
@@ -400,7 +402,7 @@ Read the “CONNECTED COMMANDS” section in the manpage.
     # Correct!
     # kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
     ```
-
+    
     - `kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx`
 
 ```bash
