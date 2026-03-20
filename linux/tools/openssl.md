@@ -43,6 +43,10 @@ purpose.
     - `-algorithm`: Specifies the algorithm to use (e.g., RSA, EC, etc.).  
     - `-out`: Specifies the output file for the generated private key.  
     - For a list of supported algorithms, you can run `openssl list -public-key-algorithms`.
+    - `genpkey` replaced the older `openssl genrsa` and other keygen subcommands.  
+    - Many options are available to customize the key. For example,
+      `-pkeyopt rsa_keygen_bits:2048` to specify the key size for RSA keys.
+        - See `man openssl-genpkey` and check the `KEY GENERATION OPTIONS` section for a list.
 
 - `openssl req`: Creates and processes certificate requests in PKCS#10 format.
   ```bash
