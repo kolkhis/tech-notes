@@ -4,7 +4,10 @@ Notes from doing the labs at <https://overthewire.org/wargames/bandit>.
 
 !!! warning "SPOILER ALERT"
 
-    This page contains the answers for the bandit labs.
+    This page contains my answers for the bandit labs.  
+    If you haven't completed the labs yourself yet, or attempted to complete
+    them, I highly recommend you try them out yourself before looking at my 
+    solutions.  
 
 ## Level 0
 
