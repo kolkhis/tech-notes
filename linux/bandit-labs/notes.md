@@ -139,11 +139,13 @@ directory and has all of the following properties:
 
 ??? warning "Solution"
 
+    Use `find` to search for the files with the specified properties.  
     ```bash
     find ./inhere/ -size 1033c
     # ./inhere/maybehere07/.file2
     find ./inhere/ -size 1033c | xargs cat
     ```
+    The `c` unit in the `-size` flag means bytes (`man find`, search `-size`).  
 
     - `HWasnPhtq9AVKe0dmk45nxy20cvUa6EG`
 
@@ -162,6 +164,7 @@ of the following properties:
 
 ??? warning "Solution"
 
+    Use `find` to search for the files with the specified properties again.  
     ```bash
     find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
     cat /var/lib/dpkg/info/bandit7.password
@@ -195,6 +198,7 @@ line of text that occurs only once.
 
 ??? warning "Solution"
 
+    Use `sort` with `uniq` to find the unique line in the file.  
     ```bash
     sort ./data.txt | uniq -u
     # Don't be me:
@@ -214,16 +218,17 @@ few human-readable strings, preceded by several `=` characters.
 
 ??? warning "Solution"
 
-    Open in `vi`.  
+    One option is to open in `vi`.  
     ```bash
     vi ./data.txt
     ```
     Search for multiple equal signs with `/==`, hit `n` to go to next. Eventually
     find password.  
 
+    Another option is to use `grep`.  
 
-    - `grep` wasn't working properly when used normally, as it was a binary file with 
-      ASCII strings hidden inside.  
+    - `grep` wasn't working properly when used normally, as `data.txt` was actually 
+      a binary file with ASCII strings hidden inside.  
       Use `--binary-files=text` to grep for the ASCII inside the binary file.  
       ```bash
       grep --binary-files=text '===' ./data.txt
@@ -251,6 +256,7 @@ base64 encoded data.
 
 ??? warning "Solution"
 
+    Use `base64` to decode the file.  
     ```bash
     cat data.txt | base64 -d
     # The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
@@ -298,6 +304,8 @@ read the manpages!)
 
 ??? warning "Solution" 
 
+    Below are the commands I used to unpack the file, along with comments
+    explaining the commands and showing the output of each command.  
     ```bash
     mkdir /tmp/solve
     cd /tmp/solve
@@ -347,6 +355,7 @@ you into previous bandit levels, and find out how to use the key for this level.
 
 ??? warning "Solution"
 
+    The private key is in the file `sshkey.private`.  
     ```bash
     cat sshkey.private
     ```
@@ -370,6 +379,7 @@ the current level to port `30000` on localhost.
 
 ??? warning "Solution"
 
+    Use `nc` to connect to port `30000` on localhost and paste in the password.
     ```bash
     nc localhost 30000
     # Pasted in: MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
