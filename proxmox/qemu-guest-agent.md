@@ -228,7 +228,7 @@ qm guest cmd 101 network-get-interfaces | jq '.[1]."ip-addresses"[0]."ip-address
 
 Extract the IP of a host with `grep`:  
 ```bash
-qm guest cmd 101 network-get-interfaces | grep -o -P '^\s*"ip-address"\s*:\s*"\K[0-9.]+'
+qm guest cmd 101 network-get-interfaces | grep -oP '^\s*"ip-address"\s*:\s*"\K[0-9.]+'
 ```
 
 
