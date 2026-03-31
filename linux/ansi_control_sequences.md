@@ -345,8 +345,8 @@ You can also change the cursor's shape and behavior.
 | `ESC[2 q` | Changes cursor shape to blinking block
 | `ESC[3 q` | Changes cursor shape to steady underline
 | `ESC[4 q` | Changes cursor shape to blinking underline
-| `ESC[5 q` | Changes cursor shape to steady bar
-| `ESC[6 q` | Changes cursor shape to blinking bar
+| `ESC[5 q` | Changes cursor shape to blinking bar
+| `ESC[6 q` | Changes cursor shape to steady bar
 | `ESC[?25l`| Hide the cursor
 | `ESC[?25h`| Show the cursor (unhide cursor)
 
