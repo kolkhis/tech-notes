@@ -158,6 +158,63 @@ sdb
 └─sdb4 ext4   1.0         ea99de3f-5513-4338-8e88-878a51dade4c
 ```
 
+### LFS Variable/Umask
+
+LFS requires a `$LFS` variable to be set to the desired mountpoint for the LFS
+partition.    
+
+The umask also needs to be set to `022`. 
+
+```bash
+export LFS="/mnt/lfs"
+sudo umask 022
+```
+
+### Mounting the Partition
+
+Mount the root partition (the ext4 one).  
+```bash
+mkdir -pv "$LFS"
+mount -v -t ext4 /dev/sdb4 "$LFS"
+chown root:root "$LFS"
+chmod 755 "$LFS"
+```
+
+If we are using a swap partition, ensure that it is enabled using the `swapon` command:
+```bash
+sudo swapon /dev/sdb3
+sudo swapon
+#NAME      TYPE      SIZE USED PRIO
+#/swap.img file        3G   0B   -2
+#/dev/sdb3 partition   4G   0B   -3
+```
+
+## Packages
+
+The `$LFS/sources` directory will be used to store the packages and their
+sources.  
+
+It's recommended to make this writable and "sticky" (only the owner can delete
+files inside).  
+```bash
+mkdir "$LFS/sources"
+chmod 1755 "$LFS/sources"
+```
+
+The packages can be fetched individually or from a curated list specifically
+for LFS.  
+
+A full list, line-by-line, can be found
+[here](https://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list-systemd).  
+
+Use `wget` to fetch all tarballs and patches.  
+```bash
+curl -O https://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list-systemd
+wget --input-file=wget-list-systemd --continue --directory-prefix=$LFS/sources
+```
+
+
+
 
 
 <!-- - Add GPT disk partition table: -->
