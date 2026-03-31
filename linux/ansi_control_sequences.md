@@ -340,11 +340,11 @@ You can also change the cursor's shape and behavior.
 
 | Sequence |  Description
 |-|-
-| `ESC[0 q` | Changes cursor shape to steady block
-| `ESC[1 q` | Changes cursor shape to steady block also
-| `ESC[2 q` | Changes cursor shape to blinking block
-| `ESC[3 q` | Changes cursor shape to steady underline
-| `ESC[4 q` | Changes cursor shape to blinking underline
+| `ESC[0 q` | Changes cursor shape to blinking block
+| `ESC[1 q` | Changes cursor shape to blinking block also
+| `ESC[2 q` | Changes cursor shape to steady block
+| `ESC[3 q` | Changes cursor shape to blinking underline
+| `ESC[4 q` | Changes cursor shape to steady underline
 | `ESC[5 q` | Changes cursor shape to blinking bar
 | `ESC[6 q` | Changes cursor shape to steady bar
 | `ESC[?25l`| Hide the cursor
