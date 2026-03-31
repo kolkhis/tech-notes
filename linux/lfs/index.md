@@ -72,31 +72,39 @@ the host system and ensures they're on the correct versions.
 My host system used for building is Ubuntu Server 22.04.3, using the default 
 LVM installation.
 
+### Adding a New Virtual Disk
+
 Step one is to create a partition on which to build the LFS system.  
 
 With an LVM installation on a VM, there are two options.  
 
 1. Add a second virtual disk.  
-2. Shrink LVM and create space.  
+2. Shrink and create space for another partition in LVM.  
 
-I'm going to opt for adding a second virtual disk.  
+I'm going to opt for adding a second virtual disk to the VM in Proxmox.  
 
-From Proxmox, go to the VM, select the Hardware tab, and add a new hard disk.
-Choose your storage pool (default is fine).  
+From the Proxmox Web UI, go to the VM, select the Hardware tab, and add a new 
+hard disk.
+Choose your storage pool (default is fine if there are no others set up).  
 
-My current disk for build is listed as `/dev/sdb`.  
+My current disk for build is listed as `/dev/sdb` in the system.  
+This will be the dedicated LFS disk referred to for the rest of the build in 
+this document.  
 
 --- 
 
-We need several partitions **required**:
+### Paritioning The Disk
+
+- Book Source: [Chapter 2.4](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter02/creatingpartition.html)  
+
+There are several partitions **required** for a Linux system:
 
 - The root partition `/`
 - The swap partition 
-- The GRUB BIOS partition
+- The EFI boot parition
+- The GRUB BIOS partition (optional but needed for BIOS/Legacy boot and Secure Boot)
 
-Several other convenience partitions are usually present, but these are the
-required ones.  
-
+The disk partitioning can be automated via `sfdisk`.  
 
 Define sizes for the partitions needed via an `sfdisk` script:
 ```bash
@@ -106,6 +114,7 @@ unit: sectors
 first-lba: 2048
 
 # BIOS boot partition
+# This `type` specifies a BIOS Boot Partition
 size=1M, type=21686148-6449-6E6D-744E-6574626F6F74, name="BIOS_Boot"
 
 # 1. /boot (EFI System Partition) - 1GB
@@ -121,12 +130,17 @@ size=4G, type=S, name="Linux_Swap"
 type=L, name="Linux_Root"
 ```
 
-Save that script into a file, then pass that via stdin to `sfdisk`:
+Save that script into a file, then pass the file via stdin to `sfdisk`:
 ```bash
 sudo sfdisk /dev/sdb < ./sfdisk_disk_layout
 ```
 
-`fisk -l` on `/dev/sdb` looks like:
+Check the disk:
+```bash
+sudo fdisk -l /dev/sdb
+```
+
+The output should look like:
 ```txt
 Device        Start      End  Sectors Size Type
 /dev/sdb1      2048     4095     2048   1M unknown
@@ -134,6 +148,16 @@ Device        Start      End  Sectors Size Type
 /dev/sdb3   2101248 10489855  8388608   4G Linux swap
 /dev/sdb4  10489856 67108830 56618975  27G Linux filesystem
 ```
+
+- `/dev/sdb1` is our BIOS boot partition.  
+- `/dev/sdb2` is our EFI system partition.  
+- `/dev/sdb3` is our SWAP partition.  
+- `/dev/sdb4` is our root filesystem partition.  
+
+### Formatting Partitions with Filesystems
+
+- Book Source: [Chapter 2.5](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter02/creatingfilesystem.html)
+
 Now we can format these partitions.  
 
 - The BIOS boot partition (/dev/sdb1) requires no filesystem.    
@@ -160,6 +184,8 @@ sdb
 
 ### LFS Variable/Umask
 
+- Book Source: [Chapter 2.6](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter02/aboutlfs.html)
+
 LFS requires a `$LFS` variable to be set to the desired mountpoint for the LFS
 partition.    
 
@@ -172,7 +198,9 @@ sudo umask 022
 
 ### Mounting the Partition
 
-Mount the root partition (the ext4 one).  
+- Book Source: [Chapter 2.7](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter02/mounting.html)
+
+Mount the root filesystem partition (`/dev/sdb4`).  
 ```bash
 mkdir -pv "$LFS"
 mount -v -t ext4 /dev/sdb4 "$LFS"
@@ -190,6 +218,8 @@ sudo swapon
 ```
 
 ## Packages
+
+- Book Source: [Chapter 3.1](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter03/introduction.html)
 
 The `$LFS/sources` directory will be used to store the packages and their
 sources.  
