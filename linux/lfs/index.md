@@ -217,6 +217,22 @@ sudo swapon
 #/dev/sdb3 partition   4G   0B   -3
 ```
 
+### Make the Mount Persistent
+
+Get the UUID of the root fs block device.  
+```bash
+lsblk -f
+# ...
+# └─sdb4
+#     ext4   1.0                        ea99de3f-5513-4338-8e88-878a51dade4c
+```
+
+Then add an entry in /etc/fstab using the UUID.  
+```bash
+/dev/disk/by-uuid/ea99de3f-5513-4338-8e88-878a51dade4c  /mnt/lfs  ext4 defaults 0 0
+```
+
+
 ## Packages
 
 - Book Source: [Chapter 3.1](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter03/introduction.html)
@@ -242,6 +258,237 @@ Use `wget` to fetch all tarballs and patches.
 curl -O https://www.linuxfromscratch.org/lfs/view/stable-systemd/wget-list-systemd
 wget --input-file=wget-list-systemd --continue --directory-prefix=$LFS/sources
 ```
+
+Change ownership of the `$LFS/sources` directory to root (user and group).  
+```bash
+sudo chown -R root:root "$LFS/sources"
+```
+
+All packages that must be present in `$LFS/sources` can be found
+[here](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter03/packages.html),
+and the patches can be found 
+[here](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter03/patches.html).  
+
+## Final Preparations
+
+- [Book Source](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter04/introduction.html)
+- https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter04/creatingminlayout.html
+
+We need to create a directory structure on the rootfs to install the new tools
+we downloaded.  
+
+The script they provide:
+```bash
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
+
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
+
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
+```
+
+This creates the directories:
+
+- `/mnt/lfs/etc`
+- `/mnt/lfs/var`
+- `/mnt/lfs/usr/bin`
+- `/mnt/lfs/usr/lib`
+- `/mnt/lfs/usr/sbin`
+
+As well as symlinks everything in `/mnt/lfs/usr/bin`, `/mnt/lfs/usr/lib`, and `/mnt/lfs/usr/sbin` to `
+
+When creating symlinks, output should be.
+```bash
+# for i in bin lib sbin; do sudo ln -sv "usr/$i" "$LFS/$i"; done
+'/mnt/lfs/bin' -> 'usr/bin'
+'/mnt/lfs/lib' -> 'usr/lib'
+'/mnt/lfs/sbin' -> 'usr/sbin'
+```
+
+Additionally, if on `x86_64` architecture, create the directory `$LFS/lib64`.  
+```bash
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
+```
+
+Finally, one more directory:
+```bash
+mkdir -pv "$LFS/tools"
+```
+
+### Adding an LFS User
+
+We're creating a new user account (unprivileged) for the LFS system.  
+
+Create a user account named `lfs`.  
+By default, a new group with the same name is created with `useradd`, but LFS
+suggests using `groupadd` first to create the group.  
+```bash
+groupadd lfs
+useradd -s /bin/bash -g lfs -m -k /dev/null lfs
+```
+
+Create a psasword for the new user:
+```bash
+passwd lfs
+```
+
+Change ownership of everything in `$LFS` to the new user.  
+```bash
+chown -v lfs $LFS/{usr{,/*},var,etc,tools}
+# and if on x86 architecture, do that dir
+case $(uname -m) in
+  x86_64) chown -v lfs $LFS/lib64 ;;
+esac
+```
+
+Finally, switch to the user.  
+```bash
+su - lfs
+```
+
+### Setting up the Environment
+
+As the `lfs` user, create a `.bash_profile`.  
+
+```bash
+cat > ~/.bash_profile << "EOF"
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+EOF
+```
+This unsets all environment variables except the ones specified (HOME, TERM,
+PS1).  
+
+This ensures that we don't read the host system's runtime configuration files,
+and will only read the `.bashrc` file in the `/home/lfs` directory.  
+
+The `.bashrc` will be as follows.  
+```bash
+cat > ~/.bashrc << "EOF"
+set +h
+umask 022
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+EOF
+```
+
+If the host system has an `/etc/bash.bashrc` file, remove it to prevent the
+environment being populated with unwanted environment vars.  
+```bash
+[ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
+```
+
+Now, prepping to build all the stuff.  
+
+`make` can spawn multiple processes by using the `-j` flag.  
+Alternatively, set the `MAKEFLAGS` var to the desired `-j` value.  
+For example, if you have an 8 core processor with 16 efficiency cores, you
+could spawn up to 32 instances of `make`. 
+```bash
+make -j32
+# or
+export MAKEFLAGS=-j32
+```
+This is how we're going to build all these packages that we downloaded. There's
+a lot of em.  
+
+**Check how many cores you have available with `nproc`**.  
+
+```bash
+cat >> ~/.bashrc << "EOF"
+export MAKEFLAGS=-j$(nproc)
+EOF
+```
+
+My build environment has 2 cores.  
+So, we'll do `-j2`.  
+
+I am extending the CPUs for the host VM that will be building the packages. I'm
+allocating 24 cores to it to build faster.  
+
+- Source:
+  <https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter04/aboutsbus.html>
+
+Many packages come with a test suite. Some packages' test suites are more
+important than others (e.g., gcc, glibc, etc.).  
+
+- Source:
+  <https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter04/abouttestsuites.html>
+
+## Building the LFS Cross Toolchain and Temporary Tools
+
+> This is where the real work of building a new system begins.
+
+- Source:
+  <https://www.linuxfromscratch.org/lfs/view/stable-systemd/part3.html>
+
+This section is split into three parts:
+
+1. Building a cross compiler and its associated libraries.  
+2. Using this cross toolchain to build several utilities in a way that isolates 
+   them from the host distribution.  
+3. Entering the chroot environment (which further improves host isolation) and 
+   constructing the remaining tools needed to build the final system.
+
+
+- [Toolchain Technical Notes](https://www.linuxfromscratch.org/lfs/view/stable-systemd/partintro/toolchaintechnotes.html)
+
+We're cross-compiling the entire toolchain. The reason for this is that it will
+not be dependent on the host system.  
+
+> ...anything that is cross-compiled cannot depend on the host environment.  
+
+- Note: It's known installing GCC pass 2 will break the cross-toolchain
+
+A few definitions for the rest of the document:
+
+- The build: The machine where we build the programs (the host system).  
+- The host: This is where the built programs will run (the LFS system). 
+- The target: The machine that the compiler produces code for.  
+
+All the packages in the book use an autoconf-based building system, which 
+accepts system types in the form `cpu-vendor-kernel-os` (referred to as a
+system triplet).  
+The `vendor` field is often omitted.  
+The `kernel` and `os` began as a single `system` field, which is why it's called a triplet.  
+
+> A simple way to determine your system triplet is to run the config.guess
+> script that comes with the source for many packages.
+
+The dynamic linker (or dynamic loader) used on my host system is `/lib64/ld-linux-x86-64.so.2`
+(symlinked from `/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2`).  
+
+This finds and loads the shared libraries needed by a program.  
+
+Check your system's dynamic linker with `ldd gcc`, or with the suggested command:  
+```bash
+readelf -l <name of binary> | grep interpreter
+```
+
+Using it on `/bin/bash`:
+```bash
+readelf -l /bin/bash | grep interpreter
+#      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+```
+
+The cross-compiler will *not* be part of the final LFS build, it's just used
+for compiling the programs for the LFS system.  
+
+> In order to cross-compile a package for the LFS temporary system, the name of
+> the system triplet is slightly adjusted by changing the "vendor" field in the
+> LFS_TGT variable so it says "lfs" and LFS_TGT is then specified as “the host”
+> triplet via `--host`...  
+
 
 
 
