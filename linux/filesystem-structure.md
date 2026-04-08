@@ -38,6 +38,11 @@ which should be available to all users.
 
 The `/bin` directory has no subdirectories.  
 
+!!! info "Note"
+    
+    The `/bin` directory is symlinked on `/usr/bin` on most major Linux distributions.
+    So, `/bin/bash` would be the same as `/usr/bin/bash`.  
+
 There are tools that are **required** to be in `/bin`, as specified by the [Linux
 Foundation](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html).  
 
@@ -111,6 +116,12 @@ Specification.
 - `/usr/bin`: Basic user-executable binaries (like `/bin`)
 - `/usr/sbin`: More binaries for admins.  
 - `/usr/lib`: The system libraries needed for binaires.  
+
+These subdirectories are symlinked to `/bin`, `/sbin`, and `/lib` on most major Linux distributions.
+
+- `/bin` would point to `/usr/bin`
+- `/sbin` would point to `/usr/sbin`
+- `/lib` would point to `/usr/lib`.
 
 ### `/usr/sbin`
 The `/sbin` (usually symlinked to `/usr/sbin`) directory stores binaries
