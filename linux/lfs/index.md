@@ -443,12 +443,16 @@ This section is split into three parts:
 
 - [Toolchain Technical Notes](https://www.linuxfromscratch.org/lfs/view/stable-systemd/partintro/toolchaintechnotes.html)
 
-We're cross-compiling the entire toolchain. The reason for this is that it will
-not be dependent on the host system.  
+We're cross-compiling the entire toolchain. 
+This means we're building the toolchain on the host system, but it's going to 
+produce code for the target system (the LFS system).
+The reason for this is that it will not be dependent on the host system.  
 
 > ...anything that is cross-compiled cannot depend on the host environment.  
 
 - Note: It's known installing GCC pass 2 will break the cross-toolchain
+
+### Important Concepts
 
 A few definitions for the rest of the document:
 
@@ -456,11 +460,13 @@ A few definitions for the rest of the document:
 - The host: This is where the built programs will run (the LFS system). 
 - The target: The machine that the compiler produces code for.  
 
-All the packages in the book use an autoconf-based building system, which 
-accepts system types in the form `cpu-vendor-kernel-os` (referred to as a
+All the packages in the book use an autoconf-based building system.  
+This accepts system types in the form `cpu-vendor-kernel-os` (referred to as a
 system triplet).  
+
 The `vendor` field is often omitted.  
-The `kernel` and `os` began as a single `system` field, which is why it's called a triplet.  
+The `kernel` and `os` began as a single `system` field, which is why it's
+called a triplet even though it's 4 fields.  
 
 > A simple way to determine your system triplet is to run the config.guess
 > script that comes with the source for many packages.
@@ -488,45 +494,6 @@ for compiling the programs for the LFS system.
 > the system triplet is slightly adjusted by changing the "vendor" field in the
 > LFS_TGT variable so it says "lfs" and LFS_TGT is then specified as “the host”
 > triplet via `--host`...  
-
-
-
-
-
-
-<!-- - Add GPT disk partition table: -->
-<!--   ```bash -->
-<!--   sudo gdisk /dev/sdb -->
-<!--   # n -->
-<!--   # Enter (defaults are fine) -->
-<!--   # w -->
-<!--   ``` -->
-
-<!-- - Format the partition: -->
-<!--   ```bash -->
-<!--   sudo mkfs.ext4 /dev/sdb1 --> 
-<!--   ``` -->
-
-<!-- - Add a mount point: -->
-<!--   ```bash -->
-<!--   sudo mkdir /mnt/lfs -->
-<!--   ``` -->
-
-<!-- - Grab the UUID for persistent mounting (`blkid` or `lsblk -f`): -->
-<!--   ```bash -->
-<!--   sudo blkid /dev/sdb1 -->
-<!--   # /dev/sdb1: UUID="aa9db16e-7a70-4694-9f25-4930f82b29d5" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="Linux filesystem" PARTUUID="9ebbd1f2-1695-4ef2-9c29-4483c3664d9c" -->
-<!--   ``` -->
-
-<!-- - Add to `/etc/fstab`: -->
-<!--   ```bash -->
-<!--   UUID=aa9db16e-7a70-4694-9f25-4930f82b29d5 /mnt/lfs ext4 defaults 0 0 -->
-<!--   ``` -->
-
-<!-- - Mount the partition from the `fstab` file: -->
-<!--   ```bash -->
-<!--   sudo mount -a -->
-<!--   ``` -->
 
 
 
