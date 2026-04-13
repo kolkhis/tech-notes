@@ -495,6 +495,253 @@ for compiling the programs for the LFS system.
 > LFS_TGT variable so it says "lfs" and LFS_TGT is then specified as “the host”
 > triplet via `--host`...  
 
+---
+
+
+### Prepping for the Build
+
+The cross-compiler will be installed in a separate `$LFS/tools` directory, since 
+it will not be part of the final system.
+
+We'll be using the `--with-sysroot` option when building the cross-linker and 
+cross-compiler, to tell them where to find the needed files for "the host" (the
+LFS system)
+
+
+Binutils is installed first because the configure runs of both gcc and glibc 
+perform various feature tests on the assembler and linker
+
+Then, we'll get a C compiler. 
+
+It's going to be "cc1-based libgcc", which does require glibc for full
+functionality (e.g., exception handling and threads), but it's enough to
+compile glibc by itself.
+
+After installing the compiler, we sanitize Linux API headers. This allows glibc
+to interface with all Linux kernel features.  
+
+Once we've done that, we can install `glibc`. This is the first package we
+cross-compile.  
+
+When compiling `glibc`:
+
+- We'll use the `--host=$LFS_TGT` option.  
+- Also the `--build=$(../scripts/config.guess)` to enable the "cross-compilation mode".  
+- The `DESTDIR` variable is used to force installation into the LFS file system.  
+
+
+#### Build Process Synopsis
+Place all the sources and patches in a directory that will be accessible from 
+the chroot environment, such as `/mnt/lfs/sources/`.
+
+- Change to the /mnt/lfs/sources/ directory.
+
+- For each package:
+
+    - Using the tar program, extract the package to be built. In Chapter 5 and 
+      Chapter 6, ensure you are the lfs user when extracting the package.
+
+    - Do not use any method except the tar command to extract the source code. 
+      Notably, using the `cp -R` command to copy the source code tree somewhere else 
+      can destroy timestamps in the source tree, and cause the build to fail.
+
+    - Change to the directory created when the package was extracted.
+
+    - Follow the instructions for building the package.
+
+    - Change back to the sources directory when the build is complete.
+
+    - Delete the extracted source directory unless instructed otherwise.
+
+
+We'll use `tar` to extract packages to be built.  
+
+## Installing/Compiling the Packages
+
+- [Book Source](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter05/chapter05.html)
+
+The cross-compiler and all its associated tools will be installed `$LFS/tools`.
+
+But the libraries will be installed into the final destination (the LFS system).  
+
+### Installing Cross Binutils
+Binutils needs to be installed first because glibc and gcc use this for tests
+on the available linker and assembler.  
+
+The binutils docs suggest making a dedicated build directory.  
+```bash
+cd $LFS/sources
+tar -xJvf ./binutils-2.46.0.tar.xz
+cd ./binutils-2.46.0/
+mkdir build
+```
+Let's `time` the commands to configure and build.  
+```bash
+../configure --prefix=$LFS/tools \
+             --with-sysroot=$LFS \
+             --target=$LFS_TGT   \
+             --disable-nls       \
+             --enable-gprofng=no \
+             --disable-werror    \
+             --enable-new-dtags  \
+             --enable-default-hash-style=gnu
+# Time:
+# real    0m6.452s
+# user    0m4.585s
+# sys     0m2.860s
+```
+Then we `make`.  
+```bash
+time make
+# real    6m37.136s
+# user    5m12.127s
+# sys     1m37.809s
+```
+
+Then `make install`.  
+```bash
+time make install
+# real    0m6.785s
+# user    0m4.516s
+# sys     0m2.823s
+```
+
+### Installing Cross GCC
+
+GCC requires the GMP, MPFR and MPC packages
+They'll be built with GCC.  
+
+Unpack each package into the GCC source directory and rename the resulting 
+directories so the GCC build procedures will automatically use them.  
+
+```bash
+cd $LFS/sources
+tar -xJvf ./gcc-15.2.0.tar.xz
+cd ./gcc-15.2.0
+
+tar -xJvf ../mpfr-4.2.2.tar.xz
+mv -v mpfr-4.2.2 mpfr
+
+tar -xJvf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+
+tar -xzvf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+```
+
+On x86_64 architecture, set default directory name for 64-bit libraries to `lib`.  
+```bash
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+ ;;
+esac
+```
+
+GCC docs recommends a dedicated build directory.  
+```bash
+mkdir build
+cd build
+```
+
+Then we can use the `configure` script.  
+```bash
+time ../configure             \
+    --target=$LFS_TGT         \
+    --prefix=$LFS/tools       \
+    --with-glibc-version=2.43 \
+    --with-sysroot=$LFS       \
+    --with-newlib             \
+    --without-headers         \
+    --enable-default-pie      \
+    --enable-default-ssp      \
+    --disable-nls             \
+    --disable-shared          \
+    --disable-multilib        \
+    --disable-threads         \
+    --disable-libatomic       \
+    --disable-libgomp         \
+    --disable-libquadmath     \
+    --disable-libssp          \
+    --disable-libvtv          \
+    --disable-libstdcxx       \
+    --enable-languages=c,c++
+
+# real    0m4.832s
+# user    0m2.984s
+# sys     0m2.537s
+```
+
+- Full breakdown of command can be found here:
+  <https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter05/gcc-pass1.html>
+
+Then we can `make` and `make install`
+```bash
+time make
+time make install
+```
+
+#### ERRORS
+
+Error:
+```txt
+libtool: link: (cd ".libs" && rm -f "libcp1plugin.so.0" && ln -s "libcp1plugin.so.0.0.0" "libcp1plugin.so.0")
+libtool: link: (cd ".libs" && rm -f "libcp1plugin.so" && ln -s "libcp1plugin.so.0.0.0" "libcp1plugin.so")
+libtool: link: ( cd ".libs" && rm -f "libcp1plugin.la" && ln -s "../libcp1plugin.la" "libcp1plugin.la" )
+make[3]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[2]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+make: *** [Makefile:1048: all] Error 2
+```
+
+Failing at line 1048 of the makefile:
+```make
+all:
+        +@r=`${PWD_COMMAND}`; export r; \
+        s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
+          $(MAKE) $(RECURSE_FLAGS_TO_PASS) \
+                $(PGO_BUILD_GEN_FLAGS_TO_PASS) all-host all-target \
+```
+
+Error with verbose output:
+```txt
+checking for x86_64-lfs-linux-gnu-gcc... /mnt/lfs/sources/gcc-15.2.0/build/./gcc/xgcc -B/mnt/lfs/sources/gcc-15.2.0/build/./gcc/ -B/mnt/lfs/tools/x86_64-lfs-linux-gnu/bin/ -B/mnt/lfs/tools/x86_64-lfs-linux-gnu/lib/ -isystem /mnt/lfs/tools/x86_64-lfs-linux-gnu/include -isystem /mnt/lfs/tools/x86_64-lfs-linux-gnu/sys-include
+checking for suffix of object files... configure: error: in `/mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc':
+configure: error: cannot compute suffix of object files: cannot compile
+See `config.log' for more details
+make[1]: *** [Makefile:14102: configure-target-libgcc] Error 1
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+make: *** [Makefile:1048: all] Error 2
+```
+Running with `make -d`:
+```txt
+checking whether ln -s works... yes
+checking for x86_64-lfs-linux-gnu-gcc... /mnt/lfs/sources/gcc-15.2.0/build/./gcc/xgcc -B/mnt/lfs/sources/gcc-15.2.0/build/./gcc/ -B/mnt/lfs/tools/x86_64-lfs-linux-gnu/bin/ -B/mnt/lfs/tools/x86_64-lfs-linux-gnu/lib/ -isystem /mnt/lfs/tools/x86_64-lfs-linux-gnu/include -isystem /mnt/lfs/tools/x86_64-lfs-linux-gnu/sys-include
+checking for suffix of object files... configure: error: in `/mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc':
+configure: error: cannot compute suffix of object files: cannot compile
+See `config.log' for more details
+Reaping losing child 0x5582d453d240 PID 270198
+make[1]: *** [Makefile:14102: configure-target-libgcc] Error 1
+Removing child 0x5582d453d240 PID 270198 from chain.
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+Reaping losing child 0x5612af9fada0 PID 269347
+make: *** [Makefile:1048: all] Error 2
+Removing child 0x5612af9fada0 PID 269347 from chain.
+```
+
+cd /mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc
+grep -A20 -B5 "cannot compute suffix of object files" /mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc/config.log
+
+---
+
+```bash
+cd ..
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+    `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+```
+ 
+
 
 
 
