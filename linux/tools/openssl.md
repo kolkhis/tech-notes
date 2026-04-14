@@ -69,7 +69,6 @@ ones that might be good to know about.
 - `openssl rsa`: Manages RSA private keys, including converting between different
   formats and extracting public keys.
 
-
 - `openssl s_client`: Connects to a remote server using SSL/TLS and displays 
   the server's certificate and other info.
 
@@ -94,6 +93,12 @@ This pulls up the man page for the `dgst`/`s_client` subcommand.
 
 The `openssl` command also has really good tab completion in Bash.
 Type out `openssl ` (with a space) and pres ++tab+tab++, that'll show all available subcommands.
+
+
+## Resources
+
+- `man openssl`  
+- [OpenSSL Documentation](https://www.openssl.org/docs/)  
 
 
 
