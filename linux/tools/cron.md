@@ -320,6 +320,11 @@ E.g.,
 ```
 These will run sequentially, with `01-backup.sh` running before `02-cleanup.sh`.  
 
+Additionally, `run-parts` can be used with different options to control its
+behavior (e.g., `--report` to print the names of the scripts being executed).
+
+See the page on [`run-parts`](./run-parts.md) for more info.  
+
 ## Resources
 
 - `man cron`
