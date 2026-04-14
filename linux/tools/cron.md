@@ -304,6 +304,22 @@ setup-cron-job(){
 
 Cron daily (e.g., in `/etc/cron.daily`) runs at 3:14 AM every morning on a linux system.  
 
+## `run-parts`
+
+Cron uses `run-parts` to run scripts in directories like `/etc/cron.daily`, `/etc/cron.hourly`, etc.
+This is a utility that runs **all** the executable files in a specified directory.
+
+The scripts will be executed in alphabetical order, so we can prefix the 
+script names with numbers to control the order of execution.
+
+E.g.,
+```bash
+# In /etc/cron.daily
+01-backup.sh
+02-cleanup.sh
+```
+These will run sequentially, with `01-backup.sh` running before `02-cleanup.sh`.  
+
 ## Resources
 
 - `man cron`
