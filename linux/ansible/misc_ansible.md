@@ -155,3 +155,13 @@ check when the `dpkg` lock is in effect by using `fuser`.
   become: true
 ```
 
+## Upgrading to Newest Ansible Version on Ubuntu
+On Ubuntu, you can add the Ansible PPA to get the latest version of Ansible.  
+```bash
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install -y ansible
+```
+
+
+
