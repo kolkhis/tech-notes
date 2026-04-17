@@ -81,3 +81,21 @@ Assuming you want to move pane 1 from window 1 to window 2, here’s how you can
     Moves the pane from the source `1.1` (window 1, pane 1) to the target window
     `2` (window 2).  
 
+## Moving a Window to a Different Session
+
+- To move a window to a different session, you can use the `move-window` command.  
+  ```bash
+  tmux move-window -s src-window -t dst-session
+  # e.g.,
+  tmux move-window -s 1 -t new-session
+  ```
+  If you're outside of the session where the window exists, also specify the
+  source session:
+  ```bash
+  tmux move-window -s old-session:1 -t new-session
+  ```
+
+- If you're in the window you want to move, use `prefix+:` to enter command mode and then run:
+  ```bash
+  move-window -t new-session
+  ```
