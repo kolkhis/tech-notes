@@ -3,21 +3,21 @@
 Collections are a way to package and distribute content for reuse.  
 Available in Ansible starting with version 2.9.
 
-
 Collections bundle related Ansible resources, such as roles, playbooks, modules, 
 plugins, and more, into a single, shareable package.  
-
 
 Collections, like Roles, follow a standard directory structure.  
 
 ## What Collections Contain
+
 An Ansible collection can contain any or all of these:
-* Roles: Modular task definitions.
-* Playbooks: High-level workflows that orchestrate tasks across systems.
-* Modules: Custom-built functionality for performing specific tasks.
-* Plugins: Extend Ansible with additional capabilities (e.g., lookup, callback, filter plugins).
-* Documentation: Describes the purpose and usage of the collection.
-* Tests: Provide automated tests for verifying the content.
+
+- Roles: Modular task definitions.
+- Playbooks: High-level workflows that orchestrate tasks across systems.
+- Modules: Custom-built functionality for performing specific tasks.
+- Plugins: Extend Ansible with additional capabilities (e.g., lookup, callback, filter plugins).
+- Documentation: Describes the purpose and usage of the collection.
+- Tests: Provide automated tests for verifying the content.
 
 
 ## Directory Structure of a Collection
