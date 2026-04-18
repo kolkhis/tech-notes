@@ -128,3 +128,25 @@ authentication, etc.
 - <https://spacelift.io/blog/ansible-awx>
 - <https://www.raptorswithhats.com/2022-05-getting-started-with-awx/>
 - <https://github.com/ansible/awx>
+
+## AAP Credentials and Job Templates
+
+People run 'templates' in AWX, but in AAP they are called 'job templates'.
+The job template has an inventory assigned to it, as well as a playbook, and
+belongs to a plroject.  
+
+Credentials are called 'credential types' in AAP, and they can be shared across multiple job templates.
+These credential types can be used for different purposes (e.g., SSH, API tokens, etc.).
+
+Teams "own" the credentials, and they can share them with other teams.
+However, the credentials aren't assigned to other teams directly, they're assigned to the templates themselves.  
+
+This is a common practice in larger organizations where different teams may
+need access to the same resources.
+
+---
+
+
+
+
+
