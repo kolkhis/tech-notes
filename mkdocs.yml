@@ -299,6 +299,7 @@ nav:
 
   - SQL:
     - sql/basics.md
+    - sql/updating-tables.md
     - sql/exploring_a_database.md
 
   - Hax:
