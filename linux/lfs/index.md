@@ -574,10 +574,12 @@ cd $LFS/sources
 tar -xJvf ./binutils-2.46.0.tar.xz
 cd ./binutils-2.46.0/
 mkdir build
+cd build
 ```
+
 Let's `time` the commands to configure and build.  
 ```bash
-../configure --prefix=$LFS/tools \
+time ../configure --prefix=$LFS/tools \
              --with-sysroot=$LFS \
              --target=$LFS_TGT   \
              --disable-nls       \
@@ -590,6 +592,7 @@ Let's `time` the commands to configure and build.
 # user    0m4.585s
 # sys     0m2.860s
 ```
+
 Then we `make`.  
 ```bash
 time make
@@ -730,17 +733,212 @@ make: *** [Makefile:1048: all] Error 2
 Removing child 0x5612af9fada0 PID 269347 from chain.
 ```
 
-cd /mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc
-grep -A20 -B5 "cannot compute suffix of object files" /mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc/config.log
-
 ---
 
+### Reinstalling
+
+GCC requires the GMP, MPFR and MPC packages.
+
 ```bash
-cd ..
-cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
-    `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+tar -xf ../mpfr-4.2.2.tar.xz
+mv -v mpfr-4.2.2 mpfr
+tar -xf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+tar -xf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+```
+
+An error while trying to run `configure`:
+```txt
+configure: error: Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+.
+Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
+their locations.  Source code for these libraries can be found at
+their respective hosting sites as well as at
+https://gcc.gnu.org/pub/gcc/infrastructure/.  See also
+```
+
+Error while running `make`
+```txt
+Libraries have been installed in:
+   /mnt/lfs/tools/lib/../lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+libtool: finish: PATH="/mnt/lfs/tools/bin:/usr/bin:/sbin" ldconfig -n /mnt/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/15.2.0/plugin
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /mnt/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/15.2.0/plugin
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+make[3]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[2]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+make: *** [Makefile:2654: install] Error 2
+```
+
+Manual run after changing ownership:
+```txt
+make[2]: *** No rule to make target 'install'.  Stop.
+make[2]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/x86_64-lfs-linux-gnu/libgcc'
+make[1]: *** [Makefile:14255: install-target-libgcc] Error 2
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+make: *** [Makefile:2654: install] Error 2
+Command exited with non-zero status 2
+```
+
+
+```txt
+libtool: link: (cd ".libs" && rm -f "libcp1plugin.so.0" && ln -s "libcp1plugin.so.0.0.0" "libcp1plugin.so.0")
+libtool: link: (cd ".libs" && rm -f "libcp1plugin.so" && ln -s "libcp1plugin.so.0.0.0" "libcp1plugin.so")
+libtool: link: ( cd ".libs" && rm -f "libcp1plugin.la" && ln -s "../libcp1plugin.la" "libcp1plugin.la" )
+make[3]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[2]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build/libcc1'
+make[1]: Leaving directory '/mnt/lfs/sources/gcc-15.2.0/build'
+make: *** [Makefile:1048: all] Error 2
+```
+
+### Fix For Errors
+
+We deleted the `binutils` and `gcc` directories, along with all subdirectories in
+the `gcc` directory containing the dependencies `mpfr`, `mpd`, and `gmp`.  
+
+Starting over from scratch, I wrote a script to execute each of the steps 
+exactly as described in the book.
+
+The script is below.  
+```bash
+#!/bin/bash
+
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu # x86_64-lfs-linux-gnu
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+export MAKEFLAGS="-j$(nproc)"
+
+if [[ $USER != "lfs" ]]; then
+        printf >&2 'ERROR: Run as root\n'
+fi
+
+
+binutils-setup(){
+        cd $LFS/sources  || {
+                printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+        }
+        tar -xJvf ./binutils-2.46.0.tar.xz
+        cd ./binutils-2.46.0/
+        mkdir build
+        cd build
+        ../configure --prefix=$LFS/tools \
+                     --with-sysroot=$LFS \
+                     --target=$LFS_TGT   \
+                     --disable-nls       \
+                     --enable-gprofng=no \
+                     --disable-werror    \
+                     --enable-new-dtags  \
+                     --enable-default-hash-style=gnu
+        printf "Running make\n"
+        time make
+        printf "Running make install\n"
+        time make install
+}
+
+dep-setup(){
+        cd $LFS/sources/gcc-15.2.0 || {
+                printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+        }
+        tar -xf ../mpfr-4.2.2.tar.xz
+        mv -v mpfr-4.2.2 mpfr
+        tar -xf ../gmp-6.3.0.tar.xz
+        mv -v gmp-6.3.0 gmp
+        tar -xf ../mpc-1.3.1.tar.gz
+        mv -v mpc-1.3.1 mpc
+}
+
+setup-gcc() {
+        cd "$LFS/sources"
+        if ! [[ -d ./gcc-15.2.0 ]]; then
+                tar -xJvf ./gcc-15.2.0.tar.xz
+        fi
+        cd ./gcc-15.2.0
+
+        case $(uname -m) in
+          x86_64)
+            sed -e '/m64=/s/lib64/lib/' \
+                -i.orig gcc/config/i386/t-linux64
+         ;;
+        esac
+
+        if ! [[ -d ./build ]]; then
+                mkdir build
+        fi
+        cd build
+
+        printf "Trying to configure now.\n"
+
+        time ../configure             \
+            --target=$LFS_TGT         \
+            --prefix=$LFS/tools       \
+            --with-glibc-version=2.43 \
+            --with-sysroot=$LFS       \
+            --with-newlib             \
+            --without-headers         \
+            --enable-default-pie      \
+            --enable-default-ssp      \
+            --disable-nls             \
+            --disable-shared          \
+            --disable-multilib        \
+            --disable-threads         \
+            --disable-libatomic       \
+            --disable-libgomp         \
+            --disable-libquadmath     \
+            --disable-libssp          \
+            --disable-libvtv          \
+            --disable-libstdcxx       \
+            --enable-languages=c,c++
+
+        printf "Running MAKE\n"
+        time make
+        printf "Running MAKE INSTALL\n"
+        time make install > gcc-install-logs.log
+}
+
+binutils-setup
+dep-setup
+setup-gcc
 ```
  
+This fixed the issue. Ran the script as the `lfs` user to ensure correct
+permissions on all files.  
+
 
 
 
