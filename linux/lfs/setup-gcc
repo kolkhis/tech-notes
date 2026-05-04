@@ -1,0 +1,103 @@
+#!/bin/bash
+
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu # x86_64-lfs-linux-gnu
+PATH=/usr/bin
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+PATH=$LFS/tools/bin:$PATH
+CONFIG_SITE=$LFS/usr/share/config.site
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
+export MAKEFLAGS="-j$(nproc)"
+
+if [[ $USER != "lfs" ]]; then
+        printf >&2 'ERROR: Run as root\n'
+fi
+
+
+binutils-setup(){
+        cd $LFS/sources  || {
+                printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+        }
+        tar -xJvf ./binutils-2.46.0.tar.xz
+        cd ./binutils-2.46.0/
+        mkdir build
+        cd build
+        ../configure --prefix=$LFS/tools \
+                     --with-sysroot=$LFS \
+                     --target=$LFS_TGT   \
+                     --disable-nls       \
+                     --enable-gprofng=no \
+                     --disable-werror    \
+                     --enable-new-dtags  \
+                     --enable-default-hash-style=gnu
+        printf "Running make\n"
+        time make
+        printf "Running make install\n"
+        time make install
+}
+
+dep-setup(){
+        cd $LFS/sources/gcc-15.2.0 || {
+                printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+        }
+        tar -xf ../mpfr-4.2.2.tar.xz
+        mv -v mpfr-4.2.2 mpfr
+        tar -xf ../gmp-6.3.0.tar.xz
+        mv -v gmp-6.3.0 gmp
+        tar -xf ../mpc-1.3.1.tar.gz
+        mv -v mpc-1.3.1 mpc
+}
+
+setup-gcc() {
+        cd "$LFS/sources"
+        if ! [[ -d ./gcc-15.2.0 ]]; then
+                tar -xJvf ./gcc-15.2.0.tar.xz
+        fi
+        cd ./gcc-15.2.0
+
+        case $(uname -m) in
+          x86_64)
+            sed -e '/m64=/s/lib64/lib/' \
+                -i.orig gcc/config/i386/t-linux64
+         ;;
+        esac
+
+        if ! [[ -d ./build ]]; then
+                mkdir build
+        fi
+        cd build
+
+        printf "Trying to configure now.\n"
+
+        time ../configure             \
+            --target=$LFS_TGT         \
+            --prefix=$LFS/tools       \
+            --with-glibc-version=2.43 \
+            --with-sysroot=$LFS       \
+            --with-newlib             \
+            --without-headers         \
+            --enable-default-pie      \
+            --enable-default-ssp      \
+            --disable-nls             \
+            --disable-shared          \
+            --disable-multilib        \
+            --disable-threads         \
+            --disable-libatomic       \
+            --disable-libgomp         \
+            --disable-libquadmath     \
+            --disable-libssp          \
+            --disable-libvtv          \
+            --disable-libstdcxx       \
+            --enable-languages=c,c++
+
+        printf "Running MAKE\n"
+        time make
+        printf "Running MAKE INSTALL\n"
+        time make install > gcc-install-logs.log
+}
+
+binutils-setup
+dep-setup
+setup-gcc
+
