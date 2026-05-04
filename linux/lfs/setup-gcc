@@ -11,7 +11,7 @@ export LFS LC_ALL LFS_TGT PATH CONFIG_SITE
 export MAKEFLAGS="-j$(nproc)"
 
 if [[ $USER != "lfs" ]]; then
-        printf >&2 'ERROR: Run as root\n'
+        printf >&2 'ERROR: Run as the lfs user\n'
 fi
 
 
