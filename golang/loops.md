@@ -38,10 +38,25 @@ for i := 0; i <= 10; i++ {
 
 - `i := 0` defines a temporary variable to use as the iterator.  
 - `i <= 10` sets a condition for the loop to continue (using the temp var).  
-- `i++` defines an action to perform on each iteration (increment var `i` by 1).  
+- `i++` defines an action to perform after each iteration (increment var `i` by 1).  
  
 
+## While-Style Loops
 
+Go does not have a `while` keyword, but you can achieve the same effect using a
+`for` loop without the initialization and post statements.  
+
+You simply define a condition for the loop to run, just as in `while` loops in
+many languages.  
+```go
+var i int = 0
+for i < 5 {
+    fmt.Printf("Loop iteration: %v\n", i) 
+    i++
+}
+```
+This example achieves the same functionality as the standard loop, but it can
+be used in any other way.  
 
 
 
