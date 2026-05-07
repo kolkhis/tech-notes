@@ -8,7 +8,7 @@ syadmins, and it's an RHCSA exam objective.
 
 The steps to reset the root password are as follows:
 
-1. Boot in recovery mode.
+1. Reboot the system to boot in recovery mode.
    ```bash
    reboot
    ```
@@ -19,7 +19,8 @@ The steps to reset the root password are as follows:
 
 4. Navigate to the end of the line and type in `rd.break`.  
 
-5. Hit ++ctrl+x++. This will boot into emergency mode.
+5. Hit ++ctrl+x++. This will boot into emergency mode, which will provide a
+   shell to make changes to the system.
 
 6. Then, remount the `/sysroot/` directory:
    ```bash
@@ -34,10 +35,10 @@ The steps to reset the root password are as follows:
 
 8. Now, change the root password itself.
    ```bash
-   passwd
+   passwd root
    ```
-   Change the password to **the one that you're given**.  
-   Don't just pick one. You usually need to set the password to a specific value.
+   - On the RHCSA exam, change the password to **the one that you're given**.  
+   - Don't just pick one. You usually need to set the password to a specific value.
 
 9. Then, create the `.autorelabel` file:
    ```bash
