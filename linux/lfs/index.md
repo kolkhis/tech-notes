@@ -939,8 +939,242 @@ setup-gcc
 This fixed the issue. Ran the script as the `lfs` user to ensure correct
 permissions on all files.  
 
+```bash
+su lfs
+./setup-gcc
+```
+
+---
 
 
+### GCC Post-Install
+
+This install of GCC does not come with a `limits.h` header file.  
+Normally it'd be in `$LFS/usr/include/limits.h`.  
+It's not needed for building glibc, but it'll be needed later.  
+
+```bash
+cd ..
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+```
+This is having us concatenate the contents of all 3 of these files: 
+
+- gcc/limitx.h 
+- gcc/glimits.h 
+- gcc/limity.h
+
+Into `/mnt/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/15.2.0/include/limits.h`.  
+
+The `$LFS/tools` directory is where the final build products are stored.  
+
+That concludes section 5.3.  
+
+
+## Installing Linux API Headers
+
+- [Book Source: Chapter 5.4](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter05/linux-headers.html)
+    - Explanations of headers purposes can be found there.  
+
+We need to install the Linux API Headers (in `linux-6.18.10.tar.xz`) expose the 
+kernel's API for use by Glibc.
+
+```bash
+cd $LFS/sources
+tar -xJvf linux-6.18.10.tar.xz
+cd linux-6.18.10
+```
+
+Ensure no stale files exist in the package
+```bash
+make mrproper
+```
+
+> Now extract the user-visible kernel headers from the source. The recommended
+> make target “headers_install” cannot be used, because it requires rsync,
+> which may not be available. The headers are first placed in ./usr, then
+> copied to the needed location.
+
+```bash
+make headers
+find usr/include -type f ! -name '*.h' -delete
+cp -rv usr/include $LFS/usr
+```
+
+## Installing Glibc
+
+1. First, create a symbolic link for LSB compliance (from the $LFS root
+   directory).
+   ```bash
+   cd $LFS
+   case $(uname -m) in
+       i?86)   
+            ln -sfv ld-linux.so.2 $LFS/lib/ld-lsb.so.3
+            ;;
+       x86_64) 
+            ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64
+            ln -sfv ../lib/ld-linux-x86-64.so.2 $LFS/lib64/ld-lsb-x86-64.so.3
+            ;;
+   esac
+   ```
+
+    - This checks CPU architecture and symlinks to different locations for i86
+      and x86_64.  
+
+    - I could not find these `.so` files on the host after building headers, however
+      I found you can prematurely make a symlink to a file before it exists. This is
+      just for LSB compliance reasons.  
+
+
+2. Extract the glibc tarball:
+   ```bash
+   tar -xJvf ./glibc-2.43.tar.xz
+   cd glibc-2.43
+   ```
+
+3. Some of the Glibc programs use the non-FHS-compliant `/var/db` directory to
+   store their runtime data.
+   We can use `patch` to apply the patch they have for this.  
+   ```bash
+   patch -Np1 -i ../glibc-fhs-1.patch
+   ```
+
+4. Make a build directory
+   ```bash
+   mkdir build
+   cd build
+   ```
+
+5. Ensure that the `ldconfig` and `sln` utilities are installed into `/usr/sbin`.  
+   ```bash
+   echo "rootsbindir=/usr/sbin" > configparms
+   ```
+
+6. Run the `configure` script to prep for glibc compilation.  
+   ```bash
+   time ../configure                     \
+      --prefix=/usr                      \
+      --host=$LFS_TGT                    \
+      --build=$(../scripts/config.guess) \
+      --disable-nscd                     \
+      libc_cv_slibdir=/usr/lib           \
+      --enable-kernel=5.4
+   #real    0m10.479s
+   #user    0m6.139s
+   #sys     0m4.273s
+   ```
+
+7. Compile glibc
+   ```bash
+   time make
+   #real    2m47.189s
+   #user    22m11.875s
+   #sys     6m21.092s
+   ```
+
+8. Finally, `make install` it while setting the `DESTDIR` variable to `$LFS`.  
+   ```bash
+   make DESTDIR="$LFS" install
+   ```
+    - The `DESTDIR` make variable is used by almost all packages to define the
+      location where the package should be installed.
+
+9. Fix a hard coded path to the executable loader in the ldd script. 
+   ```bash
+   sed '/RTLDLIST=/s@/usr@@g' -i $LFS/usr/bin/ldd
+   ```
+
+The cross-toolchain is now set up, but now we need to make sure that compiling
+and linking works as intended. 
+
+Do a sanity check:
+```bash
+cd $LFS/sources
+echo 'int main(){}' | $LFS_TGT-gcc -x c - -v -Wl,--verbose &> dummy.log
+readelf -l a.out | grep ': /lib'
+```
+
+- The output of the `readelf` command should not contain the value of `$LFS`.  
+
+Look for important success messages in the dummy.log file.  
+```bash
+grep -E -o "$LFS/lib.*/S?crt[1in].*succeeded" dummy.log
+```
+
+Expected output:
+```text
+/mnt/lfs/lib/../lib/Scrt1.o succeeded
+/mnt/lfs/lib/../lib/crti.o succeeded
+/mnt/lfs/lib/../lib/crtn.o succeeded
+```
+
+Verify that the compiler is looking in the right place for header files:
+```bash
+grep -B3 "^ $LFS/usr/include" dummy.log
+```
+
+Expected output:
+```text
+#include <...> search starts here:
+ /mnt/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/15.2.0/include
+ /mnt/lfs/tools/lib/gcc/x86_64-lfs-linux-gnu/15.2.0/include-fixed
+ /mnt/lfs/usr/include
+```
+
+Then verify that the new linker is being used.  
+```bash
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+```
+
+Expected output:
+```text
+SEARCH_DIR("=/mnt/lfs/tools/x86_64-lfs-linux-gnu/lib64")
+SEARCH_DIR("=/usr/local/lib64")
+SEARCH_DIR("=/lib64")
+SEARCH_DIR("=/usr/lib64")
+SEARCH_DIR("=/mnt/lfs/tools/x86_64-lfs-linux-gnu/lib")
+SEARCH_DIR("=/usr/local/lib")
+SEARCH_DIR("=/lib")
+SEARCH_DIR("=/usr/lib");
+```
+
+Ensure that we're using the correct libc:
+
+```bash
+grep "/lib.*/libc.so.6 " dummy.log
+```
+
+Expected output:
+```text
+attempt to open /mnt/lfs/usr/lib/libc.so.6 succeeded
+```
+
+Check that the correct linker is being used:  
+```bash
+grep found dummy.log
+```
+
+Expected output:
+```text
+found ld-linux-x86-64.so.2 at /mnt/lfs/usr/lib/ld-linux-x86-64.so.2
+```
+
+Then that part is done. We can remove the dummy test log.  
+```bash
+rm dummy.log
+```
+
+## Installing Libstdc++ (Libstdc++ from GCC-15.2.0)
+
+- [Book Source: Chapter 5.6](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter05/gcc-libstdc++.html)
+
+> **Note**: Libstdc++ is part of the GCC sources. You should first unpack the GCC
+> tarball and change to the gcc-15.2.0 directory.
+
+We've already installed GCC at this point, so the `gcc-15.2.0` directory should
+already be in `$LFS/sources`.  
+
+1. Create a separate build dir for Libstdc++.  
 
 
 ## Resources
