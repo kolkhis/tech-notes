@@ -40,6 +40,7 @@ binutils-setup(){
 dep-setup(){
         cd $LFS/sources/gcc-15.2.0 || {
                 printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+                return 1
         }
         tar -xf ../mpfr-4.2.2.tar.xz
         mv -v mpfr-4.2.2 mpfr
@@ -50,11 +51,18 @@ dep-setup(){
 }
 
 setup-gcc() {
-        cd "$LFS/sources"
+        cd "$LFS/sources" || {
+            printf >&2 "ERROR: Could not CD to %s/sources\n" "$LFS"
+            return 1
+        }
         if ! [[ -d ./gcc-15.2.0 ]]; then
                 tar -xJvf ./gcc-15.2.0.tar.xz
         fi
-        cd ./gcc-15.2.0
+        cd ./gcc-15.2.0 || {
+            printf >&2 "ERROR: Could not CD to %s/sources/gcc-15.2.0\n" "$LFS"
+            return 1
+        }
+
 
         case $(uname -m) in
           x86_64)
@@ -66,15 +74,18 @@ setup-gcc() {
         if ! [[ -d ./build ]]; then
                 mkdir build
         fi
-        cd build
+        cd build || {
+            printf >&2 "ERROR: Could not switch to build directory\n"
+            return 1
+        }
 
-        printf "Trying to configure now.\n"
+        printf "Attempting to run configure now.\n"
 
         time ../configure             \
-            --target=$LFS_TGT         \
-            --prefix=$LFS/tools       \
+            --target="$LFS_TGT"       \
+            --prefix="$LFS/tools"     \
             --with-glibc-version=2.43 \
-            --with-sysroot=$LFS       \
+            --with-sysroot="$LFS"     \
             --with-newlib             \
             --without-headers         \
             --enable-default-pie      \
