@@ -165,7 +165,7 @@ nav:
       - linux/tools/shopt.md
       - linux/tools/strace.md
       - linux/tools/sysctl.md
-      - linux/tools/systemd.md
+      - linux/tools/systemd-systemctl.md
       - linux/tools/tar.md
       - linux/tools/top.md
       - linux/tools/trap_builtin.md
