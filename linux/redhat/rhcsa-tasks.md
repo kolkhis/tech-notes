@@ -45,20 +45,18 @@ The steps to reset the root password are as follows:
    touch /.autorelabel
    ```
     - This is primarily for SELinux. It will ensure that SELinux applies labels the way that it's supposed to.  
+    - This is important because changing the password modifies the `/etc/shadow` 
+      file, and if SELinux doesn't apply the correct labels to that file, then you 
+      won't be able to log in with the new password.
 
 10. Exit the chrooted environment. 
-    ```bash
-    exit
-    ```
-    Exit again to exit the emergency shell and continue the normal boot
-    process.
     ```bash
     exit
     ```
 
 11. Finally, reboot the system.  
     ```bash
-    reboot
+    reboot -f
     # or
     shutdown -r now
     # or
@@ -66,6 +64,17 @@ The steps to reset the root password are as follows:
     ```
 
 When all that is done, try logging in with the password that we set.  
+
+### TL;DR
+```bash
+# Reboot and enter GRUB, edit the kernel line to add `rd.break`, then
+mount -o remount,rw /sysroot/
+chroot /sysroot
+passwd root
+touch /.autorelabel
+exit
+reboot -f
+```
 
 ### Note on Other Distros
 
