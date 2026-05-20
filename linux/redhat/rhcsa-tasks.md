@@ -13,14 +13,14 @@ The steps to reset the root password are as follows:
    reboot
    ```
 
-2. Then, when we get into GRUB, select the kernel and press ++e++.  
+2. Then, when we get into GRUB, select the kernel (`linux-*`) and press ++e++.  
 
-3. Navigate down to the line that starts with `linux`.  
+3. Navigate down to the line that starts with `linux`. 
 
 4. Navigate to the end of the line and type in `rd.break`.  
 
 5. Hit ++ctrl+x++. This will boot into emergency mode, which will provide a
-   shell to make changes to the system.
+   recovery shell to make changes to the system.
 
 6. Then, remount the `/sysroot/` directory:
    ```bash
@@ -31,7 +31,7 @@ The steps to reset the root password are as follows:
    ```bash
    chroot /sysroot
    ```
-   This will bring the root filesystem back online. 
+   This will bring the root filesystem back online (see `man chroot`). 
 
 8. Now, change the root password itself.
    ```bash
@@ -50,13 +50,38 @@ The steps to reset the root password are as follows:
     ```bash
     exit
     ```
+    Exit again to exit the emergency shell and continue the normal boot
+    process.
+    ```bash
+    exit
+    ```
 
 11. Finally, reboot the system.  
     ```bash
     reboot
+    # or
+    shutdown -r now
+    # or
+    systemctl reboot
     ```
 
 When all that is done, try logging in with the password that we set.  
+
+### Note on Other Distros
+
+Typically other RHEL-based distros have a somewhat similar boot process (namely 
+Rocky Linux, Alma Linux, etc.).
+
+Other distributions have a similar process but the exact steps differ. 
+
+On Ubuntu/Debian:
+
+- You would need to edit the `linux` line in GRUB to add `init=/bin/bash` instead of `rd.break`.
+- Then, you would need to remount the root filesystem with `mount -o remount,rw /` instead
+  of `mount -o remount,rw /sysroot/`.
+- Finally, you would not need to create the `.autorelabel` file, as Ubuntu
+  /Debian does not use SELinux.
+- The rest of the steps are the same.
 
 
 ## Enable Persistent Storage for Journald
