@@ -459,7 +459,7 @@ Unit=run-script.service
 WantedBy=multi-user.target
 ```
 
-Systemd waits for an event (new file, modification, etc.), then triffers the
+Systemd waits for an event (new file, modification, etc.), then triggers the
 `.service`.  
 
 The actual event **is not passed to the service**. 
