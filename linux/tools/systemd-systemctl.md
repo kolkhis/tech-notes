@@ -296,7 +296,83 @@ systemd-umount
 
 ---
 
-## `.timer` Files
+
+## Environment Variables for Systemd Services
+You can set an `EnvironmentFile=` in the `[Service]` section to load environment
+variables for use in the service.  
+
+An example:
+```ini
+[Service]
+EnvironmentFile=/etc/gh-backups.env
+ExecStart=/usr/local/bin/gh-backup.sh
+```
+
+The `/etc/gh-backups.env` file might look like:  
+```bash
+GITHUB_USER_ORG=MyOrg
+GITHUB_TOKEN=ghp_xxx
+S3_BUCKET="s3://my-bucket-name"
+```
+You don't need to use `export` on these variables.  
+
+Using this method, the `gh-backup.sh` script won't need to source a `.env` file, 
+since the variables will already be in the environment.  
+
+
+## Mounting Filesystems with Systemd
+
+Systemd can handle mounting file systems.  
+
+The basic way to do this is by using a `.mount` unit file. These contain the UUID of
+the filesystems that are to be mounted and where they should be mounted.
+
+Systemd also has the ability to handle auto-mounting filesystems.  
+You can create a `.automount` unit file to specify the instructions for doing this.  
+
+
+
+## Types of Unit Files
+
+There are many types of unit files that systemd supports, each with a file extension
+that reflects the type of unit file it is.  
+
+- `.service`: Defines a service or daemon process.  
+- `.socket`: Describes an IPC or network socket for socket activation.  
+- `.timer`: Used to schedule service activation (like cron, but systemd).  
+    - Muse be paired with `.service` files.  
+- `.mount`: Manages mount points in the filesystem (like `/etc/fstab`, but systemd).  
+- `.automount`: Defines automount behavior for on-demand mounting.  
+    - This requires a corresponding `.mount` unit file.  
+- `.target`: Tracks kernel devices (via `udev`).  
+    - These are rarely user-defined unit files.  
+    - Often used like "runlevels", e.g., `multi-user.target`, `graphical.target`.  
+- `.swap`: Controls swap devices or files.  
+- `.path`: Triggers a service when a file or directory changes (e.g., `inotify`).  
+    - This can be used to set up a kind of tripwire.  
+    - They use the `inotify` Linux kernel API, just like `inotifywait`.  
+- `.slice`: Used for resource control a `cgroups` (control groups) hierarchy.  
+- `.scope`: Represent an externally created process (e.g., via `systemd-run`).  
+    - These are auto-generated when launching transient processes.  
+    - Transient processes are processes that systemd didn't start through a static
+      unit file.  
+- `.busname`: D-Bus name activation unit. These are rare. You won't need to worry 
+  about these unless you're writing a D-Bus daemon.  
+- `.network`: Not a unit file *directly*, these are configuration files for the
+  `systemd-networkd` service. 
+    - Only use these if you're using `systemd-networkd` instead of NetworkManager, and 
+      you're setting up headless servers or containers.  
+    - These would go in `/etc/systemd/network/`.  
+- `.link`: Configures links (NICs) for `systemd-networkd`.  
+- `.netdev`: Defines virtual network devices (`vEth`, `bridge`, etc.).  
+    - These can create virtual network devices that can be used on bare metal, VMs,
+      containers, etc.  
+
+
+These different unit file types can be broken down into **user-facing** unit types
+and **advanced/internal** unit types.  
+
+### `.timer` Unit Files
 The `.timer` file can specify how often a service should run a particular thing.  
 
 An example `gh-backups.timer` file:
@@ -347,39 +423,6 @@ systemctl start gh-backup.service       # Trigger manually
 systemctl enable --now gh-backup.timer  # Schedule it
 ```
 
-## Environment Variables for Systemd Services
-You can set an `EnvironmentFile=` in the `[Service]` section to load environment
-variables for use in the service.  
-
-An example:
-```ini
-[Service]
-EnvironmentFile=/etc/gh-backups.env
-ExecStart=/usr/local/bin/gh-backup.sh
-```
-
-The `/etc/gh-backups.env` file might look like:  
-```bash
-GITHUB_USER_ORG=MyOrg
-GITHUB_TOKEN=ghp_xxx
-S3_BUCKET="s3://my-bucket-name"
-```
-You don't need to use `export` on these variables.  
-
-Using this method, the `gh-backup.sh` script won't need to source a `.env` file, 
-since the variables will already be in the environment.  
-
-
-## Mounting Filesystems with Systemd
-
-Systemd can handle mounting file systems.  
-
-The basic way to do this is by using a `.mount` unit file. These contain the UUID of
-the filesystems that are to be mounted and where they should be mounted.
-
-Systemd also has the ability to handle auto-mounting filesystems.  
-You can create a `.automount` unit file to specify the instructions for doing this.  
-
 ### `.mount` Unit Files
 The `.mount` unit file should have a `[Mount]` section.  
 ```ini
@@ -402,48 +445,26 @@ DirectoryMode=0755
 WantedBy=multi-user.target
 ```
 
+### `.path` Example
+A `.path` unit file watches a file or directory and triggers a `.service` when it changes.
 
+We can watch for a new file in some directory and then process it:  
+```ini
+# file-watcher.path
+[Path]
+PathChanged=/some/dir
+Unit=run-script.service
 
+[Install]
+WantedBy=multi-user.target
+```
 
-## Types of Unit Files
+Systemd waits for an event (new file, modification, etc.), then triffers the
+`.service`.  
 
-There are many types of unit files that systemd supports, each with a file extension
-that reflects the type of unit file it is.  
+The actual event **is not passed to the service**. 
+You can use the service to determine what happened and why.  
 
-- `.service`: Defines a service or daemon process
-- `.socket`: Describes an IPC or network socket for socket activation
-- `.timer`: Used to schedule service activation (like cron, but systemd)
-    - Muse be paired with `.service` files.  
-- `.mount`: Manages mount points in the filesystem (like `/etc/fstab`, but systemd)
-- `.automount`: Defines automount behavior for on-demand mounting
-    - This requires a corresponding `.mount` unit file.  
-- `.target`: Tracks kernel devices (via `udev`).  
-    - These are rarely user-defined unit files.  
-    - Often used like "runlevels", e.g., `multi-user.target`, `graphical.target`
-- `.swap`: Controls swap devices or files.  
-- `.path`: Triggers a service when a file or directory changes (e.g., `inotify`)
-    - This can be used to set up a kind of tripwire. 
-    - They use the `inotify` Linux kernel API, just like `inotifywait`.  
-- `.slice`: Used for resource control a `cgroups` (control groups) hierarchy
-- `.scope`: Represent an externally created process (e.g., via `systemd-run`)
-    - These are auto-generated when launching transient processes.  
-    - Transient processes are processes that systemd didn't start through a static
-      unit file.  
-- `.busname`: D-Bus name activation unit. These are rare. You won't need to worry 
-  about these unless you're writing a D-Bus daemon.  
-- `.network`: Not a unit file *directly*, these are configuration files for the
-  `systemd-networkd` service. 
-    - Only use these if you're using `systemd-networkd` instead of NetworkManager, and 
-      you're setting up headless servers or containers.  
-    - These would go in `/etc/systemd/network/`.  
-- `.link`: Configures links (NICs) for `systemd-networkd`.  
-- `.netdev`: Defines virtual network devices (`vEth`, `bridge`, etc.)
-    - These can create virtual network devices that can be used on bare metal, VMs,
-      containers, etc.  
-
-
-These different unit file types can be broken down into **user-facing** unit types
-and **advanced/internal** unit types.  
 
 ### User-Facing Unit File Types
 
@@ -477,25 +498,6 @@ managed dunamically by systemd or udev.
 | `.network` | Used by `systemd-networkd` to assign IPs, gateways, etc.
 | `.netdev`  | Defines virtual devices like `veth`, `bridge`, `vxlan`, etc.
 
-
-## `.path` Example
-
-We can watch for a new file in some directory and then process it:  
-```ini
-# file-watcher.path
-[Path]
-PathChanged=/some/dir
-Unit=run-script.service
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Systemd waits for an event (new file, modification, etc.), then triffers the
-`.service`.  
-
-The actual event **is not passed to the service**. 
-You can use the service to determine what happened and why.  
 
 
 ## Resources
