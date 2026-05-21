@@ -32,6 +32,16 @@ The steps to reset the root password are as follows:
    chroot /sysroot
    ```
    This will bring the root filesystem back online (see `man chroot`). 
+    - If it says `chroot` is not available, it's probably not in the `PATH`
+      environment variable. On RHEL 10, `find` is available.
+      ```bash
+      find / -name 'chroot' -executable
+      ```
+    - On a clean installation of RHEL 10, `chroot` was found in
+      `/sysroot/usr/sbin/chroot`, so specify the entire path.
+      ```bash
+      /sysroot/usr/sbin/chroot /sysroot
+      ```
 
 8. Now, change the root password itself.
    ```bash
@@ -40,7 +50,7 @@ The steps to reset the root password are as follows:
    - On the RHCSA exam, change the password to **the one that you're given**.  
    - Don't just pick one. You usually need to set the password to a specific value.
 
-9. Then, create the `.autorelabel` file:
+9. Then, create the `.autorelabel` file.  
    ```bash
    touch /.autorelabel
    ```
@@ -67,7 +77,7 @@ When all that is done, try logging in with the password that we set.
 
 ### TL;DR
 ```bash
-# Reboot and enter GRUB, edit the kernel line to add `rd.break`, then
+# Reboot and enter GRUB, edit the kernel line with E to add `rd.break`, then Ctrl+X to boot into emergency mode, then run:
 mount -o remount,rw /sysroot/
 chroot /sysroot
 passwd root
