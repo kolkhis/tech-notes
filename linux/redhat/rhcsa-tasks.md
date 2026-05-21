@@ -32,11 +32,14 @@ The steps to reset the root password are as follows:
    chroot /sysroot
    ```
    This will bring the root filesystem back online (see `man chroot`). 
+
     - If it says `chroot` is not available, it's probably not in the `PATH`
-      environment variable. On RHEL 10, `find` is available.
+      environment variable. On RHEL 10, `find` is available in `PATH` to find where 
+      the `chroot` binary is located.  
       ```bash
       find / -name 'chroot' -executable
       ```
+
     - On a clean installation of RHEL 10, `chroot` was found in
       `/sysroot/usr/sbin/chroot`, so specify the entire path.
       ```bash
