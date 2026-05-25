@@ -2299,4 +2299,5 @@ bind -p | grep -ve '^#' -e 'self-insert'
 - <https://www.linuxmissive.com/2020/04/how-to-interrupt-grub-and-override-init.html>
 - [Linux Kernel Programming](https://sysprog21.github.io/lkmpg/)
 - [DevOps Bash Tools List](https://github.com/HariSekhon/DevOps-Bash-tools)
+- [Exit Codes](https://medium.com/@himanshurahangdale153/list-of-exit-status-codes-in-linux-f4c00c46c9e0)
 
