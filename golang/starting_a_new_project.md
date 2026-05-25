@@ -136,7 +136,9 @@ project/
 ```
 
 ## Writing a Package  
+
 * Naming a package `util` is a **big anti-pattern** in the Go world.  
+
 Use a name that "makes sense" to what the code does.  
 
 Go to your project directory  
@@ -148,7 +150,8 @@ With `vim-go` will automatically populate this file with `package main` and `fun
 
 This will be the file that acts as the command.  
 
-Now, in your project directory, if your Go code is named `main.go`, change it to another name.  
+Now, in your project directory, if your Go code is named `main.go`, change it 
+to another name.  
 `greet.go` in this case.  
 Inside that file, you can export functions by capitalizing the first letter of the function name.  
 

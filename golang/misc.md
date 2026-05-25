@@ -110,6 +110,7 @@ In this case, it's an `int`, so the zero-value is `0`.
 ```go
 	for i, v := range m {
 ```
+
 * `for`: Starts a loop.
 * `i, v :=`: Declares two variables, `i` (the key from the map) and `v` (the corresponding value).
 * `range m`: `range` is used to iterate over elements in a variety of data structures.  
@@ -120,6 +121,7 @@ In this case, it's an `int`, so the zero-value is `0`.
 ```go
 	c, out := make(chan int), make(chan int)
 ```
+
 * `c, out`: This declares two variables, `c` and `out`.  
     * Both variables are channels that can transport integers (`int`).
 * `:=`: The short variable declaration operator.  
