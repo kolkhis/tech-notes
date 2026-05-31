@@ -1176,6 +1176,169 @@ already be in `$LFS/sources`.
 
 1. Create a separate build dir for Libstdc++.  
 
+```bash
+cd $LFS/sources/gcc-15.2.0
+mkdir build
+cd build
+../libstdc++-v3/configure      \
+    --host=$LFS_TGT            \
+    --build=$(../config.guess) \
+    --prefix=/usr              \
+    --disable-multilib         \
+    --disable-nls              \
+    --disable-libstdcxx-pch    \
+    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/15.2.0
+make
+
+make DESTDIR=$LFS install
+
+# Remove the libtool archive files because they are harmful for cross-compilation:
+rm -v $LFS/usr/lib/lib{stdc++{,exp,fs},supc++}.la
+```
+
+## Chapter 6
+
+- [Book Source: Chapter 6 Intro](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter06/introduction.html)
+
+This chapter shows how to cross-compile basic utilities using the just built cross-toolchain.
+
+The tools will be built using the cross-toolchain that we have just finished setting up.  
+We won't be able to use the utilities that we build here yet. They will be
+usable once entering the `chroot` environment in chatper 7.  
+
+Again, this all must be done as the `lfs` user.  
+
+### M4-1.4.21
+
+- [Book Source: Chapter 6.1](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter06/m4.html)
+
+M4 is most commonly used as a preprocessor for other programming languages and 
+tools. It's a critical component in the GNU build system, particularly for 
+Autoconf.  
+
+```bash
+cd $LFS/sources
+tar -xJvf m4-1.4.21.tar.xz
+cd m4-1.4.21
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
+
+### Ncurses-6.6
+
+- [Book Source: Chapter 6.2](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter06/ncurses.html)
+
+The ncurses package contains libraries for terminal-independent handling of 
+character screens.
+Basically, it handles the terminal display.  
+
+Unpack the ncurses tarball.
+```bash
+cd $LFS/sources
+tar -xzvf ncurses-6.6.tar.gz
+cd ncurses-6.6
+```
+
+First, build the `tic` program on the build host.  
+We install it in `$LFS/tools`, so that it is found in the `PATH` when needed:  
+```bash
+mkdir build
+pushd build
+../configure --prefix=$LFS/tools AWK=gawk
+  make -C include
+  make -C progs tic
+  install progs/tic $LFS/tools/bin
+popd
+```
+
+Then we can start setting up Ncurses for compilation:
+```bash
+./configure --prefix=/usr                \
+            --host=$LFS_TGT              \
+            --build=$(./config.guess)    \
+            --mandir=/usr/share/man      \
+            --with-manpage-format=normal \
+            --with-shared                \
+            --without-normal             \
+            --with-cxx-shared            \
+            --without-debug              \
+            --without-ada                \
+            --disable-stripping          \
+            AWK=gawk
+
+make
+make DESTDIR="$LFS" install
+# The libncurses.so liberary is needed for some builds coming up
+ln -sv libncursesw.so $LFS/usr/lib/libncurses.so
+sed -e 's/^#if.*XOPEN.*$/#if 1/' -i $LFS/usr/include/curses.h
+```
+
+The reason for the `sed` can be found on the book page.  
+
+### Bash-5.3
+
+- [Book Source: Chapter 6.4](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter06/bash.html)
+
+Finally compiling Bash. The lord's language.  
+
+Prep Bash for compilation:
+```bash
+cd $LFS/sources
+tar -xzvf bash-5.3.tar.gz
+cd bash-5.3
+
+./configure --prefix=/usr                      \
+            --build=$(sh support/config.guess) \
+            --host=$LFS_TGT                    \
+            --without-bash-malloc
+
+make 
+make DESTDIR=$LFS install
+# Make a link for the programs that use sh for a shell
+ln -sv bash $LFS/bin/sh
+```
+
+
+### Coreutils
+
+- [Book Source: Chapter 6.5](https://www.linuxfromscratch.org/lfs/view/13.0-systemd/chapter06/coreutils.html)
+
+Unarchive it:
+```bash
+cd $LFS/sources
+tar -xJvf coreutils-9.10.tar.xz
+cd coreutils-9.10
+```
+
+Configure and install:
+```bash
+./configure --prefix=/usr                     \
+            --host=$LFS_TGT                   \
+            --build=$(build-aux/config.guess) \
+            --enable-install-program=hostname \
+            --enable-no-install-program=kill,uptime
+make
+make DESTDIR=$LFS install
+```
+
+---
+
+Move programs to their final expected locations, because some programs hardcode executable locations.  
+```bash
+mv -v $LFS/usr/bin/chroot              $LFS/usr/sbin
+mkdir -pv $LFS/usr/share/man/man8
+mv -v $LFS/usr/share/man/man1/chroot.1 $LFS/usr/share/man/man8/chroot.8
+sed -i 's/"1"/"8"/'                    $LFS/usr/share/man/man8/chroot.8
+```
+
+
+
+
+
+
 
 ## Resources
 
