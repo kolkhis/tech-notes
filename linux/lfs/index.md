@@ -1334,9 +1334,56 @@ mv -v $LFS/usr/share/man/man1/chroot.1 $LFS/usr/share/man/man8/chroot.8
 sed -i 's/"1"/"8"/'                    $LFS/usr/share/man/man8/chroot.8
 ```
 
+### Diffutils-3.12
 
+The Diffutils package contains programs that show the differences between files or directories.
 
+```bash
+cd $LFS/sources
+tar -xJvf diffutils-3.12.tar.xz
+cd diffutils-3.12
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            gl_cv_func_strcasecmp_works=y \
+            --build=$(./build-aux/config.guess)
+make
+make DESTDIR=$LFS install
+```
 
+### File-5.46
+
+The File package contains a utility for determining the type of a given file or files.
+
+The file command on the build host needs to be the same version as the one we 
+are building in order to create the signature file.  
+
+```bash
+cd $LFS/sources
+tar -xzvf file-5.46.tar.gz
+cd file-5.46
+```
+
+Make a temporary copy of the file command:
+```bash
+mkdir build
+pushd build
+  ../configure --disable-bzlib      \
+               --disable-libseccomp \
+               --disable-xzlib      \
+               --disable-zlib
+  make
+popd
+```
+
+Prep File for compilation/installation:
+```bash
+./configure --prefix=/usr --host=$LFS_TGT --build=$(./config.guess)
+make FILE_COMPILE=$(pwd)/build/src/file
+make DESTDIR=$LFS install
+
+#Remove the libtool archive file because it is harmful for cross compilation:
+rm -v $LFS/usr/lib/libmagic.la
+```
 
 
 
