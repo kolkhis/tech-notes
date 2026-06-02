@@ -103,12 +103,16 @@ setup-gcc() {
             --enable-languages=c,c++
 
         printf "Running MAKE\n"
-        time make
+        time make || {
+            printf >&2 "ERROR: Make failed for GCC\n"
+            return 1
+        }
         printf "Running MAKE INSTALL\n"
         time make install > gcc-install-logs.log
+
 }
 
-binutils-setup
-dep-setup
-setup-gcc
+binutils-setup || { :; }
+dep-setup || { :; }
+setup-gcc || { :; }
 
