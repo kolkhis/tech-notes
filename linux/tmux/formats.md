@@ -96,3 +96,23 @@ providing a powerful toolkit for enhancing your terminal experience.
 
 
 
+## Layouts
+
+Tmux window layouts can be scripted.  
+
+Make a layout, then run `tmux list-windows` (prefix + `:` + `list-windows`) to 
+see the layout code, used to describe the sizes and positions of all the panes.  
+
+The layout code will look something like this:
+
+```text
+1546,209x55,0,0{99x55,0,0,7,109x55,100,0[109x12,100,0,8,109x42,100,13,9]}
+```
+
+Then:
+```bash
+tmux select-layout -t main:1 'f26a,220x51,0,0{165x51,0,0,0,54x51,166,0[54x25,166,0,3,54x25,166,26,4]}'
+```
+
+
+
