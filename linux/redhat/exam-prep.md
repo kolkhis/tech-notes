@@ -39,7 +39,7 @@ Example solution:
 
 Example using `nmcli` (as root):
 ```bash
-nmcli connection show
+nmcli connection show # or shorten to `nmcli c s` to get the profile name
 ip a
 nmcli connection modify PROFILE_NAME  \
     ipv4.address 192.168.1.150/24 \
