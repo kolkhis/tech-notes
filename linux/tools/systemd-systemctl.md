@@ -107,24 +107,24 @@ file it is (`.timer`, `.mount`, etc.).
 systemctl list-units --state=failed
 ```
 
-* Lists units (services) that failed to start.  
-* `systemctl --failed` is good shorthand for this.  
+- Lists units (services) that failed to start.  
+- `systemctl --failed` is good shorthand for this.  
 
 
 ```bash
 systemctl cat ssh
 ```
 
-* This will show you the configuration (unit file) used for the ssh service.
+- This will show you the configuration (unit file) used for the ssh service.
 
 ```bash
 cd /etc/systemd/system && ls
 ```
 
-* This is the directory where systemd stores its service files.
+- This is the directory where systemd stores its service files.
   You can find `target` files, `service` files, and `socket` files.
 
-  It will specify `target.wants/` and `service.wants/` directories, as well as 
+- It will specify `target.wants/` and `service.wants/` directories, as well as 
   `service.requires/` directories. These are the directories where systemd will look for
   the configuration files for the services that it is managing.
 
@@ -132,7 +132,7 @@ cd /etc/systemd/system && ls
 systemd-analyze --help
 ```
 
-* This will output all of the different arguments and commands that
+- This will output all of the different arguments and commands that
   you can use with `systemd-analyze`.
 
 
@@ -140,52 +140,63 @@ systemd-analyze --help
 systemctl is-active ssh
 ```
 
-* Shows if a service is active or not.  
+- Shows if a service is active or not.  
 
 ```bash
 systemctl is-enabled ssh
 ```
 
-* Shows whether or not a service is enabled.  
+- Shows whether or not a service is enabled.  
 
 
 ## Maniuplating Services with `systemctl` 
 
-### Start a Service
-```bash
-sudo systemctl start <service_name>
-```
-Starts a specified service immediately.
+- Start a service
+  ```bash
+  sudo systemctl start <service_name>
+  ```
+  Starts a specified service immediately.
 
-### Enable a Service
-```bash
-sudo systemctl enable <service_name>
-```
-Enables a service to start at boot.
+- Enable a service
+  ```bash
+  sudo systemctl enable <service_name>
+  ```
+  Enables a service to start at boot.  
 
-### Stop a Service
-```bash
-sudo systemctl stop <service_name>
-```
-Stops a service immediately.
+- Both start *and* enable a service
+  ```bash
+  sudo systemctl enable --now <service_name>
+  ```
 
-### Disable a Service
-```bash
-sudo systemctl disable <service_name>
-```
-Prevents a service from starting at boot.
+- Stop a service
+  ```bash
+  sudo systemctl stop <service_name>
+  ```
+  Stops a service immediately.
 
-### Restart a Service
-```bash
-sudo systemctl restart <service_name>
-```
-Restarts a service (useful after configuration changes).
+- Disable a service
+  ```bash
+  sudo systemctl disable <service_name>
+  ```
+  Prevents a service from starting at boot.
 
-### Check the Status of a Service
-```bash
-systemctl status <service_name>
-```
-Displays active/inactive status and recent log entries for the service.
+- Both stop *and* disable a service 
+  ```bash
+  sudo systemctl disable --now <service_name>
+  ```
+  Stops the service and prevents it from starting on boot.  
+
+- Restart a service
+  ```bash
+  sudo systemctl restart <service_name>
+  ```
+  Restarts a service (e.g., after configuration changes).
+
+- Check the status of a service
+  ```bash
+  systemctl status <service_name>
+  ```
+  Displays active/inactive status and recent log entries for the service.
 
 
 ## List of `systemd-x` commands
@@ -264,10 +275,11 @@ systemd-umount
 
 | Command                                      | Description
 |----------------------------------------------|------------
-| `sudo systemctl daemon-reload`               | Reload systemd manager configuration
+| `sudo systemctl daemon-reload`               | Reloads systemd manager configuration
+| `sudo systemctl daemon-reexec`               | Re-executes systemd manager configuration
+| `sudo systemctl enable <custom_service>`     | Enables custom service to start on boot
+| `sudo systemctl start <custom_service>`      | Starts custom service
 | `/etc/systemd/system/<service_name>.service` | Location for custom service files
-| `sudo systemctl enable <custom_service>`     | Enable custom service to start on boot
-| `sudo systemctl start <custom_service>`      | Start custom service
 
 ---
 
