@@ -1386,6 +1386,102 @@ rm -v $LFS/usr/lib/libmagic.la
 ```
 
 
+### Findutils-4.10.0
+Findutils provides the `find` command and also supplies the `xargs` program.  
+
+```bash
+tar -xJvf findutils-4.10.0.tar.xz
+cd findutils-4.10.0
+
+./configure --prefix=/usr                   \
+            --localstatedir=/var/lib/locate \
+            --host=$LFS_TGT                 \
+            --build=$(build-aux/config.guess)
+
+time make
+time make DESTDIR="$LFS" install
+```
+
+### Gawk-5.3.2
+
+GNU AWK.  
+
+Extract and cd:
+```bash
+tar -xJvf gawk-5.3.2.tar.xz
+cd gawk-5.3.2
+```
+
+First, ensure some unneeded files are not installed:
+```bash
+sed -i 's/extras//' Makefile.in
+```
+
+Prep for compilation:
+```bash
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+time make
+time make DESTDIR=$LFS install
+```
+
+### Grep-3.12
+
+```bash
+tar -xJvf grep-3.12.tar.xz
+cd grep-3.12
+
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(./build-aux/config.guess)
+
+time make
+time make DESTDIR=$LFS install
+```
+
+### Gzip-1.14
+
+```bash
+tar -xJvf gzip-1.14.tar.xz
+cd gzip-1.14
+
+./configure --prefix=/usr --host=$LFS_TGT
+
+time make
+time make DESTDIR=$LFS install
+```
+
+### Make-4.4.1
+
+```bash
+tar -xzvf make-4.4.1.tar.gz
+cd make-4.4.1
+
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+
+time make
+time make DESTDIR=$LFS install
+```
+
+### Patch-2.8
+
+Patch provides the `diff` utility.  
+
+```bash
+tar -xJvf patch-2.8.tar.xz
+cd patch-2.8
+
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+
+time make
+time make DESTDIR=$LFS install
+```
+
 
 ## Resources
 
