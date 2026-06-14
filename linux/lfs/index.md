@@ -1669,6 +1669,30 @@ ln -sv gcc $LFS/usr/bin/cc
     run as `root`.  
 
 
+### Changing Ownership
+
+- [Book Source: Chapter 7.1](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/changingowner.html)
+
+Currently, the whole directory hierarchy in `$LFS` is owned by the user `lfs`.
+This user only exists on the host system.  
+
+If kept as they are, all files will be owned by a UID that doesn't exist in the 
+chroot environment. That'll cause problems.  
+
+Ownership of all files must be changed to `root` before entering the chroot 
+environment.  
+```bash
+chown --from lfs -R root:root $LFS/{usr,var,etc,tools}}
+```
+If in an `x86_64` system, also change ownership of the `lib64` directory:
+```bash
+case $(uname -m) in
+    x86_64) chown --from lfs -R root:root $LFS/lib64 ;;
+esac
+```
+
+
+
 
 ## Resources
 
