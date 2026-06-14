@@ -1468,8 +1468,9 @@ time make DESTDIR=$LFS install
 
 ### Patch-2.8
 
-Patch provides the `diff` utility.  
+- [Book Source: Chapter 6.11](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter06/patch.html)
 
+Patch provides the `diff` utility.  
 ```bash
 tar -xJvf patch-2.8.tar.xz
 cd patch-2.8
@@ -1481,6 +1482,192 @@ cd patch-2.8
 time make
 time make DESTDIR=$LFS install
 ```
+
+### Sed-4.9
+
+```bash
+tar -xJvf sed-4.9.tar.xz
+cd sed-4.9
+
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(./build-aux/config.guess)
+time make
+time make DESTDIR=$LFS install
+```
+
+### Tar-1.35
+
+Prepare Tar for compilation:
+```bash
+tar -xJvf tar-1.35.tar.xz
+cd tar-1.35
+
+./configure --prefix=/usr   \
+            --host=$LFS_TGT \
+            --build=$(build-aux/config.guess)
+```
+
+Compile the package:
+```bash
+time make
+```
+Install the package:
+```bash
+make DESTDIR=$LFS install
+```
+
+### Xz-5.8.2
+The Xz package contains programs for compressing and decompressing files.
+It provides capabilities for the lzma and the newer xz compression formats. 
+
+Compressing text files with xz yields a better compression percentage than with 
+the traditional `gzip` or `bzip2` commands.
+
+```bash
+tar -xJvf xz-5.8.2.tar.xz
+cd xz-5.8.2
+
+./configure --prefix=/usr                     \
+            --host=$LFS_TGT                   \
+            --build=$(build-aux/config.guess) \
+            --disable-static                  \
+            --docdir=/usr/share/doc/xz-5.8.2
+
+time make
+time make DESTDIR=$LFS install
+
+# Remove the libtool archive file because it is harmful for cross compilation:
+rm -v $LFS/usr/lib/liblzma.la
+```
+
+### Binutils-2.46.0 - **Pass 2**
+
+The Binutils package contains a linker, an assembler, and other tools for handling object files.
+
+- [Book Source: Chapter 6.17](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter06/binutils-pass2.html)
+  
+Binutils building system relies on an shipped `libtool` copy to link against 
+internal static libraries, but the `libiberty` and `zlib` copies shipped in the 
+package do not use `libtool`
+
+This inconsistency may cause produced binaries mistakenly linked against 
+libraries from the host distro. Work around this issue by changing `ltmain.sh`
+
+```bash
+cd $LFS/sources/binutils-2.46.0
+rm -rf ./build
+
+sed '6031s/$add_dir//' -i ltmain.sh
+
+#Create a separate build directory again:
+
+mkdir -v build
+cd       build
+
+../configure                   \
+    --prefix=/usr              \
+    --build=$(../config.guess) \
+    --host=$LFS_TGT            \
+    --disable-nls              \
+    --enable-shared            \
+    --enable-gprofng=no        \
+    --disable-werror           \
+    --enable-64-bit-bfd        \
+    --enable-new-dtags         \
+    --enable-default-hash-style=gnu
+
+time make
+time make DESTDIR=$LFS install
+
+```
+
+Remove the libtool archive files because they are harmful for cross compilation, 
+and remove unnecessary static libraries:
+```bash
+rm -v $LFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+```
+
+
+### GCC-15.2.0 - **Pass 2**
+
+As in the first build of GCC, the GMP, MPFR, and MPC packages are required. 
+Unpack the tarballs and move them into the required directories:
+```bash
+cd $LFS/sources/gcc-15.2.0
+tar -xJvf ../mpfr-4.2.2.tar.xz
+mv -v mpfr-4.2.2 mpfr
+tar -xJvf ../gmp-6.3.0.tar.xz
+mv -v gmp-6.3.0 gmp
+tar -xzvf ../mpc-1.3.1.tar.gz
+mv -v mpc-1.3.1 mpc
+
+# If building on x86_64, change default directory name for 64-bit libraries to "lib":
+
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+  ;;
+esac
+
+# Override the build rules of the libgcc and libstdc++ headers to allow building 
+# these libraries with POSIX threads support:
+
+sed '/thread_header =/s/@.*@/gthr-posix.h/' \
+    -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+
+rm -rf ./build
+mkdir -v build
+cd       build
+
+../configure                   \
+    --build=$(../config.guess) \
+    --host=$LFS_TGT            \
+    --target=$LFS_TGT          \
+    --prefix=/usr              \
+    --with-build-sysroot=$LFS  \
+    --enable-default-pie       \
+    --enable-default-ssp       \
+    --disable-nls              \
+    --disable-multilib         \
+    --disable-libatomic        \
+    --disable-libgomp          \
+    --disable-libquadmath      \
+    --disable-libsanitizer     \
+    --disable-libssp           \
+    --disable-libvtv           \
+    --enable-languages=c,c++   \
+    LDFLAGS_FOR_TARGET=-L$PWD/$LFS_TGT/libgcc
+
+time make
+time make DESTDIR=$LFS install
+
+# Many programs and scripts run cc instead of gcc
+ln -sv gcc $LFS/usr/bin/cc
+```
+
+## Chapter 7
+
+### Entering Chroot and Building Additional Temporary Tools
+
+- [Book Source: Chapter 7](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/chapter07.html)
+
+> Now that all circular dependencies have been resolved, a “chroot” environment, 
+> completely isolated from the host operating system (except for the running 
+> kernel), can be used for the build.
+>
+> For proper operation of the isolated environment, some communication with the 
+> running kernel must be established. This is done via the so-called Virtual 
+> Kernel File Systems, which will be mounted before entering the chroot 
+> environment. You may want to verify that they are mounted by issuing the 
+> findmnt command.
+
+!!! warning "Run as root!"
+
+    Until Section 7.4, "Entering the Chroot Environment", the commands must be run 
+    as `root`, with the `LFS` variable set. After entering chroot, all commands are 
+    run as `root`.  
+
 
 
 ## Resources
