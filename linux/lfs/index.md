@@ -1682,7 +1682,7 @@ chroot environment. That'll cause problems.
 Ownership of all files must be changed to `root` before entering the chroot 
 environment.  
 ```bash
-chown --from lfs -R root:root $LFS/{usr,var,etc,tools}}
+chown --from lfs -R root:root $LFS/{usr,var,etc,tools}
 ```
 If in an `x86_64` system, also change ownership of the `lib64` directory:
 ```bash
@@ -1691,6 +1691,227 @@ case $(uname -m) in
 esac
 ```
 
+### Preparing Kernel Virtual File Systems
+
+- [Book Source: 7.3](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/kernfs.html)
+
+
+> Applications running in userspace utilize various file systems created by the kernel to communicate with the kernel itself. These file systems are virtual: no disk space is used for them. The content of these file systems resides in memory. These file systems must be mounted in the $LFS directory tree so the applications can find them in the chroot environment.
+
+Begin by creating the directories on which these virtual file systems will be mounted:
+```bash
+mkdir -pv $LFS/{dev,proc,sys,run}
+```
+
+---
+
+Some host kernels lack devtmpfs support (a kernel-mounted virtual fs); these 
+host distros use different methods to create the content of /dev. So the only 
+host-agnostic way to populate the $LFS/dev directory is by bind mounting the 
+host system's /dev directory
+
+```bash
+mount -v --bind /dev $LFS/dev
+```
+
+
+Now mount the remaining virtual kernel file systems:
+
+```bash
+mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+mount -vt proc proc $LFS/proc
+mount -vt sysfs sysfs $LFS/sys
+mount -vt tmpfs tmpfs $LFS/run
+```
+
+
+- `gid=5`: This ensures that all devpts-created device nodes are owned by group 
+  ID 5. 
+    - This is the ID we will use later on for the tty group. We use the group ID 
+      instead of a name, since the host system might use a different ID for its tty 
+      group.
+
+
+In some host systems, `/dev/shm` is a symbolic link to a directory, typically `/run/shm`.
+In other host systems `/dev/shm` is a mount point for a tmpfs.
+```bash
+if [ -h $LFS/dev/shm ]; then
+  install -v -d -m 1777 $LFS$(realpath /dev/shm)
+else
+  mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+fi
+```
+On the Ubuntu host, it is not a symlink, so we mount a tmpfs on it.
+
+
+### Entering the Chroot Environment
+All the packages which are required to build the rest of the needed tools are 
+on the system.  
+It is time to enter the chroot environment and finish installing 
+the temporary tools.  
+
+This environment will also be used to install the final system.
+
+As root user, run the following command to enter the environment that is, at 
+the moment, populated with nothing but temporary tools:
+```bash
+chroot "$LFS" /usr/bin/env -i   \
+    HOME=/root                  \
+    TERM="$TERM"                \
+    PS1='(lfs chroot) \u:\w\$ ' \
+    PATH=/usr/bin:/usr/sbin     \
+    MAKEFLAGS="-j$(nproc)"      \
+    TESTSUITEFLAGS="-j$(nproc)" \
+    /bin/bash --login
+```
+
+- `-i`: Wipes all env vars.
+    - Only the HOME, TERM, PS1, and PATH variables are set
+
+- `/tools/bin` is not in the PATH. This means that the cross toolchain will no 
+  longer be used.
+
+- The bash prompt will say "I have no name!", this is normal because the
+  `/etc/passwd` file has not been created yet.
+
+
+### Creating Directories
+
+Create the full directory structure in the LFS file system.  
+
+```bash
+# root level directories
+mkdir -pv /{boot,home,mnt,opt,srv}
+
+# the required set of subdirectories below the root-level
+mkdir -pv /etc/{opt,sysconfig}
+mkdir -pv /lib/firmware
+mkdir -pv /media/{floppy,cdrom}
+mkdir -pv /usr/{,local/}{include,src}
+mkdir -pv /usr/lib/locale
+mkdir -pv /usr/local/{bin,lib,sbin}
+mkdir -pv /usr/{,local/}share/{color,dict,doc,info,locale,man}
+mkdir -pv /usr/{,local/}share/{misc,terminfo,zoneinfo}
+mkdir -pv /usr/{,local/}share/man/man{1..8}
+mkdir -pv /var/{cache,local,log,mail,opt,spool}
+mkdir -pv /var/lib/{color,misc,locate}
+
+ln -sfv /run /var/run
+ln -sfv /run/lock /var/lock
+
+install -dv -m 0750 /root
+install -dv -m 1777 /tmp /var/tmp
+```
+
+> This directory tree is based on the Filesystem Hierarchy Standard (FHS). 
+> The FHS does not mandate the existence of the directory `/usr/lib64`.  
+
+### 7.6. - Creating Essential Files and Symlinks
+
+- [Book Source: 7.6](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/createfiles.html)
+
+Historically, Linux maintained a list of the mounted file systems in the file `/etc/mtab`.
+Modern kernels maintain this list internally and expose it to the user via 
+the `/proc` filesystem.
+
+Create a symlink for compatibility reasons.  
+```bash
+ln -sv /proc/self/mounts /etc/mtab
+```
+
+Create a basic `/etc/hosts` file, required for some test suites.  
+```bash
+cat > /etc/hosts << EOF
+127.0.0.1  localhost $(hostname)
+::1        localhost
+EOF
+```
+
+Add entries in `/etc/passwd` and `/etc/group` to allow the `root` user to
+login.  
+Also add the system users/groups required.  
+
+- `/etc/passwd`:
+  ```bash
+  cat > /etc/passwd << "EOF"
+  root:x:0:0:root:/root:/bin/bash
+  bin:x:1:1:bin:/dev/null:/usr/bin/false
+  daemon:x:6:6:Daemon User:/dev/null:/usr/bin/false
+  messagebus:x:18:18:D-Bus Message Daemon User:/run/dbus:/usr/bin/false
+  systemd-journal-gateway:x:73:73:systemd Journal Gateway:/:/usr/bin/false
+  systemd-journal-remote:x:74:74:systemd Journal Remote:/:/usr/bin/false
+  systemd-journal-upload:x:75:75:systemd Journal Upload:/:/usr/bin/false
+  systemd-network:x:76:76:systemd Network Management:/:/usr/bin/false
+  systemd-resolve:x:77:77:systemd Resolver:/:/usr/bin/false
+  systemd-timesync:x:78:78:systemd Time Synchronization:/:/usr/bin/false
+  systemd-coredump:x:79:79:systemd Core Dumper:/:/usr/bin/false
+  uuidd:x:80:80:UUID Generation Daemon User:/dev/null:/usr/bin/false
+  systemd-oom:x:81:81:systemd Out Of Memory Daemon:/:/usr/bin/false
+  nobody:x:65534:65534:Unprivileged User:/dev/null:/usr/bin/false
+  EOF
+  ```
+
+The `root` password will be set later.  
+
+- `/etc/group`
+  ```bash
+  cat > /etc/group << "EOF"
+  root:x:0:
+  bin:x:1:daemon
+  sys:x:2:
+  kmem:x:3:
+  tape:x:4:
+  tty:x:5:
+  daemon:x:6:
+  floppy:x:7:
+  disk:x:8:
+  lp:x:9:
+  dialout:x:10:
+  audio:x:11:
+  video:x:12:
+  utmp:x:13:
+  clock:x:14:
+  cdrom:x:15:
+  adm:x:16:
+  messagebus:x:18:
+  systemd-journal:x:23:
+  input:x:24:
+  mail:x:34:
+  kvm:x:61:
+  systemd-journal-gateway:x:73:
+  systemd-journal-remote:x:74:
+  systemd-journal-upload:x:75:
+  systemd-network:x:76:
+  systemd-resolve:x:77:
+  systemd-timesync:x:78:
+  systemd-coredump:x:79:
+  uuidd:x:80:
+  systemd-oom:x:81:
+  wheel:x:97:
+  users:x:999:
+  nogroup:x:65534:
+  EOF
+  ```
+
+The ID 65534 is used by the kernel for NFS and separate user namespaces for 
+unmapped users and groups (those exist on the NFS server or the parent user 
+namespace, but "do not exist" on the local machine or in the separate namespace).
+
+We assign nobody and nogroup to avoid an unnamed ID. But other distros may 
+treat this ID differently, so any portable program should not depend on this 
+assignment.
+
+Some tests in Chapter 8 need a regular user
+```bash
+echo "tester:x:101:101::/home/tester:/bin/bash" >> /etc/passwd
+echo "tester:x:101:" >> /etc/group
+install -o tester -d /home/tester
+```
+
+To remove the "I have no name!" prompt, start a new login shell.  
+```bash
+exec /usr/bin/bash -l
+```
 
 
 
