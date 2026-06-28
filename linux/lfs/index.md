@@ -1913,6 +1913,130 @@ To remove the "I have no name!" prompt, start a new login shell.
 exec /usr/bin/bash -l
 ```
 
+---
+
+Create necessary logfiles
+
+The login, agetty, and init programs (and others) write to a number of log 
+files, but will not write to them if they don't exist.  
+
+```bash
+touch /var/log/{btmp,lastlog,faillog,wtmp}
+chgrp -v utmp /var/log/lastlog
+chmod -v 664  /var/log/lastlog
+chmod -v 600  /var/log/btmp
+```
+
+- `/var/log/wtmp`: Records all logins and logouts.  
+- `/var/log/lastlog`: Records when each user last logged in.  
+- `/var/log/faillog`: Records failed login attempts.  
+- `/var/log/btmp`: Records the bad login attempts.  
+- `/run/utmp`: Records the users that are currently logged in.
+    - Created dynamically when a user logs into the system.  
+
+### 7.7 Installation of Gettext
+
+For the temp tools, we only need to install three programs from Gettext.  
+
+- `msgfmt`  
+- `msgmerge`  
+- `xgettext`  
+
+Prepare Gettext for compilation:
+```bash
+cd /sources
+tar -xJvf gettext-1.0.tar.xz
+cd gettext-1.0
+./configure --disable-shared
+```
+
+- `--disable-shared` stops from installing shared Gettext libraries.  
+
+Compile the program.  
+```bash
+make
+```
+
+Install the `msgfmt`, `msgmerge`, and `xgettext` programs:
+```bash
+cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /usr/bin
+```
+
+### 7.8. Installing Bison-3.8.2
+
+
+```bash
+cd /sources
+tar -xJvf bison-3.8.2.tar.xz
+cd bison-3.8.2
+
+./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.8.2
+```
+
+- `--docdir=/usr/share/doc/bison-3.8.2`: Tells the build system to install 
+  bison docs into a versioned directory.
+
+Compile and install.  
+```bash
+make
+make install
+```
+
+### 7.9. Installing Perl
+
+
+```bash
+cd /sources
+tar -xJvf perl-5.42.0.tar.xz
+cd perl-5.42.0
+
+sh Configure -des                                         \
+             -D prefix=/usr                               \
+             -D vendorprefix=/usr                         \
+             -D useshrplib                                \
+             -D privlib=/usr/lib/perl5/5.42/core_perl     \
+             -D archlib=/usr/lib/perl5/5.42/core_perl     \
+             -D sitelib=/usr/lib/perl5/5.42/site_perl     \
+             -D sitearch=/usr/lib/perl5/5.42/site_perl    \
+             -D vendorlib=/usr/lib/perl5/5.42/vendor_perl \
+             -D vendorarch=/usr/lib/perl5/5.42/vendor_perl
+```
+
+Compile and install.
+```bash
+make
+make install
+```
+
+### 7.10. Installing Python
+
+```bash
+cd /sources
+tar -xJvf Python-3.14.3.tar.xz
+
+```
+
+- Do not confuse this with the `python-3.14.3-docs-html.tar.bz2` archive.  
+    - This contains docs, not Python itself.  
+    - `bzip2` does not even exist in the chroot environment, so this can't be
+      extracted.  
+
+```bash
+cd Python-3.14.3
+./configure --prefix=/usr       \
+            --enable-shared     \
+            --without-ensurepip \
+            --without-static-libpython
+```
+
+Compile and install. 
+```bash
+make
+make install
+```
+
+Some Python modules can't be built now because the dependencies are not installed yet.  
+On the `make`, the `ssl` module installation will produce an error. Just ignore it.  
 
 
 ## Resources
