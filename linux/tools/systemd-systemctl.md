@@ -198,6 +198,24 @@ systemctl is-enabled ssh
   ```
   Displays active/inactive status and recent log entries for the service.
 
+---
+
+The `mask` and `unmask` commands are used to prevent a service from starting, 
+or to allow it to start again.
+To `mask` a service is to prevent it from starting even if it is enabled,
+essentially making it a stronger version of `disable`.
+
+- Mask the service to prevent it from starting:
+  ```bash
+  sudo systemctl mask <service_name>
+  ```
+
+- Unmask the service to allow it to start again:
+  ```bash
+  sudo systemctl unmask <service_name>
+  ```
+
+
 
 ## List of `systemd-x` commands
 There are a lot of `systemd` commands to perform different tasks on services and
@@ -510,6 +528,18 @@ managed dunamically by systemd or udev.
 | `.network` | Used by `systemd-networkd` to assign IPs, gateways, etc.
 | `.netdev`  | Defines virtual devices like `veth`, `bridge`, `vxlan`, etc.
 
+## Systemd Targets 
+
+Systemd targets are a way to group units together and manage them as a single entity.
+
+There is a default target that is used to determine what services should be started at boot.
+Use
+```bash
+systemctl get-default
+```
+to see what the default target is. This will show you the target that is used
+to determine what services should be started at boot, usually
+`graphical.target`.
 
 
 ## Resources
