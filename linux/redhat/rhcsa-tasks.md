@@ -14,15 +14,16 @@ The steps to reset the root password are as follows:
    ```
 
 2. Then, when we get into GRUB, select the kernel (`linux-*`) and press ++e++.  
+    - This will allow you to edit the kernel boot parameters.
 
-3. Navigate down to the line that starts with `linux`. 
+3. Navigate down to the line that starts with `linux` (this is the kernel). 
 
 4. Navigate to the end of the line and type in `rd.break`.  
 
 5. Hit ++ctrl+x++. This will boot into emergency mode, which will provide a
    recovery shell to make changes to the system.
 
-6. Then, remount the `/sysroot/` directory:
+6. Then, remount the `/sysroot/` directory with read/write permissions:
    ```bash
    mount -o remount,rw /sysroot/
    ```
