@@ -66,11 +66,22 @@ The `systemctl` command can also be used to create a new service file.
 sudo systemctl edit --force --full example.service
 ```
 
+This will open a text editor and allow you to create, and write, a new service 
+file called `example.service` in the `/etc/systemd/system` directory.  
+
+The editor that systemd uses is determined by the `$SYSTEMD_EDITOR` environment
+variable. This variable overrides the `$EDITOR` and `$VISUAL` environment 
+variables. If the `$SYSTEMD_EDITOR` variable is not set, `systemctl` will use 
+the `$EDITOR` variable. It will fall back on `nano` or `vi` if none of the 
+variables are set.
+
 !!! info "Editing a Service File"
 
     After editing a service file, you must reload the systemd manager configuration
     for the changes to take effect:
     ```bash
+    sudo systemctl restart example.service
+    # or, to reload all unit files:
     sudo systemctl daemon-reload
     ```
 
