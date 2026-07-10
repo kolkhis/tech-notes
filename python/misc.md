@@ -1,4 +1,3 @@
-
 # Miscellaneous Python Notes
 
 ## Python HTTP Server
@@ -24,8 +23,8 @@ mkdocs serve -a 0.0.0.0:3000
 ```
 Produces a static site
 
-## Containerize the application
-To safely share with others, you can containerize the application.
+## Containerizing an Application
+To safely share with others, you can containerize an application.
 Use `podman` or `docker` to build the image:
 ```Dockerfile
 # Use the Python version you need
@@ -38,10 +37,10 @@ WORKDIR /usr/src/app
 # Copy the current directory into the container at the WORKDIR
 COPY . .
 
-# Install dependencies
+# Install dependencies (expects a requirements.txt file in the current directory)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world, for web apps
+# Make port 80 available to the world (for web apps)
 EXPOSE 80
 
 # Set environment variables
