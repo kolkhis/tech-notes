@@ -2,26 +2,9 @@
 
 ## Python HTTP Server
 
-To spin up an http server, you can use `python3 -m http.server` to serve a directory.
-
-
-## MkDocs Static Website
-
-Requirements for `mkdocs`:
-* mkdocs
-* mkdocs-awesome-pages-plugin
-* mkdocs-material
-* mkdocs-git-revision-date-localized-plugin
-* markdown-emdash
-* git-revision-date-localized
-* python-markdown
-* mdx_emdash
-
-
-```bash
-mkdocs serve -a 0.0.0.0:3000
-```
-Produces a static site
+To spin up an http server, you can use `python3 -m http.server` to serve a 
+directory over HTTP (port 80).
+To specify a different port, you can use `python3 -m http.server 8080` to serve on port 8080.
 
 ## Containerizing an Application
 To safely share with others, you can containerize an application.
