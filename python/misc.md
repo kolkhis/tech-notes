@@ -60,3 +60,52 @@ and run it
 podman run -p 8080:80 python-app
 ```
 
+## Expanding Iterables for Function Arguments
+
+The `*` operator can be used to expand iterables into function arguments or to
+unpack elements from lists, tuples, or other iterable objects.
+
+With dictionaries, the `**` operator can be used to unpack key-value pairs into 
+function arguments.
+
+Some examples:
+
+```python
+# Expanding a list into function arguments
+numbers = [1, 2, 3]
+def add(a, b, c):
+    print(a + b + c)
+
+add(*numbers) # Expands into `add(1, 2, 3)`
+
+# Expanding a tuple into function arguments
+coordinates = (4, 5)
+def print_coordinates(x, y):
+    print(f"Coordinates: ({x}, {y})")
+print_coordinates(*coordinates) # Expands into `print_coordinates(4, 5)`
+
+# Expanding a dictionary into function arguments
+person = {'name': 'Alice', 'age': 30}
+def greet(name, age):
+    print(f"Hello, {name}! You are {age} years old.")
+
+greet(**person) # Expands into `greet(name='Alice', age=30)`
+```
+
+When using a function that accepts variable-length arguments, you can
+use `*args` and `**kwargs` to handle additional positional and keyword 
+arguments, respectively.
+
+```python
+positional_args = (1, 2, 3)
+keyword_args = {'name': 'Alice', 'age': 30}
+def example_function(*args, **kwargs):
+    print("Positional arguments:", args)
+    print("Keyword arguments:", kwargs)
+
+example_function(*positional_args, **keyword_args)
+```
+
+
+
+
