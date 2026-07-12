@@ -425,12 +425,11 @@ important than others (e.g., gcc, glibc, etc.).
 - Source:
   <https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter04/abouttestsuites.html>
 
-## Building the LFS Cross Toolchain and Temporary Tools
+## Building the LFS Cross Toolchain and Temporary Tools (Ch 5)
 
 > This is where the real work of building a new system begins.
 
-- Source:
-  <https://www.linuxfromscratch.org/lfs/view/stable-systemd/part3.html>
+- Source: <https://www.linuxfromscratch.org/lfs/view/stable-systemd/part3.html>
 
 This section is split into three parts:
 
@@ -2037,6 +2036,90 @@ make install
 
 Some Python modules can't be built now because the dependencies are not installed yet.  
 On the `make`, the `ssl` module installation will produce an error. Just ignore it.  
+
+
+### 7.11. Installing Texinfo
+The Texinfo package contains programs for reading, writing, and converting info pages.
+
+```bash
+cd /sources
+tar -xJvf ./texinfo-7.2.tar.xz
+cd texinfo-7.2
+
+./configure --prefix=/usr
+time make
+time make install
+```
+
+### 7.12. Installing Util-linux
+The FHS recommends using the /var/lib/hwclock directory instead of the usual /etc directory as the location for the adjtime file.
+
+```bash
+mkdir -pv /var/lib/hwclock
+
+tar -xJvf util-linux-2.41.3.tar.xz
+cd util-linux-2.41.3
+
+
+./configure --libdir=/usr/lib     \
+            --runstatedir=/run    \
+            --disable-chfn-chsh   \
+            --disable-login       \
+            --disable-nologin     \
+            --disable-su          \
+            --disable-setpriv     \
+            --disable-runuser     \
+            --disable-pylibmount  \
+            --disable-static      \
+            --disable-liblastlog2 \
+            --without-python      \
+            ADJTIME_PATH=/var/lib/hwclock/adjtime \
+            --docdir=/usr/share/doc/util-linux-2.41.3
+
+time make
+time make install
+```
+
+### 7.13. Cleaning up and Saving the Temporary System
+
+This marks the end of Chapter 7.
+The temp system should now have all the tools we need to build the final system.
+
+So, we clean up the temp files we were using.  
+```bash
+# Remove documentation for the temp tools
+rm -rf /usr/share/{info,man,doc}/*
+
+# Remove .la files which can cause issues for BLFS packages
+find /usr/{lib,libexec} -name \*.la -delete
+
+# The /tools directory is no longer needed either
+rm -rf /tools
+```
+
+### 7.13.2. Backup
+
+The system is in a good state now and is ready for the final build.
+
+I opted to take a snapshot of the VM that is being used to build the LFS
+system.
+However, they outline a separate method of backing up the system at the end of
+chapter 7.
+
+- [Book Source](https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/cleanup.html)
+
+
+## Chapter 8: Building the LFS System
+
+It's time to build the final system.
+
+A lot of info on Package Management:
+
+- <https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter08/pkgmgt.html>
+
+
+
+
 
 
 ## Resources
