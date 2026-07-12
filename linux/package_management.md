@@ -86,6 +86,17 @@ sudo apt clean      # Clean pkg cache
 sudo apt autoremove # Remove unnecessary files/deps
 ```
 
+- Show all files installed by a specific package:
+  ```bash
+  dpkg-query -L package_name
+  ```
+  The `package_name` here supports wildcards, so you can use `*` to match 
+  multiple packages or packages that you don't know the exact name/version of.  
+  ```bash
+  dpkg-query -L 'package_name*'
+  ```
+  Quote the wildcards to prevent the shell from doing filename expansions.
+
 
 
 ### `dpkg` Output
