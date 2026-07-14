@@ -108,6 +108,7 @@ nav:
       - linux/bash/variables.md
       - linux/bash/version-checking.md
     - Ansible:
+      - linux/ansible/setting_up_ansible.md
       - linux/ansible/ansible-doc.md
       - linux/ansible/ansible.md
       - linux/ansible/collections_in_ansible.md
@@ -116,9 +117,9 @@ nav:
       - linux/ansible/inventory_files.md
       - linux/ansible/misc_ansible.md
       - linux/ansible/roles_in_ansible.md
-      - linux/ansible/setting_up_ansible.md
       - linux/ansible/templates.md
       - linux/ansible/variables.md
+      - linux/ansible/service-accounts.md
     - Tools:
       - linux/tools/umask.md
       - linux/tools/openssl.md
