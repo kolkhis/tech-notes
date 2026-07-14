@@ -49,15 +49,39 @@ ansible localhost -m user -a "name=ansible_svc state=present generate_ssh_key=tr
 
 - Optionally add `create_home=true` to ensure a home directory is created for
   the user.
+
 - There's also an option to specify the password for the user using `password=<hashed_password>`.  
-    - Note that the password must be hashed using a method like `openssl passwd -6`.
+
+    - Note that the password must be hashed, e.g., using a method like 
+      `openssl passwd -6 -noverify`.
+
     - Instructions for how to do this can be found
       [here](https://docs.ansible.com/projects/ansible/latest/reference_appendices/faq.html#how-do-i-generate-encrypted-passwords-for-the-user-module)
 
 #### With Password
 
+
 If you want to create the user and set a password at the same time, use a
 filter to hash the password before passing it to the `user` module.
 ```bash
 ansible localhost -m user -a "name=ansible_svc state=present generate_ssh_key=true password={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
+```
+The key part here is:
+```bash
+"{{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
+```
+
+!!! warning "Note"
+    
+    The `passlib` module must be installed on the Ansible control node for
+    this to work.
+    ```bash
+    pip install passlib
+    ```
+
+This can be tested with an ad-hoc command as well:
+```bash
+ansible all -i localhost, -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
+```
+
 
