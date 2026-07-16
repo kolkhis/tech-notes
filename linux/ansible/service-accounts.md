@@ -143,5 +143,33 @@ without removing it from any other groups it may already belong to.
   ```
   
 
+## Using the Service Account in Ansible Playbooks
+
+When running Ansible playbooks, you should be on the control node as the 
+service account user before running playbooks or ad-hoc commands.
+```bash
+su ansible_svc
+```
+
+This will ensure that the playbooks/commands are connecting to the remote hosts 
+as that user.
+
+The `become_user` will still be `root`.  
+This is necessary for many operations.
+
+For example, on Ubuntu Server, the `apt` lockfile is owned by `root` and has
+VERY restrictive permissions:
+```bash
+-rw-r----- 1 root root 0 Aug  9  2023 /var/lib/apt/lists/lock
+```
+So this file, which needs to be accessible to the `become_user` when installing
+new packages via `apt`, will not be accessible to any other user account.  
+
+
+
+
+
+
+
 
 
