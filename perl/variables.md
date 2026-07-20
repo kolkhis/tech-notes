@@ -275,10 +275,14 @@ newline (`\n`) or when the buffer is flushed.
 
 With `$| = 1`, the text is immediately flushed and visible on the screen without waiting.
 
-## Memorize These
+## Important Special Variables
+
+These are a few of the most important special variables to memorize:
 
 - `$_`: Current line
+    - Known as the "default variable." Holds the current line when processing input.
 - `$.`: Current line number
+    - In a file read loop, it increments every line.
 - `$1`, `$2`, `$&`: Regex captures
     - `$&` is the entire match, not capture groups.  
 - `$!`: Last system error
@@ -290,7 +294,6 @@ With `$| = 1`, the text is immediately flushed and visible on the screen without
 - `$|`: Output autoflush
 - `$/`: Input separator
 - `$\`: Output separator
-
 
 
 ## Perl Special Variable Cheatsheet
