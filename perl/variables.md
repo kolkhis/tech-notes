@@ -25,14 +25,19 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
   default input.  
     - Most common, used in `while (<>) {...}`, `foreach`, `map`, regex, etc.
     - In one-liners, this is the current line.  
+
 - `$.`: Current line number.
     - In a file read loop, it increments every line. 
+
 - `$0`: Name of the running script.
     - Just like `$0` in bash. Shows the name of the perl script being executed.  
+
 - `$?`: Exit status of last system command. 
     - Just like `$?` in bash. Shows exit code.  
+
 - `@ARGV`: Command line arguments. 
     - Equivalent to `$@` in Bash.
+
 - `$ARGV`: The name of the current file when looping over `@ARGV` in `while (<>)`.
     - Used inside `while (<>)` loops.  
       ```perl
@@ -44,23 +49,31 @@ Special variables in perl are sometimes called "sigil variables" or "punctuation
       ```bash
       perl script.pl file1.md file2.md
       ```
-      While reading `file1.md`, `$ARGV` will the `"file1.md"`, etc..
+      While reading `file1.md`, `$ARGV` will set to `"file1.md"`, etc..
 
 - `$!`: Last system error message.  
     - Like `strerror(errno)` in C. 
-    - E.g.: `die "Error: $!"`
+    - Commonly used in `die` for error handling.
+      ```perl
+      die "Error: $!"
+      ```
+
 - `$^O`: Operating system name. 
     - `linux`, `darwin`, `MSWin32`, etc.  
+
 - `$ENV{VAR}`: Environment variables.  
     - Access shell env vars. E.g., `$HOME` would be `$ENV{HOME}`
+
 - `$|`: Autoflush output buffer.
     - Normally, Perl buffers output and flushes it to the terminal when a newline
       is found.  
     - Setting `$| = 1;` disables buffering, so output is immediately written.  
     - Useful for progress bars, interactive output, long running scripts, etc. 
+
 - `$&`: Matched string in last regex.  
     - Holds the whole matched string from the last regex.  
     - Like `${BASH_REMATCH[0]}`
+
 - `$1`, `$2`, etc.: Capture groups in Regex.  
     - Like bash regex captures, but instead of `\1`, it's `$1`.  
 
@@ -81,24 +94,26 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
 - `$^I`: Stores the in-place edit extension (used with the `-i` flag).  
     - Define this variable to enable in-place editing. Use `undef $^I` to
       disable in-place editing.  
-    - Like using `sed -i.bak`, perl supports the same thing.  
     - `$^I` stores the backup extension you set (`perl -p -i.bak -e '..'`).
     - If you set it (e.g., `our $^I = '.bak'`), Perl will create a backup of the original file.  
-    - Example from the command-line: 
+    - Like using `sed -i.bak`, perl supports the same thing.  
+    - Example CLI usage:
       ```bash
       perl -pi.bak -e 's/foo/bar/' file.txt
       ```
-      will back up the original file to `file.txt.bak`.
+      This will back up the original file to `file.txt.bak`.
 
 - `$^W`: Current value of `warnings`.
     - Shows if warnings are enabled.
     - Rarely used directly. Instead, use `use warnings;`.
 
 - `$.`: Line number in the current input file.  
+
 - `$/`: Input record separator (default is newline).  
     - Changing it lets you change how Perl reads input.
     - You can change it to read whole files in one go.  
     - Example: `undef $/;` reads the entire file at once.
+
 - `$\`: Output record separator. 
     - Adds a string after every `print`.
     - Ex:
@@ -111,6 +126,7 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
       # World
       ```
       (Every print automatically ends with `\n`.)
+
 - `$"`: Separator when interpolating arrays (default is a space `" "`).
     - Default is a space `" "`. Example:  
       ```perl
@@ -124,7 +140,7 @@ The difference between `$ARGV[n]` and `@ARGV` comes from how variables are acces
 These can be changed to modify input/output behavior:
 | Variable | Behavior |
 |----------|----------|
-|   `$/`   | Input record separator. Default is newline. Example: `undef $/;` reads the whole file at once.
+|   `$/`   | Input record separator. Default is newline (`"\n"`). Using `undef $/;` reads the whole file at once (doesn't split the lines).
 |   `$\`   | Output record separator. Example: `$\ = "\n";` automatically adds newline after every print.
 
 ### `$/` - Input Record Separator
