@@ -29,5 +29,12 @@ segment with the ACK flag set.
 
 - The last ACK flag will be set to the **server's** ISN + 1 (incremented).  
 
+So the basic flow of the three-way handshake is as follows:
+```
+Client -> Server: SYN (ISN = x)
+Server -> Client: SYN-ACK (ISN = y, ACK = x + 1)
+Client -> Server: ACK (ACK = y + 1)
+```
+
 
 
