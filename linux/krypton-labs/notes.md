@@ -133,9 +133,69 @@ Host krypton
 
     - `CAESARISEASY`
 
+## Level 3->4
+
+> Well done. You’ve moved past an easy substitution cipher.
+> 
+> The main weakness of a simple substitution cipher is repeated use of a simple 
+> key. In the previous exercise you were able to introduce arbitrary plaintext to 
+> expose the key. In this example, the cipher mechanism is not available to you, 
+> the attacker.
+> 
+> However, you have been lucky. You have intercepted more than one message. The 
+> password to the next level is found in the file ‘krypton4’. You have also found 
+> 3 other files. (found1, found2, found3)
+> 
+> You know the following important details:
+> 
+> - The message plaintexts are in American English (*** very important) 
+> - They were produced from the same key (*** even better!)
+> 
+> Enjoy.
+
+```bash
+cat found1 | fold -w1 | sort | uniq -ic
+```
+Output:
+```txt
+    257
+     20 A
+     87 B
+    107 C
+     69 D
+     17 E
+     11 F
+     81 G
+      2 H
+      2 I
+    102 J
+     25 K
+     27 L
+     29 M
+     74 N
+      7 O
+    106 Q
+      1 R
+    155 S
+     32 T
+    100 U
+     56 V
+     47 W
+     29 X
+     42 Y
+     57 Z
+```
+Using `sort -n` on that output:
+```text
+    100 U
+    102 J
+    106 Q
+    107 C
+    155 S
+```
 
 
-<!-- ## Level 3->4 -->
+
 <!-- ## Level 4->5 -->
 <!-- ## Level 5->6 -->
 <!-- ## Level 6->7 -->
