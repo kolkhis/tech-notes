@@ -108,7 +108,7 @@ If `dmenu` or any part of your i3 setup isn't working as expected:
 
 * Check the syntax of your `~/.config/i3/config` file for errors.
 * Consult the i3wm documentation and user forums for specific configuration issues.
-* Restart i3 in-place with `od+Shift+R` to apply configuration changes without ending your session.
+* Restart i3 in-place with `Mod+Shift+R` to apply configuration changes without ending your session.
 
 ## TL;DR
 
