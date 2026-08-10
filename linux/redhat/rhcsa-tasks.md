@@ -102,8 +102,8 @@ On Ubuntu/Debian:
 - You would need to edit the `linux` line in GRUB to add `init=/bin/bash` instead of `rd.break`.
 - Then, you would need to remount the root filesystem with `mount -o remount,rw /` instead
   of `mount -o remount,rw /sysroot/`.
-- Finally, you would not need to create the `.autorelabel` file, as Ubuntu
-  /Debian does not use SELinux.
+- Finally, you would not need to create the `.autorelabel` file on
+  distributions that do not use SELinux (e.g., Debian/Ubuntu).
 - The rest of the steps are the same.
 
 
