@@ -79,6 +79,30 @@ git submodule update
 - `git submodule update`: Fetch all the data from that project and check out the 
   appropriate commit listed in the parent project.  
 
+## Turning a Directory into a Submodule
+
+If there is a subdirectory in a git repo that needs to be turned into a
+submodule (e.g., it needs to be its own repository and maintain its git
+history), it can be converted with `git subtree split`.  
+
+It is good practice to make a backup branch before performing this operation.
+```bash
+cd /my-repo # Root of project repository
+git branch backup-before-split
+```
+
+Then, extract the directory's git history.  
+```bash
+git subtree split --prefix=my-repo/subdir --branch=new-repo-history
+```
+
+- `git subtree split`: Creates a new history containing only a single directory.  
+- `--prefix=my-repo/subdir`: Specifies the directory being extracted.  
+- `--branch=new-repo-history`: Creates a local branch containing the rewritten git history.  
+
+This will make it so `my-repo/subdir/src/main.py` becomes `src/main.py`
+
+
 ## Resources
 
 - <https://git-scm.com/book/en/v2/Git-Tools-Submodules>
