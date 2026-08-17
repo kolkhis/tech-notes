@@ -89,7 +89,9 @@ ps -o etime= -p "PID" # Show how long a process has been running (trim header)
 ps -eM # Security info (standard syntax)
 ps axZ # Security info (BSD syntax)
 
-pgrep processname  # Show PIDs for a process with a given name
+pgrep processname   # Show PIDs for a process with a given name
+
+fuser -k 8080/tcp   # kill any process using port 8080
 ```
 The `ps` command BSD variants do offer very similar functionality, but they do have
 different output, displaying slightly different information.  
