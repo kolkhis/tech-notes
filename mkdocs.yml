@@ -175,6 +175,7 @@ nav:
       - linux/tools/yq.md
     - Redhat:
       - linux/redhat/rhcsa-tasks.md
+      - linux/redhat/practice-questions.md
     - Monitoring:
       - linux/monitoring/monitoring_tools.md
       - linux/monitoring/prometheus_service_discovery.md
