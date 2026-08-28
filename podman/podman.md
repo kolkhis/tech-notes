@@ -1,7 +1,7 @@
 # Podman
 
 Podman is a **daemonless** container engine for developing, managing, and 
-running OCI Containers on a Linux System.
+running OCI Containers on a Linux System. 
 
 OCI (Open Container Initiative) Containers are containers that follow the OCI 
 specification for container images and runtimes.
@@ -33,6 +33,27 @@ These are containers that encapsulate an application and all its dependencies.
 * [Removing Images and Anonymous Volumes after Container Exits](#removing-images-and-anonymous-volumes-after-container-exits) 
 * [Limitations of Containers](#limitations-of-containers) 
 
+## Docker vs. Podman
+
+Podman is a container engine that is fully compatible with Docker, but it has 
+some key differences:
+
+- **Daemonless**
+    - Podman does not require a background daemon to run containers, while Docker relies on a daemon process.  
+    - This makes Podman more lightweight and secure.
+- **Rootless**
+    - Podman can run containers as a non-root user, providing better security and isolation.  
+    - Docker typically requires root privileges to run containers.
+- **Kubernetes Integration**
+    - Podman has built-in support for Kubernetes, allowing users to generate Kubernetes YAML files from Podman containers and pods.  
+    - Docker requires additional tools for Kubernetes integration.
+
+Docker uses a client-server architecture, where the Docker client communicates 
+with the Docker daemon (`dockerd`), which runs as a background service to manage 
+containers and their operations.
+
+Podman operates in a daemonless architecture, where the Podman client directly
+interacts with the container runtime (e.g., `runc`) to manage containers.
 
 ## Podman Cheatsheet
 ```bash
