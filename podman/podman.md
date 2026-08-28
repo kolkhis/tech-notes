@@ -1,8 +1,12 @@
 # Podman
 
-Podman is a container engine for developing, managing, and running OCI Containers on a Linux System.
-OCI (Open Container Initiative) Containers are a kind of package that encapsulate your application and all its dependencies.
+Podman is a **daemonless** container engine for developing, managing, and 
+running OCI Containers on a Linux System.
 
+OCI (Open Container Initiative) Containers are containers that follow the OCI 
+specification for container images and runtimes.
+
+These are containers that encapsulate an application and all its dependencies.
 
 ## Table of Contents
 * [Podman Cheatsheet](#podman-cheatsheet) 
