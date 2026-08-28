@@ -68,11 +68,11 @@ The three sets are:
 
 ## Special Permission Bits
 
-In addition to `r`, `w`, and `x`, there are a few **special** permissions:
+In addition to `r`, `w`, and `x`, there are a few **special** permissions.
 
-- `setuid` (octal `4`)
-- `setgid` (octal `2`)
 - `sticky` (octal `1`)
+- `setgid` (octal `2`)
+- `setuid` (octal `4`)
 
 These are represented as follows.  
 
@@ -94,6 +94,7 @@ These are represented as follows.
     - Often used on directories, like `/tmp`.  
     - Indicates that only the file owner (or root) can delete or rename files in 
       the directory.  
+    - Also called the "restricted deletion" attribute.
 
 - `-`: Means the **absence** of a permission.
     - The `-` in a field means that the corresponding set
