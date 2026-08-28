@@ -89,12 +89,13 @@ These are represented as follows.
     - If set on a directory, all new files and subdirectories inherit **group**
       ownership.  
 
-- `t`: **Sticky bit**. Prevents anyone from deleting the file **except the file owner *or* root**.  
+- `t`: **Sticky bit**. Prevents anyone from deleting files in a directory **except the file owner *or* root**.  
     - Appears in the **`others`** permission field.  
     - Often used on directories, like `/tmp`.  
     - Indicates that only the file owner (or root) can delete or rename files in 
       the directory.  
     - Also called the "restricted deletion" attribute.
+    - **Only effective on directories**. Ignored on regular files.
 
 - `-`: Means the **absence** of a permission.
     - The `-` in a field means that the corresponding set
