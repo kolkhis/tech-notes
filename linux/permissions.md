@@ -70,18 +70,33 @@ The three sets are:
 
 In addition to `r`, `w`, and `x`, there are a few **special** permissions:
 
-* `s`: **Setuid/Setgid**.
-    * Appears in the **`user`** or **`group`** permission field instead of the `x`.
-    * If set on a file, the file will execute with the permissions of the file owner or group.
+- `setuid` (octal `4`)
+- `setgid` (octal `2`)
+- `sticky` (octal `1`)
 
-* `t`: **Sticky bit**.
-    * Appears in the **`others`** permission field.  
-    * Often used on directories, like `/tmp`.  
-    * Indicates that only the file owner (or root) can 
-      delete or rename files in the directory.  
+These are represented as follows.  
 
-* `-`: Means the **absence** of a permission.
-    * The `-` in a field means that the corresponding set
+- `s`: **Setuid** (when in the owner's execute permission field).  
+    - Appears in the **`user`** permission field instead of the `x`.
+    - If set on a file, the file will execute with the permissions of the file 
+      owner's effective UID.
+    - If set on a directory, it is generally ignored.  
+
+- `s`: **Setgid**. (when in the group's execute permission field).  
+    - Appears in the **`group`** permission field instead of the `x`.
+    - If set on a file, the file will execute with the permissions of the
+      group's effective GID.  
+    - If set on a directory, all new files and subdirectories inherit **group**
+      ownership.  
+
+- `t`: **Sticky bit**. Prevents anyone from deleting the file **except the file owner *or* root**.  
+    - Appears in the **`others`** permission field.  
+    - Often used on directories, like `/tmp`.  
+    - Indicates that only the file owner (or root) can delete or rename files in 
+      the directory.  
+
+- `-`: Means the **absence** of a permission.
+    - The `-` in a field means that the corresponding set
       of users does not have that permission.
 
 
