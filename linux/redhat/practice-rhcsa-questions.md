@@ -48,33 +48,7 @@ On Node1, configure the Apache HTTP Server to meet the following requirements:
   Welcome to the Apache Web Server!
   ```
 
-## Question 5:
-### Shared Group Directories and Permissions
-On Node1, as root, create shared collaboration directories for group-based 
-access with the following requirements:
-
-- Create the following directories:
-    - `/groups/admins`
-    - `/groups/users`
-
-- Configure `/groups/admins` as follows:
-
-    - The group owner of the directory must be admins
-    - Members of the admins group must have full access (read, write, and execute)
-    - No access must be granted to users outside the admin group
-    - The directory owner must remain root, with full access
-    - All newly created files and directories within `/groups/admins` must 
-      automatically inherit the admin group ownership
-
-- Configure `/groups/users` as follows:
-
-    - The group owner must be users
-    - Owner and members of the users group must have read, write, and execute access
-    - Other users must have no access
-    - New files created in this directory can only be deleted by the file owner or root.
-
-
-## Question 6:
+## Question 4:
 ### User and Group Management
 
 On Node1, perform the following user and group management tasks:
@@ -103,6 +77,33 @@ On Node1, perform the following user and group management tasks:
   ```txt
   password
   ```
+
+## Question 5:
+### Shared Group Directories and Permissions
+On Node1, as root, create shared collaboration directories for group-based 
+access with the following requirements:
+
+- Create the following directories:
+    - `/groups/admins`
+    - `/groups/users`
+
+- Configure `/groups/admins` as follows:
+
+    - The group owner of the directory must be admins
+    - Members of the admins group must have full access (read, write, and execute)
+    - No access must be granted to users outside the admin group
+    - The directory owner must remain root, with full access
+    - All newly created files and directories within `/groups/admins` must 
+      automatically inherit the admin group ownership
+
+- Configure `/groups/users` as follows:
+
+    - The group owner must be users
+    - Owner and members of the users group must have read, write, and execute access
+    - Other users must have no access
+    - New files created in this directory can only be deleted by the file owner or root.
+
+
 
 ## Good to Know
 
