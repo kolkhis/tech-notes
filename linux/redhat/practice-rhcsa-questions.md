@@ -220,6 +220,22 @@ with the following requirements:
       autofs on Node1 or any other VM for the RHCSA practice scenario.
 
 
+## Question 7:
+### Cron Job for User
+On Node1, as the user `bruce`, perform the following tasks:
+
+- Create a cron job that executes daily at 12:45 AM.
+
+- The job should print (echo) the message:
+  ```plaintext
+  EX200 Practice Test!
+  ```
+
+- The job should continue to exist and run as expected across reboots.
+
+- Hint: Use the standard crontab for the user rather than placing scripts in
+  `/etc/cron.d` unless explicitly instructed.
+
 
 ## Good to Know
 
