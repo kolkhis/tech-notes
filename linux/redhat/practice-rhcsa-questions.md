@@ -35,7 +35,6 @@ Ensure the repositories are enabled, persist across reboots, and can be used to
 install packages.
 
 ## Question 3:
-
 ### Configuring and Securing an Apache HTTP Service
 
 On Node1, configure the Apache HTTP Server to meet the following requirements:
@@ -56,21 +55,21 @@ On Node1, perform the following user and group management tasks:
 - Create a group named admins with a fixed GID of 3500.
 - Create a group named users
 - Create the following user accounts with the specified requirements:
-    - harry
-        - Primary group: admins
-        - Secondary group users
-        - User ID 3455
+    - `harry`
+        - Primary group: `admins`
+        - Secondary group: `users`
+        - User ID `3455`
 
-    - natasha
-        - Supplementary groups: admins and users
-        - User ID of 3456
+    - `natasha`
+        - Supplementary groups: `admins` and `users`
+        - User ID of `3456`
 
-    - sarah
-        - Must not be a member of the admins group
+    - `sarah`
+        - Must not be a member of the `admins` group
         - Must not have access to an interactive shell
 
-    - bruce
-        - Member of  admins group
+    - `bruce`
+        - Member of `admins` group
         - Home directory must be created explicitly
 
 - Set the password for all created users to:
@@ -89,20 +88,27 @@ access with the following requirements:
 
 - Configure `/groups/admins` as follows:
 
-    - The group owner of the directory must be admins
-    - Members of the admins group must have full access (read, write, and execute)
-    - No access must be granted to users outside the admin group
-    - The directory owner must remain root, with full access
+    - The group owner of the directory must be `admins`
+    - Members of the `admins` group must have full access (read, write, and execute)
+    - No access must be granted to users outside the `admins` group
+    - The directory owner must remain `root`, with full access
     - All newly created files and directories within `/groups/admins` must 
-      automatically inherit the admin group ownership
+      automatically inherit the `admins` group ownership
 
 - Configure `/groups/users` as follows:
 
-    - The group owner must be users
-    - Owner and members of the users group must have read, write, and execute access
+    - The group owner must be `users`
+    - Owner and members of the `users` group must have read, write, and execute access
     - Other users must have no access
     - New files created in this directory can only be deleted by the file owner or root.
 
+??? info "Spoilers"
+
+    - Use the set user ID (setuid, 4), set group ID (setgid, 2), and restricted deletion/sticky (1) permission bits to meet the requirements.
+    - The setgid bit (2) will have every file inherit the group ownership when
+      set on a directory.  
+    - The sticky bit can be used to prevent anyone from deleting files in the
+      directory unless they are the owner (or root). 
 
 
 ## Good to Know
