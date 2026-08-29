@@ -302,6 +302,22 @@ following requirements:
 - Save the resulting archive as `/root/backup.tar.gz`
 - The operation should preserve file permissions and directory structure
 
+## Question 13:
+### Configure Default File and Directory Permissions
+
+On Node1, configure the system so that for the user `bruce`, the following 
+default permissions apply:
+
+- Newly created regular files must have permissions set to `-r-------` by 
+  default.
+- Newly created directories must have permissions set to `dr-x------` by 
+  default.
+- The configuration must apply automatically to all future files and 
+  directories created by `bruce`.
+
+Hint: think of `umask`.  
+
+
 
 
 ## Good to Know
