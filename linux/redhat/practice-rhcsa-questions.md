@@ -282,6 +282,26 @@ On Node1, perform the following tasks:
 - Preserve the original file ownership, permissions, and timestamps during the 
   copy operation.
 
+## Question 11:
+### Boot Configuration and Troubleshooting
+
+On Node1, ensure that system boot messages are displayed during startup to 
+assist with troubleshooting.
+
+- Remove any kernel parameters that suppress boot messages so that verbose output is enabled.
+- The configuration must persist across reboots.
+
+## Question 12:
+### Archive and Compress System Files
+
+On Node1, create a compressed archive of the directory `/var/tmp` with the 
+following requirements:
+
+- The archive must include all files and subdirectories under `/var/tmp`
+- The archive must be compressed using `gzip`
+- Save the resulting archive as `/root/backup.tar.gz`
+- The operation should preserve file permissions and directory structure
+
 
 
 ## Good to Know
