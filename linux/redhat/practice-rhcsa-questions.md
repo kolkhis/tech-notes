@@ -236,6 +236,32 @@ On Node1, as the user `bruce`, perform the following tasks:
 - Hint: Use the standard crontab for the user rather than placing scripts in
   `/etc/cron.d` unless explicitly instructed.
 
+## Question 8:
+### Ownership, Permissions, and ACLs
+
+On Node1, copy the file `/etc/fstab` to `/var/tmp` and configure its ownership and 
+permissions to meet the following requirements:
+
+- The copied file must be owned by `root`.
+- The file must belong to the `admins` group.
+- The file must not be executable by any user.
+- The user owner and group owner should have read and write access.
+- User `harry` must have read and write access to the file.
+- User `bruce` can read but not write to the file.
+- User `natasha` must have no read or write access to the file.
+- All other users, including users created in the future, must have read-only 
+  access to the file.
+ 
+!!! info "Note"
+
+    ACLs are no longer listed as an exam objective for RHEL 10.  
+    However, they remain a simple yet powerful feature that every Linux system 
+    administrator should understand. They take only a few minutes to learn and are 
+    extremely useful for managing permissions in real-world environments, so it's 
+    well worth taking the time to become familiar with them.
+
+
+
 
 ## Good to Know
 
