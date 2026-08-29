@@ -271,6 +271,17 @@ server time.google.com and meet the following requirements:
 - The configuration must persist across reboots.
 - Verify that the system clock is synchronized with the configured NTP server.
 
+## Question 10:
+### Locate, Copy, and Secure Files
+
+On Node1, perform the following tasks:
+
+- Locate all regular files under the `/etc` directory that are larger than 900 
+  KB but smaller than 5 MB.
+- Copy all matching files to the directory `/find/largefiles`.
+- Preserve the original file ownership, permissions, and timestamps during the 
+  copy operation.
+
 
 
 ## Good to Know
