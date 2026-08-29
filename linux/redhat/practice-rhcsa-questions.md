@@ -111,6 +111,116 @@ access with the following requirements:
       directory unless they are the owner (or root). 
 
 
+## Question 6:
+### Configuring NFS + Autofs
+
+On Node1, configure autofs to automatically mount remote user home directories 
+with the following requirements:
+
+- Install and enable the autofs service.
+
+- Configure automounting so that user home directories are accessed under /homes/remote.
+
+- The remote NFS export is available from server.example.com at /exports/home. 
+  This directory contains users john and mary home directories as /exports/home
+  /john & /exports/home/mary.
+
+- Home directories must be mounted on demand and unmounted automatically after 60s of inactivity.
+
+- The autofs configuration must persist across reboots.
+
+- Do not manually mount the filesystem.
+
+??? info "BONUS: Configuring Node2 as an NFS Server so that Node1 is its NFS Client"
+    - Step 1: Install required NFS packages
+      ```bash
+      dnf install -y nfs-utils
+      ```
+    - Step 2: Create the export directory
+      ```bash
+      mkdir -p /exports/home
+      #(Optional but realistic for practice)
+      chmod 755 /exports/home
+      ```
+        - Add the directories mary and john in /exports/home with any relevant contents.
+          ```bash
+          # mkdir /exports/home/john 
+          # echo "John's Home Directory" > /exports/home/john/file1.txt
+          # mkdir /exports/home/mary
+          # echo "Mary's Home Directory" > /exports/home/mary/file1.txt
+          ```
+    - Step 3: Configure NFS exports
+        - Edit /etc/exports:
+          ```bash
+          vim /etc/exports
+          ```
+          Add the following line:
+          ```bash
+          /exports/home  *(rw,sync,no_root_squash) 
+          ```
+          This allows read/write access and ensures predictable behavior for lab environments.
+          Note for simplicity, just
+          ```bash
+          /exports/home  *(rw)
+          ```
+          is sufficient and should work normally.
+          The `*` in `/exports/home   *(rw)` allows access from any host; to restrict 
+          access explicitly to Node1, replace `*` with Node1's hostname or IP address, for 
+          example:
+          ```bash
+          /exports/home rhel-node1.example.com(rw) (if DNS resolution is set)
+          ```
+          OR
+          ```bash
+          /exports/home 192.168.50.25(rw) (works even if DNS resolution is not configured in /etc/hosts)
+          ```
+
+    - Step 4: Enable and start the NFS services
+      ```bash
+      systemctl enable --now nfs-server
+      ```
+        - Confirm status:
+          ```bash
+          systemctl status nfs-server
+          ```
+
+    - Step 5: Configure the firewall to allow NFS access
+      ```bash
+      firewall-cmd --permanent --add-service=nfs
+      firewall-cmd --permanent --add-service=mountd
+      firewall-cmd --permanent --add-service=rpc-bind
+      ```
+      OR scripted:
+      ```bash
+      for service in nfs mountd rpc-bind; do firewall-cmd --add-service="$service" --permanent; done;
+      ```
+        - Next (very important)
+          ```bash
+          firewall-cmd --reload
+          ```
+
+    - Step 7: Verification (recommended)
+
+        - From Node2 (the NFS server):
+          ```bash
+          showmount -e localhost
+          ```
+
+        - From Node1 (the NFS client):
+          ```bash
+          showmount -e <Node2-IP>
+          ```
+          Expected output should include:
+          ```bash
+          /exports/home *
+          ```
+
+    - Result: Node2 is now successfully configured as an NFS server exporting 
+      `/exports/home`, along with all its sub-directories, ready to be consumed by 
+      autofs on Node1 or any other VM for the RHCSA practice scenario.
+
+
+
 ## Good to Know
 
 
@@ -120,17 +230,30 @@ access with the following requirements:
 - In the actual RHCSA exam, repo links will point to a fully functional 
   repository source, enabling real package access and installations after 
   configuring as we've done above.
+    - So on the exam, we will be able to install packages from the configured repos 
+      to test that they work properly.
     - `man dnf.conf` (search 'repo options')
 
 ## Things to Work On
-such a
-- Convert subnet mask to CIDR notation
-- /etc/sysconfig/network-scripts/
+
+- (question 9) Configure NTP Client Synchronization 
+- (question 8) Ownership, Permissions, and ACLs
+- NFS and autofs
+- Convert subnet mask to CIDR notation (beyond `255.255.255.0` = `/24`)
+- `/etc/sysconfig/network-scripts/`
 - Does RHEL10 have a flatpak repo?
 - Can we install packages on our exam boxes that were not specified?
     - e.g., `dnf-plugins-core`
+    - Likely not, but we should get clarification on this
 - SELinux (ports, etc.)
 - Firewalld
 - Special permission bits
+    - setuid (4), setgid (2), sticky bit (1)
+- PAM password quality configuration:
+    - vim /etc/security/pwquality.conf
+
+```bash
+sudo tar -czvf /root/backup.tar.gz /var/tmp/*
+```
 
 
