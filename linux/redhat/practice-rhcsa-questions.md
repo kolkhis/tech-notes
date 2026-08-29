@@ -348,6 +348,14 @@ Requirement:
 - Grant privileged access of `/etc/passwd` to user jane if necessary.
 - The script must be user-specific; do not modify system-wide login scripts.
 
+## Question 17:
+### Reset Root Password
+
+On Node2, assume the `root` password is unknown. Reset the root password to:
+```bash
+rootpass 
+```
+for root login.
 
 
 
