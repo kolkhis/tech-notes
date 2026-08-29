@@ -325,6 +325,15 @@ On Node1, configure the system so that all newly created users meet the followin
 - Passwords must expire after 30 days.
 - Passwords must be at least 9 characters long.
 
+## Question 15:
+### Configure Sudo Access
+
+On Node1, perform the following tasks:
+
+- Create a new user `jane` and ensure that `jane` can execute commands with `sudo`.
+- Configure the system so that all members of the group `admins` can execute 
+  commands with `sudo` without being prompted for a password.
+
 
 
 
