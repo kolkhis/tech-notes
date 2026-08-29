@@ -36,6 +36,8 @@ to start the container:
 podman-compose up -d
 ```
 
+The `-d` will detach the container and run it in the background.
+
 ## Example `docker-compose.yml` file
 
 An example file that can be used to spin up a Postgres container:
