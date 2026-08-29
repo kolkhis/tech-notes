@@ -317,6 +317,15 @@ default permissions apply:
 
 Hint: think of `umask`.  
 
+## Question 14:
+### Enforce Password Policies for New Users
+
+On Node1, configure the system so that all newly created users meet the following password requirements:
+
+- Passwords must expire after 30 days.
+- Passwords must be at least 9 characters long.
+
+
 
 
 
