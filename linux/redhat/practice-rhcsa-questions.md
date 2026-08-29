@@ -334,6 +334,21 @@ On Node1, perform the following tasks:
 - Configure the system so that all members of the group `admins` can execute 
   commands with `sudo` without being prompted for a password.
 
+## Question 16:
+### Create a User Script That Executes at Login
+
+On Node1, perform the following tasks as the user jane:
+
+- Create a shell script search_bash.sh that searches for the string "bash" in 
+  `/etc/passwd` and copies the matching lines, in the same order, to the file 
+  `bash-users.txt` in jane's home directory.
+- Configure the script to automatically run whenever `jane` logs in.
+
+Requirement:
+- Grant privileged access of `/etc/passwd` to user jane if necessary.
+- The script must be user-specific; do not modify system-wide login scripts.
+
+
 
 
 
