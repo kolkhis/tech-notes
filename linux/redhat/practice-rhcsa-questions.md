@@ -260,6 +260,16 @@ permissions to meet the following requirements:
     extremely useful for managing permissions in real-world environments, so it's 
     well worth taking the time to become familiar with them.
 
+## Question 9:
+### Configure NTP Client Synchronization
+
+On Node1, configure the system to synchronize its system time with the NTP 
+server time.google.com and meet the following requirements:
+
+- Configure Node1 to use time.google.com as its only time source.
+- Ensure time synchronization is enabled and active.
+- The configuration must persist across reboots.
+- Verify that the system clock is synchronized with the configured NTP server.
 
 
 
