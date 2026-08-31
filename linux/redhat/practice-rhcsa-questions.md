@@ -102,6 +102,19 @@ install packages.
     After adding the repo files, both repositories should be enabled and
     accessible.  
 
+??? warning "Additional Notes"
+
+    - Verification using `dnf repolist` ensures the repos are functional.  
+    - Both methods persist across reboots automatically. 
+    - The `gpgcheck=0` disables signature verification, which is acceptable in 
+      local/test repositories for exam purposes.  
+    - In the actual RHCSA exam, repo links will point to a fully functional 
+      repository source, enabling real package access and installations after 
+      configuring as we've done above.
+        - So on the exam, we will be able to install packages from the configured repos 
+          to test that they work properly.
+        - `man dnf.conf` (search 'repo options')
+
 
 ## Question 3:
 ### Configuring and Securing an Apache HTTP Service
