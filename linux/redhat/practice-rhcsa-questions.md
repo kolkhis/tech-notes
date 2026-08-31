@@ -39,6 +39,40 @@ Ensure the network configuration is persistent across reboots and active immedia
 Ensure the repositories are enabled, persist across reboots, and can be used to
 install packages.
 
+??? warning "Spoilers"
+
+    For this task, two new repositories must be added. This can be done by adding a 
+    repository file manually or by using `dnf config-manager`.  
+
+    ### Method 1: Using dnf config-manager
+
+    Enable repositories via DNF config manager:
+    - Enable repository access for BaseOS
+      ```bash
+      dnf config-manager --add-repo=https://repo.example.com/rhel9_10/BaseOS
+      ```
+    - Enable repository access for AppStream
+      ```bash
+      dnf config-manager --add-repo=https://repo.example.com/rhel9_10/AppStream
+      ```
+    - Verify that the repositories are available:
+      ```bash
+      dnf repolist
+      ```
+    - Both repositories should appear as enabled, however, they cannot be used
+      because gpgcheck is not set.  
+      Check the names given to them by `dnf config-manager` by running:
+      ```bash
+      ls /etc/yum.repos.d
+      ```
+    - Then for each of the two baseos and appstream repo files, open and enter 
+      `gpgcheck=0` at the end, or run the commands:
+      ```bash
+      echo "gpgcheck=0" >> /etc/yum.repos.d/repo_BaseOS.repo
+      echo "gpgcheck=0" >> /etc/yum.repos.d/repo_AppStream.repo
+      ```
+
+
 ## Question 3:
 ### Configuring and Securing an Apache HTTP Service
 
