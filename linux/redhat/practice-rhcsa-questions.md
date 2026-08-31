@@ -24,6 +24,11 @@ Determine the system’s current local network configuration, then configure the
 
 Ensure the network configuration is persistent across reboots and active immediately
 
+??? warning "Spoilers"
+
+    Use `nmcli` or `nmtui` to configure the system's network settings.
+
+
 ## Question 2:
 ### Configure DNF/RPM/YUM Repository Access
 
