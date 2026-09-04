@@ -230,6 +230,8 @@ On Node1, perform the following user and group management tasks:
   password
   ```
 
+
+
 ## Question 5:
 ### Shared Group Directories and Permissions
 On Node1, as root, create shared collaboration directories for group-based 
@@ -529,9 +531,9 @@ for root login.
 
 ## Things to Work On
 
-- (question 9) Configure NTP Client Synchronization 
+- (question 6) NFS and autofs
 - (question 8) Ownership, Permissions, and ACLs
-- NFS and autofs
+- (question 9) Configure NTP Client Synchronization 
 - Convert subnet mask to CIDR notation (beyond `255.255.255.0` = `/24`)
 - `/etc/sysconfig/network-scripts/`
 - Does RHEL10 have a flatpak repo?
