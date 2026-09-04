@@ -536,19 +536,21 @@ for root login.
 - (question 9) Configure NTP Client Synchronization 
 - Convert subnet mask to CIDR notation (beyond `255.255.255.0` = `/24`)
 - `/etc/sysconfig/network-scripts/`
-- Does RHEL10 have a flatpak repo?
+- Flatpak -- Does RHEL10 have a flatpak repo?
 - Can we install packages on our exam boxes that were not specified?
     - e.g., `dnf-plugins-core`
     - Likely not, but we should get clarification on this
 - SELinux (ports, etc.)
-- Firewalld
+    - `semanage`
+- Firewalld (`firewall-cmd`)
 - Special permission bits
     - setuid (4), setgid (2), sticky bit (1)
 - PAM password quality configuration:
-    - vim /etc/security/pwquality.conf
+    - `vim /etc/security/pwquality.conf`
 
-```bash
-sudo tar -czvf /root/backup.tar.gz /var/tmp/*
-```
+- Basic archive creation and extraction (`-z` to use bzip2)
+  ```bash
+  sudo tar -czvf /root/backup.tar.gz /var/tmp/*
+  ```
 
 
