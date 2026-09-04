@@ -549,8 +549,24 @@ for root login.
     - `vim /etc/security/pwquality.conf`
 
 - Basic archive creation and extraction (`-z` to use bzip2)
-  ```bash
-  sudo tar -czvf /root/backup.tar.gz /var/tmp/*
-  ```
+    - Creation:
+      ```bash
+      sudo tar -czvf /root/backup.tar.gz /var/tmp/*
+      ```
+        - `-c`: create
+        - `-z`: compress with gzip
+        - `-v`: verbose
+        - `-f`: filename of the archive to create
+    - Extraction
+      ```bash
+      sudo tar -xzvf /root/backup.tar.gz -C /root/
+      ```
+        - `-x`: extract
+        - `-z`: decompress with gzip
+        - `-v`: verbose
+        - `-f`: filename of the archive to extract
+        - `-C`: change to directory before extracting
+            - This will extract the contents of the archive into `/root/`
+
 
 
