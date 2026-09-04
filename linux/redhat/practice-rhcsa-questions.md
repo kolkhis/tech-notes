@@ -129,6 +129,77 @@ On Node1, configure the Apache HTTP Server to meet the following requirements:
   Welcome to the Apache Web Server!
   ```
 
+??? warning "Solutions"
+
+    1. First, make sure Apache is installed. The package is usually called `httpd`.  
+       ```bash
+       dnf install -y httpd
+       ```
+
+    2. Configure Apache to listen on port 85.  
+       ```bash
+       vi /etc/httpd/conf/httpd.conf
+       ```
+       Find the `Listen` directive and change it to 85.  
+       ```bash
+       Listen 85
+       ```
+       Save the file and exit (`:wq`).  
+
+    3. Create the web content.  
+       Create or edit the default index.html page.  
+       ```bash
+       vi /var/www/html/index.html
+       ```
+       Add the required content.  
+       ```plaintext
+       Welcome to the Apache Web Server!
+       ```
+       Save and exit (`:wq`).  
+
+    4. Allow port 85 through the firewall for external access.  
+       ```bash
+       firewall-cmd --permanent --add-port=85/tcp
+       firewall-cmd --reload
+       ```
+
+    5. Configure SELinux to allow Apache on port 85.  
+        - Apache is restricted by SELinux to use specific ports. Port 85 must
+          be explicitly allowed.  
+        - Check if port 85 is already allowed.  
+          ```bash
+          semanage port -l | grep http  
+          ```
+        - If port 85 is not listed (expected), add it.  
+          ```bash
+          semanage port -a -t http_port_t -p tcp 85
+          ```
+        - This step is **mandatory** if SELinux is enforcing, which it always
+          is on the exam.  
+        - Use `man` to find good syntax examples to use with `man semanage port`
+
+    6. Enable and start Apache web server.  
+       ```bash
+       systemctl enable --now httpd
+       # or
+       systemctl restart httpd
+       ```
+
+    7. Verify that the requirements are met.  
+       ```bash
+       semanage port -l | grep http  # Should list port 85
+       systemctl status httpd        # Should show Apache is enabled and running
+       ```
+       Check access from the local system.  
+       ```bash
+       curl http://localhost:85
+       ```
+       Check access from an external system (browser or Node2).  
+       ```bash
+       curl http://<NODE1_IP>:85
+       ```
+
+
 ## Question 4:
 ### User and Group Management
 
