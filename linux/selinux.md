@@ -6,23 +6,23 @@ This module implements a Mandatory Access Control (MAC) security model.
 
 ## tl;dr
 
-* SELinux is a Linux module that implements a Mandatory Access Control (MAC) security model.  
-* SELinux uses contexts to define the security domain of an "object" (file or process).
-* An SELinux Context is a rule that defines access permissions for files/directory.  
-    * Shown as `user:role:type:level` with `ls -Z`.  
-* SELinux rules are checked *after* Discrectionary Access Control (DAC) rules (normal 
+- SELinux is a Linux module that implements a Mandatory Access Control (MAC) security model.  
+- SELinux uses contexts to define the security domain of an "object" (file or process).
+- An SELinux Context is a rule that defines access permissions for files/directory.  
+    - Shown as `user:role:type:level` with `ls -Z`.  
+- SELinux rules are checked *after* Discrectionary Access Control (DAC) rules (normal 
   Linux permissions) are checked.  
-    
-* `semanage`, `restorecon`, and `chcon` are used to manage SELinux contexts.  
-    * Changes made with `semanage` are persistent across reboots. 
-    * Changes made with `chcon` are temporary and revert after a reboot or relabel operation.
-    * `restorecon` restores the SELinux context to match the policy you defined with `semanage`.
-        * After setting the file context with `semanage`, you need to apply it to existing 
+
+- `semanage`, `restorecon`, and `chcon` are used to manage SELinux contexts.  
+    - Changes made with `semanage` are persistent across reboots. 
+    - Changes made with `chcon` are temporary and revert after a reboot or relabel operation.
+    - `restorecon` restores the SELinux context to match the policy you defined with `semanage`.
+        - After setting the file context with `semanage`, you need to apply it to existing 
           files with `restorecon`.
 
-* `ls -Z` and `ps -Z` 
-    * Use `ls -Z` to view the SELinux context of files.
-    * Use `ps -Z` to view the SELinux context of processes.
+- `ls -Z` and `ps -Z` 
+    - Use `ls -Z` to view the SELinux context of files.
+    - Use `ps -Z` to view the SELinux context of processes.
 
 
 ## How SELinux Works  
@@ -30,34 +30,32 @@ This module implements a Mandatory Access Control (MAC) security model.
 SELinux uses a **policy** file that sets the security **context** of each file or  
 process.  
 
-
-
 ## SELinux Contexts  
 
 Contexts define the security domain of an object (file or process).  
 These domains control how different types of objects and subjects can interact.  
 SELinux uses these contexts to enforce its access control policies.  
 
-* An SELinux Context is a rule that defines access permissions for files/directory.  
-* It consists of 4 parts:  
+- An SELinux Context is a rule that defines access permissions for files/directory.  
+- It consists of 4 parts:  
     1. `user`: SELinux user identity.  
-        * This is not the same as a Linux user. It's an SELinux-specific user that 
+        - This is not the same as a Linux user. It's an SELinux-specific user that 
           processes and objects are assigned to.
-        * E.g., `system_u` represents system processes.
+        - E.g., `system_u` represents system processes.
 
     2. `role`: This defines what a user or process is allowed to do on the system.  
-        * E.g., `object_r` for files and directories, `system_r` for system processes.  
+        - E.g., `object_r` for files and directories, `system_r` for system processes.  
 
     3. `type`: Defines what a process can interact with.
-        * Processes are labeled with a type, and files/resources are labeled with  
+        - Processes are labeled with a type, and files/resources are labeled with  
           a different type.
-        * SELinux policies decide which types can access or interact with each  
+        - SELinux policies decide which types can access or interact with each  
           other. This is called the "type enforcement".
 
     4. `level`: Defines the sensitivity or integrity level of the object. 
-        * This is used for "Multi-Level Security" (MLS) and Multi-Category Security (MCS).  
-        * Often used in government or other high-security environments.  
-        * Default level is `s0`. 
+        - This is used for "Multi-Level Security" (MLS) and Multi-Category Security (MCS).  
+        - Often used in government or other high-security environments.  
+        - Default level is `s0`. 
 
 ### Contexts in Files  
 
@@ -70,15 +68,15 @@ be performed on the file.
 
 Examples:  
 
-* Files labeled with the type `httpd_sys_content_t` can be read by the Apache web server but 
+- Files labeled with the type `httpd_sys_content_t` can be read by the Apache web server but 
   not by other processes.  
-* Files labeled with the type `ssh_home_t` are accessible only to the SSH daemon.  
+- Files labeled with the type `ssh_home_t` are accessible only to the SSH daemon.  
 
 ### Context Examples  
 
 Running `ls -Z` on a file, you'll see its SELinux context.  
 
-* Check the context of the file with `ls -Z`:  
+- Check the context of the file with `ls -Z`:  
   ```bash  
   ls -Z /etc/passwd  
   ```
@@ -86,16 +84,16 @@ Running `ls -Z` on a file, you'll see its SELinux context.
   ```plaintext  
   system_u:object_r:passwd_file_t:s0 /etc/passwd  
   ```
-    * `system_u`: The system user, which is the user domain for system-related processes and files.  
-    * `object_r`: The role, usually `object_r` for files and directories, which means it's
+    - `system_u`: The system user, which is the user domain for system-related processes and files.  
+    - `object_r`: The role, usually `object_r` for files and directories, which means it's
                   just a file-related role.
-    * `passwd_file_t`: The file type (or domain) that indicates how SELinux policies handle this file.
-        * `passwd_file_t` specifically identifies this file as the `/etc/passwd` file.
-        * The type allows SELinux to apply the appropriate rules and restrictions.
-    * `s0`: Security level.
-        * This is the security level (MLS, or Multi-Level Security) part of the SELinux 
+    - `passwd_file_t`: The file type (or domain) that indicates how SELinux policies handle this file.
+        - `passwd_file_t` specifically identifies this file as the `/etc/passwd` file.
+        - The type allows SELinux to apply the appropriate rules and restrictions.
+    - `s0`: Security level.
+        - This is the security level (MLS, or Multi-Level Security) part of the SELinux 
           context. Usually used in high-security environments.  
-        * `s0`, the default, usually indicates the lowest security level, with no special restrictions applied.
+        - `s0`, the default, usually indicates the lowest security level, with no special restrictions applied.
 
 
 ---
@@ -108,10 +106,10 @@ ls -lZ /var/www/html/index.html
 #                     ^ user   ^ role   ^ type              ^ level
 ```
 
-* `system_u`: SELinux user (`system_u` is a system user).
-* `object_r`: The role (for files and directories, it's typically `object_r`).
-* `httpd_sys_content_t`: The type (this means the file is meant to be served by an HTTP server).
-* `s0`: The level, which is the default sensitivity level in this case.
+- `system_u`: SELinux user (`system_u` is a system user).
+- `object_r`: The role (for files and directories, it's typically `object_r`).
+- `httpd_sys_content_t`: The type (this means the file is meant to be served by an HTTP server).
+- `s0`: The level, which is the default sensitivity level in this case.
 
 In this example, the context `httpd_sys_content_t` is used to allow the Apache web 
 server (`httpd_t` type) to read this file, but restrict access by other types of 
@@ -124,9 +122,9 @@ The SELinux mode can be set in `/etc/selinux/config`.
 
 SELinux has 3 modes:
 
-* Disabled
-* Permissive
-* Enforcing
+- Disabled
+- Permissive
+- Enforcing
 
 
 ### Disabled
@@ -158,9 +156,9 @@ The format is:
 /pattern/ -- user:role:type:level
 ```
 
-* The whitespace on either side of the `--` are tabs.  
-    * These are options, sometimes `-d`, `-c`, etc
-* `/pattern/` can be a path or basic regular expression.  
+- The whitespace on either side of the `--` are tabs.  
+    - These are options, sometimes `-d`, `-c`, etc
+- `/pattern/` can be a path or basic regular expression.  
 
 
 ### Important SELinux Commands for Managing Contexts 
@@ -188,7 +186,7 @@ The commands `semanage`, `restorecon`, and `chcon` are used to manage/modify fil
 
 3. `chcon`: The `chcon` command changes the SELinux context for a file or directory, but
    unlike `semanage`, it only applies to the specific file or directory temporarily.  
-    * If the system is rebooted or the file is relabeled, the context change will be lost.  
+    - If the system is rebooted or the file is relabeled, the context change will be lost.  
       So, this should only be used for temporary changes.
   ```bash
   chcon -t httpd_sys_content_t /path/to/file
@@ -196,8 +194,8 @@ The commands `semanage`, `restorecon`, and `chcon` are used to manage/modify fil
   This command changes the type of the specified file to `httpd_sys_content_t`.
 
 4. `ls -Z` and `ps -Z`: 
-    * Use `ls -Z` to view the SELinux context of files.
-    * Use `ps -Z` to view the SELinux context of processes.
+    - Use `ls -Z` to view the SELinux context of files.
+    - Use `ps -Z` to view the SELinux context of processes.
    ```bash
    ls -Z /var/www/html
    ps -Z | grep httpd
@@ -220,8 +218,8 @@ create custom policies.
 ## SELinux Troubleshooting
 Check the audit logs for context violations:
 
-* `/var/log/audit/audit.log`
-* `/var/log/messages` (if auditd isn't running)
+- `/var/log/audit/audit.log`
+- `/var/log/messages` (if auditd isn't running)
 The `ausearch` and `sealert` tools are also useful for troubleshooting:
 ```bash
 ausearch -m avc -ts recent
@@ -231,8 +229,8 @@ sudo sealert -a /var/log/audit/audit.log
 
 
 ## Resources
-* [SELinux Project Documentation](https://selinuxproject.org) 
-* [Red Hat SELinux Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/using_selinux)
+- [SELinux Project Documentation](https://selinuxproject.org) 
+- [Red Hat SELinux Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/using_selinux)
 
 
 
