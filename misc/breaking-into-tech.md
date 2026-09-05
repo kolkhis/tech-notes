@@ -582,32 +582,43 @@ keep this system operational.
 
 ### Most common interview questions
 
-Tell us a little about yourself
-- What they want to know: They want a background summary
-- How you prep for it: Practice a 2 min elevator pitch. Focus on roles and
-  strengths, use % increase or numbers of improvements.
+- Question: Tell us a little about yourself
+    - What they want to know:
+        - They want a background summary
+    - How you prep for it:
+		- Practice a 2 min elevator pitch. Focus on roles and
+          strengths, use % increase or numbers of improvements.
 
-Why are you the right person for this role?
-- What they want to know: Do you understand the role as they have described it?
-- How you prep for it: Focus on what they're asking for. Do they want you to
-  troubleshoot? Do they want you to monitor something? Talk about that.  
+- Question: Why are you the right person for this role?
+    - What they want to know:
+        - Do you understand the role as they have described it?
+    - How you prep for it:
+		- Focus on what they're asking for. Do they want you to
+          troubleshoot? Do they want you to monitor something? Talk about that.  
 
-Any questions about the technology?
-- What they want to know: Do you understand how to deploy and troubleshoot the technology?
-- How you prep for it: Know the tech. Know how the industry uses it (blog
-  posts, FAQ pages). Know about alternative technologies to compare with.  
+- Question: Any questions about the technology?
+    - What they want to know:
+        - Do you understand how to deploy and troubleshoot the technology?
+    - How you prep for it:
+		- Know the tech. Know how the industry uses it (blog
+          posts, FAQ pages). Know about alternative technologies to compare with.  
 
-How do you troubleshoot X topic?
-- What they want to know: How well do you think on your feet? Do you have a standard method to
-  troubleshoot? DO you understand this tool?
-- How you prep for it: Know your troubleshooting methodology. Apply your
-  methodology, talk about what you would be checking and who you'd be
-  contacting. Check/verify and change directions.  
+- Question: How do you troubleshoot X topic?
+    - What they want to know:
+        - How well do you think on your feet? Do you have a standard method to
+          troubleshoot? DO you understand this tool?
+    - How you prep for it:
+		- Know your troubleshooting methodology. Apply your
+          methodology, talk about what you would be checking and who you'd be
+          contacting. Check/verify and change directions.  
 
-How do you handle X scenario?
-- What they want to know: They want to know how you handle pressure
-- How you prep for it: Think through when you've handled something well and
-  when you've handled something poorly. Use the good example.  
+- Question: How do you handle X scenario?
+    - What they want to know:
+        - They want to know how you handle pressure
+    - How you prep for it:
+        - Think through when you've handled something well and when you've handled 
+          something poorly.  
+          Use the good example.  
 
 ## Look Up
 - Open Waldo - open source community
