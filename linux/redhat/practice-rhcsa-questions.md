@@ -542,6 +542,7 @@ for root login.
     - Likely not, but we should get clarification on this
 - SELinux (ports, etc.)
     - `semanage`
+    - `semanage port`
 - Firewalld (`firewall-cmd`)
 - Special permission bits
     - setuid (4), setgid (2), sticky bit (1)
@@ -567,6 +568,8 @@ for root login.
         - `-f`: filename of the archive to extract
         - `-C`: change to directory before extracting
             - This will extract the contents of the archive into `/root/`
+            - Without this option, the contents will be extracted into the
+              current working directory (`$PWD`).
 
 
 
