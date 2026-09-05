@@ -513,6 +513,81 @@ rootpass
 for root login.
 
 
+## Question 18:
+### Logical Volume Configuration
+
+On Node2, create a logical volume named lvdata and configure it according to 
+the following requirements:
+
+- The logical volume must be created from a volume group named `vgstore` and must 
+  use exactly 50 physical extents.
+
+- The volume group `vgstore` must be created from an lvm partition on vdb (or `sdb`, 
+  `nvme0n2`, or any available secondary disk as appropriate) and must use a 
+  physical extent size of 8 MiB.
+
+- Format the logical volume with the ext4 filesystem and mount it persistently on
+  `/mnt/data`.
+
+!!! info
+
+    Don't delete the logical volume (LV) when done with the task, as this LV is
+    used later on in question 20.  
+
+## Question 19:
+### Create Swap Partition
+
+On Node2, perform the following tasks:
+
+- Create a 512 MB swap partition on the same disk used previously (`vdb`, `sdb`, or 
+  `nvme0n2`, as appropriate).
+
+- Configure the system to use this partition as swap space.
+
+- Ensure the swap is enabled immediately and mounted persistently so that it is 
+  active after a reboot.
+
+
+
+## Question 20:
+### Resize Logical Volume
+
+On Node2, resize the previously created logical volume lvdata in the vgstore 
+volume group to use a total of 85 physical extents.
+
+- Add a third partition of appropriate size to the secondary disk and use if 
+  for this purpose.
+
+- Ensure that the filesystem on the logical volume is adjusted appropriately so that the new space is available for use.
+
+Requirement:
+
+Ensure the logical volume remains mounted at /mnt/data and is usable after resizing.
+
+
+```bash
+lvextend -l +35 vgstore /dev/sdb3
+```
+
+
+## Question 21:
+### Enable Recommended Tuning Profile
+
+On Node2, perform the following task:
+
+Enable the recommended tuning profile to optimize the system performance 
+according to Red Hat best practices.
+
+Verify that the tuning profile has been successfully applied and is active.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,6 +606,8 @@ for root login.
 
 ## Things to Work On
 
+- Setting up SWAP partitions
+- Physical Extents in LVM
 - (question 6) NFS and autofs
 - (question 8) Ownership, Permissions, and ACLs
 - (question 9) Configure NTP Client Synchronization 
@@ -572,4 +649,5 @@ for root login.
               current working directory (`$PWD`).
 
 
+partprobe
 
