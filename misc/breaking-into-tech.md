@@ -620,6 +620,34 @@ keep this system operational.
           something poorly.  
           Use the good example.  
 
+### Deliverables
+
+1. Have an elevator pitch about yourself
+2. Have a practice plan to talk through the topics you've learned in the prev
+   two sections
+3. practice talking about the technology you work with
+
+
+## Applying for Jobs
+
+- Where should I look for entry level IT (your topic) work near me?
+- What are some alternative job titles that still use Linux?
+- What are some career paths that involve Linux?
+- Should I tailor my resume to each job posting?
+
+
+----
+
+
+- Have a set of target jobs that you're actively searching for in your local area
+
+- Modify your resume to fit each of the job's requirements
+
+- Plan to submit 5-10 jobs a week on topics you're actively working on.  
+
+
+
+
 ## Look Up
 - Open Waldo - open source community
     - <https://openwaldo.org/>
