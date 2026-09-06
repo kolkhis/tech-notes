@@ -645,6 +645,24 @@ keep this system operational.
 
 - Plan to submit 5-10 jobs a week on topics you're actively working on.  
 
+---
+
+1. Stick to the plan
+2. Adjust the plan with nnew info
+3. Find others working on the same things as you, and talk to them about these
+   topics.  
+
+## Reflection
+
+Are you more prepared now than you were 4.5 hours ago to break into the tech
+field?
+
+What can you continue to do to prepare to get into a tech role?
+
+No one says this is going to be easy. We expect this to be challenging. There
+is no *one* path into IT/Tech.  
+
+What are your next steps to continue your learning and preparation for a career in IT?
 
 
 
