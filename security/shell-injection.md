@@ -1,11 +1,50 @@
 # Shell Injection
 
-A shell injection attack is a type of attack that allow for remote code
-execution (RCE).  
+A shell injection attack is a type of attack that allows arbitrary command
+execution on a host.
 
-It is a hazard that comes with bad shell scripting habits. These types of
-attack mostly happen with command line arguments that are not parsed correctly,
-or variables being incorrectly used (e.g., unquoted).  
+It is a hazard that comes with bad shell scripting habits.
+
+These types of attack mostly happen with command line arguments that are not 
+parsed correctly, or variables being incorrectly used (e.g., unquoted).  
+
+## Prevention/Safe Practices
+
+Common examples are using `; shell-cmd` or using subshell syntax `$(...)` in command
+line arguments to trick the shell into interpreting those commands.
+
+If using Bash, a safe practice is to always use the double-bracket notation for
+conditional statements:
+```bash
+if [[ $var -eq 0 ]]; then :; fi
+```
+Inside these double brackets `[[...]]`, all variables are inherently quoted and
+treated as a single argument. No word splitting occurs using this syntax.  
+
+This is distinct from using single bracket notation:
+```bash
+if [ $var -eq 0 ]; then :; fi
+```
+Here, `$var` (unquoted), may undergo word splitting. Word splitting is an
+attack vector that can cause the subsequent arguments to be treated as commands
+if the correct syntax is provided.  
+
+If single brackets must be used (e.g., POSIX-compliant scripts), then ensure
+variables are **always** double-quoted in any context.  
+
+Another safe practice is to sanitize user input before using it in a shell
+command. For example, if the script is taking user input for a date, check that
+the provided input matches the required format.
+```bash
+declare date
+# $date expects the format YYYY-MM-DD
+if [[ "$1" =~ [[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2} ]]; then
+    date="$1"
+    shift
+fi
+```
+
+
 
 ## Examples of a Shell Injection
 
