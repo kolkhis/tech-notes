@@ -133,3 +133,130 @@ A good handful of basic operations are implemented here.
   otherwise returns `nil`.
 - `Size`: Returns the number of nodes in the list.
 
+## Example Using `any` Type
+
+Using `any` allows for arbitrary types in the `Value` field.  
+
+However, when using `any`, the `Value` node must hold a single type for the entire linked list.  
+For example, if you create a linked list of `int`, all nodes must hold `int` values.  
+If you create a linked list of `string`, all nodes must hold `string` values.
+
+This is useful when several Linked Lists are needed for different types (e.g., one Linked
+List for `int`s and one for `string`s).  
+
+```go
+package main
+import "fmt"
+
+// Node[T any] means Node is generic over a type T, and T can be any type
+type Node[T any] struct {
+    Value T
+    Next  *Node[T]
+}
+
+// LinkedList is also generic over the same type T
+type LinkedList[T any] struct {
+    Head *Node[T]
+    size int
+}
+```
+
+Then the `Append`, `Prepend`, `Delete`, and `Find` methods would also be updated to use the generic type `T` instead of `int`.
+```go
+// NewLinkedList[T] creates and empty list for a specific type (T).  
+// The [T any] here declares the type parameter for this function.  
+func NewLinkedList[T any]() *LinkedList[T] {
+    return &LinkedList[T]{}
+}
+
+// Methods use the receiver's type parameter, no need to redeclare [T any]
+func (l *LinkedList[T]) Append(value T) {
+	newNode := &Node[T]{Value: value}
+
+	if l.Head == nil {
+		l.Head = newNode
+		l.size++
+		return
+	}
+
+	current := l.Head
+	for current.Next != nil {
+		current = current.Next
+	}
+	current.Next = newNode
+	l.size++
+}
+
+func (l *LinkedList[T]) Prepend(value T) {
+	newNode := &Node[T]{Value: value, Next: l.Head}
+	l.Head = newNode
+	l.size++
+}
+
+// Delete needs a way to compare values. "comparable" is required here,
+// not "any" — see note below.
+func (l *LinkedList[T]) Delete(value T) bool {
+	if l.Head == nil {
+		return false
+	}
+
+	if any(l.Head.Value) == any(value) {
+		l.Head = l.Head.Next
+		l.size--
+		return true
+	}
+
+	current := l.Head
+	for current.Next != nil {
+		if any(current.Next.Value) == any(value) {
+			current.Next = current.Next.Next
+			l.size--
+			return true
+		}
+		current = current.Next
+	}
+	return false
+}
+
+func (l *LinkedList[T]) Size() int {
+	return l.size
+}
+
+func (l *LinkedList[T]) String() string {
+	result := ""
+	current := l.Head
+	for current != nil {
+		result += fmt.Sprintf("%v -> ", current.Value)
+		current = current.Next
+	}
+	result += "nil"
+	return result
+}
+
+```
+
+Then they can be put to use.  
+```go
+func main() {
+    // Explicit type argument is needed when creating the LL when using generics
+    intList := NewLinkedList[int]()
+    intList.Append(1)
+    intList.Append(2)
+    intList.Append(3)
+    fmt.Println("Int list:", intList)
+
+    // Lists of strings work the same way
+    strList := NewLinkedList[string]()
+    strList.Append("Hello")
+    strList.Append("world")
+    fmt.Println("String list: ", strList)
+
+    // Custom structs can also be used
+    type Coordinates struct{ x, y int}
+    coordList := NewLinkedList[Coordinates]()
+    coordList.Append(Coordinates{1, 2})
+    coordList.Append(Coordinates{3, 4})
+    fmt.Println("Coordinate list: ", coordList)
+}
+```
+
