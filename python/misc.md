@@ -1,5 +1,99 @@
 # Miscellaneous Python Notes
 
+## Binary Search
+
+A binary search is a way to search for a specific value in a **sorted** array.
+There's also an "over-under" technique.  
+
+
+Binary searches only work on a sorted array of integers. There can be negatives
+as well.  
+```python
+vals = [-5, -3, -2, 1, 3, 4, 5, 6]
+```
+As long as they're sorted in ascending order, we can apply the binary search.  
+
+A binary search is basically just checking if a given value is in an array. 
+
+We're going to check if the value `3` is in this array using a binary search.  
+```python
+target = 3
+```
+
+Implementing this requires us to take note of the index at the beginning and at
+the end, or "left" and "right".
+
+```python
+vals = [-5, -3, -2, 1, 3, 4, 5, 8]
+#        0   1   2  3  4  5  6  7
+```
+Left would be at index `0` and right would be index `7` (or `-1`).  
+```python
+left = 0
+right = len(vals) - 1 # 7
+```
+Then we'd want to calculate the middle index so we can start our search.  
+
+Calculate the middle index by doing a floor division on the number of elements 
+in the array. We'll use the formula below, as that is what we need to use on
+subsequent iterations of the search.  
+```python
+middle = (left + right) // 2
+```
+This will produce the number `3` (so our middle index is `3`).  
+
+Then the value that exists at index `middle` is checked against the target.  
+```python
+if vals[middle] == target:
+    return True
+```
+
+If that condition is `False`, then we need to check if the value at
+`vals[middle]` is **larger or smaller** than the `target`.  
+
+If it's larger, we look on the right side.  
+If it's smaller, we look on the left side.  
+
+`vals[3]` contains the value `1`. So we know the target `3` is larger than `1`.  
+
+```python
+if vals[middle] > target:
+    left = middle + 1
+elif vals[middle] < target:
+    right = middle - 1
+```
+
+So what we do is we narrow the search space by setting the `left` to `middle + 1`.  
+```python
+left = middle + 1 # Left is now 4
+```
+This brings our search area to indices `4` through `7` (`vals[4:7]`).  
+If the number was smaller, we'd instead set `right = middle - 1`.  
+
+Then we calculate our `middle` again.  
+```python
+middle = (left + right) // 2 # 4 + 7 // 2 = 5
+```
+The middle is now `5`.  
+
+We'd repeat this process until we eventually find the value `3` in `vals[4]`.  
+
+---
+
+### Different Middle Formula
+The `(left + right) // 2` formula isn't the most efficient, depending on how
+large the array is. You could potentially have an integer overflow depending on
+the language you're working in.  
+
+Instead of `left + right`, we can use:
+```python
+middle = left + (right - left) // 2
+```
+This formula can be used to avoid integer overflow while still producing the
+same result.  
+
+
+
 ## Python HTTP Server
 
 To spin up an http server, you can use `python3 -m http.server` to serve a 
@@ -87,6 +181,7 @@ def example_function(*args, **kwargs):
 
 example_function(*positional_args, **keyword_args)
 ```
+
 
 
 
