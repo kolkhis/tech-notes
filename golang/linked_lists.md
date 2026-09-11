@@ -222,6 +222,7 @@ func (l *LinkedList[T]) Size() int {
 	return l.size
 }
 
+// String method to print the linked list in a readable format
 func (l *LinkedList[T]) String() string {
 	result := ""
 	current := l.Head
@@ -232,13 +233,12 @@ func (l *LinkedList[T]) String() string {
 	result += "nil"
 	return result
 }
-
 ```
 
 Then they can be put to use.  
 ```go
 func main() {
-    // Explicit type argument is needed when creating the LL when using generics
+    // Explicit type argument is needed when creating the LL when using generics 
     intList := NewLinkedList[int]()
     intList.Append(1)
     intList.Append(2)
@@ -259,4 +259,12 @@ func main() {
     fmt.Println("Coordinate list: ", coordList)
 }
 ```
+
+Go can usually infer the type when using generics based on the arguments given.
+However, since the `NewLinkedList` constructor doesn't take any arguments, we
+need to explicitly pass the **type parameter** (`[type]`).  
+
+When creating a Linked List using the `[int]` or `[string]` **type
+parameters**, Go doesn't need to infer the type.  
+
 
