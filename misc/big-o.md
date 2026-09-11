@@ -104,6 +104,8 @@ The algorithms with this time complexity would include:
 - Selection sort
 - Insertion sort
 
+---
+
 Bubble sort repeatedly walks neighboring pairs and swaps them when they're in
 the wrong order.  
 ```python
@@ -121,8 +123,10 @@ def bubble_sort(values):
     return values
 ```
 
+---
 
-Selection sort:
+Selection sort chooses the smallest remaining element and places it in the next
+output position, then repeats.  
 ```python
 def selection_sort(values):
     n = len(values)
@@ -136,6 +140,28 @@ def selection_sort(values):
 
     return values
 ```
+This remains `O(n²)` even if the list is already sorted. It still scans the
+unsorted suffix to prove that its first item is the smallest.  
 
+---
 
+Insertion sort will sort a list from the first element to the last element.  
+```python
+def insertion_sort(values):
+    for i in range(1, len(values)):
+        current = values[i]  # first item outside the "sorted" section
+        j = i - 1            # Last item outside the "sorted" section
+
+        while j >= 0 and values[j] > current:
+            values[j + 1] = values[j]
+            j -= 1
+        values[j + 1] = current
+    return values
+```
+This algorithm treats the list as two regions. A sorted section at the front
+and an unsorted section after it. On each pass, it takes the next unsorted
+value and inserts it into the correct position in the front section, so the
+sorted section at the front becomes one item longer.  
+
+---
 
