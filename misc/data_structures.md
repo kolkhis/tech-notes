@@ -1,4 +1,3 @@
-
 # Introduction to Data Structures
 
 ## Introduction
@@ -93,7 +92,7 @@ just having a `null` value in the "next node" reference.
 In a circular doubly linked list, the `Head` node will also contain a reference
 to the `Tail` node. 
 
-#### Python Example
+#### Python Example of Linked List
 
 Python doesn't support pointers/references, but this is the basic structure of it.  
 ```python
@@ -118,7 +117,7 @@ head.next = new_node
 head.next = head.next.next
 ```
 
-#### Go Example
+#### Go Example of Linked List
 
 An example using Go, which *is* a language that supports references.  
 ```go
@@ -247,9 +246,14 @@ topic altogether, though.
 
 LIFO (Last In, First Out) data structure.
 
-* Operations: Push, Pop, Peek
+Like a stack of plates, the last one put on the stack is the first one that is 
+taken off.  
 
+- Operations: Push, Pop, Peek
 
+Python lists are a good example of a stack, as they allow you to add and remove 
+elements from the end of the list, and their `pop()` function takes the last
+item added off the stack.  
 ```python
 stack = []
 
@@ -268,8 +272,9 @@ print(stack[-1])
 
 FIFO (First In, First Out) data structure.
 
-Operations: Enqueue, Dequeue, Peek
+Like people waiting in line, the first ones in line are the first ones to leave.  
 
+- Operations: Enqueue, Dequeue, Peek
 
 ```python
 from collections import deque
@@ -285,6 +290,9 @@ queue.popleft()
 # Peek
 print(queue[0])
 ```
+
+Queues are commonly used for job processing, message queues, web server
+requests, print queues, breadth-first search, and task schedulers.  
 
 ---
 
