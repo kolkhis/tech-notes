@@ -297,12 +297,22 @@ requests, print queues, breadth-first search, and task schedulers.
 ---
 
 
+#### Stacks vs. Queues
+
+Stacks are LIFO (Last In, First Out).   
+Queues are FIFO (First In, First Out).  
+
+- Given the following values:
+  ```python
+  v = ["a", "b", "c"]
+  ```
+    - A stack will remove `"c"`, `"b"`, `"a"` (in that order)
+    - A queue will remove `"a"`, `"b"`, `"c"` (in that order)
 
 
 
 
 ## Non-Linear Data Structures
-
 
 ### Trees
 Hierarchical data structure with a root element and children.
@@ -327,29 +337,28 @@ root.right = TreeNode(3)
 #### Binary Search Trees
 
 * **Basic Structure**:
+  A binary search tree will branch values based on the values.  
+  ```
+                   (10)
+                  /    \
+                 /      \
+              (8)        (14)
+              / \        /  \
+             /   \     (11)  (17)
+            (5)  (9)
+           /  \
+          (4) (7)
+  ```
+  The right branch will always be a value larger than the one it is attached to.  
+  The left branch will always be a value smaller than the one it is attached to.  
+  How it handles deletions:
+  
+- If an element is deleted, it will be replaced by the next-highest 
+  value element from its children.  
 
-A binary search tree will branch values based on the values.  
-```
-                 (10)
-                /    \
-               /      \
-            (8)        (14)
-            / \        /  \
-           /   \     (11)  (17)
-          (5)  (9)
-         /  \
-        (4) (7)
-```
-The right branch will always be a value larger than the one it is attached to.  
-The left branch will always be a value smaller than the one it is attached to.  
-How it handles deletions:
-
-    - If an element is deleted, it will be replaced by the next-highest 
-      value element from its children.  
-
-    - So, it will look down to the left side and then right.  
-    - If `(8)` is deleted, it will look down to `(5)`, and find the 
-      highest value of its children. In this case `(7)`.  
+- So, it will look down to the left side and then right.  
+- If `(8)` is deleted, it will look down to `(5)`, and find the 
+  highest value of its children. In this case `(7)`.  
 
 
 
