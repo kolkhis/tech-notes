@@ -70,7 +70,32 @@ Collection of nodes, where each node contains a value and a reference to the nex
 
 Operations: Access, Insert, Delete
 
+#### Types of Linked Lists
+
+There are a few types of linked lists.
+- Singly Linked Lists
+- Doubly Linked Lists
+- Circular Linked Lists (these can also be singly/doubly linked lists).  
+
+A singly linked list is a collection of nodes with each node containing a value
+and a reference to the next node.  
+
+There are also doubly linked lists, in which each node contains two references.
+One to the next node, ***and*** one to the previous node.  
+
+Then there are circular linked lists. Both singly linked lists and doubly
+linked lists can be circular.  
+
+What makes a linked list circular is that the `Tail` node (last node) will 
+contain a reference to the `Head` node (first node) in the list, rather than
+just having a `null` value in the "next node" reference.  
+
+In a circular doubly linked list, the `Head` node will also contain a reference
+to the `Tail` node. 
+
 #### Python Example
+
+Python doesn't support pointers/references, but this is the basic structure of it.  
 ```python
 class Node:
     def __init__(self, data):
