@@ -583,6 +583,136 @@ Verify that the tuning profile has been successfully applied and is active.
 
 
 
+## Question 22:
+### Containers/Flatpak Configuration
+
+
+
+RHCSA 9 ONLY - Run a Rootless Container as a Systemd Service
+
+On Node2, as the non-root user russ (password: russpass), create and manage a container with the following requirements:
+
+Pull the container image registry.redhat.io/ubi9/ubi from the Red Hat registry (create a developers.redhat.com account using a browser, if required, and authenticate to the registry using valid credentials).
+
+Run a container named ubicon based on this image.
+
+Configure the container to:
+
+Map host port 8089 to container port 8089
+
+Persist data by binding two host directories, including /opt/out on the host to /opt/in inside the container, and a second host directory /opt/send to /opt/receive in the container.
+
+Finally, configure the container to be managed as a user-level systemd service with the name container-ubicon, ensuring it is enabled and automatically starts on system reboot without requiring root privileges.
+
+
+
+
+
+RHCSA 10 ONLY - Configure Flatpak Repositories
+
+On Node2, perform the following tasks:
+
+Install the flatpak package manager using the appropriate system package management tools.
+
+Add the official flathub remote repository to the system using the link:
+
+https://flathub.org/repo/flathub.flatpakrepo
+
+Add the official rhel flatpak remote repository if not present. Use the link:
+
+https://flatpaks.redhat.io/rhel.flatpakrepo
+
+Verify that all configured flatpak remotes are properly added to the system.
+
+---
+
+## Question 23:
+### Configure SELinux Booleans/System Journals
+
+On Node2, perform the following tasks:
+
+Enable the SELinux boolean `httpd_can_network_connect` so that the Apache web 
+server is allowed to initiate outbound network connections. Ensure the change 
+persists across reboots.
+
+Configure the system to preserve system journals.
+
+```bash
+# TODO: Check if this persists across reboots
+sudo semanage boolean -m --on httpd_can_network_connect
+
+# alt method
+getsebool httpd_can_network_connect
+setsebool -P httpd_can_network_connect on
+# -P = persist across reboots
+
+sudo find / -type f -name 'journald.conf'
+```
+
+
+## Question 24:
+### Secure File Transfer  / Key-Based Authentication
+
+On Node2, perform the following tasks as root:
+
+Configure key-based, passwordless SSH authentication from Node2 to Node1 for 
+secure access to the user natasha on Node1.
+
+Once authentication is established, securely copy the file /etc/fstab from 
+Node2 to natasha’s home directory on Node1.
+
+Ensure that the copied file is owned by natasha and retains appropriate 
+permissions for her to read and write.
+
+Requirement: Use a secure, encrypted method for the file transfer.
+
+
+## Question 25:
+### At Job & Systemd Timer
+
+BOTH RHCSA 9 & 10 - Create a one-time at job
+
+On Node2, as the user russ, schedule a one-time job to run tonight at 21:30 that appends the line:
+
+EX200 Mock Practice 1 Complete!
+to the file /home/russ/practice.log
+
+
+
+
+
+RHCSA 10 ONLY - Systemd Service & Timer
+
+On Node2, configure a recurring task by completing the following:
+
+Create an executable script named log.sh in /usr/local/bin/ that writes the 
+message RHCSA Practice Exam 1 Complete! to the system journal using the logger 
+command.
+
+Create a systemd oneshot service named log.service that runs the script.
+
+Create a systemd timer named log.timer that triggers the service every 1 minute 
+and ensures missed runs are executed after reboot (persistent behavior).
+
+Enable and start the timer so it begins working immediately and persists across 
+reboots.
+
+Verify that the timer is active and that the message appears repeatedly in the 
+system journal as the timer executes.
+
+Once you have confirmed the timer is working correctly, modify it so the
+service runs hourly instead.
+
+
+```bash
+systemctl list-timers
+```
+
+
+
+
+
+
 
 
 
@@ -606,11 +736,13 @@ Verify that the tuning profile has been successfully applied and is active.
 
 ## Things to Work On
 
+
 - Setting up SWAP partitions
 - Physical Extents in LVM
 - (question 6) NFS and autofs
 - (question 8) Ownership, Permissions, and ACLs
 - (question 9) Configure NTP Client Synchronization 
+- (question )
 - Convert subnet mask to CIDR notation (beyond `255.255.255.0` = `/24`)
 - `/etc/sysconfig/network-scripts/`
 - Flatpak -- Does RHEL10 have a flatpak repo?
