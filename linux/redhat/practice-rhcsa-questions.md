@@ -424,9 +424,8 @@ On Node1, as the user `bruce`, perform the following tasks:
     45 0 * * * echo "EX200 Practice Test!"    (should still work fine)
     ```
     Explanation (exam clarity):
-
     - 45 → minute
-    - 0 → hour (12:45 AM)
+    - 0 → hour (12:45 AM / 00:45)
     - `* * *` → every day
 
     To get the correct full path, run the command `which echo`, `which log`, etc.
@@ -450,7 +449,7 @@ On Node1, as the user `bruce`, perform the following tasks:
 
     No extra action is required.
 
-    Why:
+    Why:  
     User crontabs are managed by the crond service and persist automatically across 
     system reboots, provided the service is enabled (default on RHEL).
 
