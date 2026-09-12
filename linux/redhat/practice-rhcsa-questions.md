@@ -417,16 +417,16 @@ On Node1, as the user `bruce`, perform the following tasks:
 
     Add the following line:
     ```bash
-    45 0 * * * /usr/bin/echo "EX200 Practice Test!"    (full path : recommended)
+    45 0 * * * /usr/bin/echo "EX200 Practice Test!"     # (full path, recommended)
     ```
     OR
     ```bash
-    45 0 * * * echo "EX200 Practice Test!"    (should still work fine)
+    45 0 * * * echo "EX200 Practice Test!"              # (should still work fine)
     ```
     Explanation (exam clarity):
-    - 45 → minute
-    - 0 → hour (12:45 AM / 00:45)
-    - `* * *` → every day
+    - `45`: minute
+    - `0`: hour (12:45 AM / 00:45)
+    - `* * *`: every day
 
     To get the correct full path, run the command `which echo`, `which log`, etc.
 
