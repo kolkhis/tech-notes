@@ -494,6 +494,97 @@ permissions to meet the following requirements:
     extremely useful for managing permissions in real-world environments, so it's 
     well worth taking the time to become familiar with them.
 
+
+
+??? warning "Solution"
+
+    Step 1: Copy the file to the target location
+    ```bash
+    cp /etc/fstab /var/tmp/fstab
+    ```
+
+    Step 2: Set ownership and group ownership
+    ```bash
+    chown root:admins /var/tmp/fstab
+    ```
+
+    Step 3: Remove all executable permissions
+    ```bash
+    chmod a-x /var/tmp/fstab
+    # OR
+    chmod -x /var/tmp/fstab
+    # OR
+    chmod ugo-x /var/tmp/fstab
+    ```
+
+    Step 4: Set base permissions for owner, group, and others
+
+    User owner (root): read and write
+    Group owner (admins): read and write
+    Others: read-only
+    ```bash
+    chmod 664 /var/tmp/fstab
+    ```
+
+    At this point:
+    - Root → 6 → read/write
+    - Group (admins) → 6 → read/write
+    - Others → 4 → read-only
+
+    Note: This step grants the user, group and owner permissions in one go while also restricitng the execution permission for all, so you could skip Step 3.
+
+    Step 5: Configure ACLs for specific user requirements
+
+    Grant harry read and write access
+    ```bash
+    setfacl -m u:harry:rw /var/tmp/fstab
+    ```
+
+    Grant bruce read-only access
+    ```bash
+    setfacl -m u:bruce:r /var/tmp/fstab
+    # OR
+    setfacl -m u:bruce:r-- /var/tmp/fstab
+    ```
+
+    Explicitly deny natasha read and write access
+    ```bash
+    setfacl -m u:natasha:--- /var/tmp/fstab
+    # OR
+    setfacl -m u:natasha:- /var/tmp/fstab
+    ```
+
+
+    Step 6: Verify permissions
+    ```bash
+    ls -l /var/tmp/fstab
+    ```
+
+    Expected output:
+    ```plaintext
+    -rw-rw-r--+ 1 root admins ... /var/tmp/fstab
+    ```
+    Verify ACL configuration
+
+    ```bash
+    getfacl /var/tmp/fstab
+    ```
+
+    Expected key entries:
+    ```plaintext
+    # file: var/tmp/fstab
+    # owner: root
+    # group: admins
+    user::rw-
+    user:harry:rw-
+    user:natasha:---
+    user:bruce:r--
+    group::rw-
+    mask::rw-
+    other::r--
+    ```
+
+
 ## Question 9:
 ### Configure NTP Client Synchronization
 
