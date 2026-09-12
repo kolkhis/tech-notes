@@ -391,6 +391,86 @@ On Node1, as the user `bruce`, perform the following tasks:
 - Hint: Use the standard crontab for the user rather than placing scripts in
   `/etc/cron.d` unless explicitly instructed.
 
+
+??? warning "Solution"
+
+    #### Solution for Question 7
+
+    Step 1: Switch to the user bruce
+    ```bash
+    su - bruce
+    ```
+
+    Step 2: Edit the user's crontab
+    ```bash
+    crontab -e
+    ```
+    OR
+    ```bash
+    crontab -u bruce -e (if running as root)
+    ```
+
+    Step 3: Add the cron job entry
+
+    Hint: You can always use `cat /etc/crontab` as a cheat sheet to get information 
+    on what each entry represents.
+
+    Add the following line:
+    ```bash
+    45 0 * * * /usr/bin/echo "EX200 Practice Test!"    (full path : recommended)
+    ```
+    OR
+    ```bash
+    45 0 * * * echo "EX200 Practice Test!"    (should still work fine)
+    ```
+    Explanation (exam clarity):
+
+    - 45 → minute
+    - 0 → hour (12:45 AM)
+    - `* * *` → every day
+
+    To get the correct full path, run the command `which echo`, `which log`, etc.
+
+    Step 4: Save and exit the editor (`:wq`) OR ZZ
+
+    The cron job is now registered in bruce’s user crontab.
+
+    Step 5: Verify the cron job as user bruce
+    ```bash
+    crontab -l 
+    crontab -l -u bruce # (as root)
+    ```
+
+    Expected output:
+    ```plaintext
+    45 0 * * * /usr/bin/echo "EX200 Practice Test!"
+    ```
+
+    Step 6: Ensure persistence across reboots
+
+    No extra action is required.
+
+    Why:
+    User crontabs are managed by the crond service and persist automatically across 
+    system reboots, provided the service is enabled (default on RHEL).
+
+    (Optional verification as root)
+    ```bash
+    systemctl status crond (ensure enabled and active)
+    systemctl restart crond
+    ```
+
+    #### Extra Practice/Verification:
+
+    You can set(edit) the cron job to run at a sooner time, say in the next minute 
+    or two.
+
+    After the set time has passed, verify that it runs as it should by running the 
+    command:
+    ```bash
+    journalctl | grep "EX200"
+    ```
+
 ## Question 8:
 ### Ownership, Permissions, and ACLs
 
@@ -717,16 +797,6 @@ On Node2, configure a recurring task by completing the following:
     ```
 
 
-
-
-
-
-
-
-
-
-
-
 ## Good to Know
 
 
@@ -748,7 +818,8 @@ On Node2, configure a recurring task by completing the following:
 - (question 6) NFS and autofs
 - (question 8) Ownership, Permissions, and ACLs
 - (question 9) Configure NTP Client Synchronization 
-- (question )
+- (question 22) Flatpak repos and config
+- (question 23) SELinux booleans and system journals
 - Convert subnet mask to CIDR notation (beyond `255.255.255.0` = `/24`)
 - `/etc/sysconfig/network-scripts/`
 - Flatpak -- Does RHEL10 have a flatpak repo?
