@@ -450,6 +450,26 @@ WantedBy=timers.target
         - `02:00:00`: The 24-hour format for 2AM.  
     - `Persistent=true`: Ensures it runs on boot if the system was off at 2AM.  
 
+#### Specifying the Time for Timer Files
+The `OnCalendar` directive is the most robust time specification for timer unit files.  
+It follows the `YYYY-MM-DD HH:MM:SS` format.  
+
+If the service needs to run every minute, on the minute, the `OnCalendar` 
+directive can be set to:
+```bash
+OnCalendar=*-*-* *:*:00
+```
+This follows the same conventions as in the `systemd.time` man page.  
+These can be time spans:
+- `2 h`
+- `2hours`
+- `48hr`
+- `1y 12month`
+- `55s500ms`
+- `300ms20s 5day`
+
+---
+
 Timer files count as their own services. So they will need to be enabled:
 ```bash
 systemctl daemon-reexec
