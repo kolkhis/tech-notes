@@ -30,6 +30,30 @@ The `server` keyword is used to specify a server to use, followed by the
 address. Options can be added afterwards, e.g., `iburst`, which will start with
 4-8 requests in order to make the first update of the clock sooner.  
 
+After adding the server, start (or restart) the `chronyd` service and check the status.  
+```bash
+systemctl enable --now chronyd
+# or
+systemctl restart chronyd
+```
+
+Verify that the new time server is being used.  
+```bash
+chronyc sources -v
+```
+The `^*` at the beginning of the line indicates the **active synchronization source**.  
+
+The `chronyc tracking` command can also be used to see some additional info.
+```bash
+chronyc tracking
+```
+
+After setting up Chrony, ensure that NTP is enabled at the system level.  
+```bash
+timedatectl set-ntp true
+timedatectl # verify
+```
+
 
 
 
