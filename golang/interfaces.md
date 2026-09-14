@@ -353,23 +353,20 @@ switch v := i.(type) { // Type switch
       }
       ```
 
-
 4. Polymorphism: 
     * Interfaces enable polymorphism in Go.  
     * You can write functions or methods that accept interfaces as parameters,
       making it possible to work with different types that implement the same 
       interface without knowing their concrete types.  
- 
+
 5. Empty Interface: 
     * In Go, the empty interface `interface{}` is an interface with no methods.  
     * It can be used to represent any type, making it a powerful tool for working  
       with values of unknown types, similar to dynamic typing in other languages.  
 
 
-
-
-
 ## Resources  
+
 * The Go Programming Language Specification  
     * For detailed information on how interfaces are represented and work internally.  
 * Effective Go  
@@ -382,7 +379,7 @@ switch v := i.(type) { // Type switch
 You might have a function that creates and connects a REAL TCP socket  
 You also have another function that does the same, but PRETENDS to make the connection.  
 
-So, two behaviours, a real one, and a fake one.  
+So, two behaviors, a real one, and a fake one.  
 
 When you run unit testing, we use the fake one.  
 When you run the real program, you use the real one.  
