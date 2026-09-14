@@ -591,10 +591,62 @@ permissions to meet the following requirements:
 On Node1, configure the system to synchronize its system time with the NTP 
 server time.google.com and meet the following requirements:
 
-- Configure Node1 to use time.google.com as its only time source.
+- Configure Node1 to use `time.google.com` as its only time source.
 - Ensure time synchronization is enabled and active.
 - The configuration must persist across reboots.
 - Verify that the system clock is synchronized with the configured NTP server.
+
+
+??? warning "Solution"
+
+    1. Install and enable the required time synchronization package if it's not 
+       present (on RHEL10, Chrony is the standard NTP implementation).  
+       ```bash
+       dnf install -y chrony
+       systemctl enable --now chronyd
+       systemctl status chronyd
+       ```
+
+    2. Then edit the chrony config file. Comment out any existing `server` or
+       `pool` lines, and add the `time.google.com` server.  
+       ```bash
+       vi /etc/chrony.conf
+       ```
+       Add the line:
+       ```plaintext
+       server time.google.com iburst
+       ```
+       Use `pool` if provided with a set of servers (e.g., `pool.ntp.org`, which
+       will resolve to multiple addresses).  
+
+    3. Restart `chronyd` for changes to take effect.
+       ```bash
+       systemctl restart chronyd
+       ```
+
+    4. Enable NTP synchronization via `timedatectl` if it's not already set.  
+       ```bash
+       timedatectl set-ntp true
+       ```
+       Verify afterwards.  
+       ```bash
+       timedatectl
+       ```
+       Ensure the two lines are set:
+       ```plaintext
+       System clock synchronized: yes
+                     NTP service: active
+       ```
+
+    5. Verify synchronization with the time server.  
+       ```bash
+       chronyc sources
+       ```
+       The `time.google.com` server should be present in the output.  
+       In this output, the `^*` indicates the active synchronization source.  
+
+
+
 
 ## Question 10:
 ### Locate, Copy, and Secure Files
@@ -888,7 +940,6 @@ On Node2, configure a recurring task by completing the following:
 
 
 ## Good to Know
-
 
 - For repo setup, `gpgcheck=0` disables signature verification, which is 
   acceptable in local/test repositories for exam purposes.
