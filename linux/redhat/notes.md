@@ -2,9 +2,6 @@
 
 A collection of notes on RHCSA tasks and tools.  
 
-
-
-
 ## NTP (Network Time Protocol) and Chrony
 
 
@@ -54,6 +51,58 @@ timedatectl set-ntp true
 timedatectl # verify
 ```
 
+## Network Configuration
 
+Another common RHCSA task is to configure a system's current local network.
+Set up a static IPv4 address for it and configure the system's DNS settings.  
+
+RHEL uses NetworkManager for all of this. Two tools are primarily used for
+interacting with NM, `nmcli` and `nmtui`.    
+
+As an example, we'll say the following conditions are on a task:
+
+- Configure a static IPv4 address using:
+    - An IP address within the same network as the current configuration, with a host ID of `50`
+    - Netmask: `255.255.255.0`
+    - Default gateway within the same network, with a host ID of `1`
+
+- Configure the system to use the following DNS settings:
+    - DNS server: `8.8.8.8`
+    - DNS search domain: `example.local`
+
+- Set the system hostname to:
+    - `rhel-node1.example.com`
+
+
+First, the active network interface must be identified.  
+There are a couple commands that can show this information.  
+```bash
+ip -br a
+nmcli device status # can be shortened to `nmcli d s`
+```
+
+The `nmcli` output will be something like:
+```plaintext
+DEVICE  TYPE      STATE                   CONNECTION
+ens18   ethernet  connected               ens18
+lo      loopback  connected (externally)  lo
+```
+This shows that the `ens18` interace is connected.  
+The `CONNECTION` column shows the NetworkManage profile name. Here, it's the
+same name as the interface.  
+
+So now we have:
+- Interface: `ens18`
+- Active NM profile: `ens18`
+
+Now, confirm which interface carries the default route.  
+```bash
+ip r show default
+```
+Output will look like:
+```plaintext
+default via 192.168.4.1 dev ens18 proto dhcp src 192.168.4.55 metric 100
+```
+This shows that the default route is handled by the `ens18` interface.  
 
 
