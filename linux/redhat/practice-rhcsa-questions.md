@@ -309,8 +309,8 @@ On Node1, configure the Apache HTTP Server to meet the following requirements:
 
 On Node1, perform the following user and group management tasks:
 
-- Create a group named admins with a fixed GID of 3500.
-- Create a group named users
+- Create a group named `admins` with a fixed GID of `3500`.
+- Create a group named `users`.  
 - Create the following user accounts with the specified requirements:
     - `harry`
         - Primary group: `admins`
@@ -333,6 +333,91 @@ On Node1, perform the following user and group management tasks:
   ```txt
   password
   ```
+
+??? warning "Solution"
+    
+    ## Step 1: Create the groups
+    - Create `admins` group with a group ID of `3500`.  
+      ```bash
+      groupadd -g 3500 admins
+      ```
+      The `-g` specifies the GID.  
+
+    - Create `users` group.  
+      ```bash
+      groupadd users
+      ```
+
+    ## Step 2: Create the users
+    - Create `harry` 
+      ```bash
+      useradd -g admins -G users -u 3455 harry
+      ```
+        - `-g admins`: Assigns primary group `admins` 
+        - `-G users`: Assigns secondary (supplementary) group `users`.  
+        - `-u 3455`: Assigns the user ID of `3455`.  
+
+    - Create `natasha`.  
+      ```bash
+      useradd -G admins,users -u 3456 natasha
+      ```
+        - `-G admins,users`: Assigns supplementary groups `admins` and `users`
+          (these should be comma-separated).  
+        - `-u 3456`: Assigns UID of `3456`.  
+
+    - Create `sarah`.  
+      ```bash
+      useradd -s /sbin/nologin sarah
+      ```
+        - `-s /sbin/nologin`: Specifies the user's shell.  
+            - `/sbin/nologin` prevents interactive shell access while still allowing 
+              authentication for services.  
+
+    - Create `bruce`.  
+      ```bash
+      useradd -m -G admins bruce
+      ```
+        - `-m`: Automatically creates the home directory for the user.  
+        - `-G admins`: Adds supplementary group `admins`.  
+
+    ## Step 3: Set passwords
+
+    Set the password for all these users to `password`.  
+    ```bash
+    passwd harry
+    passwd natasha
+    passwd sarah
+    passwd bruce
+    ```
+    This can also be scripted. 
+    ```bash
+    for u in harry natasha sarah bruce; do echo "password" | passwd --stdin "$u"; done
+    ```
+
+    ## Step 4: Verification
+
+    Verifying that everything is correct is recommended for the exam.  
+
+    - Verify group membership
+      ```bash
+      id harry
+      id natasha
+      id sarah
+      id bruce
+      id -g admins
+      id -g users
+      ```
+
+    - Verify home directory of user bruce
+      ```bash
+      ls -ld /home/bruce
+      ```
+
+    - Verify shell access
+      ```bash
+      getent passwd sarah 
+      ```
+      Expected output should show:    `sarah:x:...:/home/sarah:/sbin/nologin`
 
 
 
