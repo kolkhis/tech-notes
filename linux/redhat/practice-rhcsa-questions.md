@@ -129,6 +129,9 @@ Ensure the network configuration is persistent across reboots and active immedia
     cat /etc/resolv.conf    # Confirm the DNS search domain
     ```
 
+    > **NOTE**: Remember to always include the network mask (e.g., `/24`) when 
+    > configuring static IP addresses.  
+    > If the subnet mask given is `255.255.255.0`, that means the CIDR notation is `/24`.
 
 ## Question 2:
 ### Configure DNF/RPM/YUM Repository Access
