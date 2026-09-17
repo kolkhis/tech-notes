@@ -24,9 +24,110 @@ Determine the system’s current local network configuration, then configure the
 
 Ensure the network configuration is persistent across reboots and active immediately
 
-??? warning "Spoilers"
+??? warning "Solution"
 
     Use `nmcli` or `nmtui` to configure the system's network settings.
+    Both are fully acceptable and the choice of which tool is used does not
+    affect score.  
+
+    ## Step 1
+
+    Whichever tool is used, the first thing that needs to be done is
+    identifying the network interface that is being used.  
+    ```bash
+    ip -br a
+    ```
+    This will show the network interfaces on the devices.  
+    Look for the local network IP address:
+    ```bash
+    lo               UNKNOWN        127.0.0.1/8 ::1/128
+    ens18            UP             192.168.4.37/22 fd61:961b:ae1c:1:be24:11ff:fe27:c5b1/64 2600:6c60:4540:2e:be24:11ff:fe27:c5b1/64 fe80::be24:11ff:fe27:c5b1/64
+    ```
+    Here, the active network interface is `ens18` (local network IP `198.168.x.x`).  
+
+    The same information may be seen with `nmcli`.  
+    ```bash
+    nmcli device status
+    ```
+    > **Note**: This command can also be shortened to `nmcli d s`.  
+    The output should be as follows:
+    ```bash
+    DEVICE  TYPE      STATE                   CONNECTION
+    ens18   ethernet  connected               ens18
+    lo      loopback  connected (externally)  lo
+    ```
+    This is a little more useful. It shows the network interface name in 
+    the `DEVICE` column, and it shows the NetworkManager profile name in
+    the `CONNECTION` column.  
+
+    ## Step 2
+    Once the active network interface is identified.  
+
+    ### Using `nmtui`
+    - Launch the NetworkManager TUI.  
+      ```bash
+      nmtui
+      ```
+    - Select **Edit a Connection**.  
+    - Choose the active interface (e.g., `ens18`).  
+    - Navigate to **IPV4 CONFIGURATION**.  
+    - Change method from **Automatic** to **Manual**.  
+    - Select **Show**.  
+    - Apply the IPv4 settings. Enter the required values:
+        - Addresses: `172.16.18.50/24`
+        - Gateway: `172.16.18.1`
+        - DNS servers: `8.8.8.8`
+        - Search domains: `example.local`
+    - Select **OK**, then exit.  
+    - Then activate the connection (this is **critical**):
+        - From the main `nmtui` menu, select **Activate a connection**.  
+        - With `ens18` selected:
+            - **Activate**
+            - **Deactivate**
+    - Exit `nmtui`.  
+
+    ### Using `nmcli`
+    This can also be done with `nmcli`.  
+
+    - Modify the existing NetworkManager profile.  
+      ```bash
+      nmcli connection modify ens18 \
+          ipv4.method manual \
+          ipv4.address 172.16.18.50/24 \
+          ipv4.gateway 172.16.18.1 \
+          ipv4.dns 8.8.8.8 \
+          ipv4.dns-search example.local \
+          connection.autoconnect yes
+      ```
+      This makes all the required changes to the profile.  
+
+    - Reactivate the connection profile for changes to take effect.  
+      ```bash
+      nmcli connection up ens18
+      ```
+
+    ## Step 3
+    Change the hostname.  
+    ```bash
+    hostnamectl set-hostname rhel-node1.example.com
+    ```
+    This is immediate and will persist across reboots.  
+
+    ## Step 4
+    Ensure NetworkManager is enabled.  
+    ```bash
+    systemctl enable --now NetworkManager
+    systemctl restart NetworkManager
+    ```
+
+    ## Verification
+    ```bash
+    ip a  # Confirm the IP address
+    ip r  # Confirm the default gateway
+
+    hostname                # Confirm the hostname
+    cat /etc/resolv.conf    # Confirm the DNS search domain
+    ```
 
 
 ## Question 2:
