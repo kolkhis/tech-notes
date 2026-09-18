@@ -446,13 +446,16 @@ access with the following requirements:
     - Other users must have no access
     - New files created in this directory can only be deleted by the file owner or root.
 
-??? info "Spoilers"
+??? info "Hint"
 
-    - Use the set user ID (setuid, 4), set group ID (setgid, 2), and restricted deletion/sticky (1) permission bits to meet the requirements.
+    - Use the set user ID (setuid, 4), set group ID (setgid, 2), and restricted 
+      deletion/sticky (1) permission bits to meet the requirements.
     - The setgid bit (2) will have every file inherit the group ownership when
       set on a directory.  
     - The sticky bit can be used to prevent anyone from deleting files in the
       directory unless they are the owner (or root). 
+
+
 
 
 ## Question 6:
