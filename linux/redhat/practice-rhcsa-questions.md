@@ -455,6 +455,71 @@ access with the following requirements:
     - The sticky bit can be used to prevent anyone from deleting files in the
       directory unless they are the owner (or root). 
 
+??? warning "Solution"
+
+    ## Step 1
+    Create the required directories.  
+    ```bash
+    mkdir -p /groups/admins /groups/users
+    # OR
+    mkdir -p /groups/{admins,users}
+    ```
+
+    ## Step 2
+    Set ownership of the directories.  
+    - Configure `/groups/admins`.  
+        - Owner must remain `root`.  
+        - Group owner must be `admins`.  
+          ```bash
+          chown root:admins /groups/admins
+          ```
+
+    - Configure `/groups/users`.  
+        - Group owner must be `users`. 
+          ```bash
+          chgrp users /groups/users
+          # OR 
+          chown :users /groups/users
+          # OR
+          chown root:users /groups/users
+          ```
+
+    ## Step 3
+    Set the directory permissions.  
+
+    - `/groups/admins` requirements:
+        - Full access for members of `admins`.  
+        - No access for others.  
+        - SETGID/SGID bit must be set so new files inherit group ownership.  
+          ```bash
+          chmod 2770 /groups/admins
+          ```
+            - `2`: SGID bit (Can also be set using `chmod g+s`)
+            - `7`: rwx for owner (`root`)
+            - `7`: rwx for group (`admins`)
+            - `0`: no access for others
+
+    - `/groups/users` requirements:
+        - Full access for members of the `users` group.  
+        - No access for others.  
+        - Sticky bit set so that only `root` can delete files.  
+          ```bash
+          chmod 1770 /groups/users
+          ```
+            - `1`: Sticky bit (Can also be set using `chmod +t`)
+            - `7`: rwx for owner (`root`)
+            - `7`: rwx for group (`users`)
+            - `0`: no access for others
+
+    ## Step 4
+    Verify the permissions.  
+    ```bash
+    ls -ld /etc/groups /etc/admins
+    ```
+    - `/groups/admins` should show `drwxrws---` 
+        - The `s` in the group execute field represents the setgid bit.  
+    - `/groups/users`  should show `drwxrwx--T`
+        - The `T` in the other execute field represents the sticky bit.  
 
 
 
