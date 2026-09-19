@@ -173,8 +173,9 @@ nav:
       - linux/tools/vmstat.md
       - linux/tools/wget.md
       - linux/tools/yq.md
-    - Redhat:
-      - linux/redhat/rhcsa-tasks.md
+    - RedHat:
+      - linux/redhat/labs.md
+      - linux/redhat/notes.md
       - linux/redhat/practice-rhcsa-questions.md
     - Monitoring:
       - linux/monitoring/monitoring_tools.md
