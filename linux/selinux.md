@@ -221,11 +221,17 @@ Check the audit logs for context violations:
 
 - `/var/log/audit/audit.log`
 - `/var/log/messages` (if auditd isn't running)
+
 The `ausearch` and `sealert` tools are also useful for troubleshooting:
 ```bash
 ausearch -m avc -ts recent
 # or
 sudo sealert -a /var/log/audit/audit.log
+```
+On RedHat systems, the `audit2why` tool is very helpful in determining the
+meaning of certain logs.  
+```bash
+cat /var/log/audit/audit.log | audit2why
 ```
 
 
