@@ -50,7 +50,7 @@ on the RHCSA exam).
 
 It's highly recommended to attempt the lab before looking at the solution.  
 
-??? warning "Solution"
+??? warning "Solution Part 1: Setting up Apache"
 
     - Ensure the necessary packages are installed.  
       ```bash
