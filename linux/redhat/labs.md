@@ -5,9 +5,20 @@ These are a collection of labs that will cover essential RHCSA study points.
 Doing these labs will be a great way to get hands-on with the tools we'll be
 using in the RHCSA exam.  
 
+!!! warning "Snapshots"
+
+    It is highly recommended to take a snapshot of your VM before starting any of 
+    these labs.  
+    This will allow you to revert back to a clean state if you make a mistake.
 
 
 ## Configuring Apache Webserver SELinux Contexts
+
+This lab will have us set up and configure an Apache web server on a
+non-standard port, use a non-standard directory for web site files, and 
+configure SELinux to make the Apache config work, as well as allow remote 
+access. 
+
 
 The lab scenario is as follows.  
 
@@ -25,14 +36,15 @@ Your company wants Apache configured with the following requirements:
 - SELinux must remain enforcing.
 - Everything must persist across a reboot.
 
-Do not solve SELinux problems by:
+Do **not** solve SELinux problems by:
 - Disabling SELinux
 - Leaving SELinux permissive
 - Using chcon as the permanent solution
 - Generating a custom policy with audit2allow
 
 Use SELinux the correct way. Set contexts and booleans properly. This will
-help to gain a deeper understanding of Apache and SELinux.  
+help to gain a deeper understanding of Apache and SELinux (and will be expected
+on the RHCSA exam).  
 
 
 
