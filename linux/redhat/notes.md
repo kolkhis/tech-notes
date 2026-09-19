@@ -274,3 +274,9 @@ ip route
 nmcli device show ens18
 hostnamectl hostname
 ```
+
+## Misc
+
+
+Tools:
+- `audit2why`
