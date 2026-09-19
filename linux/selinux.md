@@ -38,6 +38,7 @@ SELinux uses these contexts to enforce its access control policies.
 
 - An SELinux Context is a rule that defines access permissions for files/directory.  
 - It consists of 4 parts:  
+
     1. `user`: SELinux user identity.  
         - This is not the same as a Linux user. It's an SELinux-specific user that 
           processes and objects are assigned to.
@@ -68,8 +69,8 @@ be performed on the file.
 
 Examples:  
 
-- Files labeled with the type `httpd_sys_content_t` can be read by the Apache web server but 
-  not by other processes.  
+- Files labeled with the type `httpd_sys_content_t` can be read by the Apache 
+  web server but not by other processes.  
 - Files labeled with the type `ssh_home_t` are accessible only to the SSH daemon.  
 
 ### Context Examples  
