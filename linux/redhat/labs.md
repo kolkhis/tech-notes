@@ -109,4 +109,74 @@ It's highly recommended to attempt the lab before looking at the solution.
     root directory, enabling a specific SELinux boolean, and allowing access
     through Firewalld.  
 
+??? warning "Solution Part 2: SELinux Configuration"
+
+    - After Apache is set up, attempt to start it.  
+      ```bash
+      sudo systemctl enable --now httpd
+      ```
+      This will fail. SELinux doesn't normally permit `httpd_t` to bind to 
+      port `8081`.  
+
+    - Allow Apache to serve on port `8081` through SELinux.  
+      ```bash
+      semanage port -a -t http_port_t -p tcp 8081
+      ```
+        - `semanage port`: The tool used to manage port mappings for SELinux.  
+        - `-a`: Add a new port mapping.  
+        - `-t http_port_t`: Specify the type as `http_port_t` for this mapping.  
+        - `-p tcp`: Specify the protocol as `tcp`.  
+        - `8081`: The port to apply this rule to.  
+        - **Side note**: This is actually an example in `man semanage-port`.
+          Remember that for the exam.  
+
+    - Set the proper contexts on the custom document root directory.  
+
+        - Check the current contexts of the files and directories.  
+          ```bash
+          ls -alZ /srv/rhcsa-web
+          # or, to just see the SELinux contexts
+          ls -1aZ /srv/rhcsa-web
+          ```
+          They should be as follows:
+          ```plaintext
+          unconfined_u:object_r:var_t:s0 .
+          system_u:object_r:var_t:s0 ..
+          unconfined_u:object_r:var_t:s0 index.html
+          ```
+
+        - Check the default Apache files' contexts to see what needs to be changed.  
+          ```bash
+          ls -a1Z /var/www
+          ```
+          The directory itself:
+          ```plaintext
+          system_u:object_r:httpd_sys_content_t:s0 .
+          system_u:object_r:var_t:s0 ..
+          system_u:object_r:httpd_sys_script_exec_t:s0 cgi-bin
+          system_u:object_r:httpd_sys_content_t:s0 html
+          ```
+          The `httpd_sys_content_t` type is needed for the Apache files.  
+
+        - Add the context for the custom document root.  
+          ```bash
+          semanage fcontext -a -t httpd_sys_content_t "/srv/rhcsa-web.*"
+          ```
+
+        - Set the SELinux boolean to allow `httpd` connections remotely.  
+          ```bash
+          semanage boolean -m --on httpd_can_network_connect
+          ```
+            - `semanage boolean`: One of the tools that can modify SELinux booleans.  
+            - `-m`: Modify an existing boolean.  
+            - `--on`: Set the boolean to `on`.  
+            - `httpd_can_network_connect`: The name of the boolean to modify.  
+            - This can also be done with the other tools that SELinux provides
+              to interact with booleans.  
+              ```bash
+              getsebool httpd_can_network_connect  # Show the current value
+              setsebool -P httpd_can_network_connect
+              ```
+                - `-P`: Persists across reboots. This is the default behavior
+                  when using `semanage boolean`.  
 
