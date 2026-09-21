@@ -916,6 +916,43 @@ On Node1, perform the following tasks:
 - Preserve the original file ownership, permissions, and timestamps during the 
   copy operation.
 
+??? warning "Solution"
+
+    ## Step 1
+    - Create the required directory `/find/largefiles`.  
+      ```bash
+      mkdir -p /find/largefiles
+      ```
+
+    ## Step 2
+    - Locate the files matching the given specifications.  
+      ```bash
+      find /etc -type f -size +900k -size -5M -exec cp -a '{}' /find/largefiles \;
+      ```
+      This will show all the files that match the given specs and execute a
+      command on each one in sequence.  
+        - `-type f`: Ensure only regular files are matched.  
+        - `-size +900k`: Match files over the size off 900 KB.  
+        - `-size -5M`: Match files under the size off 5 MB.  
+        - `-exec`: Execute the given command over each file matched.  
+        - `cp -a '{}' /find/largefiles \;`: Use `cp -a` (`-a`, archive option, preserves original file permissions).  
+            - `-a`: The archive option, preserves original file permissions.  
+              This option preserves:  
+                - ownership  
+                - permissions  
+                - timestamps  
+                - SELinux context  
+            - `'{}'`: Placeholder syntax for `-exec`, replaced by the matched filename.  
+            - `/find/largefiles`: The destination for `cp`.  
+            - `\;`: The end of the `-exec` command (semicolon must be escaped or quoted). 
+
+    ## Step 3
+    Verify that the files were copied to the correct location.  
+    ```bash
+    ls -alh /find/largefiles
+    ```
+
+
 ## Question 11:
 ### Boot Configuration and Troubleshooting
 
