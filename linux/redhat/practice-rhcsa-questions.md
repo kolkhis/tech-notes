@@ -962,6 +962,46 @@ assist with troubleshooting.
 - Remove any kernel parameters that suppress boot messages so that verbose output is enabled.
 - The configuration must persist across reboots.
 
+
+??? warning "Solution"
+
+    ## Step 1
+    - Edit the default GRUB configuration file.  
+      ```bash
+      vi /etc/default/grub
+      ```
+      Look for the line that starts with `GRUB_CMDLINE_LINUX=`.  
+      Remove any of the quieting parameters:
+        - `rhgb`
+        - `quiet`
+      The change should be:
+      ```plaintext
+      # before:
+      GRUB_CMDLINE_LINUX="...x rhgb quiet"
+      # after:
+      GRUB_CMDLINE_LINUX="...x"
+      ```
+
+    ## Step 2
+    Regenerate the GRUB configuration.  
+    - For BIOS-based systems (legacy), this file will go into `/boot/grub2/grub.cfg`.  
+      ```bash
+      grub2-mkconfig -o /boot/grub2/grub.cfg
+      ```
+        - `-o`: Specifies the output file.  
+
+    - For UEFI-based systems, use `/boot/efi/EFI/redhat/grub.cfg`.  
+      ```bash
+      grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+      ```
+     
+    ## Step 3
+    Reboot the system to verify. 
+    ```bash
+    reboot
+    ```
+    If you still don't see boot messages on reboot, press F8.  
+
 ## Question 12:
 ### Archive and Compress System Files
 
