@@ -1013,6 +1013,27 @@ following requirements:
 - Save the resulting archive as `/root/backup.tar.gz`
 - The operation should preserve file permissions and directory structure
 
+??? warning "Solution"
+
+    ## Step 1
+    - Use the `tar` command to create a compressed archive.  
+      ```bash
+      tar -czpf /root/backup.tar.gz /var/tmp
+      ```
+        - `-c`: Create a new archive.  
+        - `-z`: Compress the archive using gzip.  
+        - `-p`: Preserve file permissions (this one is important).  
+        - `-f`: Specify the filename of the archive.  
+
+    ## Step 2
+    Verify that the archive was created successfully.  
+    ```bash
+    ls -alh /root/backup.tar.gz
+    ```
+    The output should show `backup.tar.gz` in the `/root` directory.  
+    The size of this file should be greater than 0 bytes.
+
+
 ## Question 13:
 ### Configure Default File and Directory Permissions
 
