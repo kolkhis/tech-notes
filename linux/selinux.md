@@ -234,6 +234,140 @@ meaning of certain logs.
 cat /var/log/audit/audit.log | audit2why
 ```
 
+## Example: Apache Webserver SELinux Contexts 
+
+The scenario is as follows.  
+
+Your company wants Apache configured with the following requirements:
+- Apache must listen on TCP port `8081`.
+- Website files must be stored under `/srv/rhcsa-web`.
+- The website must display:
+  ```plaintext
+  RHCSA SELinux Lab
+  ```
+- `/srv/rhcsa-web/uploads` must be writable by Apache.
+- Remote clients must be able to access port `8081`.
+- SELinux must remain enforcing.
+- Everything must persist across a reboot.
+
+
+In this example, SELinux must remain enforcing. As such, some SELinux settings
+and contexts will need to be modified in order for the Apache webserver to
+function properly.  
+
+??? info "Optional: Apache Webserver Setup"
+
+    - Ensure the necessary packages are installed.  
+      ```bash
+      sudo dnf install -y httpd curl policycoreutils-python-utils
+      ```
+
+    - Create the custom document root.  
+      ```bash
+      sudo mkdir -p /srv/rhcsa-web/uploads
+      sudo chmod 0755 /srv/rhcsa-web
+      ```
+
+    - Create the web page that will be served.  
+      ```bash
+      sudo vi /srv/rhcsa-web/index.html
+      ```
+      Add the following text to that file.  
+      ```plaintext
+      RHCSA SELinux Lab
+      ```
+
+    - Set the ordinary Linux permissions on the file.  
+      ```bash
+      sudo chmod 0644 /srv/rhcsa-web/index.html
+      ```
+
+    - Create the Apache configuration file.  
+      ```bash
+      sudo vi /etc/httpd/conf.d/rhcsa-lab.conf
+      ```
+      The config file should be as follows.  
+      ```xml
+      Listen 8081
+
+      <VirtualHost *:8081>
+          ServerName rhel-node1
+          DocumentRoot "/srv/rhcsa-web"
+
+          <Directory "/srv/rhcsa-web">
+              AllowOverride None
+              Require all granted
+          </Directory>
+
+          ErrorLog logs/rhcsa-lab-error.log
+          CustomLog logs/rhcsa-lab-error.log combined
+      </VirtualHost>
+      ```
+    - Check the syntax of the Apache webserver config.  
+      ```bash
+      apachectl configtest
+      ```
+      Look for `Syntax OK`.  
+
+Assuming the Apache webserver is already installed and has the correct config,
+there are several things that need to be addressed on the SELinux (and
+Firewalld) side.  
+
+1. Set the correct context for the custom document root directory.  
+    - If we look at the default document root directory for `httpd`, then we
+      can see the SELinux contexts that it requires.  
+      ```bash
+      ls -alhZ /var/www
+      ```
+      The `type` field has the type of `httpd_sys_content_t`.  
+      This type must be set on the custom root document directory.  
+      ```bash
+      sudo semanage fcontext -a -t httpd_sys_content_t /srv/rhcsa-web/*
+      ```
+        - `semanage fcontext`: Manage file contexts.  
+        - `-a`: Add a new context 
+            - If there's already a custom context on the file, use `-m` instead.  
+        - `-t httpd_sys_content_t`: Set the SELinux object type to the given type.  
+        - `/srv/rhcsa-web`: The file(s) that should be assigned this change.  
+
+2. Set the SELinux boolean that allows `httpd` to connect with remote clients.  
+    - This is done with the `semanage boolean` command.  
+      ```bash
+      semanage boolean -m --on httpd_can_network_connect
+      ```
+      Verify that it's not set to `on`.  
+      ```bash
+      semanage boolean -l | grep httpd_can_network_connect
+      ```
+      Look for the line:
+      ```plaintext
+      httpd_can_network_connect      (on   ,   on)  Allow httpd to can network connect
+      ```
+
+3. Allow Apache to listen on port `8081`.  
+    - This is done with `semanage port`.  
+      ```bash
+      semanage port -a -t http_port_t -p tcp 8081
+      ```
+        - `-a`: Adds a new port mapping.  
+        - `-t http_port_t`: Specify the type `http_port_t`.  
+        - `-p tcp`: Set the protocol.  
+        - `8081`: The port to map this type to.  
+    - This essentially maps the `http_port_t` SELinux object type to port
+      `8081` and allows it to accept TCP connections.  
+
+4. Allow port 8081 (or httpd) through firewalld.  
+    - Use `firewall-cmd` for Firewalld modifications. 
+      ```bash
+      firewall-cmd --add-port --permanent 8081/tcp
+      firewall-cmd --reload
+      ```
+      Alternatively, be more specific in specifying the service.  
+      ```bash
+      firewall-cmd --permanent --add-service=http
+      firewall-cmd --reload
+      ```
+
 
 ## Resources
 - [SELinux Project Documentation](https://selinuxproject.org) 
