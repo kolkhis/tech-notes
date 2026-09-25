@@ -1049,6 +1049,57 @@ default permissions apply:
 
 Hint: think of `umask`.  
 
+??? warning "Solution"
+    
+    ## Step 1
+    Determine the required `umask`.  
+
+    - Regular files must be `-r--------` (octal `400`)
+    - Directories must be `dr-x------` (octal `500`)
+
+    The default base permissions are:
+    - `666` for regular files. 
+    - `777` for directories. 
+
+    Calculated `umask`:
+    - `666 - 400 = 266` (regular files)
+    - `777 - 500 = 277` (directories)
+    - Final umask: `277`.  
+        - The `umask` with the greater number between files and directories will be used.  
+    
+    ## Step 2
+    Since the scope of new files is set to the user `bruce`, modify that user's
+    `.bash_profile` file, or `.bashrc` file.  
+
+    Append to the end of the file. 
+    ```bash
+    echo "umask 277" >> /home/bruce/.bash_profile
+    ```
+
+    ## Step 3
+    Apply and verify the configuration.  
+    - Make sure `bruce` is the active user account. 
+      ```bash
+      su - bruce
+      ```
+
+    - Ensure the config files are loaded
+      ```bash
+      source /home/bruce/.bash_profile # or .bashrc
+      # or
+      . /home/bruce/.bash_profile # or .bashrc
+      ```
+
+    - Create a new file and a new directory to check permissions.  
+      ```bash
+      touch testfile
+      mdkir testdir
+      ls -alh test*
+      ```
+      Expected permissions:
+        - `testfile`: `-r--------` (`600`)
+        - `testdir`: `dr-x------` (`600`)
+
 ## Question 14:
 ### Enforce Password Policies for New Users
 
