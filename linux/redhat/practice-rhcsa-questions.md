@@ -1061,12 +1061,16 @@ Hint: think of `umask`.
     - `666` for regular files. 
     - `777` for directories. 
 
-    Calculated `umask`:
+    Calculate the `umask`:
     - `666 - 400 = 266` (regular files)
+        - Normal files do not have execute permissions by default.  
     - `777 - 500 = 277` (directories)
     - Final umask: `277`.  
         - The `umask` with the greater number between files and directories will be used.  
-    
+        - `umask` removes permissions from the default.  
+            - For files: `666 - 277 = 400` (`-r--------`)  
+            - For directories: `777 - 277 = 500` (`dr-x------`)
+
     ## Step 2
     Since the scope of new files is set to the user `bruce`, modify that user's
     `.bash_profile` file, or `.bashrc` file.  
