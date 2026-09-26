@@ -180,3 +180,116 @@ It's highly recommended to attempt the lab before looking at the solution.
                 - `-P`: Persists across reboots. This is the default behavior
                   when using `semanage boolean`.  
 
+
+
+
+
+## Configuring Autofs/NFS
+
+### Scenario
+
+Your organization has an NFS server named:
+
+- `nfs-server.lab.example.com`
+
+It exports the directories:
+
+- `/srv/nfs/projects`
+- `/srv/nfs/users/alice`
+- `/srv/nfs/users/bob`
+
+Our lab had the following configurations:
+- `rhel-node1`: NFS Server. - `192.168.4.75 nfs-server.lab.example.com nfs-server`
+- `rhel-node2`: NFS Client - `192.168.4.20 node1.lab.example.com node1`
+
+The `/etc/hosts` on both nodes were modified to include these lines.  
+
+```bash
+192.168.4.75 nfs-server.lab.example.com nfs-server
+192.168.4.20 node1.lab.example.com node1
+```
+
+### Requirements
+
+Configure the **client** so that:
+
+- The projects share appears at `/shares/projects`.
+- User directories appear dynamically under `/remotehome`.
+- Accessing `/remotehome/alice` mounts Alice’s directory.
+- Accessing `/remotehome/bob` mounts Bob’s directory.
+- Mounts are read-only.
+- Inactive mounts expire after 30 seconds.
+- Configuration persists across reboots.
+- No NFS entries are added to `/etc/fstab`.
+
+---
+
+### Task 1: Preflight checks
+
+Determine whether:
+- The NFS server resolves by name.
+- The NFS server is reachable.
+- Its exports are visible.
+- The required client packages are installed.
+
+---
+
+### Task 2: Projects indirect map
+
+Configure autofs so that accessing:
+```bash
+/shares/projects
+```
+mounts:
+```bash
+nfs-server.lab.example.com:/srv/nfs/projects
+```
+
+#### Requirements:
+- Use an indirect map.
+- Mount it read-only using NFSv4.
+- Use a 30-second inactivity timeout.
+
+---
+
+### Task 3: Wildcard user map
+
+Configure a wildcard map so that:
+```bash
+/remotehome/alice
+```
+mounts:
+```bash
+nfs-server.lab.example.com:/srv/nfs/users/alice
+```
+and:
+```bash
+/remotehome/bob
+```
+mounts:
+```bash
+nfs-server.lab.example.com:/srv/nfs/users/bob
+```
+
+**Do not create a separate map entry for every username.**
+
+---
+
+### Task 4: Persistence
+
+Ensure autofs:
+
+- Is running immediately.
+- Starts automatically at boot.
+- Still works following a reboot.
+- Task 5: Demonstrate on-demand behavior
+
+Show that:
+
+- The NFS share is not mounted initially.
+- Accessing the path triggers the mount.
+- Leaving the path and waiting causes the NFS mount to expire.
+- Accessing it again remounts it.
+
+Do not remain inside the automounted directory while testing expiration.
+
