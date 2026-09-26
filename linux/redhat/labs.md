@@ -282,7 +282,9 @@ Ensure autofs:
 - Is running immediately.
 - Starts automatically at boot.
 - Still works following a reboot.
-- Task 5: Demonstrate on-demand behavior
+
+
+### Task 5: Demonstrate on-demand behavior
 
 Show that:
 
