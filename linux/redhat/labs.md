@@ -293,5 +293,159 @@ Show that:
 - Leaving the path and waiting causes the NFS mount to expire.
 - Accessing it again remounts it.
 
-Do not remain inside the automounted directory while testing expiration.
+Do not remain inside the automounted directory while testing expiration. As
+long as the directory is being accessed (e.g., a shell has that directory as
+it's working directory), the mount will remain active.  
 
+??? warning "Solution"
+
+    This solution assumes that the NFS server is already set up.  
+
+
+    ### Task 1: Preflight checks
+
+    Determine whether:
+    - The required client packages are installed.
+      ```bash
+      sudo dnf install -y nfs-utils autofs
+      ```
+    - The NFS server resolves by name.
+      ```bash
+      getent hosts nfs-server.lab.example.com
+      ```
+    - The NFS server is reachable.
+      ```bash
+      ping -c 3 nfs-server.lab.example.com
+      ```
+        - It is possible that the firewall on the NFS server will block the ICMP
+          packets that come from `ping`, so even if this fails, the server may still be 
+          reachable.  
+    - Its exports are visible.
+      ```bash
+      showmount -e nfs-server.lab.example.com
+      ```
+        - `showmount -e` shows any exported shares from the given endpoint.  
+
+    ---
+
+    ### Task 2: Projects indirect map
+
+    Configure autofs so that accessing `/shares/projects` mounts:
+    ```bash
+    nfs-server.lab.example.com:/srv/nfs/projects
+    ```
+
+    #### Requirements:
+    - Use an indirect map.
+    - Mount it read-only using NFSv4.
+    - Use a 30-second inactivity timeout.
+
+    #### Solution:
+
+    - Add an entry in `/etc/auto.master` that will point `/shares` to a key in
+      another file. This is the workflow to create an indirect map.  
+      ```bash
+      /shares /etc/auto.shares -t 30
+      ```
+      Using `.shares` for the `/shares` mountpoint is a typical naming
+      convention.  
+        - The `-t 30` ensures a 30-second timeout, meeting the last
+          requirement.  
+
+    - Create the `auto.shares` file and define its mapping. 
+      ```bash
+      projects   -fstype=nfs4,ro nfs-server.lab.example.com:/srv/nfs/shares/projects
+      ```
+        - `projects`: This is a "key" for the `auto.master` entry, not
+          necessarily a path. Accessing `/shares/projects` will dynamically
+          create all directories needed.  
+        - `-fstype=nfs4,ro`: Set the filesystem type to NFS4 with read-only
+          permissions.  
+        - `nfs-server.lab.example.com:/srv/nfs/shares/projects`: This is the
+          remote endpoint that will be mounted.  
+
+    ---
+
+    ### Task 3: Wildcard user map
+
+    Configure a wildcard map so that `/remotehome/alice` mounts:
+    ```bash
+    nfs-server.lab.example.com:/srv/nfs/users/alice
+    ```
+    and accessing `/remotehome/bob` mounts:
+    ```bash
+    nfs-server.lab.example.com:/srv/nfs/users/bob
+    ```
+    **Do not create a separate map entry for every username.**
+
+    #### Solution
+    - Create a similar entry to the `shares` entry in `/etc/auto.master`, but
+      point it to a different file.  
+      ```bash
+      sudo vi /etc/auto.master
+      ```
+      Add the following mapping.  
+      ```bash
+      /remotehome /etc/auto.users -t 30
+      ```
+
+    - Create the `/etc/auto.users` file.  
+      ```bash
+      touch /etc/auto.users
+      sudo vi /etc/auto.users
+      ```
+
+    - Add the mapping using a wildcard.  
+      ```bash
+      * -fstype=nfs4,ro nfs-server.lab.example.com:/srv/nfs/users/&
+      ```
+        - `*`: This is the wildcard. It will match any local path accessed in `/remotehome`.  
+        - `&`: This is the placeholder for any matched directories on the NFS share.  
+        - This way, any newly created `users` directories in the NFS share will
+          be accessible without needing to add more 
+
+    ---
+
+    ### Task 4: Persistence
+
+    Ensure autofs:
+
+    - Is running immediately.
+    - Starts automatically at boot.
+    - Still works following a reboot.
+
+    #### Solution
+    Simply enable/start the service.  
+    ```bash
+    sudo systemctl enable --now autofs
+    ```
+
+    ### Task 5: Demonstrate on-demand behavior
+
+    This is mostly a verification step.  
+
+    Show that:
+
+    - The NFS share is not mounted initially.
+      ```bash
+      findmnt /shares/projects
+      ```
+    - There should be no mount point. Access that directory.
+      ```bash
+      cd /shares/projects
+      ```
+    - Accessing the path triggers the mount.
+      ```bash
+      findmnt /shares/projects
+      ```
+    - Leaving the path and waiting causes the NFS mount to expire.
+      ```bash
+      cd ~
+      sleep 30
+      findmnt /shares/projects
+      ```
+    - Accessing it again remounts it.
+      ```bash
+      cd /shares/projects
+      findmnt /shares/projects
+      ```
