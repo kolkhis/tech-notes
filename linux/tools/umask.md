@@ -195,7 +195,7 @@ UMASK		022
 This is the default umask. Your number may be different, `022` is the
 "historical" default umask value for Debian.  
 
-!!! notes
+!!! info
 
     If `HOME_MODE` is also set in `/etc/login.defs,` that will take priority when 
     adding a new user. If that setting is not present in `/etc/login.defs`, then the 
