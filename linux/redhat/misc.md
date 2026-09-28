@@ -39,6 +39,9 @@ sudo subscription-manager repos --list-enabled
 sudo dnf repolist
 ```
 
+## Misc. RHEL Facts
+
+- The default filesystem used in RHEL installations is XFS.  
 
 
 ## Resources
