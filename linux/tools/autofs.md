@@ -10,4 +10,18 @@ after a period of inactivity.
 This is a very useful tool in mounting remote filesystems dynamically.  
 
 
+## Installing Autofs
+
+Autofs is available in the package repositories of most Linux distributions.  
+It can be installed using the given distribution's package manager.
+```bash
+# Debian/Ubuntu
+sudo apt-get install -y autofs
+# RedHat
+sudo dnf install -y autofs
+```
+Ensure that the systemd service is enabled after installing.  
+```bash
+sudo systemctl enable --now autofs
+```
 
