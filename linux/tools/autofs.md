@@ -25,3 +25,18 @@ Ensure that the systemd service is enabled after installing.
 sudo systemctl enable --now autofs
 ```
 
+## Configuring Autofs
+
+During installation, a number of configuration files are created in `/etc/`.
+
+- `/etc/auto.master`
+- `/etc/auto.net` 
+- `/etc/auto.misc` 
+- `/etc/auto.smb` 
+- `/etc/autofs.conf` 
+
+Autofs is usually configured using the `/etc/auto.master` file. 
+This file defines the mount points and their corresponding configuration files.
+
+Drop-in configuration can also be used by creating `/etc/auto.master.d/*.autofs` files.
+
