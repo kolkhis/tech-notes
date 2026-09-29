@@ -37,6 +37,15 @@ During installation, a number of configuration files are created in `/etc/`.
 
 Autofs is usually configured using the `/etc/auto.master` file. 
 This file defines the mount points and their corresponding configuration files.
+For basic usage, typically the only configuration file that needs to be 
+modified is `/etc/auto.master` or `/etc/auto.master.d/*` files.
+
+More files can also be added when specifying indirect maps (called map files).
+
+The format of the `/etc/auto.master` file is as follows:
+```
+<mount_point> <map_file> <options>
+```
 
 Drop-in configuration can also be used by creating `/etc/auto.master.d/*.autofs` files.
 
