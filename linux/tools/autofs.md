@@ -25,6 +25,7 @@ Ensure that the systemd service is enabled after installing.
 sudo systemctl enable --now autofs
 ```
 
+
 ## Configuring Autofs
 
 During installation, a number of configuration files are created in `/etc/`.
@@ -36,16 +37,66 @@ During installation, a number of configuration files are created in `/etc/`.
 - `/etc/autofs.conf` 
 
 Autofs is usually configured using the `/etc/auto.master` file. 
-This file defines the mount points and their corresponding configuration files.
-For basic usage, typically the only configuration file that needs to be 
-modified is `/etc/auto.master` or `/etc/auto.master.d/*` files.
 
-More files can also be added when specifying indirect maps (called map files).
+This file defines the mount points and their corresponding configuration files.
+
+Drop-in configuration can also be used by creating `/etc/auto.master.d/*.autofs` 
+files instead of modifying `/etc/auto.master` directly.
 
 The format of the `/etc/auto.master` file is as follows:
-```
-<mount_point> <map_file> <options>
+```bash
+mount_point map_source options
 ```
 
-Drop-in configuration can also be used by creating `/etc/auto.master.d/*.autofs` files.
+An autofs mount configuration mainly consists of these three parts.  
+
+There are two main configuration layers for autofs maps.
+
+- The Master Map (`/etc/auto.master`)
+    - This tells autofs where to manage mounts and which map file to consult.  
+- The Mount Map (`map_source` in an `/etc/auto.master` entry)
+    - This describes the individual mounts themselves.  
+    - This points to a separate file that contains keys describing the mount points.
+
+For example, take this `/etc/auto.master` entry.  
+```bash
+/- /etc/auto.direct
+```
+This is a **direct map** entry in the **master map**.  
+A direct map specified with the `/-` syntax (see [Map Types](#map-types)).  
+
+The above example points to `/etc/auto.direct` as its **map source**.  
+This tells autofs to look at the `/etc/auto.direct` file for the **mount map**.
+ 
+
+
+
+---
+
+
+
+## Map Types
+Autofs supports two types of maps.  
+1. Direct maps
+2. Indirect maps
+
+Direct maps are used to mount filesystems directly to a specified mount point,
+similar to an `/etc/fstab` entry.
+
+Indirect maps are used to mount filesystems under a specified directory, 
+allowing for multiple mounts under that directory.
+An indirect map builds the mount path from a base directory, **plus a key**.
+
+### Direct Maps
+
+To specify a direct map in `/etc/auto.master` (or drop-in file in
+`/etc/auto.master.d`), use the syntax:
+```bash
+/- /etc/auto.direct
+```
+- `/-`: Syntax that serves as a special keyword that defines a direct map.
+    - This is not a directory that needs to be created.
+- `/etc/auto.direct`: The **map source** file where individual mount points are
+  specified.
+    - This file must be created.  
 
