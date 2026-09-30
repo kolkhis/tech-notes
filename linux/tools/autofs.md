@@ -100,3 +100,10 @@ To specify a direct map in `/etc/auto.master` (or drop-in file in
   specified.
     - This file must be created.  
 
+The `/etc/auto.direct` file contains the **mount map**.
+An example of a direct map entry in `/etc/auto.direct` is as follows:
+```bash
+/mnt/nfs1 -fstype=nfs,rw,soft,intr 192.168.4.20:/srv/nfs1
+```
+
+
