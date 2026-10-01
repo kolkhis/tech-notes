@@ -106,4 +106,45 @@ An example of a direct map entry in `/etc/auto.direct` is as follows:
 /mnt/nfs1 -fstype=nfs,rw,soft,intr 192.168.4.20:/srv/nfs1
 ```
 
+### Indirect Maps
+
+Indirect maps are used to mount filesystems *under* a specified directory,
+rather than directly to a mount point.
+
+These maps build the mount point from a base directory, plus a key.
+
+The base directory is specified in the master map, and the key is specified in
+the mount map.
+
+In `/etc/auto.master`, an indirect map is specified as follows:
+```bash
+/mnt /etc/auto.indirect
+```
+
+- `/mnt`: This is the base directory under which the mounts will be created.
+- `/etc/auto.indirect`: This is the **map source** file where individual mount
+  points are specified.
+
+The `/etc/auto.indirect` file contains the **mount map**, which is essentially
+a list of keys used to specify mount points.
+
+For example, the map source `/etc/auto.indirect` contains the following
+entries:
+```bash
+users -fstype=nfs4,rw,soft,intr 192.168.4.20:/srv/users
+projects -fstype=nfs4,rw,soft,intr 192.168.4.20:/srv/projects
+```
+This will create two mount points under `/mnt`, using the NFS shares from the
+NFS server at `192.168.4.20`:
+- `/mnt/users` will mount the NFS share `/srv/users`.  
+- `/mnt/projects` will mount the NFS share `/srv/projects`.  
+
+Notice that the keys are `users` and `projects`, rather than full file paths
+(e.g., `/mnt/users` and `/mnt/projects`).  
+
+Autofs builds the mount point by using the directory specified in the master
+map (`/mnt`), and then uses the keys to specify files or subdirectories to
+mount inside that `/mnt` directory. This is the reason it resolves 
+to `/mnt/users` and `/mnt/projects`.  
+
 
