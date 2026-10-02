@@ -89,6 +89,9 @@ An indirect map builds the mount path from a base directory, **plus a key**.
 
 ### Direct Maps
 
+For direct maps, the mount point is **always** specified as `/-` in the master
+map.
+
 To specify a direct map in `/etc/auto.master` (or drop-in file in
 `/etc/auto.master.d`), use the syntax:
 ```bash
@@ -106,6 +109,14 @@ An example of a direct map entry in `/etc/auto.direct` is as follows:
 /mnt/nfs1 -fstype=nfs,rw,soft,intr 192.168.4.20:/srv/nfs1
 ```
 
+- The syntax follows the `mount_point options location` format.  
+  The options used in this example are:
+    - `-fstype=nfs4,rw,soft,intr`: These are the mount options for the NFS share.
+        - `nfs4`: Specifies the NFS version to use (NFSv4).
+        - `rw`: Mount the share as read-write.
+        - `soft`: Specifies that the mount should fail softly if the server is unreachable.
+        - `intr`: Allows the mount to be interrupted if the server is unreachable.
+
 ### Indirect Maps
 
 Indirect maps are used to mount filesystems *under* a specified directory,
@@ -116,24 +127,36 @@ These maps build the mount point from a base directory, plus a key.
 The base directory is specified in the master map, and the key is specified in
 the mount map.
 
+#### Master Map Example for Indirect Maps
 In `/etc/auto.master`, an indirect map is specified as follows:
 ```bash
 /mnt /etc/auto.indirect
 ```
 
 - `/mnt`: This is the base directory under which the mounts will be created.
-- `/etc/auto.indirect`: This is the **map source** file where individual mount
-  points are specified.
+- `/etc/auto.indirect`: This is the **map source** file where the **mount map**
+  will be located, which is where individual mount points are specified.
 
 The `/etc/auto.indirect` file contains the **mount map**, which is essentially
-a list of keys used to specify mount points.
+a list of keys used to specify mount points, mount options, and the location of
+the filesystem to be mounted.  
 
+#### Mount Map Example for Indirect Maps
 For example, the map source `/etc/auto.indirect` contains the following
 entries:
 ```bash
 users -fstype=nfs4,rw,soft,intr 192.168.4.20:/srv/users
 projects -fstype=nfs4,rw,soft,intr 192.168.4.20:/srv/projects
 ```
+
+- The syntax follows the `key options location` format.
+  The options used in this example are:
+    - `-fstype=nfs4,rw,soft,intr`: These are the mount options for the NFS share.
+        - `nfs4`: Specifies the NFS version to use (NFSv4).
+        - `rw`: Mount the share as read-write.
+        - `soft`: Specifies that the mount should fail softly if the server is unreachable.
+        - `intr`: Allows the mount to be interrupted if the server is unreachable.
+
 This will create two mount points under `/mnt`, using the NFS shares from the
 NFS server at `192.168.4.20`:
 - `/mnt/users` will mount the NFS share `/srv/users`.  
@@ -146,5 +169,7 @@ Autofs builds the mount point by using the directory specified in the master
 map (`/mnt`), and then uses the keys to specify files or subdirectories to
 mount inside that `/mnt` directory. This is the reason it resolves 
 to `/mnt/users` and `/mnt/projects`.  
+
+
 
 
