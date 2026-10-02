@@ -88,6 +88,16 @@ This is the **map source** for a **direct map**.
 - `-fstype=nfs4,ro`: Specify the filesystem type as NFSv4, and mount it as read-only.  
 - `192.168.4.20:/srv/nfs1`: The location of the NFS share to mount.  
 
+Whenever making changes to the autofs configuration, the autofs service must be
+restarted for the changes to take effect.  
+```bash
+sudo systemctl restart autofs
+```
+
+Once the changes are applied, whenever `/mnt/nfs1` is accessed, autofs will 
+automatically mount the `/srv/nfs1` NFS share from the server at `192.168.4.20`.  
+
+
 ---
 
 ## Map Types
