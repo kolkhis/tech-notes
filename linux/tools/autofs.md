@@ -43,12 +43,7 @@ This file defines the mount points and their corresponding configuration files.
 Drop-in configuration can also be used by creating `/etc/auto.master.d/*.autofs` 
 files instead of modifying `/etc/auto.master` directly.
 
-The format of the `/etc/auto.master` file is as follows:
-```bash
-mount_point map_source options
-```
-
-An autofs mount configuration mainly consists of these three parts.  
+---
 
 There are two main configuration layers for autofs maps.
 
@@ -58,22 +53,42 @@ There are two main configuration layers for autofs maps.
     - This describes the individual mounts themselves.  
     - This points to a separate file that contains keys describing the mount points.
 
+The format of the `/etc/auto.master` file is as follows:
+```bash
+mount_point map_source [options]
+```
+An autofs master map entry consists of these three parts. 
+- `mount_point`: The directory on which to mount.
+    - This will always be `/-` when using direct maps.  
+- `map_source`: The path to the file that contains the specific mount points.  
+- `options`: Any master map options (e.g., `--timeout=30`).  
+    - Specifying `options` is not mandatory.  
+
+### Example Autofs Config
+
 For example, take this `/etc/auto.master` entry.  
 ```bash
-/- /etc/auto.direct
+/- /etc/auto.direct -t 30
 ```
 This is a **direct map** entry in the **master map**.  
-A direct map specified with the `/-` syntax (see [Map Types](#map-types)).  
+
+- `/-`: Indicates a direct map.  
+    - A direct map is always specified with the `/-` syntax (see [Map Types](#map-types)).  
+- `/etc/auto.direct`: The map source file.  
+    - This tells autofs to look at the `/etc/auto.direct` file for the **mount map**.
 
 The above example points to `/etc/auto.direct` as its **map source**.  
-This tells autofs to look at the `/etc/auto.direct` file for the **mount map**.
- 
-
-
+This file contains individual mount points. For example:
+```bash
+# /etc/auto.direct
+/mnt/nfs1 -fstype=nfs4,ro 192.168.4.20:/srv/nfs1
+```
+This is the **map source** for a **direct map**.  
+- `/mnt/nfs`: The location where the filesystem will be mounted locally.  
+- `-fstype=nfs4,ro`: Specify the filesystem type as NFSv4, and mount it as read-only.  
+- `192.168.4.20:/srv/nfs1`: The location of the NFS share to mount.  
 
 ---
-
-
 
 ## Map Types
 Autofs supports two types of maps.  
@@ -94,14 +109,16 @@ map.
 
 To specify a direct map in `/etc/auto.master` (or drop-in file in
 `/etc/auto.master.d`), use the syntax:
+
 ```bash
-/- /etc/auto.direct
+/- /etc/auto.direct -t 30
 ```
 - `/-`: Syntax that serves as a special keyword that defines a direct map.
     - This is not a directory that needs to be created.
 - `/etc/auto.direct`: The **map source** file where individual mount points are
   specified.
     - This file must be created.  
+- `-t 30`: Set the timeout duration to 30 seconds.  
 
 The `/etc/auto.direct` file contains the **mount map**.
 An example of a direct map entry in `/etc/auto.direct` is as follows:
@@ -170,6 +187,8 @@ map (`/mnt`), and then uses the keys to specify files or subdirectories to
 mount inside that `/mnt` directory. This is the reason it resolves 
 to `/mnt/users` and `/mnt/projects`.  
 
+
+---
 
 
 
