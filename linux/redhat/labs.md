@@ -486,6 +486,12 @@ for offset in range(0, len(memory), 4096):
 time.sleep(3600)
 ```
 
+Run these scripts with `nohup` and background the processes.
+```bash
+nohup /usr/local/bin/rhcsa-cpu-hog > /dev/null 2>&1 &
+nohup /usr/local/bin/rhcsa-memory-hog > /dev/null 2>&1 &
+```
+This will create two processes that are saturating both CPU and memory usage.  
 
 The task is to identify and terminate these processes without using their names
 (since we already know the process names for this example).  
