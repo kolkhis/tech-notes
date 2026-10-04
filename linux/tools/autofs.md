@@ -200,5 +200,12 @@ to `/mnt/users` and `/mnt/projects`.
 
 ---
 
+## Using Wildcards in Autofs Maps
+
+Autofs supports the use of wildcards in indirect map configurations.  
+
+When using a wildcard in an indirect map, the key can be specified as a 
+wildcard pattern.
+This allows for dynamic mount points based on the accessed directory name.
 
 
