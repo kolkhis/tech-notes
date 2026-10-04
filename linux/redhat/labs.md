@@ -449,3 +449,45 @@ it's working directory), the mount will remain active.
       cd /shares/projects
       findmnt /shares/projects
       ```
+
+
+## Finding and Terminating Resource-Intensive Processes
+
+For practice purposes, we will create these resource intensive processes
+manually.  
+
+First, a CPU-intensive process. This can be a bash script with an infinite
+while loop.  
+
+This will be `/usr/local/bin/rhcsa-cpu-hog`:
+```bash
+#!/bin/bash
+while :; do
+    :
+done
+```
+
+A memory intensive process can be a simple python script.  
+
+This will be `/usr/local/bin/rhcsa-memory-hog`:
+```python
+#!/usr/bin/python3
+
+import sys
+import time
+
+mebibytes = int(sys.argv[1])
+memory = bytearray(mebibytes * 1024 * 1024)
+
+# Touch every memory page so it becomes resident in physical memory.
+for offset in range(0, len(memory), 4096):
+    memory[offset] = 1
+
+time.sleep(3600)
+```
+
+
+The task is to identify and terminate these processes without using their names
+(since we already know the process names for this example).  
+
+
