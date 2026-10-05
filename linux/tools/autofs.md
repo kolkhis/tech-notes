@@ -214,10 +214,25 @@ directories that may need to change dynamically.
 
 The wildcard is specified in the **mount map**, not the master map.  
 
+Wildcard syntax in the mount map is as follows:
+```bash
+* [options] server:/path/to/mount/&
+```
+- `*`: When used as the key in the indirect mount's mount map, this matches any
+  file being accessed under the mount path.  
+- `&`: This is the placeholder for the match found on the NFS share.  
+
+
+### Wildcard Example
+
 An example master map entry (`/etc/auto.master`):
 ```bash
 /users /etc/auto.users -t 30
 ```
+- `/users`: The initial mount path.  
+- `/etc/auto.users`: The path to the map source file.  
+- `-t 30`: Sets the timeout to 30 seconds.  
+
 This sets `/users` as the initial mount path for the mount points specified in
 the `/etc/auto.users` file. 
 
@@ -225,16 +240,19 @@ The corresponding mount map in `/etc/auto.users` could look something like this:
 ```bash
 * -fstype=nfs4,ro 192.168.4.20:/srv/nfs/users/&
 ```
-The two identifiers here are:
+The two identifiers here that represent wilcard syntax are:
 - `*`: This serves as the wildcard for the local path that is accessed.  
-    - The master map specifies `/users` as the base mount path, so the wildcard
-      path becomes `/users/*`.  
 - `&`: The placeholder for the path that is being accessed.  
 
-The `*` serves as the local path, and `&` will always hold that same value.  
+The `*` serves as the local path, and `&` will hold the value of that matched
+directory in the NFS share.  
 
-For example, if accessing `/users/natasha`, autofs will attempt to mount
-`/srv/nfs/users/natasha`.  
+The master map specifies `/users` as the base mount path, so the wildcard
+path becomes `/users/*`, effectively matching all files and subdirectories 
+under the `/users` directory.    
+
+With this configuration, if `/users/natasha` is accessed, autofs will attempt 
+to mount `/srv/nfs/users/natasha` to `/users/natasha`.  
 
 
 
