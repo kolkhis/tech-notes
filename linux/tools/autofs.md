@@ -206,6 +206,35 @@ Autofs supports the use of wildcards in indirect map configurations.
 
 When using a wildcard in an indirect map, the key can be specified as a 
 wildcard pattern.
-This allows for dynamic mount points based on the accessed directory name.
+This allows for dynamic mount points based on the directory name that is being
+accessed.
+
+A common application for wildcards would be user home directories, or any other
+directories that may need to change dynamically.  
+
+The wildcard is specified in the **mount map**, not the master map.  
+
+An example master map entry (`/etc/auto.master`):
+```bash
+/users /etc/auto.users -t 30
+```
+This sets `/users` as the initial mount path for the mount points specified in
+the `/etc/auto.users` file. 
+
+The corresponding mount map in `/etc/auto.users` could look something like this:  
+```bash
+* -fstype=nfs4,ro 192.168.4.20:/srv/nfs/users/&
+```
+The two identifiers here are:
+- `*`: This serves as the wildcard for the local path that is accessed.  
+    - The master map specifies `/users` as the base mount path, so the wildcard
+      path becomes `/users/*`.  
+- `&`: The placeholder for the path that is being accessed.  
+
+The `*` serves as the local path, and `&` will always hold that same value.  
+
+For example, if accessing `/users/natasha`, autofs will attempt to mount
+`/srv/nfs/users/natasha`.  
+
 
 
