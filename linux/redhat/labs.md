@@ -597,9 +597,14 @@ can't read.
 The supported correction is a persistent `semanage fcontext` rule followed by
 `restorecon`.  
 
+### Lab Setup
+
+This section is only for those who wish to build the lab themselves.  
+If the lab is already set up and must be completed, move on to the next
+section.  
+
 ??? warning "Lab Setup"
 
-    This section is only for those who wish to build the lab themselves.  
     ## Verify SELinux
     - Ensure SELinux is enforcing.  
       ```bash
@@ -687,4 +692,28 @@ The supported correction is a persistent `semanage fcontext` rule followed by
     HTTP/1.1 403 Forbidden
     ```
     The lab is ready.  
+
+### Assignment
+
+Tasks for this lab are as follows.  
+- Verify the current SELinux mode.  
+- Verify that Apache is active.  
+- Verify the website's traditional Linux permissions and ownership.  
+- Identify the SELinux contexts of the following files:
+    - `/srv`
+    - `/srv/rhcsa-site`
+    - `/srv/rhcsa-site/index.html`
+    - `/var/www/html`
+- Indentify the SELinux domain in which Apache runs. 
+- Temporarily switch SELinux to permissive mode and test the website.  
+- Return SELinux to enforcing mode immediately.  
+- Determine the appropriate SELinux type for static Apache content.  
+- Create a persistent file-context rule for `/srv/rhcsa-site` **and everything
+  below it**.  
+- Apply the new rule recursively.  
+- Confirm that Apache can serve the site while SELinux is enforcing.  
+- Demonstrate that the correction survives an incorrect temporary label.  
+- Leave Apache running and SELinux enforcing.  
+
+**Time limit: 25 minutes**.  
 
