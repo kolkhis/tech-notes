@@ -538,9 +538,22 @@ The task is to identify and terminate these processes without using their names
       kill <PID>
       ```
       Replace `<PID>` with the actual PID of the process you want to terminate.  
+        - By default `kill` sends the `SIGTERM` signal (signal 15), which asks the 
+          process to terminate gracefully. 
+        - If the process does not terminate with the `SIGTERM` signal, the `SIGKILL` 
+          signal (signal 9) can be sent to forcefully terminate it.  
+          ```bash
+          kill -9 <PID>
+          ```
 
     - Verify that the processes have been terminated by running `top` again or using `ps`.  
       ```bash
       ps -ef | grep -iE '(rhcsa-cpu-hog|rhcsa-memory-hog)'
       ```
+
+    Using `top` is the quickest way to identify the resource-intensive
+    processes. This is likely the best tool to use when doing things
+    interactively. 
+    The `ps` tool can be used in scripts (if automation is needed), or just for 
+    more detailed output.
 
