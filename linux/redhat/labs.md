@@ -497,4 +497,50 @@ This will create two processes that are saturating both CPU and memory usage.
 The task is to identify and terminate these processes without using their names
 (since we already know the process names for this example).  
 
+??? warning "Solution"
+    
+    Several tools can be used to identify highly resource-intensive processes.
+    The `top` and `ps` commands are the quickest for exam purposes.  
+
+    - Use `top` to identify the processes that are consuming the most CPU and memory.  
+      ```bash
+      top
+      ```
+      Look for the processes with the highest `%CPU` and `%MEM`.  
+        - Use the keybindings to sort the processes by memory and CPU usage.  
+            - `M` (++shift+m++): Sort by memory in descending order, highest at
+              the top.  
+            - `P` (++shift+p++): Sort by CPU usage in descending order, highest at
+              the top.  
+
+    - Alternatively, use `ps` with `--sort` to quickly identify the resource
+      intensive processes.  
+        - Identify the memory hog:
+          ```bash
+          ps -ef --sort %mem
+          # or
+          ps aux --sort %mem
+          ```
+        - Identify the CPU hog:
+          ```bash
+          ps -ef --sort %cpu
+          # or
+          ps aux --sort %cpu
+          ```
+            - This may show the `ps` process itself as the highest CPU usage. 
+        - By default, this will sort in ascending order, with the highest at the
+          bottom.  
+
+    - Note their PIDs (Process IDs).  
+
+    - Use `kill` to terminate the processes by their PIDs.  
+      ```bash
+      kill <PID>
+      ```
+      Replace `<PID>` with the actual PID of the process you want to terminate.  
+
+    - Verify that the processes have been terminated by running `top` again or using `ps`.  
+      ```bash
+      ps -ef | grep -iE '(rhcsa-cpu-hog|rhcsa-memory-hog)'
+      ```
 
