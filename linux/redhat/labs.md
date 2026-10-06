@@ -557,3 +557,44 @@ The task is to identify and terminate these processes without using their names
     The `ps` tool can be used in scripts (if automation is needed), or just for 
     more detailed output.
 
+## SELinux Lab: Repair a Custom Apache Document Root
+
+This lab is geared towards practicing SELinux and all the different concepts
+and tools that may be used on the RHCSA exam.  
+
+### Objectives
+
+The objectives are to practice the following.  
+- Identifying enforcing and permissive modes.  
+- Temporarily changing the SELinux mode.  
+- Reading file and process contexts.  
+- Understanding the SELinux context formats.  
+- Comparing current and expected SELinux labels.  
+- Creating persistent file-context rules.  
+- Applying rules with `restorecon`.  
+- Understanding why `chcon` is normally not a persistent solution.  
+- Verifying that SELinux remains enforcing.  
+
+### Scenario
+
+The web team has moved an apache website from `/var/www/html` to
+`/srv/rhcsa-site`.  
+
+The traditional Linux permissions appear correct and Apache is running, but the
+site returns `403 Forbidden`.  
+
+Diagnose and correct the problem.  
+
+#### Requirements
+- The website must remain in `/srv/rhcsa-site`.  
+- SELinux must be set to `enforcing` when finished.  
+- The correction must survive `restorecon` and a complete filesystem relabel.  
+- Do not solve the problem by permanently making SELinux permissive.  
+- Do not create a custon SELinux policy module.  
+
+RedHat specifically documents `/srv` as normally using `/var_t`, which Apache
+can't read.  
+The supported correction is a persistent `semanage fcontext` rule followed by
+`restorecon`.  
+
+### TODO: Finish this lab (setup/solution)
