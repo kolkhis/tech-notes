@@ -597,4 +597,94 @@ can't read.
 The supported correction is a persistent `semanage fcontext` rule followed by
 `restorecon`.  
 
-### TODO: Finish this lab (setup/solution)
+??? warning "Lab Setup"
+
+    This section is only for those who wish to build the lab themselves.  
+    ## Verify SELinux
+    - Ensure SELinux is enforcing.  
+      ```bash
+      getenforce
+      ```
+      If it's anything other than **Enforcing**, edit the selinux config.  
+      ```bash
+      sudo vi /etc/selinux/config
+      ```
+      Set the following:
+      ```bash
+      SELINUX=enforcing
+      SELINUXTYPE=targeted
+      ```
+    - Reboot the VM before continuing if this was not set.  
+
+    ## Install the Required Packages
+    ```bash
+    sudo dnf install -y httpd policycoreutils-python-utils
+    ```
+    The `httpd` package is Apache, and `policycoreutils-python-utils` provides
+    the `semanage` tool and other SELinux utilities.  
+
+    ## Remove any old rule from an earlier lab  
+    ```bash
+    sudo semanage fcontext -d '/srv/rhcsa-site(/.*)?' 2>/dev/null || true
+    ```
+    This might report nothing if the rule doesn't exist.  
+
+    ## Create the custom document root
+    - Make the base directory
+      ```bash
+      sudo mkdir -p /srv/rhcsa-site
+      ```
+    - Create the web page.  
+      ```bash
+      sudo vi /srv/rhcsa-site/index.html
+      ```
+      Add the line:
+      ```plaintext
+      SELinux lab completed successfully.  
+      ```
+    - Configure ordinary permissions
+      ```bash
+      sudo chmod 755 /srv/rhcsa-site
+      sudo chmod 644 /srv/rhcsa-site/index.html
+      ```
+    - Ensure that the deliberately incorrect SELinux type is present  
+      ```bash
+      sudo chcon -R -t var_t /srv/rhcsa-site
+      ```
+
+    ## Configure Apache
+    - Create a config file
+      ```bash
+      sudo touch /etc/httpd/conf.d/rhcsa-site.conf
+      sudo vi /etc/httpd/conf.d/rhcsa-site.conf
+      ```
+      Add the following configuration
+      ```xml
+      DocumentRoot "/srv/rhcsa-site"
+
+      <Directory "/srv/rhcsa-site">
+          AllowOverride None
+          Require all granted
+      </Directory>
+      ```
+    - Check the configuration  
+      ```bash
+      sudo httpd -t
+      ```
+      This should output `Syntax OK`.  
+
+    - Start/enable Apache.  
+      ```bash
+      sudo systemctl enable --now httpd
+      ```
+
+    ## Verify that the failure exists
+    ```bash
+    curl -I http://localhost
+    ```
+    The response should be:
+    ```plaintext
+    HTTP/1.1 403 Forbidden
+    ```
+    The lab is ready.  
+
