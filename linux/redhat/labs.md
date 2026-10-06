@@ -213,7 +213,7 @@ The `/etc/hosts` on both nodes were modified to include these lines.
 
 Configure the **client** so that:
 
-- The projects share appears at `/shares/projects`.
+- The `projects` share appears at `/shares/projects`.
 - User directories appear dynamically under `/remotehome`.
 - Accessing `/remotehome/alice` mounts Alice’s directory.
 - Accessing `/remotehome/bob` mounts Bob’s directory.
