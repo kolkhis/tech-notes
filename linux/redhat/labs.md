@@ -453,11 +453,12 @@ it's working directory), the mount will remain active.
 
 ## Finding and Terminating Resource-Intensive Processes
 
-For practice purposes, we will create these resource intensive processes
+For practice purposes, these resource intensive processes will be created
 manually.  
 
-First, a CPU-intensive process. This can be a bash script with an infinite
-while loop.  
+### Lab Setup
+First, a CPU-intensive process needs to be created. This can be a bash script 
+with an infinite while loop.  
 
 This will be `/usr/local/bin/rhcsa-cpu-hog`:
 ```bash
