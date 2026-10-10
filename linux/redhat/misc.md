@@ -42,6 +42,8 @@ sudo dnf repolist
 ## Misc. RHEL Facts
 
 - The default filesystem used in RHEL installations is XFS.  
+- `matchpathcon` will show the default file contexts for a specific path.  
+    - This will show custom rules added as well with `semanage fcontext`.  
 
 
 ## Resources
