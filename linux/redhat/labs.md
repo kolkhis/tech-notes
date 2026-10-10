@@ -565,6 +565,7 @@ and tools that may be used on the RHCSA exam.
 ### Objectives
 
 The objectives are to practice the following.  
+
 - Identifying enforcing and permissive modes.  
 - Temporarily changing the SELinux mode.  
 - Reading file and process contexts.  
@@ -592,7 +593,7 @@ Diagnose and correct the problem.
 - Do not solve the problem by permanently making SELinux permissive.  
 - Do not create a custon SELinux policy module.  
 
-RedHat specifically documents `/srv` as normally using `/var_t`, which Apache
+RedHat specifically documents `/srv` as normally using `var_t`, which Apache
 can't read.  
 The supported correction is a persistent `semanage fcontext` rule followed by
 `restorecon`.  
@@ -666,7 +667,6 @@ section.
       Add the following configuration
       ```xml
       DocumentRoot "/srv/rhcsa-site"
-
       <Directory "/srv/rhcsa-site">
           AllowOverride None
           Require all granted
@@ -716,4 +716,11 @@ Tasks for this lab are as follows.
 - Leave Apache running and SELinux enforcing.  
 
 **Time limit: 25 minutes**.  
+
+<!-- TODO: Add solution key -->
+
+```bash
+sudo semanage fcontext -a -t httpd_sys_content_t '/srv/rhcsa-site(/.*)?'
+restorecon -R /srv/rhcsa-site
+```
 
