@@ -2293,6 +2293,35 @@ To see a quick rundown of which commands are bound to which keys:
 bind -p | grep -ve '^#' -e 'self-insert'
 ```
 
+## Last-run Command Substitution
+
+Most who are familiar with the Bash probably know that using `!!` from the
+command line will run the last command that was run.
+
+However, this can be utilized for more granular command usage.  
+
+For example, if a `ps` command was run recently but it was not the *last* run
+command, `!ps` can be used to run the last `ps` command (CLI arguments, pipes 
+and all).
+
+```bash
+ps -ef | grep 'httpd'
+ls
+!ps
+```
+The `!ps` will run the last-run `ps` command, `ps -ef | grep 'httpd'`.  
+
+But, it gets even more interesting than that.
+
+If we wanted to do that `ps` again, but this time we grep for `sshd` instead 
+of `httpd`, we can perform a `vi`-style substitution filter on it.
+```bash
+!ps:s/httpd/sshd
+```
+This will change the `httpd` to `sshd` in the `grep` command.  
+
+
+
 ## Resources
 - [Setting up Node Exporter](https://prometheus.io/docs/guides/node-exporter/)
 - [`mknod` Documentation](https://www.gnu.org/software/coreutils/manual/html_node/mknod-invocation.html#mknod-invocation)
