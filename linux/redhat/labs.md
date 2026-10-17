@@ -724,3 +724,81 @@ sudo semanage fcontext -a -t httpd_sys_content_t '/srv/rhcsa-site(/.*)?'
 restorecon -R /srv/rhcsa-site
 ```
 
+## LVM Lab
+
+This lab covers the current RHEL 10 RHCSA exam objectives involving
+the following topics:
+
+- GPT partitions
+- Creating and removing physical volumes
+- Creating and extending volume groups
+- Creating and deleting logical volumes
+- Creating an XFS filesystem
+- Persistent mounting by UUID
+- Adding storage non-destructively
+- Extending a logical volume and its filesystem
+- Creating persistent swap
+- Migrating data away from a physical volume
+- Removing a physical volume without losing data
+- Verifying everything after reboot
+
+### Lab Setup
+
+Ignore this section if following along during a live session.  
+
+??? warning "Lab Setup"
+
+    This lab was intended to be set up on a RHEL 10 VM on Proxmox.  
+    The setup simply includes adding 3 virtual disks to the VM, each 4 GiB in
+    size.  
+    From the Proxmox web UI, go to the VM's "Hardware" tab, click "Add", select
+    the storage pool to use, and click "Add". Repeat 2 more times.  
+    When finished, run `lsblk` on the VM to check that the disks were added.
+    There should be 3 additional disks:
+    ```bash
+    /dev/sdb
+    /dev/sdc
+    /dev/sdd
+    ```
+    If using a different hypervisor, use the procedure for that platform to add
+    3 virtual disks in the same manner.  
+
+    Additionally, ensure that the LVM tools are installed and available for
+    use.
+    ```bash
+    sudo dnf install -y lvm2
+    ```
+    That's all that is required as far as lab setup for this lab.  
+
+
+
+### Lab Scenario
+
+You administer a RHEL 10 server that requires new storage for project data.
+
+Configure the system to meet these requirements:
+1. Use the first unused disk to create an LVM physical volume.
+2. Create a volume group named vgdata.
+3. Create a 1 GiB logical volume named lvprojects.
+4. Format lvprojects with XFS.
+5. Give the filesystem the label PROJECTS.
+6. Mount it persistently at /projects using its UUID.
+7. Create a temporary 300 MiB logical volume named lvtemp.
+8. Delete lvtemp after verifying it exists.
+9. Add the second unused disk to vgdata.
+10. Extend lvprojects by 1 GiB without losing existing data.
+11. Grow the XFS filesystem to use the additional space.
+12. Create a 512 MiB logical volume named lvswap.
+13. Configure it as persistent swap.
+14. Add the third disk to vgdata.
+15. Move all allocated extents away from the first physical volume.
+16. Remove the first physical volume from vgdata.
+17. Remove its LVM physical-volume label.
+18. Reboot and verify:
+    - `/projects` is mounted.
+    - The existing data is intact.
+    - The swap logical volume is active.
+    - The removed physical volume is no longer part of LVM.
+
+Do not delete or modify the operating-system disk.
+
