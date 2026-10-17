@@ -777,22 +777,23 @@ Ignore this section if following along during a live session.
 You administer a RHEL 10 server that requires new storage for project data.
 
 Configure the system to meet these requirements:
+
 1. Use the first unused disk to create an LVM physical volume.
-2. Create a volume group named vgdata.
-3. Create a 1 GiB logical volume named lvprojects.
-4. Format lvprojects with XFS.
-5. Give the filesystem the label PROJECTS.
-6. Mount it persistently at /projects using its UUID.
-7. Create a temporary 300 MiB logical volume named lvtemp.
-8. Delete lvtemp after verifying it exists.
-9. Add the second unused disk to vgdata.
-10. Extend lvprojects by 1 GiB without losing existing data.
+2. Create a volume group named `vgdata`.
+3. Create a 1 GiB logical volume named `lvprojects`.
+4. Format `lvprojects` with XFS.
+5. Give the filesystem the label `PROJECTS`.
+6. Mount it persistently at `/projects` using its UUID.
+7. Create a temporary 300 MiB logical volume named `lvtemp`.
+8. Delete `lvtemp` after verifying it exists.
+9. Add the second unused disk to `vgdata`.
+10. Extend `lvprojects` by 1 GiB without losing existing data.
 11. Grow the XFS filesystem to use the additional space.
-12. Create a 512 MiB logical volume named lvswap.
+12. Create a 512 MiB logical volume named `lvswap`.
 13. Configure it as persistent swap.
-14. Add the third disk to vgdata.
+14. Add the third disk to `vgdata`.
 15. Move all allocated extents away from the first physical volume.
-16. Remove the first physical volume from vgdata.
+16. Remove the first physical volume from `vgdata`.
 17. Remove its LVM physical-volume label.
 18. Reboot and verify:
     - `/projects` is mounted.
@@ -801,4 +802,72 @@ Configure the system to meet these requirements:
     - The removed physical volume is no longer part of LVM.
 
 Do not delete or modify the operating-system disk.
+
+
+??? warning "Solution"
+
+    This is just a sequence of commands to complete the lab. Explanations may
+    come at a later point.  
+    ```bash
+    sudo pvcreate /dev/sdb
+    sudo vgcreate vgdata /dev/sdb
+    sudo lvcreate vgdata -L 1G --name lvprojects
+    sudo mkfs.xfs -L PROJECTS /dev/mapper/vgdata-lvprojects # steps 4 and 5 
+    # mounting
+    sudo mkdir -p /projects
+    sudo vi /etc/fstab
+    # Add:
+    # UUID=2c9e5723-835f-41c4-a0bb-d7a49a23aab8 /projects               xfs     defaults        0 0
+    sudo lvcreate vgdata -L 300M -n lvtemp
+    sudo lvs
+    sudo lvremove vgdata/lvtemp
+
+    sudo pvcreate /dev/sdc
+    sudo vgextend vgdata /dev/sdc
+    sudo lvextend -L +1G vgdata/lvprojects
+    sudo xfs_growfs /dev/mapper/vgdata-lvprojects
+
+    sudo lvcreate vgdata -L 512M -n lvswap
+    sudo mkswap /dev/mapper/vgdata-lvswap
+    sudo vi /etc/fstab
+
+    # Add:
+    # UUID=5d2ef2b0-ff80-4707-b278-12213bbddda0 none swap defaults 0 0
+    sudo systemctl daemon-reload
+    sudo swapon -a
+    sudo swapon --show
+
+    # Adding third disk to VG
+    sudo pvcreate /dev/sdd
+    sudo vgextend vgdata /dev/sdd
+
+    # Move allocated extents away from /dev/sdb
+    sudo pvmove /dev/sdb
+
+    # Remove first PV from VG
+    sudo vgreduce vgdata /dev/sdb
+
+    # Remove PV label
+    sudo pvremove /dev/sdb
+
+    sudo systemctl reboot
+    ```
+
+    When rebooting, it seems that the kernel may relabel the disk that was removed
+    from LVM. 
+
+    With 3 disks: 
+    - `/dev/sdb`
+    - `/dev/sdc`
+    - `/dev/sdd`
+
+    The `/dev/sdb` disk is removed from LVM during the lab. 
+    After reboot it shows as still part of LVM, and `/dev/sdc` is now the disk that 
+    was removed.
+
+    This is likely due to the kernel relabeling the disks.  
+
+
+
+
 
