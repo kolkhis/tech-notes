@@ -275,8 +275,67 @@ nmcli device show ens18
 hostnamectl hostname
 ```
 
+
+
+
+
+
+
+## LVM Lab Notes
+
+Notes from the LVM lab on the [RHCSA labs page](./labs.md)
+
+
+The requirements are as follows:
+
+Configure the system to meet these requirements:
+1. Use the first unused disk to create an LVM physical volume.
+2. Create a volume group named `vgdata`.
+3. Create a 1 GiB logical volume named `lvprojects`.
+4. Format `lvprojects` with XFS.
+5. Give the filesystem the label `PROJECTS`.
+6. Mount it persistently at `/projects` using its UUID.
+7. Create a temporary 300 MiB logical volume named `lvtemp`.
+8. Delete `lvtemp` after verifying it exists.
+9. Add the second unused disk to `vgdata`.
+10. Extend `lvprojects` by 1 GiB without losing existing data.
+11. Grow the XFS filesystem to use the additional space.
+12. Create a 512 MiB logical volume named `lvswap`.
+13. Configure it as persistent swap.
+14. Add the third disk to `vgdata`.
+15. Move all allocated extents away from the first physical volume.
+16. Remove the first physical volume from `vgdata`.
+17. Remove its LVM physical-volume label.
+18. Reboot and verify:
+    - `/projects` is mounted.
+    - The existing data is intact.
+    - The swap logical volume is active.
+    - The removed physical volume is no longer part of LVM.
+Do not delete or modify the operating-system disk.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Misc
-
-
 Tools:
 - `audit2why`
