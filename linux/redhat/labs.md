@@ -868,6 +868,54 @@ Do not delete or modify the operating-system disk.
     This is likely due to the kernel relabeling the disks.  
 
 
+## Collaborative Project Directory Lab (Users/Groups)
+
+This lab's goal is to build a collaborative project directory.  
+
+Topics covered:
+- User management
+- Group management
+- Permissions  
+
+### Scenario
+A development team needs a shared directory on `node1`.
+
+Configure the system according to these requirements:
+
+1. Create a group named `opsproject` with GID `4500`.
+2. Create these users with home directories and Bash as their login shell:
+    - `dev1`
+        - UID: `4501`
+        - Supplementary member of `opsproject`
+    - `dev2`
+        - UID `4502`
+        - Supplementary member of `opsproject`
+    - `audit1`
+        - UID: `4503`
+        - Must **not** belong to `opsproject`.  
+
+3. Configure `dev1` with:
+    - Minimum password age: 1 day
+    - Maximum password age: 60 days
+    - Warning period: 7 days
+
+4. Create this shared directory:
+    - `/srv/opsproject`
+
+5. Configure the directory so that:
+    - `root` owns the directory.
+    - `opsproject` is the group owner.
+    - Members of opsproject have full access.
+    - Everyone else has no access.
+    - New files inherit the `opsproject` group.
+    - Group members create group-writable files when using the directory.
+
+6. Demonstrate that:
+    - `dev1` can create a file.
+    - `dev2` can modify that file.
+    - `audit1` cannot access the directory.
+
+7. Correct a deliberately misconfigured file without weakening the directory’s security.
 
 
 
