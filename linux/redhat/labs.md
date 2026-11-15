@@ -918,9 +918,9 @@ Configure the system according to these requirements:
     - `audit1` cannot access the directory.
 
 
-```bash
-sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject
-```
+<!-- ```bash -->
+<!-- sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject -->
+<!-- ``` -->
 
 ### Discussion Questions
 
