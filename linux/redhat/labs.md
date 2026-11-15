@@ -876,6 +876,7 @@ Topics covered:
 - User management
 - Group management
 - Permissions  
+- ACL
 
 ### Scenario
 A development team needs a shared directory on `node1`.
@@ -883,6 +884,7 @@ A development team needs a shared directory on `node1`.
 Configure the system according to these requirements:
 
 1. Create a group named `opsproject` with GID `4500`.
+
 2. Create these users with home directories and Bash as their login shell:
     - `dev1`
         - UID: `4501`
@@ -905,7 +907,7 @@ Configure the system according to these requirements:
 5. Configure the directory so that:
     - `root` owns the directory.
     - `opsproject` is the group owner.
-    - Members of opsproject have full access.
+    - Members of `opsproject` have full access.
     - Everyone else has no access.
     - New files inherit the `opsproject` group.
     - Group members create group-writable files when using the directory.
@@ -915,7 +917,23 @@ Configure the system according to these requirements:
     - `dev2` can modify that file.
     - `audit1` cannot access the directory.
 
-7. Correct a deliberately misconfigured file without weakening the directory’s security.
+
+```bash
+sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject
+```
+
+### Discussion Questions
+
+
+Discussion questions (for the study group):
+
+1. What would happen if `usermod -G` were used without `-a`?
+2. Why is the execute permission required on a directory?
+3. What does set-GID do on a directory?
+4. Why doesn't set-GID guarantee group-write permission?
+5. What is the difference between a user's primary group and supplementary groups?  
+6. Why can root ownership remain on `status.txt` after changing its group?
+7. Why should you inspect the entire path rather than only the final file?
 
 
 
