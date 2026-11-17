@@ -922,10 +922,11 @@ Configure the system according to these requirements:
 <!-- sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject -->
 <!-- ``` -->
 
-### Discussion Questions
+### Post-Lab Discussion Questions
 
 
-Discussion questions (for the study group):
+Try to answer these questions. No solution key is provided here, so look up the
+answers if needed after answering them.  
 
 1. What would happen if `usermod -G` were used without `-a`?
 2. Why is the execute permission required on a directory?
