@@ -917,6 +917,41 @@ Configure the system according to these requirements:
     - `dev2` can modify that file.
     - `audit1` cannot access the directory.
 
+??? warning "Solution"
+
+    ## SOLUTION IS A WORK IN PROGRESS
+
+    1. Create the `opsproject` group.  
+       ```bash
+       groupadd -g 4500 opsproject
+       ```
+    2. Create the user accounts with home directories.  
+        - Create `dev1` with UID of `4501` and `opsproject` as a supplementary group.  
+          ```bash
+          useradd -m -G opsproject -u 4501 dev1
+          ```
+        - Create `dev2` with UID of `4502` and `opsproject` as a supplementary group.  
+          ```bash
+          useradd -m -G opsproject -u 4502 dev2
+          ```
+        - Create `audit1` with UID of `4503`.  
+          ```bash
+          useradd -m -u 4503 audit1
+          ```
+
+    3. Configure password rules for `dev1`.  
+        - Minimum password age: 1 day
+        - Maximum password age: 60 days
+        - Warning period: 7 days
+          ```bash
+          passwd -n 1 -x 60 -w 7 dev1
+          ```
+            - `-n` (`--mindays`): Defines the minimum password age.  
+            - `-x` (`--maxdays`): Defines the maximum password age.  
+            - `-w` (`--warndays`): Defines the warning period.  
+        - This can also be achieved with the `chage` tool.  
+
+    ## The rest of the solution will be available soon.
 
 <!-- ```bash -->
 <!-- sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject -->
@@ -936,5 +971,55 @@ answers if needed after answering them.
 6. Why can root ownership remain on `status.txt` after changing its group?
 7. Why should you inspect the entire path rather than only the final file?
 
+
+## Schedule a System Health Report
+
+This lab covers the following RHCSA exam objectives.
+
+- Installing RPM packages
+- Writing a small Bash script
+- Scheduling a one-time job with `at`
+- Scheduling a recurring cron job
+- Creating a systemd service
+- Creating and enabling a systemd timer
+- Examining service logs
+- Troubleshooting a failed service
+- Ensuring configuration persistence
+
+### Scenario
+
+The operations team wants a basic system health report.
+
+Configure the server to meet these requirements:
+
+1. Install the software needed for `at` and `cron`.
+2. Ensure the `atd` and `crond` services start automatically.
+3. Create an executable script named:
+   ```bash
+   /usr/local/sbin/rhcsa-health-report
+   ```
+4. Each execution must create a timestamped report under:
+   ```bash
+   /var/log/rhcsa-health
+   ```
+5. Each report must contain:
+   - Current date and time
+   - Hostname
+   - Uptime and load average
+   - Memory usage
+   - Root-filesystem usage
+6. Schedule a one-time at job that writes the current date to:
+   ```bash
+   /var/tmp/rhcsa-at-proof.txt
+   ```
+7. Create a cron job that records the current date every five minutes in:
+   ```bash
+   /var/tmp/rhcsa-cron-proof.log
+   ```
+8. Create a systemd service and timer that run the health-report script.
+9. Initially configure the timer to run every minute for testing.
+10. After verifying it, change the timer to run every day at `02:15`.
+11. Ensure missed timer runs execute when the server starts again.
+12. Verify the schedules and examine their logs.
 
 
