@@ -316,6 +316,52 @@ Do not delete or modify the operating-system disk.
 
 
 
+## System Health Report Lab Notes
+Task checklist:
+
+1. [x] Install the software needed for `at` and `cron`.
+2. [x] Ensure the `atd` and `crond` services start automatically.
+3. [x] Create an executable script named:
+   ```bash
+   /usr/local/sbin/rhcsa-health-report
+   ```
+
+4. [x] Each execution must create a timestamped report under:
+   ```bash
+   /var/log/rhcsa-health
+   ```
+
+5. [x] Each report must contain:
+   - Current date and time
+   - Hostname
+   - Uptime and load average
+   - Memory usage
+   - Root-filesystem usage
+
+6. [x] Schedule a one-time `at` job that writes the current date to:
+   ```bash
+   /var/tmp/rhcsa-at-proof.txt
+   ```
+
+7. [x] Create a cron job that records the current date every five minutes in:
+   ```bash
+   /var/tmp/rhcsa-cron-proof.log
+   ```
+
+8. [x] Create a systemd service and timer that run the health-report script.
+
+9. [x] Initially configure the timer to run every minute for testing.
+
+10. [x] After verifying it, change the timer to run every day at 02:15.
+
+11. [x] Ensure missed timer runs execute when the server starts again.
+
+12. [x] Verify the schedules and examine their logs.
+
+
+
+
+
 
 
 
