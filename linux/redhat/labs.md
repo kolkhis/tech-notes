@@ -951,11 +951,45 @@ Configure the system according to these requirements:
             - `-w` (`--warndays`): Defines the warning period.  
         - This can also be achieved with the `chage` tool.  
 
-    ## The rest of the solution will be available soon.
+    4. Create this shared directory:
+        - `/srv/opsproject`
+          ```bash
+          mkdir -p /srv/opsroject
+          ```
 
-<!-- ```bash -->
-<!-- sudo setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject -->
-<!-- ``` -->
+    5. Configure the directory so that:
+        - `root` owns the directory.
+        - `opsproject` is the group owner.
+          ```bash
+          chown root:opsproject /srv/opsproject
+          ```
+        - Members of `opsproject` have full access.
+        - Everyone else has no access.
+        - New files inherit the `opsproject` group.
+          ```bash
+          chmod 2770 /srv/opsproject
+          ```
+            - The leading `2` represents the SETGID bit, which causes all new files in a
+              directory to inherit group ownership.  
+        - Group members create group-writable files when using the directory.
+            - This is not as simple as setting a permission bit. This must be
+              done through Access Control List (ACL) settings.  
+            - Use the `setfacl` command to configure the ACL rules for this
+              directory.  
+              ```bash
+              setfacl -m d:u::rwx,d:g::rwx,d:m::rwx,d:o::--- /srv/opsproject
+              ```
+                - `-m`: The "modify" option, this specifies modification of the ACL of a file or directory.  
+                  This option is followed by an ACL.  
+                - `d:u::rwx,d:g::rwx,d:m::rwx,d:o::---`: The ACL to set on the
+                  directory.  
+                  This specifies several ACL entries, each separated by a comma (`,`). 
+                
+
+
+
+
+    ## The rest of the solution will be available soon.
 
 ### Post-Lab Discussion Questions
 
