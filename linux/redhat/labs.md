@@ -919,12 +919,11 @@ Configure the system according to these requirements:
 
 ??? warning "Solution"
 
-    ## SOLUTION IS A WORK IN PROGRESS
-
     1. Create the `opsproject` group.  
        ```bash
        groupadd -g 4500 opsproject
        ```
+
     2. Create the user accounts with home directories.  
         - Create `dev1` with UID of `4501` and `opsproject` as a supplementary group.  
           ```bash
@@ -984,12 +983,25 @@ Configure the system according to these requirements:
                 - `d:u::rwx,d:g::rwx,d:m::rwx,d:o::---`: The ACL to set on the
                   directory.  
                   This specifies several ACL entries, each separated by a comma (`,`). 
-                
+
+    6. Demonstrate that:
+        - `dev1` can create a file.
+          ```bash
+          su - dev1
+          touch /srv/opsproject/dev1-file.txt
+          ```
+        - `dev2` can modify that file.
+          ```bash
+          su - dev2
+          echo "Dev2 was here" > /srv/opsproject/dev1-file.txt
+          ```
+        - `audit1` cannot access the directory.
+          ```bash
+          su - audit1
+          cd /srv/opsproject
+          ```
 
 
-
-
-    ## The rest of the solution will be available soon.
 
 ### Post-Lab Discussion Questions
 
